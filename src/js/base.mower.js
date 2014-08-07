@@ -47,10 +47,25 @@ var Base = (function($, window, document, undefined) {
         }
 
         return opts;
-    }
+    };
 
+    var _attachDomRemoveEvent = function() {
+        var _cleanData = $.cleanData;
+        $.cleanData = function(elems) {
+            for (var i = 0, elem;
+                (elem = elems[i]) != null; i++) {
+                try {
+                    $(elem).triggerHandler("remove");
+                } catch (e) {}
+            }
+            _cleanData(elems);
+        };
+    };
 
     // public functions
+    base.init = function() {
+        _attachDomRemoveEvent();
+    };
 
     /**
      * parse options, including standard 'data-options' attribute.
@@ -119,3 +134,7 @@ var Base = (function($, window, document, undefined) {
     return base;
 
 }(jQuery, window, document));
+
+$(function(){
+    Base.init();
+});
