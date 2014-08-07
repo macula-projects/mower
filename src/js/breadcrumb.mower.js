@@ -1,8 +1,8 @@
 /** ========================================================================
- * Macula Plugin UI: breadcrumb.mower.js - v1.0.0
+ * Mower: breadcrumb.mower.js - v1.0.0
  *
- * update or open _blank page.
- *
+ * breadcrumb with ajax load remote content capability.
+ * 
  * Dependencies:
  *               fontawsome
  *               bootstrap tooltip
@@ -44,6 +44,7 @@
     BreadCrumb.prototype = {
 
         constructor: BreadCrumb,
+
         _init: function(element, options) {
             var $element = $(element);
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
