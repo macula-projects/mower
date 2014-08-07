@@ -70,3 +70,10 @@ __Install__
 
 
 ## Release History
+7 August 2014 - Mower 1.0
+Initial release to public.
+
+    
+## Copyright and license
+
+Code and documentation copyright 2014 Infinitus, Inc. Code released under [the Apache license](LICENSE).
