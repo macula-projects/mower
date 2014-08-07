@@ -1,0 +1,138 @@
+// Name:            Style responsive
+// Description:     Sets styles responsive.
+//
+
+// ========================================================================
+// Variables
+// ========================================================================
+
+/* ========================================================================
+   Component:
+ ========================================================================== */
+
+/* Width range [ medium devices ~ large devices ]
+ ========================================================================== */
+
+@media (min-width: @screen-md) and (max-width: @screen-lg)  {
+    
+}
+/* Width range  [ > medium devices ]
+ ========================================================================== */
+
+@media (min-width: @screen-md)  {}
+/* Width range  [ < medium devices ]
+ ========================================================================== */
+
+@media (max-width: @screen-sm-max) {
+    /*
+   * Macula header
+   */
+    .mu-header {
+        .nav li.dropdown i {
+            display: inline-block;
+            position: relative;
+            top: 1px;
+            right: 0px;
+        }
+        .navbar-nav {
+            display: block;
+            margin-bottom: 0px !important;
+            .open .dropdown-menu {
+                position: absolute;
+            }
+            > li {
+                float: left;
+                > a {
+                    padding-top: 15px;
+                    padding-bottom: 15px;
+                }
+            }
+        }
+        .navbar-brand {
+            margin-left: 0px !important;
+            padding-left: 0px !important;
+        }
+    }
+    .mu-header .navbar-nav {
+        display: inline-block;
+        float: right;
+        margin: 0;
+    }
+}
+/* Width range  [ small devices ~ medium devices ]
+ ========================================================================== */
+
+@media (min-width: @screen-sm ) and (max-width: @screen-sm-max)  {}
+/* Width range  [ < extra small devices ]. extra small device only
+ ========================================================================== */
+
+@media (max-width: @screen-xs-max) {
+    /*
+   * Macula header
+   */
+    .mu-header {
+        padding: 0 10px 0 10px;
+        /*
+         * Header logo
+         */
+        .navbar-brand {
+            margin-left: 0px !important;
+            width: 150px;
+        }
+        .nav > li > .dropdown-menu {
+            &.notification {
+                margin-right: -100px;
+                &:before, &:after {
+                    margin-right: 100px;
+                }
+            }
+            &.tasks {
+                margin-right: -90px;
+                &:before, &:after {
+                    margin-right: 90px;
+                }
+            }
+            &.inbox {
+                margin-right: -80px;
+                &:before, &:after {
+                    margin-right: 80px;
+                }
+            }
+        }
+    }
+}
+/* Width range  [ < small devices ]. the most extra small device landscape mode only.
+ ========================================================================== */
+
+@media (max-width: @screen-xs) {
+    /*
+     * Macula header
+     */
+    .mu-header {
+        .navbar-nav {
+            display: block !important;
+            margin-top: 0px !important;
+            > li.dropdown .dropdown-toggle {
+                margin-top: -1px !important;
+            }
+            li.dropdown .dropdown-toggle .badge {
+                top: 8px;
+            }
+        }
+    }
+}
+/* Width range  [ < small devices ]. the most extra small device portrait mode only.
+ ========================================================================== */
+
+@media (max-width: @screen-xxs) {
+    /*
+   * Macula header
+   */
+    .mu-header .nav > li.dropdown .dropdown-toggle {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+    .mu-header .navbar-brand {
+        width: 130px;
+    }
+}

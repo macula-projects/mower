@@ -1,0 +1,898 @@
+// Name:            Plugin Style
+// Description:     Plugin css customizations.
+//
+// Component:       `dataTables`
+//
+// Uses:
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+
+/* ========================================================================
+   Component: Plugins
+ ========================================================================== */
+
+
+/* dataTables.styles for customize dataTables.
+ ========================================================================== */
+
+div.dt-top-row {
+  height: 0;
+  line-height: 0;
+  position: relative;
+}
+
+div.dt-bottom-row {
+  background: #fafafa;
+  font-size: 13px;
+  overflow: hidden;
+  padding: 5px 10px;
+  border-right: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+  -webkit-box-shadow: inset 0 1px #fff;
+  -moz-box-shadow: inset 0 1px #fff;
+  -ms-box-shadow: inset 0 1px #fff;
+  box-shadow: inset 0 1px #ffffff;
+}
+
+div.dataTables_length {
+  /*  position: absolute;
+      right: 13px;
+      top: -38px;
+   */
+  float: left;
+  padding-top: 5px;
+}
+
+div.dataTables_length select {
+  width: 60px;
+  padding: 3px;
+  border: none;
+  font-size: 13px;
+  font-weight: normal;
+  color: #404040;
+}
+
+div.dataTables_length select:hover {
+  border-color: #5d98cc;
+}
+
+div.dataTables_length select:focus {
+  background-color: #FFFFFF;
+  border-color: #3276b1;
+  color: #696969;
+  outline: 0px none;
+}
+
+div.dataTables_filter {
+  position: absolute;
+  left: 10px;
+  top: -38px;
+}
+
+div.dataTables_filter input {
+  /*height: 26px;*/
+  padding: 2px 8px;
+  font-size: 13px;
+  border: none;
+}
+
+div.dataTables_filter .input-group {
+  width: 180px !important;
+}
+
+div.dataTables_length select,
+div.dataTables_filter input {
+  border: 1px solid #bbbbbb;
+}
+
+div.dataTables_paginate {
+  margin: 4px 0 0;
+}
+
+div.dataTables_paginate .pagination {
+  margin: 0;
+}
+
+.dataTables_wrapper {
+  position: relative;
+}
+
+.dt-wrapper {
+  overflow: hidden;
+}
+
+.dataTables_wrapper table.table {
+  clear: both;
+  max-width: inherit;
+  margin-bottom: 0;
+}
+
+.dataTables_wrapper table.table thead th {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+}
+
+.dataTables_wrapper table.table thead .sorting,
+.dataTables_wrapper table.table thead .sorting_asc,
+.dataTables_wrapper table.table thead .sorting_desc,
+.dataTables_wrapper table.table thead .sorting_asc_disabled,
+.dataTables_wrapper table.table thead .sorting_desc_disabled {
+  cursor: hand;
+  cursor: pointer;
+  padding-right: 20px;
+}
+
+.dataTables_wrapper table.table thead .sorting {
+  background: url('../images/sort_both.png') no-repeat center right;
+}
+
+.dataTables_wrapper table.table thead .sorting_asc {
+  background: url('../images/sort_asc.png') no-repeat center right;
+}
+
+.dataTables_wrapper table.table thead .sorting_desc {
+  background: url('../images/sort_desc.png') no-repeat center right;
+}
+
+.dataTables_wrapper table.table thead .sorting_asc_disabled {
+  background: url('../images/sort_asc_disabled.png') no-repeat center right;
+}
+
+.dataTables_wrapper table.table thead .sorting_desc_disabled {
+  background: url('../images/sort_desc_disabled.png') no-repeat center right;
+}
+
+.dataTables_wrapper table.dataTable th:active {
+  outline: none;
+}
+
+.dataTables_wrapper table.table tbody tr.active td,
+.dataTables_wrapper table.table tbody tr.active th {
+  background-color: #08C;
+  color: #ffffff;
+}
+
+.dataTables_wrapper table.table tbody tr.active:hover td,
+.dataTables_wrapper table.table tbody tr.active:hover th {
+  background-color: #0075b0 !important;
+}
+
+.dataTables_wrapper .table-striped tbody tr.active:nth-child(odd) td,
+.dataTables_wrapper .table-striped tbody tr.active:nth-child(odd) th {
+  background-color: #017ebc;
+}
+
+.dataTables_wrapper select {
+  min-height: inherit;
+}
+
+.dataTables_wrapper table + .row {
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+.dataTables_scrollBody {
+  -webkit-overflow-scrolling: touch;
+}
+
+.dataTables_wrapper .top,
+.dataTables_wrapper .bottom {
+  background-color: #f5f5f5;
+  border: 1px solid #CCC;
+  padding: 15px;
+}
+
+.top .dataTables_info {
+  float: none;
+}
+
+div.dt-bottom-row .dataTables_info {
+  text-align: right;
+  line-height: 32px;
+  font-size: 12px;
+}
+
+.dataTables_empty {
+  text-align: center !important;
+  font-size: 15px;
+  background: #fff !important;
+  padding: 20px 0 !important;
+}
+
+.dataTables_scroll {
+  clear: both;
+}
+
+.dataTables_scrollHeadInner table.table-bordered {
+  -webkit-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  border-bottom: none;
+}
+
+.dataTables_scrollHeadInner table.table-bordered,
+.dataTables_scrollHeadInner table.table-bordered thead {
+  border-bottom: none;
+}
+
+.dataTables_scrollBody table {
+  border-top: none;
+}
+
+.dataTables_processing {
+  position: absolute;
+  top: 50%;
+  margin-top: -24px;
+  z-index: 100;
+  left: 50%;
+  width: 250px;
+  margin-left: -125px;
+  border: 1px solid #ddd;
+  text-align: center;
+  color: #000;
+  background: #fff;
+  font-size: 15px !important;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  -ms-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
+}
+
+.dataTables_wrapper .center {
+  text-align: center;
+}
+
+.dataTables_wrapper .details,
+.dataTables_wrapper .details:hover {
+  background: #dddddd !important;
+}
+
+.dataTables_wrapper .details table td {
+  background: #ffffff !important;
+}
+
+.dataTables_scrollHeadInner table.table,
+.dataTables_wrapper .details table.table {
+  margin: 0 !important;
+}
+
+.dataTables_wrapper .dt_actions {
+  float: left;
+  margin-right: 20px;
+}
+
+.dataTables_empty {
+  cursor: default;
+}
+
+.dataTables_full {
+  width: 100% !important;
+}
+
+.dataTables_wrapper div.DTTT .btn:hover {
+  text-decoration: none !important;
+}
+
+.dataTables_wrapper ul.DTTT_dropdown.dropdown-menu a {
+  color: #333333 !important;
+}
+
+.dataTables_wrapper ul.DTTT_dropdown.dropdown-menu li:hover a {
+  background-color: #08c;
+  color: #ffffff !important;
+}
+
+.dataTables_wrapper div.DTTT_print_info.modal {
+  height: 150px;
+  margin-top: -75px;
+  text-align: center;
+}
+
+.dataTables_wrapper div.DTTT_print_info h6 {
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 28px;
+  margin: 1em;
+}
+
+.dataTables_wrapper div.DTTT_print_info p {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.dataTables_wrapper div.DTFC_LeftHeadWrapper table,
+.dataTables_wrapper div.DTFC_LeftFootWrapper table,
+.dataTables_wrapper table.DTFC_Cloned tr.even {
+  background-color: #ffffff;
+}
+
+.dataTables_wrapper div.DTFC_LeftHeadWrapper table {
+  margin-bottom: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+div.dataTables_scrollHead table {
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+div.dataTables_scrollHead table thead tr:last-child th:first-child,
+div.dataTables_scrollHead table thead tr:last-child td:first-child,
+div.DTFC_LeftHeadWrapper table thead tr:last-child th:first-child,
+div.DTFC_LeftHeadWrapper table thead tr:last-child td:first-child {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+div.dataTables_scrollBody table,
+div.DTFC_LeftBodyWrapper table {
+  border-top: none;
+  margin-bottom: 0 !important;
+}
+
+div.dataTables_scrollBody tbody tr:first-child th,
+div.dataTables_scrollFoot table,
+div.DTFC_LeftBodyWrapper tbody tr:first-child th,
+div.DTFC_LeftBodyWrapper tbody tr:first-child td,
+div.DTFC_LeftFootWrapper table {
+  border-top: none;
+}
+
+.dt-row {
+  padding: 4px 10px;
+}
+
+.ColVis {
+  position: absolute;
+  right: 83px;
+  top: -38px;
+}
+
+.ColVis_collection .ColVis_Button {
+  position: relative;
+  margin-right: 3px;
+  height: 30px;
+  background-color: #fff;
+  border: 1px solid #d0d0d0;
+  cursor: hand;
+  padding: 3px 5px;
+}
+
+button.ColVis_Button::-moz-focus-inner {
+  border: none !important;
+  padding: 0;
+}
+
+div.ColVis_collectionBackground {
+  background-color: #000;
+  z-index: 1100;
+}
+
+div.ColVis_collection {
+  position: relative;
+  width: 180px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1102;
+}
+
+div.ColVis_collection button.ColVis_Button {
+  padding: 4px 12px;
+  height: 26px;
+  background-color: #fff;
+  border: none;
+  width: 100%;
+  float: none;
+  font-size: 12px;
+}
+
+div.ColVis_collection button.ColVis_Button + button.ColVis_Button {
+  border-top: 1px solid #e1e1e1;
+}
+
+div.ColVis_collection button.ColVis_Button input {
+  margin: 0;
+}
+
+div.ColVis_catcher {
+  position: absolute;
+  z-index: 1101;
+}
+
+.disabled {
+  color: #999999;
+}
+
+button.ColVis_Button {
+  text-align: left;
+}
+
+span.ColVis_radio {
+  display: inline-block;
+  width: 20px;
+  vertical-align: -2px;
+}
+
+.ColVis_text_hover,
+div.ColVis_collection button.ColVis_Button:hover {
+  background: #F2F2F2;
+  color: #222222;
+}
+
+table.DTCR_clonedTable {
+  background-color: #fff;
+  z-index: 202;
+}
+
+div.DTCR_pointer {
+  width: 1px;
+  background-color: #0259C4;
+  z-index: 201;
+}
+
+ul.DTTT_dropdown.dropdown-menu li {
+  position: relative;
+}
+
+ul.DTTT_dropdown.dropdown-menu li:hover a {
+  background-color: #f2f2f2;
+  color: #333 !important;
+}
+
+.table_tools_group {
+  position: absolute;
+  right: 83px;
+  top: -37px;
+}
+
+.DTTT.btn-group {
+  position: absolute;
+  top: -38px;
+  right: 83px;
+}
+
+.DTTT_dropdown {
+  z-index: 2002;
+}
+
+.DTFC_LeftHeadWrapper {
+  border-bottom: 1px solid #dddddd;
+}
+
+/*
+ * File:        TableTools.css
+ * Description: Styles for TableTools 2
+ * Author:      Allan Jardine (www.sprymedia.co.uk)
+ * Language:    Javascript
+ * License:     GPL v2 / 3 point BSD
+ * Project:     DataTables
+ *
+ * Copyright 2009-2012 Allan Jardine, all rights reserved.
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * CSS name space:
+ *   DTTT                  DataTables TableTools
+ *
+ * Style sheet provides:
+ *   CONTAINER             TableTools container element and styles applying to all components
+ *   BUTTON_STYLES         Action specific button styles
+ *   SELECTING             Row selection styles
+ *   COLLECTIONS           Drop down list (collection) styles
+ *   PRINTING              Print display styles
+ */
+/*
+ * CONTAINER
+ * TableTools container element and styles applying to all components
+ */
+div.DTTT_container {
+  position: relative;
+  float: right;
+  margin-bottom: 1em;
+}
+
+button.DTTT_button,
+div.DTTT_button,
+a.DTTT_button {
+  position: relative;
+  float: left;
+  margin-right: 3px;
+  padding: 5px 8px;
+  border: 1px solid #999;
+  cursor: pointer;
+  *cursor: hand;
+  font-size: 0.88em;
+  color: black !important;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 1px 1px 3px #ccc;
+  -moz-box-shadow: 1px 1px 3px #ccc;
+  -ms-box-shadow: 1px 1px 3px #ccc;
+  -o-box-shadow: 1px 1px 3px #ccc;
+  box-shadow: 1px 1px 3px #ccc;
+  /* Generated by http://www.colorzilla.com/gradient-editor/ */
+  background: #ffffff;
+  /* Old browsers */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* IE10+ */
+  background: -o-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* Opera 11.10+ */
+  background: linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=0);
+  /* IE6-9 */
+}
+
+/* Buttons are cunning border-box sizing - we can't just use that for A and DIV due to IE6/7 */
+button.DTTT_button {
+  height: 30px;
+  padding: 3px 8px;
+}
+
+.DTTT_button embed {
+  outline: none;
+}
+
+button.DTTT_button:hover,
+div.DTTT_button:hover,
+a.DTTT_button:hover {
+  border: 1px solid #666;
+  text-decoration: none !important;
+  -webkit-box-shadow: 1px 1px 3px #999;
+  -moz-box-shadow: 1px 1px 3px #999;
+  -ms-box-shadow: 1px 1px 3px #999;
+  -o-box-shadow: 1px 1px 3px #999;
+  box-shadow: 1px 1px 3px #999;
+  background: #f3f3f3;
+  /* Old browsers */
+  background: -webkit-linear-gradient(top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%);
+  /* IE10+ */
+  background: -o-linear-gradient(top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%);
+  /* Opera 11.10+ */
+  background: linear-gradient(top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3f3f3', endColorstr='#f4f4f4', GradientType=0);
+  /* IE6-9 */
+}
+
+button.DTTT_disabled,
+div.DTTT_disabled,
+a.DTTT_disabled {
+  color: #999;
+  border: 1px solid #d0d0d0;
+  background: #ffffff;
+  /* Old browsers */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #f9f9f9 89%, #fafafa 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, #ffffff 0%, #f9f9f9 89%, #fafafa 100%);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #f9f9f9 89%, #fafafa 100%);
+  /* IE10+ */
+  background: -o-linear-gradient(top, #ffffff 0%, #f9f9f9 89%, #fafafa 100%);
+  /* Opera 11.10+ */
+  background: linear-gradient(top, #ffffff 0%, #f9f9f9 89%, #fafafa 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#fafafa', GradientType=0);
+  /* IE6-9 */
+}
+
+/*
+ * BUTTON_STYLES
+ * Action specific button styles
+ * If you want images - comment this back in
+
+button.DTTT_button_csv,
+button.DTTT_button_xls,
+button.DTTT_button_copy,
+button.DTTT_button_pdf,
+button.DTTT_button_print {
+	padding-right: 0px;
+}
+
+button.DTTT_button_csv span,
+button.DTTT_button_xls span,
+button.DTTT_button_copy span,
+button.DTTT_button_pdf span,
+button.DTTT_button_print span {
+	display: inline-block;
+	height: 24px;
+	line-height: 24px;
+	padding-right: 30px;
+}
+
+
+button.DTTT_button_csv span { background: url(../img/csv.png) no-repeat bottom right; }
+button.DTTT_button_csv:hover span { background: url(../img/csv_hover.png) no-repeat center right; }
+
+button.DTTT_button_xls span { background: url(../img/xls.png) no-repeat center right; }
+button.DTTT_button_xls:hover span { background: #f0f0f0 url(../img/xls_hover.png) no-repeat center right; }
+
+button.DTTT_button_copy span { background: url(../img/copy.png) no-repeat center right; }
+button.DTTT_button_copy:hover span { background: #f0f0f0 url(../img/copy_hover.png) no-repeat center right; }
+
+button.DTTT_button_pdf span { background: url(../img/pdf.png) no-repeat center right; }
+button.DTTT_button_pdf:hover span { background: #f0f0f0 url(../img/pdf_hover.png) no-repeat center right; }
+
+button.DTTT_button_print span { background: url(../img/print.png) no-repeat center right; }
+button.DTTT_button_print:hover span { background: #f0f0f0 url(../img/print_hover.png) no-repeat center right; }
+
+
+
+button.DTTT_button_collection span {
+	padding-right: 17px;
+	background: url(../img/collection.png) no-repeat center right;
+}
+
+button.DTTT_button_collection:hover span {
+	padding-right: 17px;
+	background: #f0f0f0 url(../img/collection_hover.png) no-repeat center right;
+} */
+/*
+ * SELECTING
+ * Row selection styles
+ */
+table.DTTT_selectable tbody tr {
+  cursor: pointer;
+  *cursor: hand;
+}
+
+table.dataTable tr.DTTT_selected.odd {
+  background-color: #9FAFD1;
+}
+
+table.dataTable tr.DTTT_selected.odd td.sorting_1 {
+  background-color: #9FAFD1;
+}
+
+table.dataTable tr.DTTT_selected.odd td.sorting_2 {
+  background-color: #9FAFD1;
+}
+
+table.dataTable tr.DTTT_selected.odd td.sorting_3 {
+  background-color: #9FAFD1;
+}
+
+table.dataTable tr.DTTT_selected.even {
+  background-color: #B0BED9;
+}
+
+table.dataTable tr.DTTT_selected.even td.sorting_1 {
+  background-color: #B0BED9;
+}
+
+table.dataTable tr.DTTT_selected.even td.sorting_2 {
+  background-color: #B0BED9;
+}
+
+table.dataTable tr.DTTT_selected.even td.sorting_3 {
+  background-color: #B0BED9;
+}
+
+/*
+ * COLLECTIONS
+ * Drop down list (collection) styles
+ */
+div.DTTT_collection {
+  width: 150px;
+  padding: 8px 8px 4px 8px;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background-color: #f3f3f3;
+  background-color: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  z-index: 2002;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  -ms-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+div.DTTT_collection_background {
+  /*background: transparent url(../img/background.png) repeat top left;*/
+  z-index: 2001;
+}
+
+div.DTTT_collection button.DTTT_button,
+div.DTTT_collection div.DTTT_button,
+div.DTTT_collection a.DTTT_button {
+  position: relative;
+  left: 0;
+  right: 0;
+  display: block;
+  float: none;
+  margin-bottom: 4px;
+  -webkit-box-shadow: 1px 1px 3px #999;
+  -moz-box-shadow: 1px 1px 3px #999;
+  -ms-box-shadow: 1px 1px 3px #999;
+  -o-box-shadow: 1px 1px 3px #999;
+  box-shadow: 1px 1px 3px #999;
+}
+
+/*
+ * PRINTING
+ * Print display styles
+ */
+.DTTT_print_info {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 150px;
+  margin-left: -200px;
+  margin-top: -75px;
+  text-align: center;
+  color: #333;
+  padding: 10px 30px;
+  background: #ffffff;
+  /* Old browsers */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* IE10+ */
+  background: -o-linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* Opera 11.10+ */
+  background: linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=0);
+  /* IE6-9 */
+  opacity: 0.95;
+  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  -ms-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.DTTT_print_info h6 {
+  font-weight: normal;
+  font-size: 28px;
+  line-height: 28px;
+  margin: 1em;
+}
+
+.DTTT_print_info p {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/*pagination*/
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #428bca;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+  color: #2a6496;
+  background-color: #eee;
+  border-color: #ddd;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  z-index: 2;
+  color: #fff;
+  cursor: default;
+  background-color: #428bca;
+  border-color: #428bca;
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #999;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #ddd;
+}
+.pagination-lg > li > a,
+.pagination-lg > li > span {
+  padding: 10px 16px;
+  font-size: 18px;
+}
+.pagination-lg > li:first-child > a,
+.pagination-lg > li:first-child > span {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.pagination-lg > li:last-child > a,
+.pagination-lg > li:last-child > span {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.pagination-sm > li > a,
+.pagination-sm > li > span {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+.pagination-sm > li:first-child > a,
+.pagination-sm > li:first-child > span {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.pagination-sm > li:last-child > a,
+.pagination-sm > li:last-child > span {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.mu-pagination > li > a,
+.mu-pagination > li > span {
+  padding: 4px 12px !important;
+}
+
+
+

@@ -1,0 +1,27 @@
+{
+    "name": "mower",
+    "version": "1.0.0",
+    "description": "project for macula ui",
+    "authors": [{
+        "name": "Rain Wang",
+        "email": "rainwzp@gmail.com"
+    }, {
+        "name": "jokeway",
+        "email": "jokeway@gmail.com"
+    }, {
+        "name": "Eric.Ou",
+        "email": "ouchunxiao@gmail.com"
+    }],
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jquery": "~=1.11.1"
+    }
+}

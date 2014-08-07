@@ -1,0 +1,475 @@
+<div class="panel panel-default mu-panel">
+    <div class="panel-heading">
+        <div class="row mu-panel-toolbar">
+            <div class="col-xs-12 col-md-6 mu-panel-toolbar-action-cont">
+                <a class="btn" href="#" data-table-action="add" data-target="#dt_basic">
+                    <i class="fa fa-search-plus fa-lg"></i>
+                    新增
+                </a>
+            </div>
+            <div class="col-xs-12 col-md-offset-2  col-md-4 mu-panel-toolbar-query-cont">
+                <div class="input-group">
+                    <span class="input-group-addon query">
+                        <a class="btn" href="#">查询<i class="fa fa-search"></i></a>
+                    </span>
+                    <input class="form-control" type="text">
+                    <span class="input-group-addon">
+                        <a class="btn" href="#" data-toggle="tooltip" data-original-title="清除">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </span>
+                    <span class="input-group-addon advanced-query">
+                        <a class="btn " href="#" data-toggle="dropdown"> 高级查询 <i class="fa fa-caret-down"></i> </a> 
+                        <div class="dropdown-menu advanced-query-container" role="dropdown-menu" data-options="closeOnBodyClick:false" id="advancedQuery">
+                            <div class="advanced-query-content">
+                                <form>
+                                    <div style="width: 150px;height: 100px;">
+                                        高级查询条件内容
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <table id="dt_basic" class="table table-striped table-bordered table-hover table-responsive " role="datatables" data-options="">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>联系方式</th>
+                    <th>公司</th>
+                    <th>邮政编码</th>
+                    <th>城市</th>
+                    <th>日期</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Jennifer</td>
+                    <td>1-342-463-8341</td>
+                    <td>Et Rutrum Non Associates</td>
+                    <td>35728</td>
+                    <td>Fogo</td>
+                    <td>03/04/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Clark</td>
+                    <td>1-516-859-1120</td>
+                    <td>Nam Ac Inc.</td>
+                    <td>7162</td>
+                    <td>Machelen</td>
+                    <td>03/23/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Brendan</td>
+                    <td>1-724-406-2487</td>
+                    <td>Enim Commodo Limited</td>
+                    <td>98611</td>
+                    <td>Norman</td>
+                    <td>02/13/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Warren</td>
+                    <td>1-412-485-9725</td>
+                    <td>Odio Etiam Institute</td>
+                    <td>10312</td>
+                    <td>Sautin</td>
+                    <td>01/01/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Rajah</td>
+                    <td>1-849-642-8777</td>
+                    <td>Neque Ltd</td>
+                    <td>29131</td>
+                    <td>Glovertown</td>
+                    <td>02/16/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Demetrius</td>
+                    <td>1-470-329-9627</td>
+                    <td>Euismod In Ltd</td>
+                    <td>1883</td>
+                    <td>Kapolei</td>
+                    <td>03/15/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Keefe</td>
+                    <td>1-188-191-2346</td>
+                    <td>Molestie Industries</td>
+                    <td>2211BM</td>
+                    <td>Modena</td>
+                    <td>07/08/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Leila</td>
+                    <td>1-663-655-8904</td>
+                    <td>Est LLC</td>
+                    <td>75286</td>
+                    <td>Hondelange</td>
+                    <td>12/09/12</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Fritz</td>
+                    <td>1-598-234-7837</td>
+                    <td>Et Ultrices Posuere Institute</td>
+                    <td>2324</td>
+                    <td>Monte San Pietrangeli</td>
+                    <td>12/29/12</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Cassady</td>
+                    <td>1-212-965-8381</td>
+                    <td>Vitae Erat Vel Company</td>
+                    <td>5898</td>
+                    <td>Huntly</td>
+                    <td>10/07/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Rogan</td>
+                    <td>1-541-654-9030</td>
+                    <td>Iaculis Incorporated</td>
+                    <td>6464JN</td>
+                    <td>Carson City</td>
+                    <td>05/30/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Candice</td>
+                    <td>1-153-708-6027</td>
+                    <td>Pellentesque Company</td>
+                    <td>8565</td>
+                    <td>Redruth</td>
+                    <td>02/25/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>Brittany</td>
+                    <td>1-987-452-6038</td>
+                    <td>Suspendisse Inc.</td>
+                    <td>4031</td>
+                    <td>Carapiba</td>
+                    <td>10/13/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>Baxter</td>
+                    <td>1-281-147-5085</td>
+                    <td>Nulla Donec Non Associates</td>
+                    <td>53067</td>
+                    <td>Yellowknife</td>
+                    <td>08/14/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>Vaughan</td>
+                    <td>1-940-231-1787</td>
+                    <td>Metus Facilisis Lorem Incorporated</td>
+                    <td>26530-046</td>
+                    <td>Guarapuava</td>
+                    <td>11/17/12</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>Ivan</td>
+                    <td>1-314-209-1223</td>
+                    <td>Posuere Vulputate Inc.</td>
+                    <td>KX3W 1OI</td>
+                    <td>Bienne-lez-Happart</td>
+                    <td>03/04/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>17</td>
+                    <td>Marah</td>
+                    <td>1-348-582-4041</td>
+                    <td>Feugiat Ltd</td>
+                    <td>2128</td>
+                    <td>Nîmes</td>
+                    <td>11/29/12</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>Kiara</td>
+                    <td>1-570-428-6681</td>
+                    <td>Et Euismod Et Corp.</td>
+                    <td>70483</td>
+                    <td>Meeuwen</td>
+                    <td>03/28/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>19</td>
+                    <td>Brielle</td>
+                    <td>1-216-787-0056</td>
+                    <td>Quis Massa Mauris Institute</td>
+                    <td>19913</td>
+                    <td>Mombaruzzo</td>
+                    <td>12/17/12</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>Kennedy</td>
+                    <td>1-997-154-9340</td>
+                    <td>Quis Diam Pellentesque Institute</td>
+                    <td>3092FI</td>
+                    <td>Edmundston</td>
+                    <td>02/26/13</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>21</td>
+                    <td>Peter</td>
+                    <td>1-394-459-3833</td>
+                    <td>Mauris Eu Turpis Corporation</td>
+                    <td>27337</td>
+                    <td>Ravenstein</td>
+                    <td>06/05/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>Kibo</td>
+                    <td>1-162-467-7160</td>
+                    <td>Massa LLP</td>
+                    <td>30305</td>
+                    <td>Witney</td>
+                    <td>08/20/14</td>
+                    <td>
+                        <div class="mu-table-action">
+                            <a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;">
+                                <i class="fa fa-pencil "></i>
+                            </a>
+                            <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

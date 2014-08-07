@@ -1,0 +1,227 @@
+<div class="panel panel-default mu-panel">
+    <div class="panel-heading">
+        <div class="row mu-panel-toolbar">
+            <div class="col-xs-12 col-md-6 mu-panel-toolbar-action-cont">
+                <a class="btn" href="#" data-form-action="save">
+                    <i class="fa fa-check-circle fa-lg"></i>
+                    保存
+                </a>
+                <a class="btn" href="#" data-form-action="cancel">
+                    <i class="fa fa-reply fa-lg"></i>
+                    取消
+                </a>
+            </div>
+            <div class="col-xs-12  col-md-offset-1 col-md-5 mu-panel-toolbar-step-cont">
+                <div class="fuelux pull-right">
+                    <div id="MyWizard" class="wizard">
+                        <ul class="steps">
+                            <li data-target="#step1">
+                                <span class="badge badge-info">1</span>
+                                提交订单
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-target="#step2">
+                                <span class="badge">2</span>
+                                付款成功
+                                <span class="chevron"></span>
+                            </li>
+                            <li class="active" data-target="#step3">
+                                <span class="badge">3</span>
+                                商品出库
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-target="#step4">
+                                <span class="badge">4</span>
+                                等待收货
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-target="#step5">
+                                <span class="badge">5</span>
+                                完成
+                                <span class="chevron"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="./basic.html" data-toggle="atab">常用属性</a>
+                </li>
+                <li>
+                    <a href="./advanced.html" data-toggle="atab">高级选项</a>
+                </li>
+                <li><a href="#tab_5_3" data-toggle="tab">验证1</a>
+                </li>
+                <li><a href="#tab_5_4" data-toggle="tab">验证2</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_3">
+                    <!-- BEGIN FORM-->
+                    <form action="#" id="form_sample_1" class="form-horizontal" role="validate-form">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">姓名
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="text" name="name" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">邮件
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="email" type="text" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">个人主页
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="url" type="text" class="form-control" data-bv-notempty="true" />
+                                    <span class="help-block">e.g: http://www.demo.com or http://demo.com</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">固定电话
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="number" type="text" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">移动电话
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="digits" type="text" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">信用卡号码
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="creditcard" type="text" class="form-control" data-bv-notempty="true" />
+                                    <span class="help-block">e.g: 5500 0000 0000 0004</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">职业&nbsp;&nbsp;</label>
+                                <div class="col-md-4">
+                                    <input name="occupation" type="text" class="form-control" />
+                                    <span class="help-block">可选</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">类别
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="category" data-bv-notempty="true">
+                                        <option value="">请选择...</option>
+                                        <option value="Category 1">类别 1</option>
+                                        <option value="Category 2">类别 2</option>
+                                        <option value="Category 3">类别 5</option>
+                                        <option value="Category 4">类别 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+                <div class="tab-pane" id="tab_5_4">
+                    <!-- BEGIN FORM-->
+                    <form action="#" id="form_sample_2" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">姓名<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="text" name="name" data-required="1" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">邮件<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="email" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">个人主页<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="url" type="text" class="form-control" />
+                                    <span class="help-block">e.g: http://www.demo.com or http://demo.com</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">固定电话<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="number" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">移动电话<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="digits" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">信用卡号码<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="creditcard" type="text" class="form-control" />
+                                    <span class="help-block">e.g: 5500 0000 0000 0004</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">职业&nbsp;&nbsp;</label>
+                                <div class="col-md-4">
+                                    <input name="occupation" type="text" class="form-control" />
+                                    <span class="help-block">可选</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">类别<sup>*</sup>
+                                </label>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="category">
+                                        <option value="">请选择...</option>
+                                        <option value="Category 1">类别 1</option>
+                                        <option value="Category 2">类别 2</option>
+                                        <option value="Category 3">类别 5</option>
+                                        <option value="Category 4">类别 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">备注&nbsp;&nbsp;</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control" name="remark" rows="3" placeholder="Textarea"></textarea>
+                                    <span class="help-block">可选</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="formdetail.js"></script>

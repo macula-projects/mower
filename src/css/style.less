@@ -1,0 +1,1101 @@
+// Name:            Style
+// Description:     Sets default values for HTML elements and utility
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+
+//== Colors
+//
+//## Gray and brand colors for use across Bootstrap.
+
+@gray-darker:            lighten(#000, 13.5%); // #222
+@gray-dark:              lighten(#000, 20%);   // #333
+@gray:                   lighten(#000, 33.5%); // #555
+@gray-light:             lighten(#000, 60%);   // #999
+@gray-lighter:           lighten(#000, 93.5%); // #eee
+
+@brand-primary:         #428bca;
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+
+//== Scaffolding
+//
+// ## Settings for some of the most global styles.
+
+//** Background color for `<body>`.
+@body-bg-color:                                 #FCFCFC;
+
+//** Global text color on `<body>`.
+@text-color:                                    #333333;
+
+//** Global textual link color.
+@link-color:                                    @brand-primary;
+
+//** Link hover color set via `darken()` function.
+@link-hover-color:                              darken(@link-color, 15%);
+
+@font-family-sans-serif:                        "微软雅黑", "宋体", Arial, Verdana, sans-serif;;
+
+@font-family-base:                              @font-family-sans-serif;
+
+@font-size-base:                                13px;
+
+//** Unit-less `line-height` for use in components like buttons.
+@line-height-base:                              1.538461538461538; // 20/13
+
+@box-size-base:                                 2px;
+@box-4:                                         (@box-size-base*2);
+@box-6:                                         (@box-size-base*3);
+@box-8:                                         (@box-size-base*4);
+@box-10:                                        (@box-size-base*5);
+@box-12:                                        (@box-size-base*6);
+@box-14:                                        (@box-size-base*7);
+
+
+@utility-align-horizontal:                      15px;
+@utility-align-vertical:                        15px;
+
+@utility-margin:                                15px;
+@utility-margin-small:                          5px;
+@utility-margin-large:                          50px;
+
+@utility-border-rounded:                        5px;
+
+@utility-heading-large-font-size:               52px;
+@utility-heading-large-line-height:             64px;
+
+@utility-link-muted-color:                      #444;
+@utility-link-muted-hover-color:                #444;
+
+@utility-scrollable-text-height:                300px;
+
+@utility-scrollable-box-height:                 170px;
+@utility-scrollable-box-padding:                10px;
+@utility-scrollable-box-border:                 #ddd;
+@utility-scrollable-box-border-width:           1px;
+
+
+@text-small-font-size:                          11px;
+@text-small-line-height:                        16px;
+@text-large-font-size:                          18px;
+@text-large-line-height:                        24px;
+
+
+/* ========================================================================
+   Component: Style
+ ========================================================================== */
+
+
+/* Body
+ ========================================================================== */
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: @body-bg-color;
+  line-height: @line-height-base;
+  color: @text-color;
+  font-family: @font-family-base;
+  font-size: @font-size-base;
+}
+
+
+/* Typography
+ ========================================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: @font-family-base;
+  font-weight: 300 !important;
+}
+
+h1.block,
+h2.block,
+h3.block,
+h4.block,
+h5.block,
+h6.block {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+a {
+  text-shadow: none !important;
+  color: @link-color;
+}
+
+/* Disable link outlines after click */
+a,
+a:hover,
+a:active,
+a:focus,
+button,
+button:active,
+button:focus,
+object,
+embed,
+input::-moz-focus-inner {
+  outline: 0;
+}
+
+*:focus {
+  outline: 0 !important;
+}
+
+textarea:focus,
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+div,
+input,
+select,
+textarea,
+span,
+img,
+table,
+td,
+th,
+p,
+a,
+button,
+ul,
+code,
+pre,
+li {
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-radius: 0 !important;
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  cursor: not-allowed;
+  background-color: #F4F4F4 !important;
+}
+
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  cursor: not-allowed;
+  background-color: #F9F9F9 !important;
+}
+
+label {
+  font-weight: normal;
+}
+
+
+hr {
+  border-top: 1px solid #E0DFDF;
+  display: block;
+  font-size: 0px;
+  height: 0px;
+  margin: 12px 0px;
+  overflow: hidden;
+}
+
+
+.form header,
+legend {
+  display: block;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  font-size: 16px;
+  font-weight: 300;
+  color: #222222;
+  margin: 25px 0px 20px;
+}
+
+.form header:first-child {
+  margin-top: 10px;
+}
+
+legend {
+  margin-top: 0px;
+  background: none;
+}
+
+
+header {
+  display: block;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  background: white;
+  font-size: 16px;
+  font-weight: 300;
+  color: #232323;
+  margin: 10px 0 20px 0;
+}
+
+/* Utility Section.
+ * Bootstrap also provide some utility:
+ * 1. Floats: clearfix  center-block pull-right pull-left
+ * 2. Toggling content: hide show invisible text-hide hidden
+ * 3. Affix: affix
+ ========================================================================== */
+
+
+/* Double hr and hr margin
+ ========================================================================== */
+.mu-hr-double {
+  border-bottom: 1px solid #FEFEFE;
+  border-top: 1px solid #E0DFDF;
+  height: 3px;
+}
+
+hr.dotted, .mu-hr-dotted {
+  border-top-style: dotted;
+}
+
+.mu-hr-double.dotted {
+  border-bottom-style: dotted;
+}
+
+.mu-hr-14 {
+  margin: @box-14 0;
+}
+
+.mu-hr-12 {
+  margin: @box-12 0;
+}
+
+.mu-hr-10 {
+  margin: @box-10 0;
+}
+
+.mu-hr-8 {
+  margin: @box-8 0;
+}
+
+.mu-hr-6 {
+  margin: @box-6 0;
+}
+
+.mu-hr-4 {
+  margin: @box-4 0;
+}
+
+.mu-hr-2 {
+  margin: @box-size-base 0;
+}
+
+
+/* Display
+ ========================================================================== */
+
+/*
+ * Display
+ */
+
+.mu-display-block { display: block !important; }
+.mu-display-inline { display: inline !important; }
+.mu-display-inline-block { display: inline-block !important; }
+
+/*
+ * Visibility
+ * Avoids setting display to `block`
+ */
+
+/* Desktop and bigger */
+@media (min-width: @screen-md) {
+
+  .mu-visible-small { display: none !important; }
+  .mu-visible-medium { display: none !important; }
+  .mu-hidden-large { display: none !important; }
+
+}
+
+/* Only tablets portrait */
+@media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
+
+  .mu-visible-small { display: none !important; }
+  .mu-visible-large { display: none !important ; }
+  .mu-hidden-medium { display: none !important; }
+
+}
+
+/* Phone landscape and smaller */
+@media (max-width: @screen-xs-max) {
+
+  .mu-visible-medium { display: none !important; }
+  .mu-visible-large { display: none !important; }
+  .mu-hidden-small { display: none !important; }
+
+}
+
+/* Remove from the flow and screen readers on any device */
+.mu-hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* It's hidden, but still affects layout */
+.mu-invisible { visibility: hidden !important; }
+
+/* Show on hover */
+.mu-visible-hover:hover .mu-hidden,
+.mu-visible-hover:hover .mu-invisible {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.mu-visible-hover-inline:hover .mu-hidden,
+.mu-visible-hover-inline:hover .mu-invisible {
+  display: inline-block !important;
+  visibility: visible !important;
+}
+
+/* Position of block elements
+ ========================================================================== */
+
+.mu-position-relative {
+  position: relative;
+}
+
+.mu-position-absolute {
+  position: absolute;
+}
+
+
+/* Alignment of block elements
+ ========================================================================== */
+
+/*
+ * Float blocks
+ * 1. Prevent content overflow on small devices
+ */
+
+.mu-float-left { float: left; }
+.mu-float-right { float: right; }
+
+/* 1 */
+[class*='mu-float-'] { max-width: 100%; }
+
+
+/* Alignment of images and objects
+ ========================================================================== */
+
+/*
+ * Alignment
+ */
+
+[class*='mu-align-'] {
+  display: block;
+  margin-bottom: @utility-align-vertical;
+}
+
+.mu-align-left {
+  margin-right: @utility-align-horizontal;
+  float: left;
+}
+
+.mu-align-right {
+  margin-left: @utility-align-horizontal;
+  float: right;
+}
+
+/* Tablet and bigger */
+@media (min-width: @screen-sm) {
+
+  .mu-align-medium-left {
+    margin-right: @utility-align-horizontal;
+    margin-bottom: @utility-align-vertical;
+    float: left;
+  }
+
+  .mu-align-medium-right {
+    margin-left: @utility-align-horizontal;
+    margin-bottom: @utility-align-vertical;
+    float: right;
+  }
+
+}
+
+.mu-align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Vertical alignment
+ ========================================================================== */
+
+/*
+ * Remove whitespace between child elements when using `inline-block`
+ */
+
+.mu-vertical-align { font-size: 0.001px; }
+
+/*
+ *  The `mu-vertical-align` container needs a specific height
+ */
+
+.mu-vertical-align:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+/*
+ * Sub-object which can have any height
+ * 1. Reset whitespace hack
+ */
+
+.mu-vertical-align-middle,
+.mu-vertical-align-bottom {
+  display: inline-block;
+  max-width: 100%;
+  /* 1 */
+  font-size: 1rem;
+}
+
+.mu-vertical-align-middle { vertical-align: middle; }
+.mu-vertical-align-bottom { vertical-align: bottom; }
+
+/*
+ *  This helper class is very useful to extend the `html` and `body` element to the full height of the page.
+ */
+
+.mu-height-1-1 { height: 100%; }
+
+
+/* Responsive objects
+ * Note: Images are already responsive by default, see Base component
+ ========================================================================== */
+
+/*
+ * 1. Corrects max-width/max-height behavior if padding and border are used
+ */
+
+.mu-responsive-width,
+.mu-responsive-height {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/*
+ * Responsiveness: Sets a maximum width relative to the parent and auto scales the height
+ */
+
+.mu-responsive-width {
+  max-width: 100%;
+  height: auto;
+}
+
+/*
+ * Responsiveness: Sets a maximum height relative to the parent and auto scales the width
+ * Only works if the parent element has a fixed height.
+ */
+
+.mu-responsive-height {
+  max-height: 100%;
+  width: auto;
+}
+
+
+/* Margin
+ ========================================================================== */
+
+/*
+ * Create a block with the same margin of a paragraph
+ * Add margin if adjacent element
+ */
+
+.mu-margin { margin-bottom: @utility-margin; }
+* + .mu-margin { margin-top: @utility-margin; }
+
+.mu-margin-top { margin-top: @utility-margin !important; }
+.mu-margin-bottom { margin-bottom: @utility-margin !important; }
+.mu-margin-left { margin-left: @utility-margin !important; }
+.mu-margin-right { margin-right: @utility-margin !important; }
+
+/*
+ * Larger margins
+ */
+
+.mu-margin-large { margin-bottom: @utility-margin-large; }
+* + .mu-margin-large { margin-top: @utility-margin-large; }
+
+.mu-margin-large-top { margin-top: @utility-margin-large !important; }
+.mu-margin-large-bottom { margin-bottom: @utility-margin-large !important; }
+.mu-margin-large-left { margin-left: @utility-margin-large !important; }
+.mu-margin-large-right { margin-right: @utility-margin-large !important; }
+
+/*
+ * Smaller margins
+ */
+
+.mu-margin-small { margin-bottom: @utility-margin-small; }
+* + .mu-margin-small { margin-top: @utility-margin-small; }
+
+.mu-margin-small-top { margin-top: @utility-margin-small !important; }
+.mu-margin-small-bottom { margin-bottom: @utility-margin-small !important; }
+.mu-margin-small-left { margin-left: @utility-margin-small !important; }
+.mu-margin-small-right { margin-right: @utility-margin-small !important; }
+
+/*
+ * Remove margins
+ */
+
+.mu-margin-remove { margin: 0 !important; }
+.mu-margin-top-remove { margin-top: 0 !important; }
+.mu-margin-bottom-remove { margin-bottom: 0 !important; }
+.mu-margin-left-remove { margin-left: 0 !important; }
+.mu-margin-right-remove { margin-right: 0 !important; }
+
+/*
+ * Remove all
+ */
+.mu-margin-padding-remove {
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+/* Padding
+ ========================================================================== */
+
+/*
+ * Remove paddings
+ */
+
+.mu-padding-remove { padding: 0 !important; }
+.mu-padding-top-remove { padding-top: 0 !important; }
+.mu-padding-bottom-remove { padding-bottom: 0 !important; }
+.mu-padding-left-remove { padding-left: 0 !important; }
+.mu-padding-right-remove { padding-right: 0 !important; }
+
+
+/* Border
+ ========================================================================== */
+
+.mu-border-circle { border-radius: 50%; }
+.mu-border-rounded { border-radius: @utility-border-rounded; }
+
+/*
+ * Remove border
+ */
+
+.mu-border-remove { border: 0 none !important; }
+.mu-border-top-remove { border-top: 0 none  !important; }
+.mu-border-bottom-remove { border-bottom: 0 none !important; }
+.mu-border-left-remove { border-left: 0 none !important; }
+.mu-border-right-remove { border-right: 0 none !important; }
+
+
+/* Underline
+ ========================================================================== */
+
+.mu-underline_remove {
+  text-decoration: none ! important;
+}
+
+.mu-underline_remove:hover {
+  text-decoration: none ! important;
+}
+
+/* box-shadow
+ ========================================================================== */
+
+.mu-box-shadow-remove {
+  box-shadow: none ! important;
+}
+
+.mu-text-shadow-remove {
+  text-shadow: none ! important;
+}
+
+
+/* Link
+ ========================================================================== */
+
+.mu-link-muted,
+.mu-link-muted a { color: @utility-link-muted-color; }
+
+.mu-link-muted:hover,
+.mu-link-muted a:hover { color: @utility-link-muted-hover-color; }
+
+
+/* Scrollable
+ ========================================================================== */
+
+/*
+ * Enable scrolling for preformatted text
+ */
+
+.mu-scrollable-text {
+  height: @utility-scrollable-text-height;
+  overflow-y: scroll;
+  resize: both;
+}
+
+/*
+ * Box with scrolling enabled
+ */
+
+.mu-scrollable-box {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: @utility-scrollable-box-height;
+  padding: @utility-scrollable-box-padding;
+  border: @utility-scrollable-box-border-width solid @utility-scrollable-box-border;
+  overflow: auto;
+  resize: both;
+}
+
+/*
+ * Remove margin from the last-child
+ */
+
+.mu-scrollable-box > :last-child { margin-bottom: 0; }
+
+
+/* Background color.
+ ========================================================================== */
+
+.mu-bg-blue {
+  background-color: #4b8df8 ;
+}
+
+.mu-bg-blue2 {
+  background-color: #57889c ;
+}
+
+.mu-bg-light-blue {
+  color: #93CBF9;
+}
+
+.mu-bg-light-blue2 {
+  background-color: #92a2a8 ;
+}
+
+.mu-bg-dark-blue {
+  background-color: #4c4f53 ;
+}
+
+.mu-bg-red {
+  background-color: #e02222 ;
+}
+
+.mu-bg-red2 {
+  background-color: #a90329 ;
+}
+
+.mu-bg-light-red {
+  background-color: #a65858 ;
+}
+
+.mu-bg-yellow {
+  background-color: #ffb848 ;
+}
+
+.mu-bg-yellow2 {
+  background-color: #b09b5b ;
+}
+
+.mu-bg-green {
+  background-color: #35aa47 ;
+}
+
+.mu-bg-green2 {
+  background-color: #356e35 ;
+}
+.mu-bg-light-green {
+  background-color: #71843f ;
+}
+.mu-bg-dark-green {
+  background-color: #496949 ;
+}
+
+.mu-bg-purple {
+  background-color: #852b99 ;
+}
+
+.mu-bg-purple2 {
+  background-color: #6e587a ;
+}
+
+.mu-bg-dark {
+  background-color: #555555 ;
+}
+
+.mu-bg-dark2 {
+  background-color: #404040 ;
+}
+
+.mu-bg-grey {
+  background-color: #fafafa ;
+}
+
+.mu-bg-dark-gray {
+  background-color: #525252 ;
+}
+
+.mu-bg-lighten {
+  background-color: #d5e7ec ;
+}
+
+.mu-bg-white {
+  background-color: #ffffff ;
+}
+
+.mu-bg-orange {
+  background-color: #c79121 ;
+}
+
+.mu-bg-dark-orange {
+  background-color: #a57225 ;
+}
+
+.mu-bg-pink {
+  background-color: #ac5287 ;
+}
+
+.mu-bg-dark-pink {
+  background-color: #a8829f ;
+}
+
+.mu-bg-magenta {
+  background-color: #6e3671 ;
+}
+
+.mu-bg-teal {
+  background-color: #568a89 ;
+}
+
+
+/* Text
+ ========================================================================== */
+
+
+/* Color modifiers.
+ ========================================================================== */
+
+.mu-text-dark {
+  color: #333333 ;
+}
+
+.mu-text-dark2 {
+  color: #404040 ;
+}
+
+.mu-text-lighten {
+  color: #d5e7ec ;
+}
+
+.mu-text-white {
+  color: #FFFFFF ;
+}
+
+.mu-text-red {
+  color: #a90329 ;
+}
+
+.mu-text-red2 {
+  color: #DD5A43 ;
+}
+
+.mu-text-light-red {
+  color: #FF7777 ;
+}
+
+.mu-text-light-red {
+  color: #a65858 ;
+}
+
+.mu-text-blue {
+  color: #478FCA ;
+}
+
+.mu-text-blue2 {
+  color: #57889c ;
+}
+
+.mu-text-light-blue {
+  color: #93CBF9 ;
+}
+
+.mu-text-light-blue2 {
+  color: #92a2a8 ;
+}
+
+.mu-text-dark-blue {
+  color: #4c4f53 ;
+}
+
+.mu-text-green {
+  color: #69AA46 ;
+}
+
+.mu-text-green2 {
+  color: #356e35 ;
+}
+
+.mu-text-light-green {
+  color: #B0D877 ;
+}
+
+.mu-text-light-green2 {
+  color: #71843f ;
+}
+
+.mu-text-dark-green {
+  color: #496949 ;
+}
+
+.mu-text-orange {
+  color: #FF892A ;
+}
+
+.mu-text-orange2 {
+  color: #FEB902 ;
+}
+
+.mu-text-light-orange {
+  color: #FCAC6F ;
+}
+
+.mu-text-light-orange2 {
+  color: #b19a6b ;
+}
+
+.mu-text-dark-orange {
+  color: #a57225 ;
+}
+
+.mu-text-purple {
+  color: #A069C3 ;
+}
+
+.mu-text-purple2 {
+  color: #6e587a ;
+}
+
+.mu-text-pink {
+  color: #C6699F ;
+}
+
+.mu-text-pink2 {
+  color: #D6487E ;
+}
+
+.mu-text-pink3 {
+  color: #ac5287 ;
+}
+
+.mu-text-dark-pink {
+  color: #a8829f ;
+}
+
+.mu-text-brown {
+  color: #A52A2A ;
+}
+
+.mu-text-grey {
+  color: #777777 ;
+}
+
+.mu-text-dark-gray {
+  color: #525252 ;
+}
+
+.mu-text-light-grey {
+  color: #BBBBBB ;
+}
+
+.mu-text-yellow {
+  color: #b09b5b ;
+}
+
+.mu-text-magenta {
+  color: #6e3671 ;
+}
+
+.mu-text-teal {
+  color: #568a89 ;
+}
+
+
+/* Size modifiers
+ ========================================================================== */
+
+.mu-text-small {
+  font-size: @text-small-font-size;
+  line-height: @text-small-line-height;
+}
+
+.mu-text-large {
+  font-size: @text-large-font-size;
+  line-height: @text-large-line-height;
+}
+
+/* Alignment modifiers
+ ========================================================================== */
+
+.mu-text-left { text-align: left !important; }
+.mu-text-right { text-align: right !important; }
+.mu-text-center { text-align: center !important; }
+.mu-text-justify { text-align: justify !important; }
+
+.mu-text-top { vertical-align: top !important; }
+.mu-text-middle { vertical-align: middle !important; }
+.mu-text-bottom { vertical-align: bottom !important; }
+
+/* Weight modifiers
+ ========================================================================== */
+
+.mu-text-bold { font-weight: bold; }
+
+/* Only tablets portrait */
+@media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
+
+  .mu-text-center-medium { text-align: center !important; }
+
+}
+
+/* Phone landscape and smaller */
+@media (max-width: @screen-xs-max) {
+
+  .mu-text-center-small { text-align: center !important; }
+
+}
+
+
+/* Wrap modifiers
+ ========================================================================== */
+
+/*
+ * Prevent text from wrapping onto multiple lines
+ */
+
+.mu-text-nowrap { white-space: nowrap; }
+
+/*
+ * Prevent text from wrapping onto multiple lines, and truncate with an ellipsis
+ */
+
+.mu-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * Break strings if their length exceeds the width of their container
+ */
+
+.mu-text-break {
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+
+/* Hack
+ ========================================================================== */
+
+/*
+Internet Explorer 10 doesn't differentiate device width from viewport width, and thus doesn't
+properly apply the media queries in Bootstrap's CSS. To address this,
+you can optionally include the following CSS and JavaScript to work around this problem until Microsoft issues a fix.
+*/
+@-webkit-viewport {
+  width: device-width;
+}
+
+@-moz-viewport {
+  width: device-width;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
+
+@-o-viewport {
+  width: device-width;
+}
+
+@viewport {
+  width: device-width;
+}
+
+/* Internet Explorer 10 doesn't differentiate device width from viewport width,
+and thus doesn't properly apply the media queries in Bootstrap's CSS. To address this, following CSS code applied */
+@-ms-viewport {
+  width: auto !important;
+}
+
+/* ie8 & ie9 modes */
+.visible-ie8 {
+  display: none;
+}
+
+.ie8 .visible-ie8 {
+  display: inherit !important;
+}
+
+.visible-ie9 {
+  display: none;
+}
+
+.ie9 .visible-ie9 {
+  display: inherit !important;
+}
+
+.hidden-ie8 {
+  display: inherit;
+}
+
+.ie8 .hidden-ie8 {
+  display: none !important;
+}
+
+.hidden-ie9 {
+  display: inherit;
+}
+
+.ie9 .hidden-ie9 {
+  display: none !important;
+}
+
