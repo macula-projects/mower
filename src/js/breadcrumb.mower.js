@@ -175,7 +175,6 @@
                             that.$element.trigger('ajaxError', [xhr, ajaxOpt]); //global event
                             return;
                         }
-
                         var e;
                         if (data != null && data.error != null) {
                             e = $.Event(BreadCrumb.DEFAULTS.events.populateError, {
@@ -183,36 +182,42 @@
                             });
                             that.$element.trigger(e);
                         } else {
+                            //trigger populdate success event 
+                            e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
+                                "data": data
+                            });
+                            that.$element.trigger(e);
 
                             var target = that.$element.data('target');
-                            var panel = '<div data-panel="' + panelId + '"></div>';
-                            $(target).append($(panel).append($.parseHTML(data))); //not including script tag snippet
+                            var $panel = $('<div data-panel="' + panelId + '"></div>');
+                            $(target).append($panel.append($.parseHTML(data))); //not including script tag snippet
 
-                            _callback && _callback.apply(that); //hide siblings
+                            //hide siblings
+                            _callback && _callback.apply(that); 
 
-                            //trigger init function 
+                            //reinit document ready function in the new fragment 
                             $(document).trigger('update', target);
 
+                            //append & apply javascript 
                             var scripts = [];
                             $(data).filter('script').each(function() {
                                 $(this).attr('data-ref-panel', panelId);
-
                                 if (this.src) {
                                     scripts.push(this);
                                 } else {
                                     scripts.unshift(this);
                                 }
                             });
-
                             $.each(scripts, function(index, val) {
                                 /* iterate through array or object */
                                 $(target).append(val);
                             });
 
-                            e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
-                                "data": data
+                            //listen on panel remove event
+                            $panel.on('remove', function(event) {
+                                var id = $(this).data('panel');
+                                id && $('[data-ref-panel="'+id+'"]').remove();
                             });
-                            that.$element.trigger(e);
                         }
                     },
                     error: function(data) {
@@ -301,7 +306,7 @@
             $.each(popArray, function(index, val) {
                 /* iterate through array or object */
                 $(that.$element.data("target")).children()
-                    .filter('[data-panel="' + val + '"],[data-ref-panel="' + val + '"]').remove();
+                    .filter('[data-panel="' + val + '"]').remove();
             });
         },
         pop: function(popCount, relatedTarget) {
