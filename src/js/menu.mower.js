@@ -233,7 +233,7 @@
 
     /* MAINMENU DATA-API
      * ============== */
-    $(document).on('ready', function(event, updatedFragment) {
+    $(document).on('ready update', function(event, updatedFragment) {
         /* Act on the event */
         var $root = $(updatedFragment || 'html');
 
