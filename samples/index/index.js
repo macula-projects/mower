@@ -34,10 +34,7 @@ var Index = (function($) {
             });
         },
         initMainMenu: function() {
-            $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
-            });
-
+            
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
                 // alert(event.mid +"[ name: " +event.instance.name + " ] " + "[ heaf :" + event.href + "]");
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();

@@ -12,7 +12,6 @@ var DetailsTable = (function($) {
     return {
 
         //main function
-        //main function
         init: function() {
             this.initMainMenu();
             this.initBreadCrumb();

@@ -15,7 +15,6 @@ var Base = (function($, window, document, undefined) {
     var base = {};
 
     // private functions & variables
-
     var _parseComposite = function(key, value, t, pre, pkey) {
         var opts     = {};
         var attrName = 'data-' + pre + (pkey ? (pkey.toLowerCase() + '-') : "") + key.toLowerCase();

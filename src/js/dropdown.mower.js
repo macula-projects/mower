@@ -24,9 +24,9 @@
         }
     };
 
-    // Apply to  all elements with the role="dropdown-menu" attribute
+    // Apply to  all elements with the rel="dropdown-menu" attribute
     // ===================================
     $(document)
-        .on('click.bs.dropdown.data-api', '[role=dropdown-menu]', isClosedOnDMBodyClick);
+        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu]', isClosedOnDMBodyClick);
 
 }(jQuery, Base || {}, window, document));

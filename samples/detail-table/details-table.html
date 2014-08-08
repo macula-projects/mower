@@ -12,14 +12,28 @@
     <link rel="stylesheet" href="../../css/mower.css">
 
     <style type="text/css" class="init">
-    td.details-control {
-        width: 36px;
-        background: url('../assets/img/details_open.png') no-repeat center center;
-        cursor: pointer;
-    }
-    tr.details td.details-control {
-        background: url('../assets/img/details_close.png') no-repeat center center;
-    }
+        td.details-control {
+        }
+        td.details-control:before {
+            content: "\f103";
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+            font-size: 18px;
+            position: absolute;
+        }
+        tr.details td.details-control {
+        }
+        tr.details td.details-control:before {
+            content: "\f102";
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+            font-size: 18px;
+            position: absolute;
+        }
     </style>
 
 </head>
@@ -130,7 +144,7 @@
                             <i class="fa fa-envelope"></i>
                             <span class="badge">9</span>
                         </a>
-                        <ul class="dropdown-menu mu-header-dropdown-list tasks" role="dropdown-menu" data-options="closeOnBodyClick:false">
+                        <ul class="dropdown-menu mu-header-dropdown-list tasks" rel="dropdown-menu" data-options="closeOnBodyClick:false">
                             <li class="mu-header-dropdown-list-header">
                                 <i class="fa fa-envelope-o"></i>
                                 9条未读消息
@@ -263,7 +277,7 @@
                         <li class="dropdown mu-menu">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" href="#" id="allcate-header">全部系统功能<i class="fa fa-list pull-right"></i></a>
                             <ul id="main-menu" class="dropdown-menu" aria-labelledby="allcate-header">
-                                
+
                             </ul>
                         </li>
                         <li>

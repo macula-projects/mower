@@ -140,26 +140,26 @@ var DTParser = (function(base, $, window, document, undefined) {
                                 break;
 
                             case 'first':
-                                btnDisplay = '<a href="#" data-toggle="tooltip" data-original-title="' + lang.sFirst + '"><i class="fa fa-step-backward"></i></a>';
+                                btnDisplay = '<a href="#" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sFirst + '"><i class="fa fa-step-backward"></i></a>';
                                 btnClass = button + (page > 0 ?
                                     '' : ' disabled');
 
                                 break;
 
                             case 'previous':
-                                btnDisplay = '<a href="#" data-toggle="tooltip" data-original-title="' + lang.sPrevious + '"><i class="fa fa-backward"></i></a>';
+                                btnDisplay = '<a href="#" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sPrevious + '"><i class="fa fa-backward"></i></a>';
                                 btnClass = button + (page > 0 ?
                                     '' : ' disabled');
                                 break;
 
                             case 'next':
-                                btnDisplay = '<a href="#" data-toggle="tooltip" data-original-title="' + lang.sNext + '"><i class="fa fa-forward"></i></a>';
+                                btnDisplay = '<a href="#" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sNext + '"><i class="fa fa-forward"></i></a>';
                                 btnClass = button + (page < pages - 1 ?
                                     '' : ' disabled');
                                 break;
 
                             case 'last':
-                                btnDisplay = '<a href="#" id="toolsss" data-toggle="tooltip" data-original-title="' + lang.sLast + '"><i class="fa fa-step-forward"></i></a>';
+                                btnDisplay = '<a href="#" id="toolsss" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sLast + '"><i class="fa fa-step-forward"></i></a>';
                                 btnClass = button + (page < pages - 1 ?
                                     '' : ' disabled');
                                 break;
@@ -384,7 +384,7 @@ var DTParser = (function(base, $, window, document, undefined) {
         jqTds[4].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[4] + '">';
         jqTds[5].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[5] + '">';
         jqTds[6].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[6] + '">';
-        jqTds[7].innerHTML = '<div class="mu-table-action"><a class="edit" data-table-action="save" data-toggle="tooltip" data-original-title="保存" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-table-action="cancel" data-toggle="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>';
+        jqTds[7].innerHTML = '<div class="mu-table-action"><a class="edit" data-table-action="save" data-toggle="tooltip" ref="tooltip" data-original-title="保存" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-table-action="cancel" data-toggle="tooltip" ref="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>';
     }
 
     function saveRow(oTable, nRow) {
@@ -396,7 +396,7 @@ var DTParser = (function(base, $, window, document, undefined) {
         oTable.fnUpdate(jqInputs[4].value, nRow, 4, false);
         oTable.fnUpdate(jqInputs[5].value, nRow, 5, false);
         oTable.fnUpdate(jqInputs[6].value, nRow, 6, false);
-        oTable.fnUpdate('<div class="mu-table-action"><a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>  <a class="delete" data-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a></div>', nRow, 7, false);
+        oTable.fnUpdate('<div class="mu-table-action"><a class="edit" data-table-action="edit" data-toggle="tooltip" ref="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>  <a class="delete" data-table-action="delete" data-toggle="tooltip" ref="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a></div>', nRow, 7, false);
         oTable.fnDraw();
     }
 
@@ -434,7 +434,7 @@ var DTParser = (function(base, $, window, document, undefined) {
                 if ($datatables) {
 
                     var aiNew = $datatables.fnAddData(['', '', '', '', '', '', '',
-                        '<div class="mu-table-action"><a class="edit" data-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-table-action="cancel" data-mode="new" data-toggle="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>'
+                        '<div class="mu-table-action"><a class="edit" data-table-action="edit" data-toggle="tooltip" ref="tooltip" data-original-title="编辑" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-table-action="cancel" data-mode="new" data-toggle="tooltip" ref="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>'
                     ]);
 
                     var nRow = $datatables.fnGetNodes(aiNew[0]);
@@ -578,12 +578,12 @@ var DTParser = (function(base, $, window, document, undefined) {
             attachActionToolTip();
         });
 
-    // Apply datatables to all elements with the role="datatables" attribute
+    // Apply datatables to all elements with the rel="datatables" attribute
     // ===================================
     $(document).on('ready update', function(event, updatedFragment) {
         var $root = $(updatedFragment || 'html');
 
-        $root.find('[role="datatables"]').each(function(index, el) {
+        $root.find('[rel="datatables"]').each(function(index, el) {
             var table = this,
                 $table = $(this),
                 columnDataSelector = '> thead > tr:last-child > th, > thead > tr:last-child > td',

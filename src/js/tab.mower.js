@@ -192,12 +192,12 @@
     })
     // add a element tab dynamic and loading page via jquery ajax
     .on('click.mu.atab.data-api', '[data-toggle^="ntab"]', function(e) {
-        var $this = $(this)
-        var title = $this.attr('data-title')
-        var href  =  $this.attr('data-href') || $this.attr('href')
-        href      = (href && href.replace(/.*(?=#[^\s]+$)/, '')) // strip for ie7
-        var $target = $($this.attr('data-target'))
-        var option = $.extend({}, $target.data(), $this.data())
+        var $this = $(this);
+        var title = $this.attr('data-title');
+        var href  =  $this.attr('data-href') || $this.attr('href');
+        href      = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
+        var $target = $($this.attr('data-target'));
+        var option = $.extend({}, $target.data(), $this.data());
 
         if ($this.is('a')) e.preventDefault()
 
@@ -207,11 +207,7 @@
             .one('hide', function() {
                 $this.is(':visible') && $this.focus()
             })
-    })
-
-
-    $(function() {
-
+    }).on('ready', function(event) {
         var $li = $('[data-toggle^="atab"]').parent('li.active').eq(0);
 
         var activate = function(li) {

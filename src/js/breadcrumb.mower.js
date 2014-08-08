@@ -24,10 +24,10 @@
     BreadCrumb.DEFAULTS = {
         prefix        : "breadcrumb",
         param         : '{}',
-        home          : '<i class="fa fa-home"></i>',
+        home          : '<i class="fa fa-home home"></i>',
         divider       : '<i class="fa fa-angle-right"></i>',
         favoritable   : true,
-        favoriteTmp   : '<a href="#" data-favorite="breadcrumb" data-toggle="tooltip"  data-original-title="\u6536\u85CF"><i class="fa fa-star"></i></a>',
+        favoriteTmp   : '<a href="#" data-favorite="breadcrumb" data-toggle="tooltip" ref="tooltip" data-original-title="\u6536\u85CF"><i class="fa fa-star fa-lg"></i></a>',
         keyboard      : false,
         favoriteClick : false,
         events: {
@@ -55,7 +55,7 @@
             if (this.options.favoritable === true && this.$element.children('li.favorite').length <= 0) {
                 var $li = $('<li class="favorite">' + this.options.favoriteTmp + '</li>');
                 this.$element.append($li);
-                $li.find('[data-toggle="tooltip"]').tooltip({'container': 'body'});
+                $li.find('[ref="tooltip"]').tooltip({'container': 'body'});
 
                 var that = this;
                 $li.on("click.favorite.mu.breadcrumb", 'a', function(event) {

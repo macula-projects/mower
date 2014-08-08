@@ -14,19 +14,18 @@
 
     // private functions & variables
 
-    // Apply popover to all elements with the data-toggle="popover" attribute
+    // Apply popover to all elements with the rel="popover" attribute
     // ===================================
     $(document).on('ready update',function(event, updatedFragment) {
         /* Act on the event */
         var $root = $(updatedFragment || 'html');
 
-        $root.find('[data-toggle=popover]').each(function(index, el) {
+        $root.find('[rel=popover]').each(function(index, el) {
             var $this = $(this);
 
             if (!$this.data('bs.popover')) {
 
                 var container = $this.data('container') || 'body';
-
                 var placement = $this.data('placement') || 'top';
 
                 $this.popover({

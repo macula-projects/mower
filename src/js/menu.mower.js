@@ -18,28 +18,28 @@
      * ====================== */
 
     var MainMenu = function(element, options) {
-        this.element  = element
+        this.element = element
         this.$element = $(element)
-        this.options  = options
-        this.nodes    = []
+        this.options = options
+        this.nodes = []
     }
 
     //you can put your plugin defaults in here.
     MainMenu.DEFAULTS = {
-        url      : '', //ajax url
-        param    : '{}', //data to be sent to the server.
-        method   : 'GET', // data sending method
-        dataType : 'json', // type of data loaded
-        template : function() {
+        url: '', //ajax url
+        param: '{}', //data to be sent to the server.
+        method: 'GET', // data sending method
+        dataType: 'json', // type of data loaded
+        template: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li data-menu-item-id="menuItem${id}" class="mu-menu-item"><h3><a mid="${id}" data-toggle="menu"><span>${name}</span></a><i class="fa fa-caret-right pull-right"></i></h3><div class="mu-menu-item-main" id="menuItem${id}"><div class="mu-menu-subitem-main">{{each(index2, menu2) children}}<dl><dt><a href="javascript:void(0)"><span>${menu2.name}</span></a></dt><dd>{{each(index3, menu3) menu2.children}}<em><a mid="${menu3.id}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a></em>{{/each}}</dd></dl>{{/each}}</div></div></li>');
+                return $.template(null, '<li  class="mu-menu-item"><h3><a mid="${id}" data-toggle="menu"><span>${name}</span></a><i class="fa fa-caret-right pull-right"></i></h3><div class="mu-menu-item-main" ><div class="mu-menu-subitem-main">{{each(index2, menu2) children}}<dl><dt><a href="javascript:void(0)"><span>${menu2.name}</span></a></dt><dd>{{each(index3, menu3) menu2.children}}<em><a mid="${menu3.id}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a></em>{{/each}}</dd></dl>{{/each}}</div></div></li>');
             } else {
                 return "";
             }
         },
         events: {
             clickMenu: "clickMenu.mu.mainMenu",
-            complete:"complete.mu.mainMenu",
+            complete: "complete.mu.mainMenu",
             populateError: "error.populate.mu.mainMenu",
             populateSuccess: "success.populate.mu.mainMenu"
         }
@@ -65,10 +65,36 @@
             });
 
             this.renderMainMenu(datasource.tree);
+
+            var that = this;
+            this.$element.on("mouseenter", "li.mu-menu-item", function(e) {
+                //stuff to do on mouse enter
+                var $menuItem = $(this),
+                    $subMenu = $menuItem.find('.mu-menu-item-main'),
+                    width = that.$element.outerWidth(),
+                    height = that.$element.outerHeight();
+
+                $menuItem.addClass('hover');
+                // Show the submenu
+                $subMenu.css({
+                    display: "block",
+                    top: -1,
+                    left: width - 2, // main should overlay submenu
+                    "min-height": height
+                });
+            }).on("mouseleave", "li.mu-menu-item", function(e) {
+                //stuff to do on mouse leave
+                var $menuItem = $(this),
+                    $subMenu = $menuItem.find('.mu-menu-item-main');
+
+                $menuItem.removeClass('hover');
+                // Hide the submenu and remove the row's highlighted look
+                $subMenu.css("display", "none");
+            });
+
             this.nodes = datasource.nodes;
 
             var e = $.Event(MainMenu.DEFAULTS.events.complete);
-
             this.$element.trigger(e);
 
             return datasource.tree;
@@ -91,16 +117,16 @@
 
             var that = this;
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
-                var mid      = $(this).attr('_mid') || $(this).attr('mid');
-                var href     = $(this).attr('data-href');
+                var mid = $(this).attr('_mid') || $(this).attr('mid');
+                var href = $(this).attr('data-href');
                 var instance = that.findMenuById(mid);
 
                 e = $.Event(MainMenu.DEFAULTS.events.clickMenu, {
-                    relatedTarget : that.element,
-                    target        : this,
-                    mid           : mid,
-                    href          : href,
-                    instance      : instance
+                    relatedTarget: that.element,
+                    target: this,
+                    mid: mid,
+                    href: href,
+                    instance: instance
                 });
 
                 that.$element.trigger(e);
@@ -108,9 +134,7 @@
 
         },
         populate: function() {
-
             var that = this;
-
             var purl = this.options.url + (this.options.url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
 
             $.ajax({
@@ -167,7 +191,7 @@
         this.each(function() {
             var element = this,
                 $element = $(element),
-                pluginKey = 'mu.menu',
+                pluginKey = 'mu.mainMenu',
                 instance = $.data(element, pluginKey)
 
 
@@ -209,12 +233,21 @@
 
     /* MAINMENU DATA-API
      * ============== */
+    $(document).on('ready', function(event, updatedFragment) {
+        /* Act on the event */
+        var $root = $(updatedFragment || 'html');
 
+        $root.find('[rel=mainMenu]').each(function(index, el) {
+            var $this = $(this);
+            if (!$this.data('mu.mainMenu')) {
+                $(this).mainMenu();
+            }
+        });
+    });
 
 
     /* HELP METHOD
      *=================*/
-
     //返回一个树形的根集合，对原有的数组顺序不改变，但会增加parent和children两个属性
     Array.prototype.makeLevelTree = function(option) {
         var o = option || {},
@@ -314,7 +347,10 @@
         }
 
         sorted = [];
-        return {"tree":root,"nodes":tmpNodes};
+        return {
+            "tree": root,
+            "nodes": tmpNodes
+        };
     };
 
 })(JSON || {}, jQuery, window, document);

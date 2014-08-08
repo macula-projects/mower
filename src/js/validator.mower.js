@@ -13,13 +13,13 @@
 
     // private functions & variables
 
-    // Apply tooltip to all elements with the data-toggle="tooltip" attribute
+    // Apply tooltip to all elements with the rel="validate-form" attribute
     // ===================================
     $(document).on('ready update',function(event, updatedFragment) {
         /* Act on the event */
         var $root = $(updatedFragment || 'html');
 
-        $root.find('[role=validate-form]').each(function(index, el) {
+        $root.find('[rel=validate-form]').each(function(index, el) {
             var $this = $(this);
 
             if (!$this.data('bootstrapValidator')) {

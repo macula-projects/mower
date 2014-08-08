@@ -14,14 +14,14 @@
 
     // private functions & variables
 
-    // Apply tooltip to all elements with the data-toggle="tooltip" attribute
+    // Apply tooltip to all elements with the rel="tooltip" attribute
     // ===================================
 
     $(document).on('ready update', function(event, updatedFragment) {
         /* Act on the event */
         var $root = $(updatedFragment || 'html');
 
-        $root.find('[data-toggle=tooltip]').each(function(index, el) {
+        $root.find('[rel=tooltip]').each(function(index, el) {
             var $this = $(this);
 
             if (!$this.data('bs.tooltip')) {
