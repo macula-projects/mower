@@ -156,79 +156,21 @@
             return target;
         },
         _pushContent: function(panelId, _callback) {
-            var $li = this.$element.find('[data-target="' + panelId + '"]');
+            var $li = this.$element.find('[data-target="' + panelId + '"]');//header
             var url = this._getHref($li);
 
             if (url) {
 
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
 
-                var that = this;
+                var ajaxOpt = {data: this.options.param};
 
-                var ajaxOpt = {
-                    url: url,
-                    data: this.options.param,
-                    dataType: 'html',
-                    success: function(data, status, xhr) {
-                        var ct = xhr.getResponseHeader('content-type') || '';
-                        if (ct.indexOf('json') > -1) {
-                            that.$element.trigger('ajaxError', [xhr, ajaxOpt]); //global event
-                            return;
-                        }
-                        var e;
-                        if (data != null && data.error != null) {
-                            e = $.Event(BreadCrumb.DEFAULTS.events.populateError, {
-                                "data": data
-                            });
-                            that.$element.trigger(e);
-                        } else {
-                            //trigger populdate success event 
-                            e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
-                                "data": data
-                            });
-                            that.$element.trigger(e);
+                var target = this.$element.data('target');
+                var $panel = $('<div data-panel="' + panelId + '"></div>');
+                $(target).append($panel); 
 
-                            var target = that.$element.data('target');
-                            var $panel = $('<div data-panel="' + panelId + '"></div>');
-                            $(target).append($panel.append($.parseHTML(data))); //not including script tag snippet
-
-                            //hide siblings
-                            _callback && _callback.apply(that); 
-
-                            //reinit document ready function in the new fragment 
-                            $(document).trigger('update', target);
-
-                            //append & apply javascript 
-                            var scripts = [];
-                            $(data).filter('script').each(function() {
-                                $(this).attr('data-ref-panel', panelId);
-                                if (this.src) {
-                                    scripts.push(this);
-                                } else {
-                                    scripts.unshift(this);
-                                }
-                            });
-                            $.each(scripts, function(index, val) {
-                                /* iterate through array or object */
-                                $(target).append(val);
-                            });
-
-                            //listen on panel remove event
-                            $panel.on('remove', function(event) {
-                                var id = $(this).data('panel');
-                                id && $('[data-ref-panel="'+id+'"]').remove();
-                            });
-                        }
-                    },
-                    error: function(data) {
-                        var e = $.Event(BreadCrumb.DEFAULTS.events.populateError, {
-                            "data": data
-                        });
-                        that.$element.trigger(e);
-                    }
-                };
-
-                $.ajax(ajaxOpt);
+                //call jquery.fn extend appendcontent defined in utils.mower.js
+                $panel.appendContents(url,ajaxOpt,_callback,true);
             }
         },
         /**
@@ -246,11 +188,19 @@
             //update header in breadcrumb
             var panelId = this._pushHeader(label, url);
 
-            var callback = function() {
+            var that = this;
+            var callback = function(data) {
                 //hide siblings
-                $(this.$element.data('target'))
+                $(that.$element.data('target'))
                     .find('[data-panel="' + panelId + '"]')
-                    .prev().addClass('hide');
+                    .prev().addClass('hidden');
+
+                //trigger populdate success event 
+                var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
+                    "data": data
+                });
+
+                that.$element.trigger(e);
             };
 
             //update breadcrumb's target content
@@ -302,12 +252,20 @@
             return popArray;
         },
         _popContent: function(popArray) {
+
+            var showPanelId = popArray.pop();
+
             var that = this;
             $.each(popArray, function(index, val) {
                 /* iterate through array or object */
                 $(that.$element.data("target")).children()
                     .filter('[data-panel="' + val + '"]').remove();
             });
+
+            //show self
+            $(this.$element.data('target'))
+                .children('[data-panel="' + showPanelId + '"]')
+                .removeClass('hidden');
         },
         pop: function(popCount, relatedTarget) {
 
@@ -316,16 +274,8 @@
             //update header in breadcrumb
             var popArray = this._popHeader(popCount);
 
-            var showPanelId = popArray.pop();
-
             //update breadcrumb's target
             this._popContent(popArray);
-
-            //show self
-            $(this.$element.data('target'))
-                .children('[data-panel="' + showPanelId + '"]')
-                .removeClass('hide');
-
 
             this._removeFavorite();
 

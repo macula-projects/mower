@@ -160,7 +160,7 @@
                     }
                 },
                 error: function(data) {
-                    e = $.Event(MainMenu.DEFAULTS.events.populateError, {
+                    var e = $.Event(MainMenu.DEFAULTS.events.populateError, {
                         "data": data
                     });
                     that.$element.trigger(e);
