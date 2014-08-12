@@ -10,7 +10,7 @@
  * ======================================================================== */
 
 ;
-(function(json, guid, $, window, document, undefined) {
+(function(json, uuid, $, window, document, undefined) {
 
     'use strict';
 
@@ -28,7 +28,7 @@
     AModal.VERSION = '3.2.0'
 
     AModal.DEFAULTS = {
-        prefix: 'amodal', // prefix of target modal id
+        prefix: 'amodal-id-', // prefix of target modal id
         selector: '', // target modal
         title: 'AModal',
         param: '{}',
@@ -85,7 +85,7 @@
                 } else {
 
                     var $dialog = $(that.options.template),
-                        dialogId = that.options.selector ? (that.options.prefix + that.options.selector) : guid(that.options.prefix);
+                        dialogId = that.options.selector ? (that.options.prefix + that.options.selector) : uuid(that.options.prefix);
 
                     $dialog.attr("id", dialogId);
                     $dialog.find(".modal-header > h3 ").html(that.options.title);
@@ -155,4 +155,4 @@
         Plugin.call($this, 'show');
     })
 
-})(JSON || {}, Guid || {}, jQuery, window, document);
+})(JSON || {}, UniqueId || {}, jQuery, window, document);
