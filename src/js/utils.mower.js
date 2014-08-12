@@ -7,6 +7,15 @@
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  * ======================================================================== */
 
+
+var UniqueId = (function() {
+ 	return function(prefix) {
+ 		do prefix += ~~(Math.random() * 1000000)
+ 		while (document.getElementById(prefix))
+ 		return prefix
+ 	};
+ })();
+
 Date.prototype.setISO8601 = function(string) {
 	if (!string) {
 		return;
@@ -79,7 +88,7 @@ String.prototype.length2 = function() {
 	return this.length + (cArr == null ? 0 : cArr.length);
 };
 
-(function($, window, document, undefined) {
+(function(uuid, $, window, document, undefined) {
 
 	$.fn.extend({
 		/** 获取该元素所隶属的应用上下文信息 */
@@ -255,23 +264,26 @@ String.prototype.length2 = function() {
 		updateContents: function(url, ajaxOptions, callback, isScrollTop) {
 			var update = function(html, container) {
 				var $this = $(html),
+					$container = $(container),
 					id = $this.attr('id'),
-					$container = $(container);
+					ajaxId = $this.attr('data-uuid');
 
 				if (id) {
 					var existed = $container.find('#' + id);
 					if (existed.exists()) {
-						$container.find('#' + id).html($this.html()).attr('base', $this.attr('base'));
-
+						$container.find('#' + id).html($this.html())
+												 .attr('base', $this.attr('base'))
+												 .attr('data-uuid', ajaxId);
 						$this = existed;
 					} else {
-						$container.html($this.html()).attr('base', $this.attr('base'));
-
+						$container.html($this.html())
+								  .attr('base', $this.attr('base'))
+								  .attr('data-uuid', ajaxId);
 						$this = $container;
 					}
 
 					$this.on("remove", function() {
-						$('html').find('[data-ref-target="' + id + '"]').remove();
+						$('html').find('[data-ref-target="' + this.attr('data-uuid') + '"]').remove();
 					});
 				}
 			};
@@ -281,10 +293,13 @@ String.prototype.length2 = function() {
 		replaceContents: function(url, ajaxOptions, callback, isScrollTop) {
 			var replace = function(html, container) {
 				var $this = $(html),
+					$container = $(container),
 					id = $this.attr('id'),
-					$container = $(container);
+					ajaxId = $this.attr('data-uuid');
 
 				if (id) {
+					$this.attr('data-uuid',ajaxId);
+
 					var existed = $container.find('#' + id);
 					if (existed.exists()) {
 						$container.find('#' + id).replaceWith($this);
@@ -293,7 +308,7 @@ String.prototype.length2 = function() {
 					}
 
 					$this.on("remove", function() {
-						$('html').find('[data-ref-target="' + id + '"]').remove();
+						$('html').find('[data-ref-target="' + this.attr('data-uuid') + '"]').remove();
 					});
 				}
 			};
@@ -303,8 +318,12 @@ String.prototype.length2 = function() {
 		appendContents: function(url, ajaxOptions, callback, isScrollTop) {
 			var append = function(html, container) {
 				var $this = $(html),
+					$container = $(container),
 					id = $this.attr('id'),
-					$container = $(container);
+					ajaxId = $this.attr('data-uuid');
+
+				$this.attr('data-uuid',ajaxId);	
+
 				if (id) {
 					var existed = $container.find('#' + id);
 					if (existed.exists()) {
@@ -312,12 +331,12 @@ String.prototype.length2 = function() {
 					} else {
 						$container.append($this);
 					}
-				}else{
+				} else {
 					$container.append($this);
 				}
 
 				$this.on("remove", function() {
-					$('html').find('[data-ref-target="' + id + '"]').remove();
+					$('html').find('[data-ref-target="' + $this.attr('data-uuid') + '"]').remove();
 				});
 			};
 
@@ -325,7 +344,8 @@ String.prototype.length2 = function() {
 		},
 		updateHtml: function(data, callback, action) {
 			var self = $(this),
-				$html = $(data);
+				$html = $(data),
+				ajaxId = uuid('ajax-uid-');
 
 			//update title
 			var titlepart = $html.filter('title');
@@ -335,6 +355,7 @@ String.prototype.length2 = function() {
 
 			//update content
 			$($.parseHTML(data)).each(function() {
+				$(this).attr('data-uuid', ajaxId);
 				action && $.isFunction(action) && action(this, self);
 			});
 
@@ -355,6 +376,7 @@ String.prototype.length2 = function() {
 				if (id) {
 					self.find('#' + id).remove();
 				}
+				scripts[i].attr('data-ref-target', ajaxId);
 				self.append(scripts[i]);
 			}
 
@@ -363,7 +385,7 @@ String.prototype.length2 = function() {
 				callback.apply(self, [data]);
 			}
 
-			return self;//keep chain
+			return self; //keep chain
 		},
 		_privateProcessContents: function(url, ajaxOptions, action, callback, isScrollTop) {
 			var self = $(this),
@@ -431,7 +453,7 @@ String.prototype.length2 = function() {
 		})
 	});
 
-}(jQuery, window, document));
+}(UniqueId || {}, jQuery, window, document));
 
 JSON = {
 	useHasOwn: ({}.hasOwnProperty ? true : false),
@@ -529,10 +551,3 @@ JSON = {
 	}
 };
 
-var Guid = (function() {
-	return function(prefix) {
-		do prefix += ~~(Math.random() * 1000000)
-		while (document.getElementById(prefix))
-		return prefix
-	};
-})();
