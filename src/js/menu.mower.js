@@ -117,11 +117,14 @@
 
             var that = this;
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
-                var mid = $(this).attr('_mid') || $(this).attr('mid');
-                var href = $(this).attr('data-href');
+                var $this = $(this);
+                var mid = $this.attr('_mid') || $this.attr('mid');
+                var href = $this.attr('data-href');
                 var instance = that.findMenuById(mid);
 
-                e = $.Event(MainMenu.DEFAULTS.events.clickMenu, {
+                if ($this.is('a')) e.preventDefault();
+
+                var event = $.Event(MainMenu.DEFAULTS.events.clickMenu, {
                     relatedTarget: that.element,
                     target: this,
                     mid: mid,
@@ -129,7 +132,7 @@
                     instance: instance
                 });
 
-                that.$element.trigger(e);
+                that.$element.trigger(event);
             });
 
         },

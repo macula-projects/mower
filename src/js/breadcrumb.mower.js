@@ -49,7 +49,6 @@
             var $element = $(element);
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
             this.options.param = json.decode(this.options.param || '{}');
-
         },
         _appendFavorite: function() {
             if (this.options.favoritable === true && this.$element.children('li.favorite').length <= 0) {
@@ -155,31 +154,42 @@
             this.$element.append(li);
             return target;
         },
-        _pushContent: function(panelId, _callback) {
-            var $li = this.$element.find('[data-target="' + panelId + '"]');//header
+        _pushAjaxContent: function(panelId, _callback) {
+            var $li = this.$element.find('[data-target="' + panelId + '"]'); //header
             var url = this._getHref($li);
 
             if (url) {
 
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
 
-                var ajaxOpt = {data: this.options.param};
+                var ajaxOpt = {
+                    data: this.options.param
+                };
 
                 var target = this.$element.data('target');
                 var $panel = $('<div data-panel="' + panelId + '"></div>');
-                $(target).append($panel); 
+                $(target).append($panel);
 
                 //call jquery.fn extend appendcontent defined in utils.mower.js
-                $panel.appendContents(url,ajaxOpt,_callback,true);
+                $panel.appendAajxContents(url, ajaxOpt, _callback, true);
             }
+        },
+        _pushStaticContent: function(panelId, staticContent, _callback) {
+            var target = this.$element.data('target');
+            var $panel = $('<div data-panel="' + panelId + '"></div>');
+            $(target).append($panel);
+
+            //call jquery.fn extend appendStaticContents defined in utils.mower.js
+            $panel.appendStaticContents(staticContent);
         },
         /**
          * [push add path in the breadcrumb]
          * @param  {[string]} path label
          * @param  {[string]} url ajax request page content url
-         * @param  {[string]} relatedTarget
+         * @param  {[string]} content  html snippet,not ajax load via parameter url any more
+         * @param  {[string]} relatedTarget trigger original
          */
-        push: function(label, url, relatedTarget) {
+        push: function(label, url, content, relatedTarget) {
 
             if (!label || !url) return;
 
@@ -204,10 +214,14 @@
             };
 
             //update breadcrumb's target content
-            this._pushContent(panelId, callback);
+            if (content) {
+                this._pushStaticContent(panelId, content, callback);
+            } else {
+                this._pushAjaxContent(panelId, callback);
+            }
 
             var trigger = relatedTarget || this.element;
-            $(this.element).trigger(BreadCrumb.DEFAULTS.events.pushed, {
+            $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
                 "path": this._getXPath(this.$element.children('li:not(.favorite)'))
             });
         },
@@ -373,7 +387,7 @@
 
             $target
                 .breadcrumb(option)
-                .breadcrumb("push", label, href, this)
+                .breadcrumb("push", label, href,null,this)
                 .one('hide', function() {
                     $this.is(':visible') && $this.focus()
                 })

@@ -30,3 +30,4 @@
         .on('click.bs.dropdown.data-api', '[rel=dropdown-menu]', isClosedOnDMBodyClick);
 
 }(jQuery, Base || {}, window, document));
+

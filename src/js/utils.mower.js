@@ -9,12 +9,12 @@
 
 
 var UniqueId = (function() {
- 	return function(prefix) {
- 		do prefix += ~~(Math.random() * 1000000)
- 		while (document.getElementById(prefix))
- 		return prefix
- 	};
- })();
+	return function(prefix) {
+		do prefix += ~~(Math.random() * 1000000)
+		while (document.getElementById(prefix))
+		return prefix
+	};
+})();
 
 Date.prototype.setISO8601 = function(string) {
 	if (!string) {
@@ -89,6 +89,73 @@ String.prototype.length2 = function() {
 };
 
 (function(uuid, $, window, document, undefined) {
+
+	var _update = function(html, container) {
+		var $this = $(html),
+			$container = $(container),
+			id = $this.attr('id'),
+			ajaxId = $this.attr('data-uuid');
+
+		if (id) {
+			var existed = $container.find('#' + id);
+			if (existed.exists()) {
+				$container.find('#' + id).html($this.html())
+					.attr('base', $this.attr('base'))
+					.attr('data-uuid', ajaxId);
+				$this = existed;
+			} else {
+				$container.html($this.html())
+					.attr('base', $this.attr('base'))
+					.attr('data-uuid', ajaxId);
+				$this = $container;
+			}
+
+			ajaxId && $this.on("remove", function() {
+				$('html').find('[data-ref-target="' + this.attr('data-uuid') + '"]').remove();
+			});
+		}
+	};
+
+	var _replace = function(html, container) {
+		var $this = $(html),
+			$container = $(container),
+			id = $this.attr('id'),
+			ajaxId = $this.attr('data-uuid');
+
+		if (id) {
+			$this.attr('data-uuid', ajaxId);
+
+			var existed = $container.find('#' + id);
+			if (existed.exists()) {
+				$container.find('#' + id).replaceWith($this);
+			} else {
+				$container.replaceWith($this);
+			}
+
+			ajaxId && $this.on("remove", function() {
+				$('html').find('[data-ref-target="' + this.attr('data-uuid') + '"]').remove();
+			});
+		}
+	};
+
+	var _append = function(html, container) {
+		var $this = $(html),
+			$container = $(container),
+			id = $this.attr('id'),
+			ajaxId = $this.attr('data-uuid');
+
+		$this.attr('data-uuid', ajaxId);
+
+		if (id && $container.find('#' + id).length > 0) {
+			$container.find('#' + id).append($this);
+		} else {
+			$container.append($this);
+		}
+
+		ajaxId && $this.on("remove", function() {
+			$('html').find('[data-ref-target="' + $this.attr('data-uuid') + '"]').remove();
+		});
+	};
 
 	$.fn.extend({
 		/** 获取该元素所隶属的应用上下文信息 */
@@ -261,88 +328,25 @@ String.prototype.length2 = function() {
 			}, ajaxOptions || {});
 			$.ajax(s);
 		},
-		updateContents: function(url, ajaxOptions, callback, isScrollTop) {
-			var update = function(html, container) {
-				var $this = $(html),
-					$container = $(container),
-					id = $this.attr('id'),
-					ajaxId = $this.attr('data-uuid');
-
-				if (id) {
-					var existed = $container.find('#' + id);
-					if (existed.exists()) {
-						$container.find('#' + id).html($this.html())
-												 .attr('base', $this.attr('base'))
-												 .attr('data-uuid', ajaxId);
-						$this = existed;
-					} else {
-						$container.html($this.html())
-								  .attr('base', $this.attr('base'))
-								  .attr('data-uuid', ajaxId);
-						$this = $container;
-					}
-
-					$this.on("remove", function() {
-						$('html').find('[data-ref-target="' + this.attr('data-uuid') + '"]').remove();
-					});
-				}
-			};
-
-			$(this)._privateProcessContents(url, ajaxOptions, update, callback, isScrollTop);
+		updateAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
+			$(this)._privateProcessContents(url, ajaxOptions, _update, callback, isScrollTop);
 		},
-		replaceContents: function(url, ajaxOptions, callback, isScrollTop) {
-			var replace = function(html, container) {
-				var $this = $(html),
-					$container = $(container),
-					id = $this.attr('id'),
-					ajaxId = $this.attr('data-uuid');
-
-				if (id) {
-					$this.attr('data-uuid',ajaxId);
-
-					var existed = $container.find('#' + id);
-					if (existed.exists()) {
-						$container.find('#' + id).replaceWith($this);
-					} else {
-						$container.replaceWith($this);
-					}
-
-					$this.on("remove", function() {
-						$('html').find('[data-ref-target="' + this.attr('data-uuid') + '"]').remove();
-					});
-				}
-			};
-
-			$(this)._privateProcessContents(url, ajaxOptions, replace, callback, isScrollTop);
+		replaceAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
+			$(this)._privateProcessContents(url, ajaxOptions, _replace, callback, isScrollTop);
 		},
-		appendContents: function(url, ajaxOptions, callback, isScrollTop) {
-			var append = function(html, container) {
-				var $this = $(html),
-					$container = $(container),
-					id = $this.attr('id'),
-					ajaxId = $this.attr('data-uuid');
-
-				$this.attr('data-uuid',ajaxId);	
-
-				if (id) {
-					var existed = $container.find('#' + id);
-					if (existed.exists()) {
-						$container.find('#' + id).append($this);
-					} else {
-						$container.append($this);
-					}
-				} else {
-					$container.append($this);
-				}
-
-				$this.on("remove", function() {
-					$('html').find('[data-ref-target="' + $this.attr('data-uuid') + '"]').remove();
-				});
-			};
-
-			$(this)._privateProcessContents(url, ajaxOptions, append, callback, isScrollTop);
+		appendAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
+			$(this)._privateProcessContents(url, ajaxOptions, _append, callback, isScrollTop);
 		},
-		updateHtml: function(data, callback, action) {
+		updateStaticContents: function(data, callback) {
+			$(this).updateHtml(data, _update, callback);
+		},
+		replaceStaticContents: function(data, callback) {
+			$(this).updateHtml(data, _replace, callback);
+		},
+		appendStaticContents: function(data, callback) {
+			$(this).updateHtml(data, _append, callback);
+		},
+		updateHtml: function(data, action, callback) {
 			var self = $(this),
 				$html = $(data),
 				ajaxId = uuid('ajax-uid-');
@@ -353,9 +357,10 @@ String.prototype.length2 = function() {
 				document.title = titlepart.text();
 			}
 
+			var exclude = ':not(title)';
 			//update content
-			$($.parseHTML(data)).each(function() {
-				$(this).attr('data-uuid', ajaxId);
+			$($.parseHTML(data)).filter(exclude).each(function() {
+				!$(this).attr('data-uuid') && $(this).attr('data-uuid', ajaxId);
 				action && $.isFunction(action) && action(this, self);
 			});
 
@@ -375,8 +380,7 @@ String.prototype.length2 = function() {
 				var id = scripts[i].attr('id');
 				if (id) {
 					self.find('#' + id).remove();
-				}
-				scripts[i].attr('data-ref-target', ajaxId);
+				}!scripts[i].attr('data-ref-target') && scripts[i].attr('data-ref-target', ajaxId);
 				self.append(scripts[i]);
 			}
 
@@ -416,7 +420,7 @@ String.prototype.length2 = function() {
 					self.children().removeClass('hidden');
 					self.css({
 						opacity: '0.0'
-					}).updateHtml(data, callback, action).delay(50).animate({
+					}).updateHtml(data, action, callback).delay(50).animate({
 						opacity: '1.0'
 					}, 300);
 
@@ -550,4 +554,3 @@ JSON = {
 		return eval("(" + json + ')');
 	}
 };
-
