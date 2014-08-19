@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
                 ' * Licensed under <%= _.pluck(pkg.licenses, "type").join(", ") %> (<%= _.pluck(pkg.licenses, "url").join(", ") %>)\n' +
                 ' */\n',
-            jqueryCheck: 'if (typeof jQuery === \'undefined\') { throw new Error(\'Mower\\\'s JavaScript requires jQuery\') }\n\n',
+            jqueryCheck: 'if (typeof jQuery === \'undefined\') { throw new Error(\'<%= pkg.name %>\\\'s JavaScript requires jQuery\') }\n\n',
             build_date: '<%= grunt.template.today("yyyymmddHHMMss") %>',
             build_num: process.env.BUILD_NUMBER || 0, // Jenkins build number if available
             version_string: '<%= pkg.version %>-<%= meta.build_num %>'
@@ -36,25 +36,26 @@ module.exports = function(grunt) {
                 options: {
                     open: true,
                     base: [
-                        'dist' // This is the base file folder. we suppose our index.html is located in this folder
+                        'dist/docs/' // This is the base file folder. we suppose our index.html is located in this folder
                     ]
                 }
             }
         },
         // Task configuration
         clean: { // clean all
-            development: ['dist/css', 'dist/js'],
-            production: ['dist/**']
+            development: ['dist/<%= pkg.name %>/css', 'dist/<%= pkg.name %>/js', "dist/docs/dist"],
+            release: ['dist/**']
         },
         concat: { //files concat
             options: {
-                banner: '<%= meta.banner %>',
-                stripBanners: false,
                 separator: ';'
             },
             buildcss: {
+                options: {
+                    banner: '<%= meta.banner %>'
+                },
                 files: {
-                    'dist/css/<%= pkg.name %>-modules.css': ['src/css/modules/**/*.css', '!**/*.min.css']
+                    'dist/<%= pkg.name %>/css/<%= pkg.name %>-modules.css': ['src/css/modules/**/*.css', '!**/*.min.css']
                 }
             },
             buildjs: {
@@ -62,21 +63,59 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>\n<%= meta.jqueryCheck %>'
                 },
                 files: {
-                    'dist/js/<%= pkg.name %>.js': [
-                        'src/js/base.mower.js',
-                        'src/js/utils.mower.js',
-                        'src/js/breadcrumb.mower.js',
-                        'src/js/datatables.mower.js',
-                        'src/js/dropdown.hover.mower.js',
-                        'src/js/dropdown.mower.js',
-                        'src/js/magnifier.mower.js',
-                        'src/js/menu.mower.js',
-                        'src/js/modal.mower.js',
-                        'src/js/popover.mower.js',
-                        'src/js/tab.mower.js',
-                        'src/js/tooltip.mower.js',
-                        'src/js/utils.mower.js',
-                        'src/js/validator.mower.js'
+                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.js': [
+                        'src/js/base.<%= pkg.name %>.js',
+                        'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/breadcrumb.<%= pkg.name %>.js',
+                        'src/js/datatables.<%= pkg.name %>.js',
+                        'src/js/dropdown.hover.<%= pkg.name %>.js',
+                        'src/js/dropdown.<%= pkg.name %>.js',
+                        'src/js/magnifier.<%= pkg.name %>.js',
+                        'src/js/menu.<%= pkg.name %>.js',
+                        'src/js/modal.<%= pkg.name %>.js',
+                        'src/js/popover.<%= pkg.name %>.js',
+                        'src/js/tab.<%= pkg.name %>.js',
+                        'src/js/tooltip.<%= pkg.name %>.js',
+                        'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/validator.<%= pkg.name %>.js'
+                    ]
+                }
+            },
+            mergecss: {
+                options: {
+                    separator: grunt.util.linefeed
+                },
+                files: {
+                    'dist/<%= pkg.name %>/css/<%= pkg.name %>.css': [
+                        'plugins/font-awesome/css/font-awesome.css',
+                        'dist/<%= pkg.name %>/css/<%= pkg.name %>.css',
+                        'plugins/bootstrapValidator/dist/css/bootstrapValidator.css',
+                        'plugins/jquery-treetable/stylesheets/jquery.treetable.css'
+                    ],
+                    'dist/<%= pkg.name %>/css/<%= pkg.name %>.min.css': [
+                        'plugins/font-awesome/css/font-awesome.min.css',
+                        'dist/<%= pkg.name %>/css/<%= pkg.name %>.min.css',
+                        'plugins/bootstrapValidator/dist/css/bootstrapValidator.min.css',
+                        'plugins/jquery-treetable/stylesheets/jquery.treetable.min.css'
+                    ]
+                }
+            },
+            mergejs: {
+                options: {
+                    separator: grunt.util.linefeed + ";"
+                },
+                files: {
+                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.js': [
+                        'plugins/bootstrapValidator/dist/js/bootstrapValidator.js',
+                        'plugins/datatables/media/js/jquery.dataTables.js',
+                        'plugins/jquery-treetable/javascripts/src/jquery.treetable.js',
+                        'dist/<%= pkg.name %>/js/<%= pkg.name %>.js'
+                    ],
+                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.min.js': [
+                        'plugins/bootstrapValidator/dist/js/bootstrapValidator.min.js',
+                        'plugins/datatables/media/js/jquery.dataTables.min.js',
+                        'plugins/jquery-treetable/javascripts/src/jquery.treetable.min.js',
+                        'dist/<%= pkg.name %>/js/<%= pkg.name %>.min.js'
                     ]
                 }
             }
@@ -87,58 +126,56 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>'
                 },
                 files: {
-                    'dist/js/<%= pkg.name %>.min.js': ['dist/js/<%= pkg.name %>.js']
+                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.min.js': ['dist/<%= pkg.name %>/js/<%= pkg.name %>.js']
                 }
-            }
+            },
+            minify_treetable: {
+                options: {
+                    preserveComments: 'some'
+                },
+                files: {
+                    'plugins/jquery-treetable/javascripts/src/jquery.treetable.min.js': ['plugins/jquery-treetable/javascripts/src/jquery.treetable.js']
+                }
+            },
         },
         less: { //convert less to css
             buildcore: {
                 options: {
+                    banner: '<%= meta.banner %>',
                     strictMath: true
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>.css': 'src/css/mower.less'
+                    'dist/<%= pkg.name %>/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>.less'
                 }
             },
             buildtheme: {
                 options: {
+                    banner: '<%= meta.banner %>',
                     strictMath: true
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>-theme.css': 'src/css/themes/theme.less'
+                    'dist/<%= pkg.name %>/css/<%= pkg.name %>-theme.css': 'src/css/themes/theme.less'
                 }
             }
         },
         cssmin: { //css compress
-            options: {
-                banner: '<%= meta.banner %>'
-            },
             minify: {
                 expand: true,
-                cwd: 'dist/css/',
+                cwd: 'dist/<%= pkg.name %>/css/',
                 src: ['*.css', '!*.min.css'],
-                dest: 'dist/css/',
+                dest: 'dist/<%= pkg.name %>/css/',
                 ext: '.min.css'
-            }
-        },
-        usebanner: { //set banner in the files
-            build: {
-                options: {
-                    position: 'top',
-                    banner: '<%= meta.banner %>'
-                },
+            },
+            minify_treetable: {
                 files: {
-                    src: [
-                        'dist/css/<%= pkg.name %>.css',
-                        'dist/css/<%= pkg.name %>-theme.css'
-                    ]
+                    'plugins/jquery-treetable/stylesheets/jquery.treetable.min.css': ['plugins/jquery-treetable/stylesheets/jquery.treetable.css']
                 }
-            }
+            },
         },
         compress: {
             build: {
                 options: {
-                    archive: 'mower_' + '<%= meta.version_string %>_<%= meta.build_date %>' + '.zip'
+                    archive: '<%= pkg.name %>_' + '<%= meta.version_string %>_<%= meta.build_date %>' + '.zip'
                 },
                 files: [{
                     expand: true,
@@ -149,40 +186,52 @@ module.exports = function(grunt) {
             }
         },
         copy: { //copy files to dist
-            build: {
+            development: {
                 files: [
+                    // includes files within path and its sub-directories
+                    {
+                        expand: true,
+                        cwd: 'dist/<%= pkg.name %>/',
+                        src: ['**'],
+                        dest: 'dist/docs/dist/'
+                    }
+                ]
+            },
+            release: {
+                files: [
+                    // includes files within path and its sub-directories
+                    {
+                        expand: true,
+                        src: ['bootstrap/**'],
+                        dest: 'dist/'
+                    },
+                    {
+                        expand: true,
+                        src: ['bootstrap/**'],
+                        dest: 'dist/docs/assets/vendor/'
+                    },
+                    {
+                        expand: true,
+                        src: ['libs/**'],
+                        dest: 'dist/docs/assets/'
+                    },
                     // includes files within path and its sub-directories
                     {
                         expand: true,
                         src: ['libs/**'],
                         dest: 'dist/'
                     },
-
-                    {
-                        expand: true,
-                        src: ['plugins/**'],
-                        dest: 'dist/'
-                    },
-
                     // includes files within path
                     {
                         expand: true,
-                        cwd: 'src/',
-                        src: ['images/*'],
-                        dest: 'dist/'
+                        cwd: 'plugins/font-awesome/',
+                        src: ['fonts/*'],
+                        dest: 'dist/<%= pkg.name %>/'
                     },
-
                     // includes files within path and its sub-directories
                     {
                         expand: true,
                         src: ['docs/**'],
-                        dest: 'dist/'
-                    },
-
-                    // includes files within path and its sub-directories
-                    {
-                        expand: true,
-                        src: ['samples/**'],
                         dest: 'dist/'
                     }
                 ]
@@ -254,14 +303,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bowercopy');
 
 
-    // Creates the 'serve' task
-    grunt.registerTask('serve', ['connect:all', 'watch']);
+    // Creates the 'server' task
+    grunt.registerTask('server', ['connect:all', 'watch']);
 
     // grunt dev
-    grunt.registerTask('dev', ['clean:development', 'less', 'concat', 'uglify', 'cssmin', 'usebanner']);
+    grunt.registerTask('dev', ['clean:development', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy:development']);
 
     // grunt release
-    grunt.registerTask('pro', ['clean:production', 'less', 'concat', 'uglify', 'cssmin', 'usebanner', 'copy', 'compress']);
+    grunt.registerTask('release', ['compress','clean:release', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
 
     // grunt
     grunt.registerTask('default', ['dev']);

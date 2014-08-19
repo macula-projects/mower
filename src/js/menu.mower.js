@@ -251,7 +251,7 @@
 
     /* HELP METHOD
      *=================*/
-    //·µ»ØÒ»¸öÊ÷ĞÎµÄ¸ù¼¯ºÏ£¬¶ÔÔ­ÓĞµÄÊı×éË³Ğò²»¸Ä±ä£¬µ«»áÔö¼ÓparentºÍchildrenÁ½¸öÊôĞÔ
+    //è¿”å›ä¸€ä¸ªæ ‘å½¢çš„æ ¹é›†åˆï¼Œå¯¹åŸæœ‰çš„æ•°ç»„é¡ºåºä¸æ”¹å˜ï¼Œä½†ä¼šå¢åŠ parentå’Œchildrenä¸¤ä¸ªå±æ€§
     Array.prototype.makeLevelTree = function(option) {
         var o = option || {},
             id = o.id || 'id',

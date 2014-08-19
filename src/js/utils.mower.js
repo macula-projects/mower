@@ -1,3 +1,10 @@
+/*
+ * Created with Sublime Text 2.
+ * User: song.chen
+ * Date: 2014-08-15
+ * Time: 13:41:38
+ * Contact: song.chen@qunar.com
+ */
 /** ========================================================================
  * Mower: utils.mower.js - v1.0.0
  *
@@ -161,9 +168,9 @@ String.prototype.length2 = function() {
 		/** 获取该元素所隶属的应用上下文信息 */
 		getContextPath: function() {
 			try {
-				var closest = $(this).closest('[base]');
+				var closest = $(this).closest('[data-base]');
 				if (closest != null && closest.size()) {
-					return closest.attr('base') || base;
+					return closest.attr('data-base') || base;
 				}
 				return base;
 			} catch (e) {
@@ -337,15 +344,6 @@ String.prototype.length2 = function() {
 		appendAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
 			$(this)._privateProcessContents(url, ajaxOptions, _append, callback, isScrollTop);
 		},
-		updateStaticContents: function(data, callback) {
-			$(this).updateHtml(data, _update, callback);
-		},
-		replaceStaticContents: function(data, callback) {
-			$(this).updateHtml(data, _replace, callback);
-		},
-		appendStaticContents: function(data, callback) {
-			$(this).updateHtml(data, _append, callback);
-		},
 		updateHtml: function(data, action, callback) {
 			var self = $(this),
 				$html = $(data),
@@ -357,7 +355,13 @@ String.prototype.length2 = function() {
 				document.title = titlepart.text();
 			}
 
-			var exclude = ':not(title)';
+			//update version
+			var version = $html.filter('meta');
+			if (version.exists()) {
+				$('meta[name=version]',document).attr('content', version.attr('content'));
+			}
+
+			var exclude = ':not(meta,title)';
 			//update content
 			$($.parseHTML(data)).filter(exclude).each(function() {
 				!$(this).attr('data-uuid') && $(this).attr('data-uuid', ajaxId);

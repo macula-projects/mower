@@ -1,0 +1,68 @@
+<div class="panel panel-default mu-panel">
+    <div class="panel-heading">
+        <div class="row mu-panel-toolbar">
+            <div class="col-xs-12 col-md-6 mu-panel-toolbar-action-cont">
+                <a class="btn" data-action-type="add">
+                    <i class="fa fa-search-plus fa-lg"></i>
+                    新增
+                </a>
+                <a class="btn" data-action-type="edit">
+                    <i class="fa fa-pencil fa-lg"></i>
+                    编辑
+                </a>
+                <a class="btn" href="#">
+                    <i class="fa fa-files-o"></i>
+                    复制
+                </a>
+                <a class="btn" href="#">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                    删除
+                </a>
+            </div>
+            <div class="col-xs-12 col-md-offset-2  col-md-4 mu-panel-toolbar-query-cont">
+                <div class="input-group">
+                    <span class="input-group-addon query">
+                        <a class="btn" href="#">查询<i class="fa fa-search"></i></a>
+                    </span>
+                    <input class="form-control" type="text">
+                    <span class="input-group-addon">
+                        <a class="btn" href="#" data-toggle="tooltip" rel="tooltip" data-original-title="清除">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </span>
+                    <span class="input-group-addon advanced-query">
+                        <a class="btn " href="#" data-toggle="dropdown"> 高级查询 <i class="fa fa-caret-down"></i> </a> 
+                        <div class="dropdown-menu advanced-query-container" rel="dropdown-menu" data-options="closeOnBodyClick:false" id="advancedQuery">
+                            <div class="advanced-query-content">
+                                <form>
+                                    <div style="width: 150px;height: 100px;">
+                                        高级查询条件内容
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body tree-panel" style="background-color: #fff;padding: 10px ">
+        <table id="dt_basic" class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>名称</th>
+                    <th>职位</th>
+                    <th>办公室</th>
+                    <th>分机号</th>
+                    <th>入职时间</th>
+                    <th>薪资</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+ <script type="text/javascript" src="table.js">

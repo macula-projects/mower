@@ -114,6 +114,8 @@ div.dataTables_paginate .pagination {
 }
 
 .dataTables_wrapper table.table thead th {
+  position: relative;
+  background-image: none !important;
   white-space: nowrap;
   text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
@@ -129,24 +131,39 @@ div.dataTables_paginate .pagination {
   padding-right: 20px;
 }
 
-.dataTables_wrapper table.table thead .sorting {
-  background: url('../images/sort_both.png') no-repeat center right;
+.dataTables_wrapper table.table thead .sorting:after,
+.dataTables_wrapper table.table thead .sorting_asc:after,
+.dataTables_wrapper table.table thead .sorting_desc:after,
+.dataTables_wrapper table.table thead .sorting_asc_disabled:after,
+.dataTables_wrapper table.table thead .sorting_desc_disabled:after {
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    display: block;
+    font-family: FontAwesome;
 }
 
-.dataTables_wrapper table.table thead .sorting_asc {
-  background: url('../images/sort_asc.png') no-repeat center right;
+.dataTables_wrapper table.table thead .sorting:after {
+    content: "\f0dc";
+    color: #ddd;
+    font-size: 0.8em;
+    padding-top: 0.12em;
 }
 
-.dataTables_wrapper table.table thead .sorting_desc {
-  background: url('../images/sort_desc.png') no-repeat center right;
+.dataTables_wrapper table.table thead .sorting_asc:after {
+    content: "\f0de";
 }
 
-.dataTables_wrapper table.table thead .sorting_asc_disabled {
-  background: url('../images/sort_asc_disabled.png') no-repeat center right;
+.dataTables_wrapper table.table thead .sorting_desc:after {
+    content: "\f0dd";
+}
+
+.dataTables_wrapper table.table thead .sorting_asc_disabled:after {
+    color:#999;
 }
 
 .dataTables_wrapper table.table thead .sorting_desc_disabled {
-  background: url('../images/sort_desc_disabled.png') no-repeat center right;
+    color:#999;
 }
 
 .dataTables_wrapper table.dataTable th:active {

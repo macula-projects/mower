@@ -2,7 +2,7 @@
  * Mower: breadcrumb.mower.js - v1.0.0
  *
  * breadcrumb with ajax load remote content capability.
- * 
+ *
  * Dependencies:
  *               fontawsome
  *               bootstrap tooltip
@@ -16,20 +16,26 @@
     "use strict"
 
     var BreadCrumb = function(element, options) {
-        this.element  = element;
+        this.element = element;
         this.$element = $(element);
-        this.options  = options;
+        this.options = options;
+
+        //current location in the breadcrumb workspace
+        this.current = 0;
+
+        //sequence of panel in the breadcrumb
+        this.panelSeq = 1;
     };
 
     BreadCrumb.DEFAULTS = {
-        prefix        : "breadcrumb",
-        param         : '{}',
-        home          : '<i class="fa fa-home home"></i>',
-        divider       : '<i class="fa fa-angle-right"></i>',
-        favoritable   : true,
-        favoriteTmp   : '<a href="#" data-favorite="breadcrumb" data-toggle="tooltip" ref="tooltip" data-original-title="\u6536\u85CF"><i class="fa fa-star fa-lg"></i></a>',
-        keyboard      : false,
-        favoriteClick : false,
+        prefix: "breadcrumb",
+        param: '{}',
+        home: '<i class="fa fa-home home"></i>',
+        divider: '<i class="fa fa-angle-right"></i>',
+        favoritable: true,
+        favoriteTmp: '<a href="#" data-favorite="breadcrumb" data-toggle="tooltip" rel="tooltip" data-original-title="\u6536\u85CF"><i class="fa fa-star fa-lg"></i></a>',
+        keyboard: false,
+        favoriteClick: false,
         events: {
             push: "push.mu.breadcrumb",
             pushed: "pushed.mu.breadcrumb",
@@ -37,7 +43,8 @@
             poped: "poped.mu.breadcrumb",
             reset: "reset.mu.breadcrumb",
             populateError: "error.populate.mu.breadcrumb",
-            populateSuccess: "success.populate.mu.breadcrumb"
+            populateSuccess: "success.populate.mu.breadcrumb",
+            clickFavorite: "click.favorite.mu.breadcrumb"
         }
     };
 
@@ -49,28 +56,36 @@
             var $element = $(element);
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
             this.options.param = json.decode(this.options.param || '{}');
+
+            this._appendFavorite();
+            var that = this;
+            $element.on("click.favorite.mu.breadcrumb", 'li.favorite > a', function(event) {
+                event.preventDefault();
+
+                var href = window.location.href;
+                that.options.favoriteClick && $.isFunction(that.options.favoriteClick) && that.options.favoriteClick(href);
+            });
         },
         _appendFavorite: function() {
-            if (this.options.favoritable === true && this.$element.children('li.favorite').length <= 0) {
-                var $li = $('<li class="favorite">' + this.options.favoriteTmp + '</li>');
-                this.$element.append($li);
-                $li.find('[ref="tooltip"]').tooltip({'container': 'body'});
-
-                var that = this;
-                $li.on("click.favorite.mu.breadcrumb", 'a', function(event) {
-                    event.preventDefault();
-                    var $activeLi = $(this).parent().siblings('.active');
-                    that.options.favoriteClick && $.isFunction(that.options.favoriteClick) && that.options.favoriteClick($activeLi.data('href'));
+            if (this.options.favoritable === true &&
+                this.$element.children('li:not(.favorite)').length > 0 &&
+                this.$element.children('li.favorite').length <= 0) {
+                var $li = $('<li class="favorite ">' + this.options.favoriteTmp + '</li>');
+                this.$element.prepend($li);
+                $li.find('[ref="tooltip"]').tooltip({
+                    'container': 'body'
                 });
             }
         },
-        _removeFavorite: function() {
-            if (this.options.favoritable === true && this.$element.children('li').length === 1) {
-                this.$element.children('li.favorite').remove();
+        _toggleFavorite: function() {
+            if (this.current === 0) {
+                this.$element.children('li.favorite').removeClass('hidden');
+            } else {
+                this.$element.children('li.favorite').removeClass('hidden').addClass('hidden');
             }
         },
         _getXPath: function(elements) {
-            var path = new Array()
+            var path = new Array();
 
             for (var i = 0; i < elements.length; i++) {
                 path.push(this._getLabel(elements[i]));
@@ -86,13 +101,6 @@
 
             return $content[0].textContent || $content[0].innerText || '';
         },
-        _getHref: function(element) {
-            var $content = $(element).children('a').length ? $(element).children('a:first') : $(element);
-
-            var href = $content.attr('data-href') || $content.attr('href');
-
-            return (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
-        },
         _getTarget: function(element) {
             var $content = $(element).children('a').length ? $(element).children('a:first') : $(element);
 
@@ -102,20 +110,16 @@
             var path = this._getXPath(this.$element.children('li:not(.favorite)')); //exclude favorite
 
             if (path.length > 0) {
-                var $last          = this.$element.children('li:not(.favorite)').filter(':last');
-                var previousUrl    = this._getHref($last);
-                var previousLabel  = this._getLabel($last);
+                var $last = this.$element.children('li:not(.favorite)').filter(':last');
+                var previousLabel = this._getLabel($last);
                 var previousTarget = this._getTarget($last);
 
                 $last.remove();
 
                 var preLi = [
-                    '<li data-level="',
-                    path.length,
-                    '">',
+                    '<li>',
                     path.length === 1 ? this.options.home : this.options.divider,
-                    '<a data-toggle="breadcrumb" href="', (previousUrl || '#'),
-                    '" data-target="',
+                    '<a data-toggle="breadcrumb" data-target="',
                     previousTarget,
                     '">',
                     previousLabel,
@@ -137,14 +141,12 @@
 
             path.push(label);
 
-            var target = this.options.prefix + path.length;
+            var target = this.options.prefix + this.panelSeq++;
 
             var li = [
-                '<li data-level="',
-                path.length,
+                '<li ',
                 '" data-target="',
                 target,
-                '" data-href="', (url || '#'),
                 '" class="active">',
                 path.length === 1 ? this.options.home : this.options.divider,
                 label,
@@ -154,9 +156,8 @@
             this.$element.append(li);
             return target;
         },
-        _pushAjaxContent: function(panelId, _callback) {
+        _pushContent: function(panelId, url, _callback) {
             var $li = this.$element.find('[data-target="' + panelId + '"]'); //header
-            var url = this._getHref($li);
 
             if (url) {
 
@@ -170,26 +171,20 @@
                 var $panel = $('<div data-panel="' + panelId + '"></div>');
                 $(target).append($panel);
 
+                //hide siblings
+                $panel.prev().addClass('hidden');
+
                 //call jquery.fn extend appendcontent defined in utils.mower.js
                 $panel.appendAajxContents(url, ajaxOpt, _callback, true);
             }
-        },
-        _pushStaticContent: function(panelId, staticContent, _callback) {
-            var target = this.$element.data('target');
-            var $panel = $('<div data-panel="' + panelId + '"></div>');
-            $(target).append($panel);
-
-            //call jquery.fn extend appendStaticContents defined in utils.mower.js
-            $panel.appendStaticContents(staticContent);
         },
         /**
          * [push add path in the breadcrumb]
          * @param  {[string]} path label
          * @param  {[string]} url ajax request page content url
-         * @param  {[string]} content  html snippet,not ajax load via parameter url any more
          * @param  {[string]} relatedTarget trigger original
          */
-        push: function(label, url, content, relatedTarget) {
+        push: function(label, url, relatedTarget) {
 
             if (!label || !url) return;
 
@@ -200,10 +195,9 @@
 
             var that = this;
             var callback = function(data) {
-                //hide siblings
-                $(that.$element.data('target'))
-                    .find('[data-panel="' + panelId + '"]')
-                    .prev().addClass('hidden');
+                //move forward
+                that.current++;
+                that._toggleFavorite();
 
                 //trigger populdate success event 
                 var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
@@ -214,11 +208,7 @@
             };
 
             //update breadcrumb's target content
-            if (content) {
-                this._pushStaticContent(panelId, content, callback);
-            } else {
-                this._pushAjaxContent(panelId, callback);
-            }
+            this._pushContent(panelId, url, callback);
 
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
@@ -238,7 +228,6 @@
 
             if ($last.length > 0) {
                 var lastLabel = this._getLabel($last);
-                var lastUrl = this._getHref($last);
                 var lastTarget = this._getTarget($last);
 
                 $last.remove();
@@ -247,12 +236,9 @@
                 var divider = (level === 1 ? this.options.home : this.options.divider);
 
                 var li = [
-                    '<li data-level="',
-                    level,
+                    '<li ',
                     '" data-target="',
                     lastTarget,
-                    '" data-href="',
-                    lastUrl,
                     '" class="active">',
                     divider,
                     lastLabel,
@@ -280,6 +266,7 @@
             $(this.$element.data('target'))
                 .children('[data-panel="' + showPanelId + '"]')
                 .removeClass('hidden');
+
         },
         pop: function(popCount, relatedTarget) {
 
@@ -291,7 +278,9 @@
             //update breadcrumb's target
             this._popContent(popArray);
 
-            this._removeFavorite();
+            //move backward
+            this.current -= popArray.length;
+            this._toggleFavorite();
 
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.poped, {
@@ -387,7 +376,7 @@
 
             $target
                 .breadcrumb(option)
-                .breadcrumb("push", label, href,null,this)
+                .breadcrumb("push", label, href, this)
                 .one('hide', function() {
                     $this.is(':visible') && $this.focus()
                 })
