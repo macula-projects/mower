@@ -1,4 +1,6 @@
-var Index = (function($) {
+var TreeTable = (function($) {
+
+    'use strict';
 
     // private functions & variables
     var onFavoriteClick = function(href) {
@@ -7,6 +9,7 @@ var Index = (function($) {
 
     // public functions
     return {
+
         //main function
         init: function() {
             this.initMainMenu();
@@ -15,15 +18,27 @@ var Index = (function($) {
         initBreadCrumb: function() {
             $("#main-menu").on('complete.mu.mainMenu', function(event) {
                 /* Act on the event */
-                
-                var  defaultVal = QueryString.title ? QueryString.title : '商品库存管理';
+                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
 
-                $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i>'+ decodeURIComponent(defaultVal));
+                // menuItem && $(".breadcrumb")
+                //                 .breadcrumb({
+                //                     divider: '<i class="fa fa-angle-right"></i>',
+                //                     favoriteClick: onFavoriteClick
+                //                 })
+                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
+                //                 
+
+                menuItem && $(".breadcrumb")
+                    .breadcrumb({
+                        divider: '<i class="fa fa-angle-right"></i>',
+                        favoriteClick: onFavoriteClick
+                    })
+                    .breadcrumb("push", menuItem.name, 'table.html')
             });
         },
         initMainMenu: function() {
             $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
+                'url': "../../assets/ajax/data/menu.txt"
             });
 
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
@@ -31,7 +46,7 @@ var Index = (function($) {
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
 
-                var purl = 'index.html?' + 'title=' + event.instance.name + '&_=' + (new Date()).valueOf();
+                var purl = 'tree-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
         }
@@ -39,5 +54,5 @@ var Index = (function($) {
 }(jQuery));
 
 $(document).ready(function() {
-    Index.init();
+    TreeTable.init();
 });

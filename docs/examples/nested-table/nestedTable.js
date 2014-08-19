@@ -1,12 +1,18 @@
-var FormTable = (function($) {
+var NestedTable = (function($) {
+
+    'use strict';
 
     // private functions & variables
     var onFavoriteClick = function(href) {
         alert("want to favorite href:" + href);
     };
 
+
+
     // public functions
     return {
+
+        //main function
         //main function
         init: function() {
             this.initMainMenu();
@@ -30,12 +36,12 @@ var FormTable = (function($) {
                         divider: '<i class="fa fa-angle-right"></i>',
                         favoriteClick: onFavoriteClick
                     })
-                    .breadcrumb("push", menuItem.name, 'formdetail.html')
+                    .breadcrumb("push", menuItem.name, 'table.html')
             });
         },
         initMainMenu: function() {
             $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
+                'url': "../../assets/ajax/data/menu.txt"
             });
 
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
@@ -43,13 +49,13 @@ var FormTable = (function($) {
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
 
-                var purl = 'form-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
+                var purl = 'nested-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
         }
-    }
+    };
 }(jQuery));
 
 $(document).ready(function() {
-    FormTable.init();
+    NestedTable.init();
 });

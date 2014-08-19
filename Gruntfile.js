@@ -36,15 +36,14 @@ module.exports = function(grunt) {
                 options: {
                     open: true,
                     base: [
-                        'dist/docs/' // This is the base file folder. we suppose our index.html is located in this folder
+                        'docs/' // This is the base file folder. we suppose our index.html is located in this folder
                     ]
                 }
             }
         },
         // Task configuration
         clean: { // clean all
-            development: ['dist/<%= pkg.name %>/css', 'dist/<%= pkg.name %>/js', "dist/docs/dist"],
-            release: ['dist/**']
+            build: ['dist/**', 'docs/<%= pkg.name %>/**']
         },
         concat: { //files concat
             options: {
@@ -55,7 +54,7 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>'
                 },
                 files: {
-                    'dist/<%= pkg.name %>/css/<%= pkg.name %>-modules.css': ['src/css/modules/**/*.css', '!**/*.min.css']
+                    'dist/css/<%= pkg.name %>-modules.css': ['src/css/modules/**/*.css', '!**/*.min.css']
                 }
             },
             buildjs: {
@@ -63,7 +62,7 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>\n<%= meta.jqueryCheck %>'
                 },
                 files: {
-                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.js': [
+                    'dist/js/<%= pkg.name %>.js': [
                         'src/js/base.<%= pkg.name %>.js',
                         'src/js/utils.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
@@ -86,15 +85,15 @@ module.exports = function(grunt) {
                     separator: grunt.util.linefeed
                 },
                 files: {
-                    'dist/<%= pkg.name %>/css/<%= pkg.name %>.css': [
+                    'dist/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
-                        'dist/<%= pkg.name %>/css/<%= pkg.name %>.css',
+                        'dist/css/<%= pkg.name %>.css',
                         'plugins/bootstrapValidator/dist/css/bootstrapValidator.css',
                         'plugins/jquery-treetable/stylesheets/jquery.treetable.css'
                     ],
-                    'dist/<%= pkg.name %>/css/<%= pkg.name %>.min.css': [
+                    'dist/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
-                        'dist/<%= pkg.name %>/css/<%= pkg.name %>.min.css',
+                        'dist/css/<%= pkg.name %>.min.css',
                         'plugins/bootstrapValidator/dist/css/bootstrapValidator.min.css',
                         'plugins/jquery-treetable/stylesheets/jquery.treetable.min.css'
                     ]
@@ -105,17 +104,17 @@ module.exports = function(grunt) {
                     separator: grunt.util.linefeed + ";"
                 },
                 files: {
-                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.js': [
+                    'dist/js/<%= pkg.name %>.js': [
                         'plugins/bootstrapValidator/dist/js/bootstrapValidator.js',
                         'plugins/datatables/media/js/jquery.dataTables.js',
                         'plugins/jquery-treetable/javascripts/src/jquery.treetable.js',
-                        'dist/<%= pkg.name %>/js/<%= pkg.name %>.js'
+                        'dist/js/<%= pkg.name %>.js'
                     ],
-                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.min.js': [
+                    'dist/js/<%= pkg.name %>.min.js': [
                         'plugins/bootstrapValidator/dist/js/bootstrapValidator.min.js',
                         'plugins/datatables/media/js/jquery.dataTables.min.js',
                         'plugins/jquery-treetable/javascripts/src/jquery.treetable.min.js',
-                        'dist/<%= pkg.name %>/js/<%= pkg.name %>.min.js'
+                        'dist/js/<%= pkg.name %>.min.js'
                     ]
                 }
             }
@@ -126,7 +125,7 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>'
                 },
                 files: {
-                    'dist/<%= pkg.name %>/js/<%= pkg.name %>.min.js': ['dist/<%= pkg.name %>/js/<%= pkg.name %>.js']
+                    'dist/js/<%= pkg.name %>.min.js': ['dist/js/<%= pkg.name %>.js']
                 }
             },
             minify_treetable: {
@@ -145,7 +144,7 @@ module.exports = function(grunt) {
                     strictMath: true
                 },
                 files: {
-                    'dist/<%= pkg.name %>/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>.less'
+                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>.less'
                 }
             },
             buildtheme: {
@@ -154,16 +153,16 @@ module.exports = function(grunt) {
                     strictMath: true
                 },
                 files: {
-                    'dist/<%= pkg.name %>/css/<%= pkg.name %>-theme.css': 'src/css/themes/theme.less'
+                    'dist/css/<%= pkg.name %>-theme.css': 'src/css/themes/theme.less'
                 }
             }
         },
         cssmin: { //css compress
             minify: {
                 expand: true,
-                cwd: 'dist/<%= pkg.name %>/css/',
+                cwd: 'dist/css/',
                 src: ['*.css', '!*.min.css'],
-                dest: 'dist/<%= pkg.name %>/css/',
+                dest: 'dist/css/',
                 ext: '.min.css'
             },
             minify_treetable: {
@@ -186,55 +185,23 @@ module.exports = function(grunt) {
             }
         },
         copy: { //copy files to dist
-            development: {
-                files: [
-                    // includes files within path and its sub-directories
-                    {
-                        expand: true,
-                        cwd: 'dist/<%= pkg.name %>/',
-                        src: ['**'],
-                        dest: 'dist/docs/dist/'
-                    }
-                ]
-            },
-            release: {
-                files: [
-                    // includes files within path and its sub-directories
-                    {
-                        expand: true,
-                        src: ['bootstrap/**'],
-                        dest: 'dist/'
-                    },
-                    {
-                        expand: true,
-                        src: ['bootstrap/**'],
-                        dest: 'dist/docs/assets/vendor/'
-                    },
-                    {
-                        expand: true,
-                        src: ['libs/**'],
-                        dest: 'dist/docs/assets/'
-                    },
-                    // includes files within path and its sub-directories
-                    {
-                        expand: true,
-                        src: ['libs/**'],
-                        dest: 'dist/'
-                    },
-                    // includes files within path
-                    {
-                        expand: true,
-                        cwd: 'plugins/font-awesome/',
-                        src: ['fonts/*'],
-                        dest: 'dist/<%= pkg.name %>/'
-                    },
-                    // includes files within path and its sub-directories
-                    {
-                        expand: true,
-                        src: ['docs/**'],
-                        dest: 'dist/'
-                    }
-                ]
+            build: {
+                files: [{
+                    expand: true,
+                    cwd: 'plugins/font-awesome/',
+                    src: ['fonts/*'],
+                    dest: 'dist/'
+                }, {
+                    expand: true,
+                    cwd: 'dist/',
+                    src: ['**'],
+                    dest: 'docs/<%= pkg.name %>/'
+                },{
+                    expand: true,
+                    cwd: 'plugins/font-awesome/',
+                    src: ['fonts/*'],
+                    dest: 'docs/<%= pkg.name %>/'
+                }]
             }
         },
         jshint: { //file validate,non activated in task
@@ -307,10 +274,10 @@ module.exports = function(grunt) {
     grunt.registerTask('server', ['connect:all', 'watch']);
 
     // grunt dev
-    grunt.registerTask('dev', ['clean:development', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy:development']);
+    grunt.registerTask('dev', ['clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
 
     // grunt release
-    grunt.registerTask('release', ['compress','clean:release', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    grunt.registerTask('release', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
 
     // grunt
     grunt.registerTask('default', ['dev']);

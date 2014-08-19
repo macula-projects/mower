@@ -1,4 +1,4 @@
-var InlineTable = (function($) {
+var Form = (function($) {
 
     // private functions & variables
     var onFavoriteClick = function(href) {
@@ -30,12 +30,12 @@ var InlineTable = (function($) {
                         divider: '<i class="fa fa-angle-right"></i>',
                         favoriteClick: onFavoriteClick
                     })
-                    .breadcrumb("push", menuItem.name, 'table.html')
+                    .breadcrumb("push", menuItem.name, 'formdetail.html')
             });
         },
         initMainMenu: function() {
             $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
+                'url': "../../assets/ajax/data/menu.txt"
             });
 
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
@@ -43,13 +43,13 @@ var InlineTable = (function($) {
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
 
-                var purl = 'inline-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
+                var purl = 'form.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
         }
-    };
+    }
 }(jQuery));
 
 $(document).ready(function() {
-    InlineTable.init();
+    Form.init();
 });

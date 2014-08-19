@@ -45,7 +45,7 @@ var Table = (function($) {
 
                     var oInnerTable = $("#exampleTable_" + iTableCounter).dataTable({
                         "ajax": {
-                            "url": "../assets/ajax/data/arrays_custom_prop.txt",
+                            "url": "../../assets/ajax/data/arrays_custom_prop.txt",
                             "dataSrc": "demo"
                         },
                         "ordering": true

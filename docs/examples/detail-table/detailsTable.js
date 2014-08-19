@@ -1,4 +1,4 @@
-var TreeTable = (function($) {
+var DetailsTable = (function($) {
 
     'use strict';
 
@@ -6,6 +6,7 @@ var TreeTable = (function($) {
     var onFavoriteClick = function(href) {
         alert("want to favorite href:" + href);
     };
+
 
     // public functions
     return {
@@ -38,7 +39,7 @@ var TreeTable = (function($) {
         },
         initMainMenu: function() {
             $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
+                'url': "../../assets/ajax/data/menu.txt"
             });
 
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
@@ -46,7 +47,7 @@ var TreeTable = (function($) {
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
 
-                var purl = 'tree-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
+                var purl = 'details-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
         }
@@ -54,5 +55,5 @@ var TreeTable = (function($) {
 }(jQuery));
 
 $(document).ready(function() {
-    TreeTable.init();
+    DetailsTable.init();
 });

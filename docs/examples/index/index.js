@@ -1,4 +1,4 @@
-var Form = (function($) {
+var Index = (function($) {
 
     // private functions & variables
     var onFavoriteClick = function(href) {
@@ -15,27 +15,15 @@ var Form = (function($) {
         initBreadCrumb: function() {
             $("#main-menu").on('complete.mu.mainMenu', function(event) {
                 /* Act on the event */
-                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
+                
+                var  defaultVal = QueryString.title ? QueryString.title : '商品库存管理';
 
-                // menuItem && $(".breadcrumb")
-                //                 .breadcrumb({
-                //                     divider: '<i class="fa fa-angle-right"></i>',
-                //                     favoriteClick: onFavoriteClick
-                //                 })
-                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
-                //                 
-
-                menuItem && $(".breadcrumb")
-                    .breadcrumb({
-                        divider: '<i class="fa fa-angle-right"></i>',
-                        favoriteClick: onFavoriteClick
-                    })
-                    .breadcrumb("push", menuItem.name, 'formdetail.html')
+                $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i>'+ decodeURIComponent(defaultVal));
             });
         },
         initMainMenu: function() {
             $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
+                'url': "../../assets/ajax/data/menu.txt"
             });
 
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
@@ -43,13 +31,13 @@ var Form = (function($) {
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
 
-                var purl = 'form.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
+                var purl = 'index.html?' + 'title=' + event.instance.name + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
         }
-    }
+    };
 }(jQuery));
 
 $(document).ready(function() {
-    Form.init();
+    Index.init();
 });

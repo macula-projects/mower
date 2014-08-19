@@ -1,16 +1,12 @@
-var DetailsTable = (function($) {
-
-    'use strict';
+var InlineTable = (function($) {
 
     // private functions & variables
     var onFavoriteClick = function(href) {
         alert("want to favorite href:" + href);
     };
 
-
     // public functions
     return {
-
         //main function
         init: function() {
             this.initMainMenu();
@@ -39,7 +35,7 @@ var DetailsTable = (function($) {
         },
         initMainMenu: function() {
             $("#main-menu").mainMenu({
-                'url': "../assets/ajax/data/menu.txt"
+                'url': "../../assets/ajax/data/menu.txt"
             });
 
             $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
@@ -47,7 +43,7 @@ var DetailsTable = (function($) {
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
 
-                var purl = 'details-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
+                var purl = 'inline-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
         }
@@ -55,5 +51,5 @@ var DetailsTable = (function($) {
 }(jQuery));
 
 $(document).ready(function() {
-    DetailsTable.init();
+    InlineTable.init();
 });

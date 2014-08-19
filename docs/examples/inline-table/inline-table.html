@@ -2,36 +2,18 @@
 <html>
 
 <head>
-    <title>04_Infinitus Admin_nested_table</title>
+    <title>02_Infinitus Admin_inline_table</title>
 
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 
-    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="../dist/css/mower.css">
+    <link rel="stylesheet" href="../../mower/css/mower.css">
 
-    <style type="text/css" class="init">
-    td.details-control {
-    }
-    td.details-control:before {
-        content: "\f101";
-        font-family: FontAwesome;
-        font-style: normal;
-        font-weight: normal;
-        text-decoration: inherit;
-        font-size: 18px;
-        position: absolute;
-    }
-    tr.details td.details-control {
-    }
-    tr.details td.details-control:before {
-        content: "\f103";
-        font-family: FontAwesome;
-        font-style: normal;
-        font-weight: normal;
-        text-decoration: inherit;
-        font-size: 18px;
-        position: absolute;
+    <style>
+    /*table in-line edit*/
+    .input-small {
+        width: 80px !important;
     }
     </style>
 </head>
@@ -175,25 +157,25 @@
                                     <li>
                                         <a href="#">
                                             <span class="label label-icon mu-bg-blue2">1</span>
-                                            个人信息
+                                            交易单录入
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#">
                                             <span class="label label-icon mu-bg-blue2">2</span>
-                                            订单列表
+                                            银行到账单查询
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#">
                                             <span class="label label-icon mu-bg-blue2">3</span>
-                                            订餐信息
+                                            我经办的未结案案件
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#">
                                             <span class="label label-icon mu-bg-blue2">4</span>
-                                            客户信息
+                                            虚拟库存监控
                                         </a>
                                     </li>
                                     <li>
@@ -275,11 +257,11 @@
                         <li class="dropdown mu-menu">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" href="#" id="allcate-header">全部系统功能<i class="fa fa-list pull-right"></i></a>
                             <ul id="main-menu" class="dropdown-menu" aria-labelledby="allcate-header">
-
+                                
                             </ul>
                         </li>
                         <li>
-                            <a href="nested-table.html">首页</a>
+                            <a href="inline-table.html">首页</a>
                         </li>
                         <li>
                             <a target="_blank" href="https://uim.infinitus.com.cn/login?service=https://gbss.infinitus.com.cn/j_spring_cas_security_check&forward=/front&form=https://gbss.infinitus.com.cn/front/login&appId=gbss-portal@ALL_APP&nextstep=https://gbss.infinitus.com.cn/front/gbss-portal-web/dealer/nextstep/1">无限极e帆网</a>
@@ -302,7 +284,8 @@
                 </div>
                 <!-- END BREADCRUMB-->
                 <!-- BEGIN MAIN CONTENT -->
-                <div class="mu-main-content" id="mainContent"></div>
+                <div class="mu-main-content" id="mainContent">
+                </div>
                 <!-- END MAIN CONTENT-->
             </div>
             <!-- END MAIN CONTAINER -->
@@ -311,17 +294,18 @@
     <!-- END MAIN -->
 
     <!-- BEGIN CORE PLUGINS -->
-    <script src="../assets/libs/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
-    <script src="../assets/libs/jquery/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-    <script src="../assets/vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="../assets/libs/jquery-tmpl/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="../../libs/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="../../libs/jquery/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../libs/jquery-tmpl/jquery.tmpl.min.js" type="text/javascript"></script>
     <!-- END CORE PLUGINS -->
 
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
-    <script src="../dist/js/mower.js" type="text/javascript"></script>
-    <script src="../assets/js/query.js" type="text/javascript"></script>
-    <script src="nestedTable.js" type="text/javascript"></script>
+    <script src="../../mower/js/mower.js" type="text/javascript"></script>
+    <script src="../../assets/js/query.js" type="text/javascript"></script>
+    <script src="inlineTable.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
+
 </body>
 
 </html>

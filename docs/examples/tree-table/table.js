@@ -8,7 +8,7 @@ var Table = (function($) {
             //initialize here something.
 
             $('#dt_basic').dataTable({
-                "ajax": "../assets/ajax/data/tree_arrays_data.txt",
+                "ajax": "../../assets/ajax/data/tree_arrays_data.txt",
                 "ordering": false,
                 "paging": false,
                 "columnDefs": [{
