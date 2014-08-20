@@ -45,15 +45,21 @@ __Install__
 
         npm install
 
+    五、编译项目
+
+        1.作为管理员（对于Windows环境）,通过命令行进入项目工程根目录，执行以下命令:
+
+        grunt release
+
     五、运行项目
 
         1.作为管理员（对于Windows环境）,通过命令行进入项目工程根目录，执行以下命令:
 
-        grunt serve
+        grunt server
 
         执行成功后，命令窗口出现 Waiting 字符。
 
-        打开浏览器访问：http://localhost:9000 ,即可访问 samples 目录下文件.
+        打开浏览器访问：http://localhost:9000 ,即可访问 examples 目录下文件.
 
 ## Live demo
 
