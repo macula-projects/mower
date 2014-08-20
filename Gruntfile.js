@@ -88,14 +88,14 @@ module.exports = function(grunt) {
                     'dist/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
                         'dist/css/<%= pkg.name %>.css',
-                        'plugins/bootstrapValidator/dist/css/bootstrapValidator.css',
-                        'plugins/jquery-treetable/stylesheets/jquery.treetable.css'
+                        'plugins/bootstrapValidator/css/bootstrapValidator.css',
+                        'plugins/jquery-treetable/css/jquery.treetable.css'
                     ],
                     'dist/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
                         'dist/css/<%= pkg.name %>.min.css',
-                        'plugins/bootstrapValidator/dist/css/bootstrapValidator.min.css',
-                        'plugins/jquery-treetable/stylesheets/jquery.treetable.min.css'
+                        'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
+                        'plugins/jquery-treetable/css/jquery.treetable.min.css'
                     ]
                 }
             },
@@ -105,15 +105,15 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/js/<%= pkg.name %>.js': [
-                        'plugins/bootstrapValidator/dist/js/bootstrapValidator.js',
-                        'plugins/datatables/media/js/jquery.dataTables.js',
-                        'plugins/jquery-treetable/javascripts/src/jquery.treetable.js',
+                        'plugins/bootstrapValidator/js/bootstrapValidator.js',
+                        'plugins/datatables/js/jquery.dataTables.js',
+                        'plugins/jquery-treetable/js/jquery.treetable.js',
                         'dist/js/<%= pkg.name %>.js'
                     ],
                     'dist/js/<%= pkg.name %>.min.js': [
-                        'plugins/bootstrapValidator/dist/js/bootstrapValidator.min.js',
-                        'plugins/datatables/media/js/jquery.dataTables.min.js',
-                        'plugins/jquery-treetable/javascripts/src/jquery.treetable.min.js',
+                        'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
+                        'plugins/datatables/js/jquery.dataTables.min.js',
+                        'plugins/jquery-treetable/js/jquery.treetable.min.js',
                         'dist/js/<%= pkg.name %>.min.js'
                     ]
                 }
@@ -133,7 +133,7 @@ module.exports = function(grunt) {
                     preserveComments: 'some'
                 },
                 files: {
-                    'plugins/jquery-treetable/javascripts/src/jquery.treetable.min.js': ['plugins/jquery-treetable/javascripts/src/jquery.treetable.js']
+                    'plugins/jquery-treetable/js/jquery.treetable.min.js': ['plugins/jquery-treetable/js/jquery.treetable.js']
                 }
             },
         },
@@ -167,7 +167,7 @@ module.exports = function(grunt) {
             },
             minify_treetable: {
                 files: {
-                    'plugins/jquery-treetable/stylesheets/jquery.treetable.min.css': ['plugins/jquery-treetable/stylesheets/jquery.treetable.css']
+                    'plugins/jquery-treetable/css/jquery.treetable.min.css': ['plugins/jquery-treetable/css/jquery.treetable.css']
                 }
             },
         },
