@@ -16,15 +16,12 @@
     <![endif]-->
 
     <style type="text/css">
-        body.mu-body {
-            padding-top: 70px;
-        }
          /** Footer **/
-        .navbar-footer{
+        .mu-footer{
             background-color: #F8F8F8;
             margin-top: 15px;
         }
-        .navbar-footer footer p{
+        .mu-footer footer p{
             margin-bottom: 15px;
             margin-top: 15px;
         }  
@@ -57,26 +54,25 @@
             padding-right: 0;
         }
         .mu-navbar-sm .navbar-collapse .navbar-nav li.text,
-        .bmu-navbar-sm .navbar-collapse .navbar-nav li a{
+        .mu-navbar-sm .navbar-collapse .navbar-nav li a{
             font-size: 13px;
             padding: 3px 8px;
         }  
 
-         .mu-navbar-under-small{
-            top: 45px;
+        .mu-navbar-under-small{
+            top: 26px;
             z-index: 1020;
         }            
     </style>
 </head>
-<body class="mu-body">
-    <div id="header">
+<body>
+    <div id="header" class="mu-header">
         <!-- small navbar -->
         <nav class="navbar navbar-default navbar-fixed-top mu-navbar-sm" role="navigation">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-left">
-                        <li class="text">Change size:</li>
-                        <li>收藏网站</li>
+                        <li class="text">收藏网站</li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
@@ -316,7 +312,7 @@
         </nav>
     </div>
 
-    <div id="main" class="container-fluid">
+    <div id="main" class="mu-main container-fluid">
         <!-- left, vertical navbar & content -->
         <div class="row">
             <!-- content -->
@@ -1065,7 +1061,7 @@
     </div>
 
     <!-- footer -->
-    <div id="footer" class="navbar navbar-footer">
+    <div id="footer" class="mu-footer navbar">
         <div class="container-fluid">
             <footer role="contentinfo">
                 <p class="left">Infinitus Admin Theme</p>
