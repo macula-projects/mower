@@ -59,7 +59,7 @@ __Install__
 
         执行成功后，命令窗口出现 Waiting 字符。
 
-        打开浏览器访问：http://localhost:9000 ,即可访问 examples 目录下文件.
+        打开浏览器访问：http://localhost:9000 ,即可访问 examples 目录下文件. 
 
 ## Live demo
 
