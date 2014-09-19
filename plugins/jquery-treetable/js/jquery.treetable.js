@@ -1,4 +1,4 @@
-/*
+/*!
  * jQuery treetable Plugin 3.1.0
  * http://ludo.cubicphuse.nl/jquery-treetable
  *
