@@ -11,7 +11,7 @@
  * ======================================================================== */
 
 ;
-(function(json, $, window, document, undefined) {
+(function(json, utils, $, window, document, undefined) {
 
     "use strict"
 
@@ -37,6 +37,8 @@
         keyboard: false,
         favoriteClick: false,
         events: {
+            command: "command.mu.breadcrumb",
+            commanded: "commanded.mu.breadcrumb",
             push: "push.mu.breadcrumb",
             pushed: "pushed.mu.breadcrumb",
             pop: "pop.mu.breadcrumb",
@@ -72,7 +74,7 @@
                 this.$element.children('li.favorite').length <= 0) {
                 var $li = $('<li class="favorite ">' + this.options.favoriteTmp + '</li>');
                 this.$element.prepend($li);
-                $li.find('[ref="tooltip"]').tooltip({
+                $li.find('[rel="tooltip"]').tooltip({
                     'container': 'body'
                 });
             }
@@ -175,6 +177,7 @@
                 $panel.prev().addClass('hidden');
 
                 //call jquery.fn extend appendcontent defined in utils.mower.js
+                url = utils.getAbsoluteUrl(url, this.$element.getContextPath());
                 $panel.appendAajxContents(url, ajaxOpt, _callback, true);
             }
         },
@@ -185,7 +188,6 @@
          * @param  {[string]} relatedTarget trigger original
          */
         push: function(label, url, relatedTarget) {
-
             if (!label || !url) return;
 
             this._appendFavorite();
@@ -252,7 +254,6 @@
             return popArray;
         },
         _popContent: function(popArray) {
-
             var showPanelId = popArray.pop();
 
             var that = this;
@@ -266,10 +267,8 @@
             $(this.$element.data('target'))
                 .children('[data-panel="' + showPanelId + '"]')
                 .removeClass('hidden');
-
         },
         pop: function(popCount, relatedTarget) {
-
             if (parseInt(popCount) <= 0) return;
 
             //update header in breadcrumb
@@ -285,6 +284,28 @@
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.poped, {
                 "path": this._getXPath(this.$element.children('li:not(.favorite)'))
+            });
+        },
+        command: function(relatedTarget) {
+            var $this = $(relatedTarget);
+            var e = $.Event(BreadCrumb.DEFAULTS.events.command);
+            $this.trigger(e);
+
+            if (e.isDefaultPrevented()) return;
+
+            var href = $this.attr('data-href') || $this.attr('href');
+            href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
+
+            $.ajax({
+                url: utils.getAbsoluteUrl(href, $this.getContextPath()),
+                type: 'post',
+                dataType: 'json',
+                success: function(data) {
+                    var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
+                    $this.trigger(e, {
+                        "data": data
+                    });
+                }
             });
         },
         reset: function() {
@@ -341,7 +362,7 @@
 
         // If the earlier cached method gives a value back, return the resulting value, otherwise return this to preserve chainability.
         return results !== undefined ? results : this;
-    }
+    };
 
     $.fn.breadcrumb.Constructor = BreadCrumb;
 
@@ -350,9 +371,9 @@
      * ================= */
 
     $.fn.breadcrumb.noConflict = function() {
-        $.fn.breadcrumb = old
-        return this
-    }
+        $.fn.breadcrumb = old;
+        return this;
+    };
 
     /* BREADCRUMB DATA-API
      * ============== */
@@ -360,45 +381,46 @@
     $(document)
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="pushBreadcrumb"]', function(event) {
             var $this = $(this);
+            if ($this.is('a')) event.preventDefault();
+
+            var e = $.Event(BreadCrumb.DEFAULTS.events.push);
+            $this.trigger(e);
+
+            if (e.isDefaultPrevented()) return;
+
             var href = $this.attr('data-href') || $this.attr('href');
             href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
             var label = $this.attr('data-label');
             var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
             var option = $.extend({}, $target.data(), $this.data());
-
-            if ($this.is('a')) event.preventDefault()
-
-            var e = $.Event(BreadCrumb.DEFAULTS.events.push);
-
-            $this.trigger(e);
-
-            if (e.isDefaultPrevented()) return;
-
             $target
                 .breadcrumb(option)
                 .breadcrumb("push", label, href, this)
                 .one('hide', function() {
-                    $this.is(':visible') && $this.focus()
-                })
+                    $this.is(':visible') && $this.focus();
+                });
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="popBreadcrumb"]', function(event) {
             var $this = $(this);
-            var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
-            var option = $.extend({}, $target.data(), $this.data());
-
             if ($this.is('a')) event.preventDefault();
 
             var e = $.Event(BreadCrumb.DEFAULTS.events.pop);
-
             $this.trigger(e);
-
             if (e.isDefaultPrevented()) return;
 
+            var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
+            var option = $.extend({}, $target.data(), $this.data());
             $target
                 .breadcrumb(option)
                 .breadcrumb("pop", 1, this)
                 .one('hide', function() {
-                    $this.is(':visible') && $this.focus()
-                })
+                    $this.is(':visible') && $this.focus();
+                });
+        })
+        .on('click.mu.breadcrumb.data-api', '[data-toggle^="commandBreadcrumb"]', function(event) {
+            var $this = $(this);
+            if ($this.is('a')) event.preventDefault();
+
+            BreadCrumb.command(this);
         });
-}(JSON || {}, jQuery, window, document));
+})(JSON || {}, Utils || {}, jQuery, window, document);

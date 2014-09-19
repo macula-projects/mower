@@ -140,9 +140,9 @@
     // ===============
 
     $.fn.amodal.noConflict = function() {
-        $.fn.amodal = old
-        return this
-    }
+        $.fn.amodal = old;
+        return this;
+    };
 
 
     // AJAXMODAL DATA-API
@@ -153,7 +153,7 @@
         if ($this.is('a')) e.preventDefault();
 
         Plugin.call($this, 'show');
-    })
+    });
 
 })(JSON || {}, UniqueId || {}, jQuery, window, document);
 

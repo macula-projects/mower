@@ -11,19 +11,63 @@
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  * ======================================================================== */
 
-//Datatables html5 data-* attribute parser
+//Datatables html5 data-* attribute adapter
 ;
-var DTParser = (function(base, $, window, document, undefined) {
+var DTAdapter = (function(base, utils, $, window, document, undefined) {
+
+    function _fnUpdateInfo(settings) {
+        var
+            lang = settings.oLanguage,
+            start = settings._iDisplayStart + 1,
+            end = settings.fnDisplayEnd(),
+            max = settings.fnRecordsTotal(),
+            total = settings.fnRecordsDisplay(),
+            out = total ?
+            lang.sInfo :
+            lang.sInfoEmpty;
+
+        if (total !== max) {
+            /* Record set after filtering */
+            out += ' ' + lang.sInfoFiltered;
+        }
+
+        // Convert the macros
+        out += lang.sInfoPostFix;
+        out = _fnInfoMacros(settings, out);
+
+        return out;
+    }
+
+
+    function _fnInfoMacros(settings, str) {
+        // When infinite scrolling, we are always starting at 1. _iDisplayStart is used only
+        // internally
+        var
+            formatter = settings.fnFormatNumber,
+            start = settings._iDisplayStart + 1,
+            len = settings._iDisplayLength,
+            vis = settings.fnRecordsDisplay(),
+            all = len === -1,
+            page = all ? 0 : Math.floor(start / len),
+            start = (page * len) + 1;
+
+        return str.
+        replace(/_START_/g, formatter.call(settings, start)).
+        replace(/_END_/g, formatter.call(settings, settings.fnDisplayEnd())).
+        replace(/_MAX_/g, formatter.call(settings, settings.fnRecordsTotal())).
+        replace(/_TOTAL_/g, formatter.call(settings, vis)).
+        replace(/_PAGE_/g, formatter.call(settings, all ? 1 : Math.ceil(start / len))).
+        replace(/_PAGES_/g, formatter.call(settings, all ? 1 : Math.ceil(vis / len)));
+    }
+
 
     return {
-        getTableData: function(target) {
+        getTableOption: function(target) {
             var t = $(target);
 
-            var obj = $.extend(
-                //新空对象
-                {},
-                //公用的属性转换器
-                base.parseOptions(target, "tb", [
+            var obj = $.extend({},
+                base.parseOptions(target, [
+                    'id',
                     'dom', {
                         autoWidth: 'boolean',
                         deferRender: 'boolean',
@@ -44,364 +88,597 @@ var DTParser = (function(base, $, window, document, undefined) {
                     }, {
                         serverSide: 'boolean',
                         ajax: 'string'
+                    }, {
+                        enableSelected: 'boolean',
+                        singleSelect: 'boolean'
+                    }, {
+                        validated: 'boolean',
+                        validateForm: 'string'
                     }
                 ])
             );
 
             return obj;
         },
-        getColumnsData: function(target) {
+        getRowOption: function(target) {
             var t = $(target);
-            return $.extend(
-                //新空对象
-                {},
-                //公用的属性转换器
-                base.parseOptions(target, "th", [
+
+            var obj = $.extend({},
+                base.parseOptions(target, [
+                    'name'
+                ])
+            );
+
+            return obj;
+        },
+        getColumnsOption: function(target) {
+            var t = $(target);
+            return $.extend({},
+                base.parseOptions(target, [
                     'name',
+                    'real',
+                    'data', {
+                        render: 'function'
+                    },
                     'width',
                     'title', {
                         orderable: 'boolean',
                         orderData: 'array',
                         orderSequence: 'array',
                         visible: 'boolean'
+                    }, {
+                        editor: 'string'
+                    }, {
+                        checkbox: {
+                            on: 'string',
+                            off: 'string'
+                        }
+                    }, {
+                        numberbox: {
+                            radixPoint: 'string'
+                        }
+                    }, {
+                        datebox: {
+                            format: 'string',
+                            autoclose: 'boolean',
+                            fontAwesome: 'boolean'
+                        }
+                    }, {
+                        combobox: {
+                            valueField: 'string',
+                            textField: 'string',
+                            url: 'string',
+                            multiple: 'boolean',
+                            separator: 'string'
+                        }
                     }
                 ])
             );
+        },
+        getValidateOption: function(target, prefix) {
+            var t = $(target);
+
+            var obj = $.extend({},
+                base.parseOptions(target, [{
+                    container: 'string',
+                    excluded: 'string',
+                    group: 'string',
+                    live: 'string',
+                    threshold: 'number',
+                    feedbackIcons: {
+                        valid: 'string',
+                        invalid: 'string',
+                        validating: 'string'
+                    }
+                }], prefix)
+            );
+
+            return obj;
+        },
+        getValidateFieldOptions: function(target) {
+            var t = $(target);
+            return $.extend({},
+                base.parseOptions(target, [{
+                    validator: {
+                        name: 'string', //multiple name separate by ',' ie:'notEmpty,number,...'
+                        container: 'string',
+                        enabled: 'boolean',
+                        excluded: 'string',
+                        group: 'string',
+                        selector: 'string',
+                        threshold: 'number'
+                    }
+                }, {
+                    notEmpty: {
+                        "default": true, //however attribute notEmpty exists or not,notEmpty object created yet.
+                        message: 'string'
+                    }
+                }, {
+                    numeric: {
+                        "default": true,
+                        message: 'string'
+                    }
+                }, {
+                    digits: {
+                        "default": true,
+                        message: 'string'
+                    }
+                }, {
+                    emailaddress: {
+                        "default": true,
+                        message: 'string'
+                    }
+                }, {
+                    integer: {
+                        "default": true,
+                        message: 'string'
+                    }
+                }, {
+                    ip: {
+                        "default": true,
+                        ipv4: 'boolean',
+                        ipv6: 'boolean',
+                        message: 'string'
+                    }
+                }, {
+                    uri: {
+                        "default": true,
+                        allowLocal: 'boolean',
+                        message: 'string'
+                    }
+                }, {
+                    date: {
+                        "default": true,
+                        format: 'string',
+                        message: 'string'
+                    }
+                }, , {
+                    regexp: {
+                        "default": true,
+                        regexp: 'string',
+                        message: 'string'
+                    }
+                }, {
+                    between: {
+                        "default": true,
+                        min: 'number',
+                        max: 'number',
+                        message: 'string'
+                    }
+                }, {
+                    choice: {
+                        "default": true,
+                        min: 'number',
+                        max: 'number',
+                        message: 'string'
+                    }
+                }, {
+                    greaterThan: {
+                        "default": true,
+                        value: 'number',
+                        message: 'string'
+                    }
+                }, {
+                    lessThan: {
+                        "default": true,
+                        value: 'number',
+                        message: 'string'
+                    }
+                }, {
+                    remote: {
+                        "default": true,
+                        message: 'string',
+                        url: 'string'
+                    }
+                }])
+            );
+        },
+        processOption: function(dataTable, option) {
+            if (!option) return;
+
+            if (option.hasOwnProperty('ajax')) {
+                var ajax = option.ajax;
+
+                if ($.isPlainObject(ajax)) {
+                    ajax.url = utils.getAbsoluteUrl(ajax.url, $(dataTable).getContextPath());
+                } else if (typeof ajax === 'string') {
+                    option.ajax = utils.getAbsoluteUrl(ajax, $(dataTable).getContextPath());
+                }
+            }
+
+            if (option.hasOwnProperty('columns')) {
+                var columns = option.columns;
+                if (columns && $.isArray(columns)) {
+                    for (var i = 0; i < columns.length; i++) {
+                        var column = columns[i];
+                        column.data = column.data || column.name ;
+                    }
+                }
+            }
+
+
+            // var infoCallback = {
+            //     "infoCallback": function(settings, start, end, max, total, pre) {
+            //         return _fnUpdateInfo(settings);
+            //     }
+            // };
+            // $.extend(option, infoCallback);
+        },
+        processReqData: function(settings, data) {
+            if ($.fn.dataTableExt.oApi._fnDataSource(settings) !== 'ssp')
+                return;
+
+            try {
+                //because of macula only support current page,not support current index
+                //so convert it and handle infoCallback in order to make it corret
+                var pageData = {};
+
+                if (settings.oFeatures.bPaginate === true) {
+                    var pageNumber = (data.start === 0 ? 1 : Math.ceil(data.start / data.length));
+                    pageData = {
+                        rows: data.length,
+                        page: pageNumber
+                    };
+
+                    settings.iDisplayStart = (pageNumber - 1) * data.length;
+                }
+
+                var orderData = {};
+                for (var i = 0; i < data.order.length; i++) {
+                    var item = data.order[i];
+
+                    if (data.columns[item.column]) {
+                        orderData = {
+                            sort: data.columns[item.column].data,
+                            order: item.dir
+                        };
+                    }
+                    //process only one column
+                    break;
+                }
+
+                //clear all data
+                for (var name in data)
+                    delete data[name];
+
+                $.extend(data, pageData, orderData);
+            } catch (e) {
+                //NoOPS
+            }
+        },
+        processResData: function(settings, json) {
+            if ($.fn.dataTableExt.oApi._fnDataSource(settings) !== 'ssp')
+                return;
+
+            try {
+                var dataSource = {
+                    "recordsTotal": json.totalElements,
+                    "recordsFiltered": json.totalElements,
+                    "data": json.content
+                };
+
+                //clear all data
+                for (var name in json)
+                    delete json[name];
+
+                $.extend(json, dataSource);
+            } catch (e) {
+                //NoOPS
+            }
         }
-    }
-}(Base || {}, jQuery, window, document));
+    };
+}(Base || {}, Utils || {}, jQuery, window, document));
+
 
 ;
-(function(base, parser, $, window, document, undefined) {
+(function(base, adapter, $, window, document, undefined) {
 
     'use strict';
 
-    $.extend(true, $.fn.dataTable.defaults, {
-        "sDom": "<'dt-top-row'>r<'dt-wrapper table-responsive't>" +
-            "<'dt-row dt-bottom-row'<'row'<'col-xs-12  col-sm-1'l><'col-xs-12 col-sm-8'p><'col-xs-12 col-sm-3'i>>>",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_",
-            "oPaginate": {
-                "sFirst": "首页",
-                "sPrevious": "上一页",
-                "sNext": "下一页",
-                "sLast": "最后一页"
-            },
-            "sInfo": "显示记录从_START_到_END_，总数 _TOTAL_ 条"
-        },
-        "pagingType": "full_numbers"
-    });
-
-
-    /* Default class modification */
-    $.extend($.fn.dataTableExt.oStdClasses, {
-        "sWrapper": "dataTables_wrapper form-inline",
-        "sFilterInput": "form-control input-sm",
-        "sLengthSelect": "form-control input-sm"
-    });
-
-    // In 1.10 we use the pagination renderers to draw the Bootstrap paging,
-    // rather than  custom plug-in
-    if ($.fn.dataTable.Api) {
-        $.fn.dataTable.defaults.renderer = 'bootstrap';
-        $.fn.dataTable.ext.renderer.pageButton.bootstrap = function(settings, host, idx, buttons, page, pages) {
-            var api = new $.fn.dataTable.Api(settings);
-            var classes = settings.oClasses;
-            var lang = settings.oLanguage.oPaginate;
-            var btnDisplay, btnClass;
-
-            var attach = function(container, buttons) {
-                var i, ien, node, button;
-                var clickHandler = function(e) {
-                    e.preventDefault();
-
-                    //hide tooltip before redraw
-                    var $target = $(e.currentTarget);
-                    $target.find('a').tooltip('hide');
-
-                    if (e.data.action !== 'ellipsis') {
-                        api.page(e.data.action).draw(false);
-                    }
-                };
-
-                for (i = 0, ien = buttons.length; i < ien; i++) {
-                    button = buttons[i];
-
-                    if ($.isArray(button)) {
-                        attach(container, button);
-                    } else {
-                        btnDisplay = '';
-                        btnClass = '';
-
-                        switch (button) {
-                            case 'ellipsis':
-                                btnDisplay = '&hellip;';
-                                btnClass = 'disabled';
-                                break;
-
-                            case 'first':
-                                btnDisplay = '<a href="#" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sFirst + '"><i class="fa fa-step-backward"></i></a>';
-                                btnClass = button + (page > 0 ?
-                                    '' : ' disabled');
-
-                                break;
-
-                            case 'previous':
-                                btnDisplay = '<a href="#" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sPrevious + '"><i class="fa fa-backward"></i></a>';
-                                btnClass = button + (page > 0 ?
-                                    '' : ' disabled');
-                                break;
-
-                            case 'next':
-                                btnDisplay = '<a href="#" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sNext + '"><i class="fa fa-forward"></i></a>';
-                                btnClass = button + (page < pages - 1 ?
-                                    '' : ' disabled');
-                                break;
-
-                            case 'last':
-                                btnDisplay = '<a href="#" id="toolsss" data-toggle="tooltip" ref="tooltip" data-original-title="' + lang.sLast + '"><i class="fa fa-step-forward"></i></a>';
-                                btnClass = button + (page < pages - 1 ?
-                                    '' : ' disabled');
-                                break;
-
-                            default:
-                                btnDisplay = '<a href="#">' + (button + 1) + '</a>';
-                                btnClass = page === button ?
-                                    'active' : '';
-                                break;
-                        }
-
-                        if (btnDisplay) {
-                            node = $('<li>', {
-                                'class': classes.sPageButton + ' ' + btnClass,
-                                'aria-controls': settings.sTableId,
-                                'tabindex': settings.iTabIndex,
-                                'id': idx === 0 && typeof button === 'string' ?
-                                    settings.sTableId + '_' + button : null
-                            })
-                                .append(btnDisplay)
-                                .appendTo(container);
-
-                            //show tooltip depend on boostrap tooltip
-                            node.find('a').tooltip({
-                                placement: "bottom",
-                                container: "body",
-                                delay: {
-                                    show: 500,
-                                    hide: 100
-                                }
-                            });
-
-                            settings.oApi._fnBindAction(
-                                node, {
-                                    action: button
-                                }, clickHandler
-                            );
-                        }
-                    }
-                }
-            };
-
-            attach(
-                $(host).empty().html('<ul class="pagination"/>').children('ul'),
-                buttons
-            );
-        }
-    } else {
-        // Integration for 1.9-
-        $.fn.dataTable.defaults.sPaginationType = 'bootstrap';
-
-        /* API method to get paging information */
-        $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
-            return {
-                "iStart": oSettings._iDisplayStart,
-                "iEnd": oSettings.fnDisplayEnd(),
-                "iLength": oSettings._iDisplayLength,
-                "iTotal": oSettings.fnRecordsTotal(),
-                "iFilteredTotal": oSettings.fnRecordsDisplay(),
-                "iPage": oSettings._iDisplayLength === -1 ?
-                    0 : Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
-                "iTotalPages": oSettings._iDisplayLength === -1 ?
-                    0 : Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
-            };
-        };
-
-        /* Bootstrap style pagination control */
-        $.extend($.fn.dataTableExt.oPagination, {
-            "bootstrap": {
-                "fnInit": function(oSettings, nPaging, fnDraw) {
-                    var oLang = oSettings.oLanguage.oPaginate;
-                    var fnClickHandler = function(e) {
-                        e.preventDefault();
-                        if (oSettings.oApi._fnPageChange(oSettings, e.data.action)) {
-                            fnDraw(oSettings);
-                        }
-                    };
-
-                    $(nPaging).append(
-                        '<ul class="pagination">' +
-                        '<li class="prev disabled"><a href="#">&larr; ' + oLang.sPrevious + '</a></li>' +
-                        '<li class="next disabled"><a href="#">' + oLang.sNext + ' &rarr; </a></li>' +
-                        '</ul>'
-                    );
-                    var els = $('a', nPaging);
-                    $(els[0]).bind('click.DT', {
-                        action: "previous"
-                    }, fnClickHandler);
-                    $(els[1]).bind('click.DT', {
-                        action: "next"
-                    }, fnClickHandler);
-                },
-
-                "fnUpdate": function(oSettings, fnDraw) {
-                    var iListLength = 5;
-                    var oPaging = oSettings.oInstance.fnPagingInfo();
-                    var an = oSettings.aanFeatures.p;
-                    var i, ien, j, sClass, iStart, iEnd, iHalf = Math.floor(iListLength / 2);
-
-                    if (oPaging.iTotalPages < iListLength) {
-                        iStart = 1;
-                        iEnd = oPaging.iTotalPages;
-                    } else if (oPaging.iPage <= iHalf) {
-                        iStart = 1;
-                        iEnd = iListLength;
-                    } else if (oPaging.iPage >= (oPaging.iTotalPages - iHalf)) {
-                        iStart = oPaging.iTotalPages - iListLength + 1;
-                        iEnd = oPaging.iTotalPages;
-                    } else {
-                        iStart = oPaging.iPage - iHalf + 1;
-                        iEnd = iStart + iListLength - 1;
-                    }
-
-                    for (i = 0, ien = an.length; i < ien; i++) {
-                        // Remove the middle elements
-                        $('li:gt(0)', an[i]).filter(':not(:last)').remove();
-
-                        // Add the new list items and their event handlers
-                        for (j = iStart; j <= iEnd; j++) {
-                            sClass = (j == oPaging.iPage + 1) ? 'class="active"' : '';
-                            $('<li ' + sClass + '><a href="#">' + j + '</a></li>')
-                                .insertBefore($('li:last', an[i])[0])
-                                .bind('click', function(e) {
-                                    e.preventDefault();
-                                    oSettings._iDisplayStart = (parseInt($('a', this).text(), 10) - 1) * oPaging.iLength;
-                                    fnDraw(oSettings);
-                                });
-                        }
-
-                        // Add / remove disabled classes from the static elements
-                        if (oPaging.iPage === 0) {
-                            $('li:first', an[i]).addClass('disabled');
-                        } else {
-                            $('li:first', an[i]).removeClass('disabled');
-                        }
-
-                        if (oPaging.iPage === oPaging.iTotalPages - 1 || oPaging.iTotalPages === 0) {
-                            $('li:last', an[i]).addClass('disabled');
-                        } else {
-                            $('li:last', an[i]).removeClass('disabled');
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-
-    /*
-     * TableTools Bootstrap compatibility
-     * Required TableTools 2.1+
-     */
-    if ($.fn.DataTable.TableTools) {
-        // Set the classes that TableTools uses to something suitable for Bootstrap
-        $.extend(true, $.fn.DataTable.TableTools.classes, {
-            "container": "DTTT btn-group",
-            "buttons": {
-                "normal": "btn btn-default",
-                "disabled": "disabled"
-            },
-            "collection": {
-                "container": "DTTT_dropdown dropdown-menu",
-                "buttons": {
-                    "normal": "",
-                    "disabled": "disabled"
-                }
-            },
-            "print": {
-                "info": "DTTT_print_info modal"
-            },
-            "select": {
-                "row": "active"
-            }
-        });
-
-        // Have the collection use a bootstrap compatible dropdown
-        $.extend(true, $.fn.DataTable.TableTools.DEFAULTS.oTags, {
-            "collection": {
-                "container": "ul",
-                "button": "li",
-                "liner": "a"
-            }
-        });
-    }
-
-    /*
-     * datatables inline editing
-     */
+    // datatables inline editing
+    // ===================================
     function attachActionToolTip() {
         //bootstrap tooltip active
         $('.mu-table-action a').tooltip({
             placement: "top",
             container: "body"
         });
-
     }
 
     function detachActionToolTip() {
         //bootstrap tooltip destory
         $('.mu-table-action a').tooltip('destroy');
-
     }
+
+    function attachSelectedClass(table, settings) {
+        var defaults = $.fn.dataTable.defaults;
+
+        var oInit = $.extend({}, settings.oInit, defaults);
+        if (oInit.enableSelected === false) return;
+
+        var api = settings.oInstance.api();
+
+        var tr = api.$('tr:first').addClass('selected');
+        if (oInit.singleSelect === true) {
+            $(table).find('tbody').on('click', 'tr', function() {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    instance.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+        } else if (oInit.singleSelect === false) {
+            $(table).find('tbody').on('click', 'tr', function() {
+                $(this).toggleClass('selected');
+            });
+        }
+    }
+
+    var editors = {
+        text: {
+            init: function(container, options) {
+                var text = $("<input type=\"text\" class=\"form-control\" name=\"" + options.name + "\"/>").data("options", options).appendTo(container);
+                this.setValidated(options);
+                return text;
+            },
+            getValue: function(element) {
+                return $(element).find('input:first').val();
+            },
+            setValue: function(element, value) {
+                $(element).find('input:first').val(value);
+            },
+            setValidated: function(options) {
+                if (options.validated === true && options.form) {
+                    $(options.form).bootstrapValidator('addField', options.name, options.validate);
+                }
+            },
+            isValid: function(element) {
+                var text = $(element).find('input:first');
+                var options = text.data("options");
+                if (options.validated === true && options.form) {
+                    $(options.form).data('bootstrapValidator').validateField(text);
+                    return $(options.form).data('bootstrapValidator').isValidField(text);
+                }
+                return true;
+            },
+            resize: function(element, width) {
+                $(element)._outerWidth(width)._outerHeight(22);
+            }
+        },
+        textarea: {
+            init: function(container, options) {
+                var textarea = $("<textarea class=\"form-control\" rows=\"5\" name=\"" + options.name + "\"></textarea>").appendTo(container);
+                return textarea;
+            },
+            getValue: function(element) {
+                return $(element).val();
+            },
+            setValue: function(element, value) {
+                $(element).val(value);
+            },
+            resize: function(element, width) {
+                $(element)._outerWidth(width);
+            }
+        },
+        checkbox: {
+            init: function(container, options) {
+                var checkbox = $("<input type=\"checkbox\" name=\"" + options.name + "\"/>").appendTo(
+                    ("<label></label>").appendTo(
+                        ("<div class=\"checkbox\"></div>").appendTo(container.empty())));
+
+                checkbox.val(options.on);
+                checkbox.attr("offval", options.off);
+                return checkbox;
+            },
+            getValue: function(element) {
+                if ($(element).is(":checked")) {
+                    return $(element).val();
+                } else {
+                    return $(element).attr("offval");
+                }
+            },
+            setValue: function(element, value) {
+                var checked = false;
+                if ($(element).val() == value) {
+                    checked = true;
+                }
+                $(element)._propAttr("checked", checked);
+            }
+        },
+        numberbox: {
+            init: function(container, options) {
+                var numberbox = $("<input type=\"text\" class=\"form-control\" name=\"" + options.name + "\" />").appendTo(container);
+                numberbox.inputmask("decimal", options || {});
+                return numberbox;
+            },
+            destroy: function(element) {
+                $(element).inputmask("remove");
+            },
+            getValue: function(element) {
+                $(element).blur();
+                return $(element).inputmask("unmaskedvalue");
+            },
+            setValue: function(element, value) {
+                $(element).val(value);
+            },
+            resize: function(element, width) {
+                $(element)._outerWidth(width)._outerHeight(22);
+            }
+        },
+        datebox: {
+            init: function(container, options) {
+                var datebox = $("<div class=\"input-group date form_datetime\"><input type=\"text\" size=\"16\" readonly=\"\" class=\"form-control\" name=\"" + options.name + "\"> <span class=\"input-group-btn\"> <button class=\"btn default\" type=\"button\"><i class=\"fa fa-calendar\"></i></button></span></div>").appendTo(container);
+                datebox.datetimepicker(options || {});
+                return datebox;
+            },
+            destroy: function(element) {
+                $(element).datetimepicker("remove");
+            },
+            getValue: function(element) {
+                return $(element).find('input.form-control').val();
+            },
+            setValue: function(element, value) {
+                $(element).find('input.form-control').val(value);
+                $(element).datetimepicker('update');
+            },
+            resize: function() {
+                //NoOPS
+            }
+        },
+        combobox: {
+            init: function(container, options) {
+                var combobox = $("<select " + options.multiple ? "multiple " : "" + " class=\"form-control selectpicker\" name=\"" + options.name + "\"></select>").appendTo(container);
+                combobox.selectpicker(options || {});
+
+                if (options.url) {
+                    var select = combobox.find('select');
+                    var purl = options.url + (this.options.url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
+
+                    $.ajax({
+                        url: purl,
+                        dataType: 'json',
+                        type: 'GET',
+                        success: function(data) {
+                            select.empty();
+                            $.each(data.values, function(i, item) {
+                                select.append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                        },
+                        error: function(data) {
+                            //NoOPS
+                        }
+                    });
+
+                    select.data('options', options);
+                }
+
+                combobox.selectpicker('refresh');
+                return combobox;
+            },
+            destroy: function(element) {
+                $(element).selectpicker("destroy");
+            },
+            getValue: function(element) {
+                var opts = $(element).data("options") || {};
+                if (opts.multiple) {
+                    return $(element).val().join((opts.separator || ','));
+                } else {
+                    return $(element).val();
+                }
+            },
+            setValue: function(element, value) {
+                var opts = $(element).data("options") || {};
+                if (opts.multiple) {
+                    if (value) {
+                        $(element).selectpicker("val", value.split(opts.separator));
+                    } else {
+                        $(element).empty();
+                    }
+                } else {
+                    $(element).selectpicker("val", value);
+                }
+            },
+            resize: function(element, width) {
+                //NoOPS
+            }
+        }
+    };
+
+
+    var deletedColumn = "deleted";
+
+    var operationColumn = "_OPERATE_";
 
     function restoreRow(oTable, nRow) {
         var aData = oTable.fnGetData(nRow);
-        var jqTds = $('>td', nRow);
 
-        for (var i = 0, iLen = jqTds.length; i < iLen; i++) {
-            oTable.fnUpdate(aData[i], nRow, i, false);
-        }
-
-        oTable.fnDraw();
+        oTable.api().row(nRow).data(aData).draw();
     }
 
     function editRow(oTable, nRow) {
-        var aData = oTable.fnGetData(nRow);
-        var jqTds = $('>td', nRow);
-        jqTds[0].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[0] + '">';
-        jqTds[1].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[1] + '">';
-        jqTds[2].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[2] + '">';
-        jqTds[3].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[3] + '">';
-        jqTds[4].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[4] + '">';
-        jqTds[5].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[5] + '">';
-        jqTds[6].innerHTML = '<input type="text" class="form-control input-small" value="' + aData[6] + '">';
-        jqTds[7].innerHTML = '<div class="mu-table-action"><a class="edit" data-table-action="save" data-toggle="tooltip" ref="tooltip" data-original-title="保存" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-table-action="cancel" data-toggle="tooltip" ref="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>';
+        var settings = oTable.fnSettings();
+        var aData = oTable.api().row(nRow).data(); //object
+        var rowName = '';
+        if ($.isPlainObject(settings.oInit.row) && typeof settings.oInit.row.name !== 'undefined') {
+            rowName = settings.oInit.row.name.replace(/_INDEX_/g, oTable.api().row(nRow).index());
+        }
+
+        $(nRow).find('td:not(:last)').each(function(index, el) {
+            $(el).empty();
+
+            var column = settings.oInit.columns[index];
+            var editor = column.editor;
+            if (editor) {
+                var editorOption = column[editor] || {};
+
+                editorOption["name"] = rowName ? (rowName + '.' + column.name) : column.name;
+
+                //validate information
+                if (settings.oInit.validated === true) {
+                    editorOption["validated"] = settings.oInit.validated;
+                    editorOption["form"] = settings.oInit.validateForm;
+
+                    if ($.isPlainObject(column.validate)) {
+                        editorOption["validate"] = column.validate;
+                    }
+                }
+
+                editors[editor].init(el, editorOption);
+                editors[editor].setValue(el, column.real ? aData[column.real] : aData[column.name]);
+            }
+        });
+
+        $('<div class="mu-table-action"><a class="edit" data-inline-table-action="save" data-toggle="tooltip" rel="tooltip" data-original-title="保存" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-inline-table-action="cancel" data-toggle="tooltip" rel="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>').appendTo($(nRow).find('td:last').removeClass('mu-table-action-cont').addClass('mu-table-action-cont').empty());
     }
 
     function saveRow(oTable, nRow) {
-        var jqInputs = $('input', nRow);
-        oTable.fnUpdate(jqInputs[0].value, nRow, 0, false);
-        oTable.fnUpdate(jqInputs[1].value, nRow, 1, false);
-        oTable.fnUpdate(jqInputs[2].value, nRow, 2, false);
-        oTable.fnUpdate(jqInputs[3].value, nRow, 3, false);
-        oTable.fnUpdate(jqInputs[4].value, nRow, 4, false);
-        oTable.fnUpdate(jqInputs[5].value, nRow, 5, false);
-        oTable.fnUpdate(jqInputs[6].value, nRow, 6, false);
-        oTable.fnUpdate('<div class="mu-table-action"><a class="edit" data-table-action="edit" data-toggle="tooltip" ref="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>  <a class="delete" data-table-action="delete" data-toggle="tooltip" ref="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a></div>', nRow, 7, false);
-        oTable.fnDraw();
+        var result = true,
+            settings = oTable.fnSettings(),
+            isValidate = settings.oInit.validated,
+            $form = $(settings.oInit.validateForm);
+
+        var rowData = {};
+        $('>td:not(:last)', nRow).each(function(index, el) {
+            var column = settings.oInit.columns[index];
+            var editor = column.editor;
+            if (editor) {
+                var isValid = editors[editor].isValid(el);
+                if (isValid === true) {
+                    var value = editors[editor].getValue(el);
+                    if ($.isPlainObject(value)) {
+                        for (var name in value) {
+                            rowData[name] = value[name];
+                        }
+                    } else {
+                        rowData[column.name] = value;
+                    }
+                }
+            }
+        });
+
+        rowData[deletedColumn] = 0;
+        rowData[operationColumn] = 'SAVE';
+
+        if (isValidate === true) {
+            result = $form.data('bootstrapValidator').isValidContainer($(nRow));
+            if (result !== true) return result;
+        }
+
+        $('>td:not(:last)', nRow).each(function(index, el) {
+            var editor = settings.oInit.columns[index].editor;
+            if (editor) {
+                if (editors[editor].destroy) {
+                    editors[editor].destroy(el);
+                }
+            }
+        });
+
+        oTable.api().row(nRow).data(rowData).draw();
+        return result;
     }
 
     function getTable($this) {
-
         var selector = $this.attr('data-target');
 
         if (!selector) {
@@ -410,54 +687,45 @@ var DTParser = (function(base, $, window, document, undefined) {
         }
 
         var $table = selector && $(selector);
-
-        return $table && $table.length ? $table : $this.closest("table");
-
+        return $table.length ? $table : $this.closest("table");
     }
-
 
     // APPLY TO DTATABLES ELEMENTS CLICK EVENT
     // ===================================
     $(document)
-        .on('click.add.inline.datatables.data-api', '[data-table-action="add"]', function(e) {
-
+        .on('click.add.inline.datatables.data-api', '[data-inline-table-action="add"]', function(e) {
             e.preventDefault();
             detachActionToolTip();
-
             try {
-
-                //get closed tables
                 var $table = getTable($(this));
                 //get datatables object
                 var $datatables = $table.dataTable();
+                if ($datatables.length) {
+                    var settings = $datatables.fnSettings();
 
-                if ($datatables) {
+                    var cols = settings.oInit.columns;
+                    var colDatas = {};
+                    for (var i = 0; i < cols.length; i++) {
+                        if (cols[i].name) {
+                            colDatas[cols[i].name] = '';
+                        }
+                    }
 
-                    var aiNew = $datatables.fnAddData(['', '', '', '', '', '', '',
-                        '<div class="mu-table-action"><a class="edit" data-table-action="edit" data-toggle="tooltip" ref="tooltip" data-original-title="编辑" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-table-action="cancel" data-mode="new" data-toggle="tooltip" ref="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>'
-                    ]);
-
-                    var nRow = $datatables.fnGetNodes(aiNew[0]);
-
-                    editRow($datatables, nRow);
-
-                } else {
-                    //TO DO
+                    colDatas[operationColumn] = 'ADD';
+                    colDatas[deletedColumn] = 0;
+                    var aiNew = $datatables.api().row.add(colDatas).draw(false).node();
+                    editRow($datatables, aiNew);
                 }
-
             } catch (e) {
-
+                //NoOPS
             }
 
             attachActionToolTip();
         })
-        .on('click.delete.inline.datatables.data-api', '[data-table-action="delete"]', function(e) {
-
+        .on('click.delete.inline.datatables.data-api', '[data-inline-table-action="delete"]', function(e) {
             e.preventDefault();
             detachActionToolTip();
-
             try {
-
                 if (confirm("Are you sure to delete this row ?") == false) {
                     return;
                 }
@@ -468,16 +736,31 @@ var DTParser = (function(base, $, window, document, undefined) {
                 var $datatables = $table.dataTable();
 
                 if ($datatables) {
-
                     var nRow = $(this).parents('tr')[0];
+                    var rowData = $table.api().row(nRow).data();
 
-                    $datatables.fnDeleteRow(nRow);
+                    var e = $.Event('delete.inline.datatables');
+                    $table.trigger(e, {
+                        "data": rowData
+                    });
 
-                } else {
-                    //TO DO
+                    if (e.isDefaultPrevented()) return;
+
+                    var settings = $datatables.fnSettings();
+                    if ($.isPlainObject(settings.oInit.row) &&
+                        typeof settings.oInit.row.id !== 'undefined') {
+                        var id = rowData[settings.oInit.row.id];
+                        if (id) {
+                            $datatables.row(nRow)
+                                .nodes()
+                                .to$()
+                                .addClass('mu-hidden');
+
+                        } else {
+                            $datatables.fnDeleteRow(nRow);
+                        }
+                    }
                 }
-
-                /*alert("Deleted! Do not forget to do some ajax to sync with backend :)");*/
 
             } catch (e) {
 
@@ -485,11 +768,9 @@ var DTParser = (function(base, $, window, document, undefined) {
 
             attachActionToolTip();
         })
-        .on('click.save.inline.datatables.data-api', '[data-table-action="save"]', function(e) {
-
+        .on('click.save.inline.datatables.data-api', '[data-inline-table-action="save"]', function(e) {
             e.preventDefault();
             detachActionToolTip();
-
             try {
 
                 //get closed tables
@@ -497,15 +778,20 @@ var DTParser = (function(base, $, window, document, undefined) {
                 //get datatables object
                 var $datatables = $table.dataTable();
 
-                if ($datatables) {
+                if ($datatables.length) {
 
                     var nRow = $(this).parents('tr')[0];
 
                     if (nRow !== null) {
                         /* Editing this row and want to save it */
-                        saveRow($datatables, nRow);
+                        var result = saveRow($datatables, nRow);
 
-                        /*alert("Updated! Do not forget to do some ajax to sync with backend :)");*/
+                        if (result === true) {
+                            var e = $.Event('save.inline.datatables');
+                            $table.trigger(e, {
+                                "data": $table.api().row(nRow).data()
+                            });
+                        }
                     }
 
                 } else {
@@ -518,13 +804,10 @@ var DTParser = (function(base, $, window, document, undefined) {
 
             attachActionToolTip();
         })
-        .on('click.cancel.inline.datatables.data-api', '[data-table-action="cancel"]', function(e) {
-
+        .on('click.cancel.inline.datatables.data-api', '[data-inline-table-action="cancel"]', function(e) {
             e.preventDefault();
             detachActionToolTip();
-
             try {
-
                 //get closed tables
                 var $table = getTable($(this));
                 //get datatables object
@@ -550,11 +833,9 @@ var DTParser = (function(base, $, window, document, undefined) {
 
             attachActionToolTip();
         })
-        .on('click.edit.inline.datatables.data-api', '[data-table-action="edit"]', function(e) {
-
+        .on('click.edit.inline.datatables.data-api', '[data-inline-table-action="edit"]', function(e) {
             e.preventDefault();
             detachActionToolTip();
-
             try {
                 //get closed tables
                 var $table = getTable($(this));
@@ -579,7 +860,12 @@ var DTParser = (function(base, $, window, document, undefined) {
         });
 
     // Apply datatables to all elements with the rel="datatables" attribute
-    // ===================================
+    // ====================================================================
+    $.extend(true, $.fn.dataTable.defaults, {
+        "enableSelected": true,
+        "singleSelect": false
+    });
+
     $(document).on('ready update', function(event, updatedFragment) {
         var $root = $(updatedFragment || 'html');
 
@@ -590,22 +876,39 @@ var DTParser = (function(base, $, window, document, undefined) {
                 columnArray = new Array();
 
             if (!$.fn.DataTable.isDataTable(table)) {
-
-                var option = $.extend({}, parser.getTableData(table));
+                //parse option
+                var option = $.extend({}, adapter.getTableOption(table));
 
                 // Get the column data once for the life time of the plugin
                 $table.find(columnDataSelector).each(function() {
-                    var data = parser.getColumnsData(this);
+                    var data = adapter.getColumnsOption(this);
                     columnArray.push(data);
                 });
-
                 option = $.extend({}, {
                     "columns": columnArray
                 }, option);
 
-                $table.dataTable(option);
+                //predo option
+                adapter.processOption(this, option);
+
+                //apply datatables
+                var instance = $table
+                    .on('init.dt', function(e, settings, json) {
+                        //afterdo option
+                        attachSelectedClass(table, settings);
+                    })
+                    .on('preXhr.dt', function(e, settings, data) {
+                        adapter.processReqData(settings, data);
+                    })
+                    .on('xhr.dt', function(e, settings, json) {
+                        if (json.success) {
+                            adapter.processResData(settings, json);
+                        } else {
+                            //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
+                        }
+                    }).DataTable(option);
             }
         });
     });
 
-})(Base || {}, DTParser || {}, jQuery, window, document);
+})(Base || {}, DTAdapter || {}, jQuery, window, document);

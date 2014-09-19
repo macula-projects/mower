@@ -137,9 +137,9 @@
     // ====================
 
     $.fn.dropdownHover.noConflict = function() {
-        $.fn.dropdownHover = old
-        return this
-    }
+        $.fn.dropdownHover = old;
+        return this;
+    };
 
 
     // Apply dropdownHover to all elements with the data-hover="dropdown" attribute

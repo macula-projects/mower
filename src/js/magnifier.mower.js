@@ -17,10 +17,10 @@
    * ====================== */
 
   var Magnifier = function(element, options) {
-    this.options  = options
-    this.element  = element
-    this.$element = $(element)
-  }
+    this.options  = options;
+    this.element  = element;
+    this.$element = $(element);
+  };
 
   //you can put your plugin defaults in here.
   Magnifier.DEFAULTS = {
@@ -138,9 +138,9 @@
    * ================= */
 
   $.fn.magnifier.noConflict = function() {
-    $.fn.magnifier = old
-    return this
-  }
+    $.fn.magnifier = old;
+    return this;
+  };
 
   /* Magnifier DATA-API
    * ============== */

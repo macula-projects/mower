@@ -15,14 +15,18 @@ var Base = (function($, window, document, undefined) {
     var base = {};
 
     // private functions & variables
-    var _parseComposite = function(key, value, t, pre, pkey) {
-        var opts     = {};
-        var attrName = 'data-' + pre + (pkey ? (pkey.toLowerCase() + '-') : "") + key.toLowerCase();
+    var _parseComposite = function(key, value, t, prefix, parentkey) {
+        var opts = {};
+        var attrName = 'data-' + prefix + (parentkey ? (parentkey.toLowerCase() + '-') : '') + key.toLowerCase();
 
-        if (value === 'string') { //字符串直接从宿主对象对应属性中取值
+        if (!t.attr(attrName)) return opts;
+
+        if (value === 'function') {
+            opts[key] = (new Function("return " + t.attr(attrName)))(); //设置页面全局函数
+        } else if (value === 'string') { //字符串直接从宿主对象对应属性中取值
             opts[key] = t.attr(attrName);
         } else if (value === 'boolean') { //布尔型从宿主对象对应属性中取值，同时将属性值转为布尔型
-            opts[key] = t.attr(attrName) ? (t.attr(attrName) == 'true') : undefined;
+            opts[key] = t.attr(attrName) ? (t.attr(attrName) === 'true') : undefined;
         } else if (value === 'number') { //数字型也从宿主对象对应属性中取值，同时将属性值转为浮数
             opts[key] = t.attr(attrName) == '0' ? 0 : parseFloat(t.attr(attrName)) || undefined;
         } else if (value === 'array') { //数组型也从宿主对象对应属性中取值，同时将属性值转为数组
@@ -70,17 +74,17 @@ var Base = (function($, window, document, undefined) {
      * parse options, including standard 'data-options' attribute.
      *
      * @param target [DOM对象] 组件的宿主对象
-     * @param tPrefix [DOM对象] 组件的宿主对象前缀
      * @param properties [数组] 需要优先从宿主对象属性(不包含data-options属性)中取的opts列表
+     * @param tPrefix [DOM对象] 组件的宿主对象前缀
      *
      * calling examples:
      * Base.parseOptions(target);
      * Base.parseOptions(target, ['id','title','width',{fit:'boolean',border:'boolean'},{min:'number'},{orderSeq:'array'}]);
      * Base.parseOptions(target, [{ajax:{url:'string',method:'string'}}]);
      */
-    base.parseOptions = function(target, tPrefix, properties) {
+    base.parseOptions = function(target, properties, tPrefix) {
         var t = $(target);
-        var pre = (tPrefix ? (tPrefix.toLowerCase() + '-') : ('mu' + '-'));
+        var prefix = (tPrefix ? (tPrefix.toLowerCase() + '-') : '');
 
         var options = {};
         //第一步：首先从data-options属性中取opts
@@ -99,27 +103,32 @@ var Base = (function($, window, document, undefined) {
             for (var i = 0; i < properties.length; i++) {
                 var pp = properties[i];
                 //如果是字符串型
-                if (typeof pp == 'string') {
+                if (typeof pp === 'string') {
                     //width height left top四个属性从宿主对象的style属性中取值
                     if (pp === 'width' || pp === 'height' || pp === 'left' || pp === 'top') {
                         opts[pp] = parseInt(target.style[pp]) || undefined;
                     } else { //其它情况直接从宿主对象的对应属性中取值
-                        opts[pp] = t.attr('data-' + pre + pp.toLowerCase());
+                        opts[pp] = t.attr('data-' + prefix + pp.toLowerCase());
                     }
-                } else { //布尔型或者数字型或者数组[]或者对象'{}'
+                } else { //json对象'{}'
                     for (var pkey in pp) {
                         var pvalue = pp[pkey];
 
-                        if (typeof pvalue == 'string') { //字符串型(布尔型或者数字型或者数组)
-                            $.extend(opts, _parseComposite(pkey, pvalue, t, pre));
-                        } else { //对象
+                        if (typeof pvalue === 'string') { //字符串型
+                            //解析字符串或布尔型或者数字型或者数组
+                            $.extend(opts, _parseComposite(pkey, pvalue, t, prefix));
+                        } else { //对象'{}'
                             var nestedOpts = {};
                             for (var ckey in pvalue) {
                                 var cvalue = pvalue[ckey];
-                                $.extend(nestedOpts, _parseComposite(ckey, cvalue, t, pre, pkey));
+                                //data attribute name ie: data-parent=""; children : data-parent-children.
+                                var cOpts = _parseComposite(ckey, cvalue, t, prefix, pkey);
+                                if (!$.isEmptyObject(cOpts)) $.extend(nestedOpts, cOpts); //maybe empty object
                             }
-
-                            opts[pkey] = nestedOpts;
+                            //maybe empty object
+                            if (!$.isEmptyObject(nestedOpts) || (typeof pvalue.default !== 'undefined' && pvalue.default === true)) {
+                                opts[pkey] = nestedOpts;
+                            }
                         }
                     }
                 }
@@ -134,6 +143,6 @@ var Base = (function($, window, document, undefined) {
 
 }(jQuery, window, document));
 
-$(function(){
+$(function() {
     Base.init();
 });

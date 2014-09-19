@@ -40,6 +40,10 @@ div.dt-bottom-row {
   box-shadow: inset 0 1px #ffffff;
 }
 
+
+/* dataTables_length
+ ========================================================================== */
+
 div.dataTables_length {
   /*  position: absolute;
       right: 13px;
@@ -47,6 +51,12 @@ div.dataTables_length {
    */
   float: left;
   padding-top: 5px;
+}
+
+div.dataTables_length label {
+  font-weight: normal;
+  float: left;
+  text-align: left;
 }
 
 div.dataTables_length select {
@@ -69,10 +79,18 @@ div.dataTables_length select:focus {
   outline: 0px none;
 }
 
+/* dataTables_filter
+ ========================================================================== */
+
 div.dataTables_filter {
   position: absolute;
   left: 10px;
   top: -38px;
+}
+
+div.dataTables_filter label {
+  font-weight: normal;
+  float: right;
 }
 
 div.dataTables_filter input {
@@ -91,6 +109,9 @@ div.dataTables_filter input {
   border: 1px solid #bbbbbb;
 }
 
+/* dataTables_paginate
+ ========================================================================== */
+ 
 div.dataTables_paginate {
   margin: 4px 0 0;
 }
@@ -112,6 +133,13 @@ div.dataTables_paginate .pagination {
   max-width: inherit;
   margin-bottom: 0;
 }
+
+@media (max-width: 767px){
+  .dataTables_wrapper .table-responsive {
+    margin-bottom: 0;
+  }
+}
+
 
 .dataTables_wrapper table.table thead th {
   position: relative;
@@ -170,6 +198,7 @@ div.dataTables_paginate .pagination {
   outline: none;
 }
 
+
 .dataTables_wrapper table.table tbody tr.active td,
 .dataTables_wrapper table.table tbody tr.active th {
   background-color: #08C;
@@ -179,6 +208,13 @@ div.dataTables_paginate .pagination {
 .dataTables_wrapper table.table tbody tr.active:hover td,
 .dataTables_wrapper table.table tbody tr.active:hover th {
   background-color: #0075b0 !important;
+}
+
+
+.dataTables_wrapper .table-striped > tbody > tr:nth-child(2n+1) > td, 
+.dataTables_wrapper .table-striped > tbody > tr:nth-child(2n+1) > th {
+  background-clip: padding-box;
+  background-color: #f9f9f9;
 }
 
 .dataTables_wrapper .table-striped tbody tr.active:nth-child(odd) td,
@@ -368,6 +404,37 @@ div.DTFC_LeftFootWrapper table {
 .dt-row {
   padding: 4px 10px;
 }
+
+/* dataTables selected
+ ========================================================================== */
+ table.dataTable tbody tr.selected {
+  background-color: #b0bed9;
+}
+
+
+table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > td,
+table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > th {
+  background-color: #abb9d3;
+}
+
+table.dataTable.table-hover > tbody > tr:hover.selected > td,
+table.dataTable.table-hover > tbody > tr.odd:hover.selected >td,
+table.dataTable.table-hover > tbody > tr.even:hover.selected > td {
+  background-color: #a9b7d1;
+}
+
+/* dataTables form-group input
+ ========================================================================== */
+// table.dataTable thead > tr > th .form-group,
+// table.dataTable tbody> tr > td .form-group {
+//     width: 100% !important;
+// }
+
+table.dataTable thead > tr > th .form-control,
+table.dataTable tbody> tr > td .form-control {
+    width: 100% !important;
+}
+
 
 .ColVis {
   position: absolute;

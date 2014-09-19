@@ -10,7 +10,7 @@
  * ======================================================================== */
 
 ;
-(function(json, $, window, document, undefined) {
+(function(json, utils, $, window, document, undefined) {
 
     "use strict"; // jshint ;_;
 
@@ -18,11 +18,11 @@
      * ====================== */
 
     var MainMenu = function(element, options) {
-        this.element = element
-        this.$element = $(element)
-        this.options = options
-        this.nodes = []
-    }
+        this.element  = element;
+        this.$element = $(element);
+        this.options  = options;
+        this.nodes    = [];
+    };
 
     //you can put your plugin defaults in here.
     MainMenu.DEFAULTS = {
@@ -43,7 +43,7 @@
             populateError: "error.populate.mu.mainMenu",
             populateSuccess: "success.populate.mu.mainMenu"
         }
-    }
+    };
 
     MainMenu.prototype = {
 
@@ -51,10 +51,15 @@
 
         _init: function(element, options) {
             var $element = $(element);
-            this.options = $.extend({}, MainMenu.DEFAULTS, $element.data(), typeof options == 'object' && options);
+            this.options = $.extend({}, MainMenu.DEFAULTS, $element.data(), typeof options === 'object' && options);
+            this.options.url && (this.options.url = utils.getAbsoluteUrl(this.options.url,$element.getContextPath()));
+            
             this.options.param = json.decode(this.options.param || '{}');
 
-            this.populate();
+            var that = this;
+            $element.closest('.dropdown').one("mouseover", function() {
+                that.populate();
+            });
         },
         constructTree: function(treeFlatData) {
             var datasource = treeFlatData.makeLevelTree({
@@ -71,16 +76,41 @@
                 //stuff to do on mouse enter
                 var $menuItem = $(this),
                     $subMenu = $menuItem.find('.mu-menu-item-main'),
-                    width = that.$element.outerWidth(),
-                    height = that.$element.outerHeight();
+                    width = that.$element.outerWidth();
 
                 $menuItem.addClass('hover');
+
+                var p = that.$element.offset().top; //Main Menu top
+                var o = $menuItem.offset().top - p; //menu item top
+
+                var t = document.documentElement.scrollTop || document.body.scrollTop;
+                var r = o + $subMenu.height() + p - t;
+
+                var q = $(window).height() - 30;
+                var s = r - q;
+                if (r > q) {
+                    if ($menuItem.offset().top - t + $menuItem.height() - q > -10) {
+                        o = $menuItem.position().top - $subMenu.height() + $menuItem.height() - 2;
+                    } else {
+                        o = o - s - 10;
+                    }
+                }
+
+                if ($subMenu.height() > q) {
+                    o = t - p;
+                }
+
+                //because of main menu z-index lt top main menu.
+                //so .mu-menu-subitem-main top substract top menu height 
+                if (o < (0 - (p - 26))) {
+                    o = (0 - (p - 26)); //26 top menu height
+                }
+
                 // Show the submenu
                 $subMenu.css({
                     display: "block",
-                    top: -1,
-                    left: width - 2, // main should overlay submenu
-                    "min-height": height
+                    top: o,
+                    left: width - 2 // main should overlay submenu
                 });
             }).on("mouseleave", "li.mu-menu-item", function(e) {
                 //stuff to do on mouse leave
@@ -120,21 +150,31 @@
                 var $this = $(this);
                 var mid = $this.attr('_mid') || $this.attr('mid');
                 var href = $this.attr('data-href');
-                var instance = that.findMenuById(mid);
+                var instance = that.findMenuById(mid);//origin
 
                 if ($this.is('a')) e.preventDefault();
 
+                var module = this;
                 var event = $.Event(MainMenu.DEFAULTS.events.clickMenu, {
                     relatedTarget: that.element,
-                    target: this,
+                    target: module,
                     mid: mid,
                     href: href,
                     instance: instance
                 });
-
                 that.$element.trigger(event);
-            });
 
+                if(event.isDefaultPrevented()) return;
+
+                href = $this.attr('data-href');
+                if ($.isFunction(decodeURIComponent)) {
+                    href = decodeURIComponent(href);
+                }
+
+                var url = utils.getAbsoluteUrl(href, that.$element.getContextPath());
+                url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
+                window.location.href = url;
+            });
         },
         populate: function() {
             var that = this;
@@ -176,12 +216,12 @@
         _destroy: function() {
 
         }
-    }
+    };
 
     /* MAINMENU PLUGIN DEFINITION
      * ======================= */
 
-    var old = $.fn.mainMenu
+    var old = $.fn.mainMenu;
 
     $.fn.mainMenu = function(options) {
 
@@ -220,9 +260,9 @@
 
         // If the earlier cached method gives a value back, return the resulting value, otherwise return this to preserve chainability.
         return results !== undefined ? results : this;
-    }
+    };
 
-    $.fn.mainMenu.Constructor = MainMenu
+    $.fn.mainMenu.Constructor = MainMenu;
 
 
     /* MAINMENU NO CONFLICT
@@ -231,7 +271,7 @@
     $.fn.mainMenu.noConflict = function() {
         $.fn.mainMenu = old
         return this
-    }
+    };
 
 
     /* MAINMENU DATA-API
@@ -356,4 +396,4 @@
         };
     };
 
-})(JSON || {}, jQuery, window, document);
+})(JSON || {}, Utils || {}, jQuery, window, document);
