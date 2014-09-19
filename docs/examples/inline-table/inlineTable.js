@@ -11,26 +11,15 @@ var InlineTable = (function($) {
         init: function() {
             this.initMainMenu();
             this.initBreadCrumb();
+            this.initTable();
         },
         initBreadCrumb: function() {
             $("#main-menu").on('complete.mu.mainMenu', function(event) {
                 /* Act on the event */
-                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
 
-                // menuItem && $(".breadcrumb")
-                //                 .breadcrumb({
-                //                     divider: '<i class="fa fa-angle-right"></i>',
-                //                     favoriteClick: onFavoriteClick
-                //                 })
-                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
-                //                 
+                var defaultVal = QueryString.title ? QueryString.title : '商品库存管理';
 
-                menuItem && $(".breadcrumb")
-                    .breadcrumb({
-                        divider: '<i class="fa fa-angle-right"></i>',
-                        favoriteClick: onFavoriteClick
-                    })
-                    .breadcrumb("push", menuItem.name, 'table.html')
+                $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i>' + decodeURIComponent(defaultVal));
             });
         },
         initMainMenu: function() {
@@ -46,6 +35,18 @@ var InlineTable = (function($) {
                 var purl = 'inline-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
                 window.location = purl;
             });
+        },
+        initTable: function() {
+                var viewModel = ko.mapping.fromJS({
+                    "tableData":[]
+                });
+
+                var val = $('div.panel-body').attr('attribute');
+                if(val){
+                    alert("ddd");
+                }
+
+                ko.applyBindings(viewModel,$('div.panel-body')[0]);
         }
     };
 }(jQuery));

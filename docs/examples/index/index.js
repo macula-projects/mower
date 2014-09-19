@@ -30,6 +30,8 @@ var Index = (function($) {
                 // alert(event.mid +"[ name: " +event.instance.name + " ] " + "[ heaf :" + event.href + "]");
                 // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
                 // window.location= purl;
+                // 
+                event.preventDefault();
 
                 var purl = 'index.html?' + 'title=' + event.instance.name + '&_=' + (new Date()).valueOf();
                 window.location = purl;
