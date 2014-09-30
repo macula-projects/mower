@@ -333,28 +333,34 @@
                             data-paging="false"
                             data-ordering="false"
                             data-bind="inlineEditTable:tableData"
-                            data-validator-container="tooltip"
-                            data-validator-group="td">
+                            data-bv-container="tooltip"
+                            data-bv-feedbackicons-valid="fa fa-check"
+                            data-bv-feedbackicons-invalid="fa fa-times"
+                            data-bv-feedbackicons-validating="fa fa-refresh"
+                            data-bv-group="td">
                                 <thead>
                                     <tr data-name="application.appInstance[_INDEX_]" data-id="id">
                                         <th data-name="id" 
                                             data-editor="text" 
-                                            data-validator-name="notEmpty,digits">编号</th>
+                                            data-bv-notempty="true"
+                                            data-bv-digits="true"
+                                        >编号</th>
                                         <th data-name="name"
                                             data-editor="text" 
-                                            data-validator-name="notEmpty">姓名</th>
+                                            data-bv-notempty="true">姓名</th>
                                         <th data-name="phone" data-editor="text" 
-                                            data-validator-name="notEmpty,between" 
-                                            data-between-min="4"
-                                            data-between-max="100"
-                                            data-between-message="请输入介于之间4~100之间的数值">联系方式</th>
+                                            data-bv-notempty="true"
+                                            data-bv-between="true"
+                                            data-bv-between-max="100"
+                                            data-bv-between-min="4"
+                                            data-bv-between-message="请输入介于之间4~100之间的数值">联系方式</th>
                                         <th data-name="company" 
                                             data-editor="text" 
-                                            data-validator-name="notEmpty">公司</th>
+                                            data-bv-notempty="true">公司</th>
                                         <th data-name="zipCode"
-                                            data-editor="text" 
-                                            data-validator-name="notEmpty,digits">邮政编码</th>
-                                        <th data-name="_OPERATE_"></th>
+                                            data-editor="text"
+                                            data-bv-notempty="true"
+                                            data-bv-digits="true">邮政编码</th>
                                     </tr>
                                 </thead>
                             </table>

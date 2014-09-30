@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../mower/css/mower.css">
 </head>
 
-<body>
+<body class="mu-header-fixed">
     <!-- BEGIN HEADER -->
     <div id="header">
         <nav class="navbar navbar-default navbar-fixed-top mu-navbar-sm" role="navigation">
@@ -239,9 +239,9 @@
                 <div class="navbar-collapse collapse" id="navbar-main">
                     <ul class="nav navbar-nav">
                         <li class="dropdown mu-menu">
-                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" href="#" id="allcate-header">全部系统功能<i class="fa fa-list pull-right"></i></a>
+                            <a class="dropdown-toggle" href="#" id="allcate-header">全部系统功能<i class="fa fa-list pull-right"></i></a>
                             <ul id="main-menu" class="dropdown-menu" aria-labelledby="allcate-header">
-
+                                <h4 class="_loadmask"><i class="fa fa-cog fa-spin"></i> Loading...</h4>
                             </ul>
                         </li>
                         <li>
@@ -286,7 +286,7 @@
                             <div class="panel-heading">
                                 <div class="row mu-panel-toolbar">
                                     <div class="col-xs-12 col-md-6 mu-panel-toolbar-action-cont">
-                                        <a class="btn" data-action-type="add" data-toggle="pushBreadcrumb" data-label="新增" data-href="examples/index/form.html">
+                                        <a class="btn" data-action-type="add" data-toggle="pushBreadcrumb" data-label="新增" data-href="admin_examples/index/form.html">
                                             <i class="fa fa-search-plus fa-lg"></i>
                                             新增
                                         </a>

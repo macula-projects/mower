@@ -22,7 +22,9 @@ var Index = (function($) {
             });
         },
         initMainMenu: function() {
-            $("#main-menu").mainMenu({
+            
+
+            $("#main-menu").compMenu({
                 'url': "../../assets/ajax/data/menu.txt"
             });
 
@@ -41,5 +43,6 @@ var Index = (function($) {
 }(jQuery));
 
 $(document).ready(function() {
+
     Index.init();
 });
