@@ -50,7 +50,6 @@
 (function(adapter, knockout, $, window, document, undefined) {
     'use strict';
 
-    var deletedColumn = "deleted";
     var operationColumn = "_OPERATE_";
 
     var _operationRender = function(data, type, row, meta) {
@@ -84,6 +83,9 @@
         //may be array,depend on passing array/object to table data
         if ($.isPlainObject(data)) {
             for (var name in data) {
+
+                if(name === operationColumn) continue;
+
                 var isDrawed = false;
                 var colName = '';
                 for (var i = 0, iLen = columns.length; i < iLen; i++) {
@@ -94,6 +96,7 @@
                         break;
                     }
                 }
+
 
                 if (isDrawed !== true) {
                     colName = rowName ? (rowName + '.' + name) : name;
@@ -130,43 +133,15 @@
 
             // Get the column data once for the life time of the plugin
             $(element).find(columnDataSelector).each(function() {
-                var colOptions = adapter.getColumnsOption(this);
-
-                try {
-                    var colName = colOptions.name;
-
-                    //handle operate column
-                    if (colName === operationColumn) {
-                        colOptions["data"] = null;
-                        colOptions["render"] = _operationRender;
-                    }
-
-                    if (colName) {
-                        var colValidateOpts = adapter.getValidateFieldOptions(this);
-                        if (colValidateOpts.validator) {
-                            var colValidator = colValidateOpts.validator;
-                            //keep all validators
-                            if (typeof colValidator.name !== 'undefined' && colValidator.name) {
-                                var validatorNames = colValidator.name.split(',');
-                                var validators = {};
-                                for (var i = 0; i < validatorNames.length; i++) {
-                                    var name = validatorNames[i];
-                                    validators[name] = colValidateOpts[name];
-                                }
-                                colValidator["validators"] = validators;
-
-                                delete colValidator.name;
-                            }
-
-                            colOptions["validate"] = colValidator;
-                        }
-                    }
-                } catch (e) {
-                    //NoOPS
-                }
-
-                columnArray.push(colOptions);
+                columnArray.push(adapter.getColumnsOption(this));
             });
+
+            $(rowDataSelector,element).append('<th></th>');//auto append operation column
+            var operationOpt = {};
+            operationOpt["data"] = null;
+            operationOpt["render"] = _operationRender;
+
+            columnArray.push(operationOpt);
 
             //merge columns options
             tableOptions["columns"] = columnArray;
@@ -184,28 +159,28 @@
 
             //apply table
             var table = $(element).dataTable(tableOptions);
-            var api = table.api();
 
+            var api = table.api();
             var id = tableOptions.id || $(api.table().node()).attr("id");
 
             if (typeof tableOptions.validated !== 'undefined' && tableOptions.validated === true) {
                 if (!tableOptions.validateForm) {
-                    //parse table validate option
-                    var validateOpt = adapter.getValidateOption(element, "validator");
-                    if (!$.isPlainObject(validateOpt.feedbackIcons)) {
-                        $.extend(validateOpt, {
-                            feedbackIcons: {
-                                valid: 'fa fa-check',
-                                invalid: 'fa fa-times',
-                                validating: 'fa fa-refresh'
-                            }
-                        });
-                    }
                     var formId = id + '_form';
                     var $form = $('<form id="' + formId + '"></form>');
+
+                    var attributes = $(element).prop("attributes");
+                    var prefix = 'data-bv-';
+
+                    // loop through <select> attributes and apply them on form
+                    $.each(attributes, function() {
+                        if(this.name.indexOf(prefix) === 0){
+                            $form.attr(this.name, this.value);
+                        }
+                    });
+
                     $(api.table().node()).wrap($form[0]);
                     //apply bootstrap validator
-                    $(api.table().node()).closest('form').bootstrapValidator(validateOpt);
+                    $(api.table().node()).closest('form').bootstrapValidator();
 
                     var settings = table.fnSettings();
                     $.extend(settings.oInit, {

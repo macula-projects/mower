@@ -11,9 +11,118 @@ var UniqueId = (function() {
     return function(prefix) {
         do prefix += ~~(Math.random() * 1000000)
         while (document.getElementById(prefix))
-        return prefix
+        return prefix;
     };
 })();
+
+//返回一个树形的根集合，对原有的数组顺序不改变，但会增加parent和children两个属性
+Array.prototype.makeLevelTree = function(option) {
+    var o = option || {},
+        id = o.id || 'id',
+        pid = o.pid || 'pid',
+        order = o.order || 'ordered';
+
+    function node(origin) {
+        var self = this;
+        self.origin = origin;
+        self.getKey = function() {
+            if (self.key) {
+                return self.key;
+            }
+            self.key = [];
+            self.key.push(getOrder(self.origin));
+            self.key.push(getId(self.origin));
+            if (self.parent) {
+                var pkey = self.parent.getKey();
+                for (var i = pkey.length - 1; i >= 0; i--) {
+                    self.key.unshift(pkey[i]);
+                }
+            }
+            return self.key;
+        };
+        self.compare2 = function(other) {
+            var lk = self.getKey(),
+                rk = other.getKey(),
+                loop = Math.min(lk.length, rk.length);
+            for (var i = 0; i < loop; i++) {
+                if (typeof(lk[i]) == 'undefined' || typeof(rk[i]) == 'undefined') {
+                    break;
+                }
+                if (lk[i] != rk[i]) {
+                    var diff = (lk[i] + '').length - (rk[i] + '').length;
+                    return diff == 0 ? (lk[i] > rk[i] ? 1 : -1) : (diff > 0 ? 1 : -1);
+                }
+            }
+            return lk.length > rk.length ? 1 : -1;
+        };
+    }
+
+    function getId(m) {
+        if (typeof(id) == 'function') {
+            return id(m) || 0;
+        }
+        return m[id] || 0;
+    }
+
+    function getPid(m) {
+        if (typeof(pid) == 'function') {
+            return pid(m) || 0;
+        }
+        return m[pid] || 0;
+    }
+
+    function getOrder(m) {
+        if (typeof(order) == 'function') {
+            return order(m) || 0;
+        }
+        return m[order] || 0;
+    }
+
+    var tmpNodes = [],
+        sorted = [],
+        root = [];
+    // add children attribute 
+    for (var i = 0; i < this.length; i++) {
+        var cur = this[i];
+        if (cur != null) {
+            cur.children = [];
+            tmpNodes['$' + getId(cur)] = new node(cur);
+        }
+    }
+    for (var i = 0; i < this.length; i++) {
+        var cur = this[i];
+        if (cur != null) {
+            var parent = tmpNodes['$' + getPid(cur)];
+            if (parent) {
+                tmpNodes['$' + getId(cur)].parent = parent;
+                cur.parent = parent.origin;
+            }
+            sorted.push(cur);
+        }
+    }
+
+    sorted.sort(function(l, r) {
+        return tmpNodes['$' + getId(l)].compare2(tmpNodes['$' + getId(r)]);
+    });
+
+    tmpNodes = [];
+    for (var i = 0; i < sorted.length; i++) {
+        var cur = sorted[i];
+        if (cur.parent) {
+            cur.parent.children.push(cur);
+        } else {
+            root.push(cur);
+        }
+
+        tmpNodes[cur.code] = cur;
+    }
+
+    sorted = [];
+    return {
+        "tree": root,
+        "nodes": tmpNodes
+    };
+};
 
 Date.prototype.setISO8601 = function(string) {
     if (!string) {

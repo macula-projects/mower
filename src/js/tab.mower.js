@@ -72,12 +72,12 @@
     };
 
     /**
-     * [dynamic new tab and show]
+     * [dynamic add tab and show]
      * @param  {[string]} title :name show in tab
      * @param  {[string]} href  :remote url
      * @return {[type]}
      */
-    ATab.prototype.new = function(title, href) {
+    ATab.prototype.add = function(title, href) {
         // tab panel,convert to jQuery object in order to next 
         // called will get the new appending context,as following show function call. 
         var $tab = $([
@@ -203,7 +203,7 @@
 
         Plugin
             .call($target, option)
-            .call("new", title, href)
+            .call("add", title, href)
             .one('hide', function() {
                 $this.is(':visible') && $this.focus()
             })

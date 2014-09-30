@@ -10,7 +10,8 @@
 
 // Variables
 // ========================================================================
-
+@yamm-content-title-fontsize:                                         13px;
+@yamm-content-fontsize:                                               12px;
 
 /* ========================================================================
    Component: Plugins
@@ -979,4 +980,53 @@ div.DTTT_collection a.DTTT_button {
 }
 
 
+/*!
+ * Yamm!3 - Yet another megamenu for Bootstrap 3
+ * http://geedmo.github.com/yamm3
+ * 
+ * @geedmo - Licensed under the MIT license
+ */
+.yamm .nav, .yamm .collapse, .yamm .dropup, .yamm .dropdown {
+  position: static;
+}
+.yamm .container {
+  position: relative;
+}
+.yamm .dropdown-menu {
+  left: auto;
+  > li > a {
+    color:#777;
+    font-size:@yamm-content-title-fontsize;
+    &:hover,&:focus{
+      color:#333;
+    }
+  } 
+}
+.yamm .yamm-content {
+  width: 400px;
+  padding: 5px 10px;
+
+  .title {
+    font-size:@yamm-content-title-fontsize;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  
+  ul li > ul > li{
+    min-width: 120px;
+    &:hover,&:focus{
+      background-color: #f5f5f5;
+    }
+    a {
+      font-size:@yamm-content-fontsize;
+      word-wrap: break-word; 
+      word-break: normal;
+    }
+  }
+}
+
+.yamm .dropdown.yamm-fw .dropdown-menu {
+  left: 0;
+  right: 0;
+}
 

@@ -105,6 +105,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             var obj = $.extend({},
                 base.parseOptions(target, [
+                    'id',
                     'name'
                 ])
             );
@@ -155,124 +156,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 ])
             );
         },
-        getValidateOption: function(target, prefix) {
-            var t = $(target);
-
-            var obj = $.extend({},
-                base.parseOptions(target, [{
-                    container: 'string',
-                    excluded: 'string',
-                    group: 'string',
-                    live: 'string',
-                    threshold: 'number',
-                    feedbackIcons: {
-                        valid: 'string',
-                        invalid: 'string',
-                        validating: 'string'
-                    }
-                }], prefix)
-            );
-
-            return obj;
-        },
-        getValidateFieldOptions: function(target) {
-            var t = $(target);
-            return $.extend({},
-                base.parseOptions(target, [{
-                    validator: {
-                        name: 'string', //multiple name separate by ',' ie:'notEmpty,number,...'
-                        container: 'string',
-                        enabled: 'boolean',
-                        excluded: 'string',
-                        group: 'string',
-                        selector: 'string',
-                        threshold: 'number'
-                    }
-                }, {
-                    notEmpty: {
-                        "default": true, //however attribute notEmpty exists or not,notEmpty object created yet.
-                        message: 'string'
-                    }
-                }, {
-                    numeric: {
-                        "default": true,
-                        message: 'string'
-                    }
-                }, {
-                    digits: {
-                        "default": true,
-                        message: 'string'
-                    }
-                }, {
-                    emailaddress: {
-                        "default": true,
-                        message: 'string'
-                    }
-                }, {
-                    integer: {
-                        "default": true,
-                        message: 'string'
-                    }
-                }, {
-                    ip: {
-                        "default": true,
-                        ipv4: 'boolean',
-                        ipv6: 'boolean',
-                        message: 'string'
-                    }
-                }, {
-                    uri: {
-                        "default": true,
-                        allowLocal: 'boolean',
-                        message: 'string'
-                    }
-                }, {
-                    date: {
-                        "default": true,
-                        format: 'string',
-                        message: 'string'
-                    }
-                }, , {
-                    regexp: {
-                        "default": true,
-                        regexp: 'string',
-                        message: 'string'
-                    }
-                }, {
-                    between: {
-                        "default": true,
-                        min: 'number',
-                        max: 'number',
-                        message: 'string'
-                    }
-                }, {
-                    choice: {
-                        "default": true,
-                        min: 'number',
-                        max: 'number',
-                        message: 'string'
-                    }
-                }, {
-                    greaterThan: {
-                        "default": true,
-                        value: 'number',
-                        message: 'string'
-                    }
-                }, {
-                    lessThan: {
-                        "default": true,
-                        value: 'number',
-                        message: 'string'
-                    }
-                }, {
-                    remote: {
-                        "default": true,
-                        message: 'string',
-                        url: 'string'
-                    }
-                }])
-            );
-        },
         processOption: function(dataTable, option) {
             if (!option) return;
 
@@ -291,12 +174,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 if (columns && $.isArray(columns)) {
                     for (var i = 0; i < columns.length; i++) {
                         var column = columns[i];
-                        column.data = column.data || column.name ;
+                        column.data = column.data || column.name;
                     }
                 }
             }
-
-
             // var infoCallback = {
             //     "infoCallback": function(settings, start, end, max, total, pre) {
             //         return _fnUpdateInfo(settings);
@@ -419,7 +300,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         text: {
             init: function(container, options) {
                 var text = $("<input type=\"text\" class=\"form-control\" name=\"" + options.name + "\"/>").data("options", options).appendTo(container);
-                this.setValidated(options);
+                this.setValidated(text, options);
                 return text;
             },
             getValue: function(element) {
@@ -428,9 +309,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             setValue: function(element, value) {
                 $(element).find('input:first').val(value);
             },
-            setValidated: function(options) {
+            setValidated: function(element, options) {
                 if (options.validated === true && options.form) {
-                    $(options.form).bootstrapValidator('addField', options.name, options.validate);
+                    for (var name in options.validate) {
+                        $(element).attr(name, options.validate[name]);
+                        $(options.form).bootstrapValidator('addField', options.name);
+                    }
                 }
             },
             isValid: function(element) {
@@ -619,8 +503,21 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     editorOption["validated"] = settings.oInit.validated;
                     editorOption["form"] = settings.oInit.validateForm;
 
-                    if ($.isPlainObject(column.validate)) {
-                        editorOption["validate"] = column.validate;
+                    var thead = oTable.api().table().header();
+                    var th = $(thead).find('th:eq(' + index + ')');
+                    var attributes = th.prop("attributes");
+                    var prefix = 'data-bv-';
+
+                    // loop through <select> attributes and apply them on form
+                    var validate = {};
+                    $.each(attributes, function() {
+                        if (this.name.indexOf(prefix) === 0) {
+                            validate[this.name] = this.value;
+                        }
+                    });
+
+                    if ($.isPlainObject(validate)) {
+                        editorOption["validate"] = validate;
                     }
                 }
 
@@ -660,7 +557,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         rowData[deletedColumn] = 0;
         rowData[operationColumn] = 'SAVE';
 
-        if (isValidate === true) {
+        if (isValidate === true && $form.size() > 0) {
             result = $form.data('bootstrapValidator').isValidContainer($(nRow));
             if (result !== true) return result;
         }
@@ -737,7 +634,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                 if ($datatables) {
                     var nRow = $(this).parents('tr')[0];
-                    var rowData = $table.api().row(nRow).data();
+                    var rowData = $datatables.api().row(nRow).data();
 
                     var e = $.Event('delete.inline.datatables');
                     $table.trigger(e, {
@@ -749,19 +646,30 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     var settings = $datatables.fnSettings();
                     if ($.isPlainObject(settings.oInit.row) &&
                         typeof settings.oInit.row.id !== 'undefined') {
-                        var id = rowData[settings.oInit.row.id];
-                        if (id) {
-                            $datatables.row(nRow)
-                                .nodes()
-                                .to$()
-                                .addClass('mu-hidden');
 
-                        } else {
-                            $datatables.fnDeleteRow(nRow);
+                        var $form = $(settings.oInit.validateForm);
+                        var id = rowData[settings.oInit.row.id];
+
+                        var rowName = '';
+                        if (typeof settings.oInit.row.name !== 'undefined') {
+                            rowName = settings.oInit.row.name.replace(/_INDEX_/g, $datatables.api().row(nRow).index());
+                        }
+
+                        var columnName = rowName ? (rowName + '.' + deletedColumn) : deletedColumn;
+
+                        if (id && $form.size() > 0) {
+                            var $cont = $('<div></div');
+                            $.each($datatables.api().row(nRow).nodes().to$().find('input:hidden'), function(index, el) {
+                                if(columnName === $(el).attr('name')){
+                                    $(el).val(1);
+                                }
+                                $cont.append(el);
+                            });
+                            $form.prepend($cont);
                         }
                     }
+                    $datatables.fnDeleteRow(nRow);
                 }
-
             } catch (e) {
 
             }
