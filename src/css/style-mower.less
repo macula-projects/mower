@@ -6,7 +6,7 @@
 
 // Variables
 // =======================================================================
-@navbar-min-height:                                                      41px;
+@navbar-min-height:                                                      40px;
 @navbar-padding-vertical:                                                10px;
 @navbar-padding-horizontal:                                              15px;
 @navbar-fontsize:                                                        15px;
@@ -70,9 +70,7 @@
 @wizard-li-height:                                  (@wizard-mini-height - 2);
 @wizard-li-line-height:                                     @wizard-li-height;
 @wizard-chevron-border:                               (@wizard-li-height / 2);
-@wizard-chevron-border-left:                     ((@wizard-li-height / 2) - 1);
-
-
+@wizard-chevron-border-left:                    ((@wizard-li-height / 2) - 1);
 
 
 
@@ -86,6 +84,13 @@
 
 .navbar {
   min-height: @navbar-min-height;
+}
+
+.navbar .divider-vertical {
+  height: @navbar-min-height;
+  margin: 0 9px;
+  border-right: 1px solid #ffffff;
+  border-left: 1px solid #f2f2f2;
 }
 
 .navbar-brand {
@@ -102,6 +107,7 @@
     font-size: @navbar-icon-fontsize;
   }
 }
+
 
 
 
@@ -159,7 +165,7 @@
     float: none;
     width: auto;
     margin-top: 2px;
-    background-color: #ffffff;
+    background-color: transparent;
     border: 1px solid #ddd;
     -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
@@ -251,7 +257,7 @@
   background-color: transparent;
   color: #ffffff;
 }
-@media (max-width: 767px) {
+@media (max-width:@screen-xs-max) {
   .navbar-red .navbar-nav .open .dropdown-menu > .dropdown-header {
     border-color: #a91b0c;
   }
@@ -302,6 +308,103 @@ fieldset[disabled] .navbar-red .btn-link:focus {
 .navbar-red .badge {
   background-color: #fff;
   color: #d9230f;
+}
+
+
+.navbar-default-red {
+  background-color: #d40b07;
+}
+.navbar-default-red .navbar-brand {
+  color: #fff;
+}
+.navbar-default-red .navbar-brand:hover,
+.navbar-default-red .navbar-brand:focus {
+  color: #fff;
+  background-color: none;
+}
+.navbar-default-red .navbar-text {
+  color: #fff;
+}
+.navbar-default-red .navbar-nav > li > a {
+  color: #fff;
+}
+.navbar-default-red .navbar-nav > li > a:hover,
+.navbar-default-red .navbar-nav > li > a:focus {
+  color: #fff;
+  background-color: #e59205;
+}
+.navbar-default-red .navbar-nav > .active > a,
+.navbar-default-red .navbar-nav > .active > a:hover,
+.navbar-default-red .navbar-nav > .active > a:focus {
+  color: #fff;
+  background-color: #faa619;
+}
+.navbar-default-red .navbar-nav > .disabled > a,
+.navbar-default-red .navbar-nav > .disabled > a:hover,
+.navbar-default-red .navbar-nav > .disabled > a:focus {
+  color: #ccc;
+  background-color: transparent;
+}
+.navbar-default-red .navbar-toggle {
+  border-color: #8a0705;
+}
+.navbar-default-red .navbar-toggle:hover,
+.navbar-default-red .navbar-toggle:focus {
+  background-color: #8a0705;
+}
+.navbar-default-red .navbar-toggle .icon-bar {
+  background-color: #fff;
+}
+.navbar-default-red .navbar-collapse,
+.navbar-default-red .navbar-form {
+  border-color: #b40906;
+}
+.navbar-default-red .navbar-nav > .open > a,
+.navbar-default-red .navbar-nav > .open > a:hover,
+.navbar-default-red .navbar-nav > .open > a:focus {
+  color: #fff;
+  background-color: #e59205;
+}
+@media (max-width: 767px) {
+  .navbar-default-red .navbar-nav .open .dropdown-menu > li > a {
+    color: #fff;
+  }
+  .navbar-default-red .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-default-red .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #fff;
+    background-color: #e59205;
+  }
+  .navbar-default-red .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-default-red .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-default-red .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #fff;
+    background-color: #faa619;
+  }
+  .navbar-default-red .navbar-nav .open .dropdown-menu > .disabled > a,
+  .navbar-default-red .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+  .navbar-default-red .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #ccc;
+    background-color: transparent;
+  }
+}
+.navbar-default-red .navbar-link {
+  color: #fff;
+}
+.navbar-default-red .navbar-link:hover {
+  color: #fff;
+}
+.navbar-default-red .btn-link {
+  color: #fff;
+}
+.navbar-default-red .btn-link:hover,
+.navbar-default-red .btn-link:focus {
+  color: #fff;
+}
+.navbar-default-red .btn-link[disabled]:hover,
+fieldset[disabled] .navbar-default-red .btn-link:hover,
+.navbar-default-red .btn-link[disabled]:focus,
+fieldset[disabled] .navbar-default-red .btn-link:focus {
+  color: #ccc;
 }
 
 /*
@@ -881,9 +984,9 @@ li .icon-large[class*=" icon-"] {
 
     .search-default .search-form button {
         color: #fff;
-        background-color: #f0ad4e;
+        background-color: #faa619;
         &:hover, &:focus {
-            background-color: #ec971f;
+            background-color: #e59205;
         }
     }
 
@@ -892,12 +995,12 @@ li .icon-large[class*=" icon-"] {
     .search-default .nav-pills>li.active>a:hover,
     .search-default .nav-pills>li.active>a:focus {
       color: #fff;
-      background-color: #f0ad4e;
+      background-color: #faa619;
     }
 
     .search-default .search-form .form-control,
     .search-default .search-form .form-control + .input-group-btn {
-      border-color: #f0ad4e;
+      border-color: #faa619;
     }
 
     .shortcut {
@@ -907,10 +1010,10 @@ li .icon-large[class*=" icon-"] {
             > li {
                 width: 80px;
                 i {
-                  color:#f0ad4e;
+                  color:#faa619;
                   &:hover,
                   &:focus{
-                    color: #ec971f;
+                    color: #e59205;
                   }
                 }
                 .tag {
@@ -922,10 +1025,10 @@ li .icon-large[class*=" icon-"] {
                     left: -5px;
                     white-space: nowrap;
                     font-size: 13px;
-                    color:#f0ad4e;
+                    color:#dd4814;
                     &:hover,
                     &:focus{
-                      color: #ec971f;
+                      color: #ae3910;
                     }
                 }
 
