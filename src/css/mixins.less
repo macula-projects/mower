@@ -1,0 +1,111 @@
+//
+// Mixins
+// --------------------------------------------------
+.panel-solid-variant(@solid-color: white;@solid-heading-icon-color: white;) {
+    > .panel-heading,
+    > .panel-body {
+        border: 0;
+        color: @solid-color;
+    }
+    > .panel-heading > .caption > i {
+        color: @solid-heading-icon-color;
+    }
+    > .panel-heading > .tools > a.remove {
+        position: relative;
+    }
+    > .panel-heading > .tools > a.remove:before {
+        content: "\f00d";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        font-size: 14px;
+    }
+    > .panel-heading > .tools > a.config {
+        position: relative;
+    }
+    > .panel-heading > .tools > a.config:before {
+        content: "\f0ad";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        font-size: 14px;
+    }
+    > .panel-heading > .tools > a.reload {
+        position: relative;
+    }
+    > .panel-heading > .tools > a.reload:before {
+        content: "\f021";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        font-size: 14px;
+    }
+    > .panel-heading > .tools > a.expand {
+        position: relative;
+    }
+    > .panel-heading > .tools > a.expand:before {
+        content: "\f106";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        font-size: 14px;
+    }
+    > .panel-heading > .tools > a.collapse {
+        position: relative;
+    }
+    > .panel-heading > .tools > a.collapse:before {
+        content: "\f107";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        font-size: 14px;
+    }
+}
+
+.panel-box-variant( 
+  @box-border-color;
+  @heading-bg-color;
+  @heading-actions-btn-border-color;
+  @heading-actions-btn-color;
+  @heading-actions-btn-icon-color;
+  @heading-actions-btn-border-hover-color;
+  @heading-actions-btn-hover-color;
+  @heading-caption-color:white;
+  @heading-caption-icon-color:white;
+) {
+    border: 1px solid @box-border-color;
+    border-top: 0;
+    > .panel-heading {
+        background-color: @heading-bg-color;
+    }
+    > .panel-heading > .caption {
+        color: @heading-caption-color;
+    }
+    > .panel-heading > .caption > i {
+        color: @heading-caption-icon-color;
+    }
+    > .panel-heading > .actions .btn-default {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: 1px solid @heading-actions-btn-border-color;
+        color: @heading-actions-btn-color;
+    }
+    > .panel-heading > .actions .btn-default > i {
+        color: @heading-actions-btn-icon-color;
+    }
+    > .panel-heading > .actions .btn-default:hover,
+    > .panel-heading > .actions .btn-default:focus,
+    > .panel-heading > .actions .btn-default:active,
+    > .panel-heading > .actions .btn-default.active {
+        border: 1px solid @heading-actions-btn-border-hover-color;;
+        color: @heading-actions-btn-hover-color;
+    }
+}
+
+
+

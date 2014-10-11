@@ -121,7 +121,7 @@
                 var preLi = [
                     '<li>',
                     path.length === 1 ? this.options.home : this.options.divider,
-                    '<a data-toggle="breadcrumb" data-target="',
+                    '<a href="#" data-toggle="breadcrumb" data-target="',
                     previousTarget,
                     '">',
                     previousLabel,
@@ -147,7 +147,7 @@
 
             var li = [
                 '<li ',
-                '" data-target="',
+                'data-target="',
                 target,
                 '" class="active">',
                 path.length === 1 ? this.options.home : this.options.divider,

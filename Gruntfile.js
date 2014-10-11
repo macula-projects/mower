@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         },
         // Task configuration
         clean: { // clean all
-            build: ['dist/**', 'docs/<%= pkg.name %>/**']
+            build: ['dist/**','docs/<%= pkg.name %>/**']
         },
         concat: { //files concat
             options: {
@@ -201,7 +201,7 @@ module.exports = function(grunt) {
                     cwd: 'plugins/font-awesome/',
                     src: ['fonts/*'],
                     dest: 'dist/'
-                }, {
+                },{
                     expand: true,
                     cwd: 'dist/',
                     src: ['**'],

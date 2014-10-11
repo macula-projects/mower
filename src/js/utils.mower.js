@@ -537,7 +537,7 @@ String.prototype.length2 = function() {
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     self.html('<h4 style="margin-top:10px; display:block; text-align:left"><i class="fa fa-warning txt-color-orangeDark"></i> Error 404! Page not found.</h4>');
-                },
+                }
             }, ajaxOptions || {});
             $.ajax(s);
         },
@@ -666,11 +666,80 @@ JSON = {
 
 
 var Utils = (function($, window, document, undefined) {
+
     // private functions & variables
+
+    // IE mode
+    var isIE8 = false;
+    var isIE9 = false;
+    var isIE10 = false;
+
+    var resizeHandlers = [];
+
+    // initializes main settings
+    var handleInit = function() {
+
+        isIE8 = !!navigator.userAgent.match(/MSIE 8.0/);
+        isIE9 = !!navigator.userAgent.match(/MSIE 9.0/);
+        isIE10 = !!navigator.userAgent.match(/MSIE 10.0/);
+
+        if (isIE10) {
+            $('html').addClass('ie10'); // detect IE10 version
+        }
+
+        if (isIE10 || isIE9 || isIE8) {
+            $('html').addClass('ie'); // detect IE10 version
+        }
+    };
+
+    // runs callback functions set by Metronic.addResponsiveHandler().
+    var _runResizeHandlers = function() {
+        // reinitialize other subscribed elements
+        for (var i = 0; i < resizeHandlers.length; i++) {
+            var each = resizeHandlers[i];
+            each.call();
+        }
+    };
+
+    // handle the layout reinitialization on window resize
+    var handleOnResize = function() {
+        var resize;
+        if (isIE8) {
+            var currheight;
+            $(window).resize(function() {
+                if (currheight == document.documentElement.clientHeight) {
+                    return; //quite event since only body resized not window.
+                }
+                if (resize) {
+                    clearTimeout(resize);
+                }
+                resize = setTimeout(function() {
+                    _runResizeHandlers();
+                }, 50); // wait 50ms until window resize finishes.                
+                currheight = document.documentElement.clientHeight; // store last body client height
+            });
+        } else {
+            $(window).resize(function() {
+                if (resize) {
+                    clearTimeout(resize);
+                }
+                resize = setTimeout(function() {
+                    _runResizeHandlers();
+                }, 50); // wait 50ms until window resize finishes.
+            });
+        }
+    };
 
     // public functions
     return {
 
+        //main function to initiate the theme
+        init: function() {
+            //IMPORTANT!!!: Do not modify the core handlers call order.
+
+            handleInit(); // initialize core variables
+            handleOnResize(); // set and handle responsive    
+        },
         //some helper function
         getAbsoluteUrl: function(url, contextPath) {
             if (url.indexOf('://') >= 0) {
@@ -682,7 +751,56 @@ var Utils = (function($, window, document, undefined) {
 
             var root = (contextPath || base);
             return url.startWith(root) ? url : root + url;
+        },
+        //public function to get a paremeter by name from URL
+        getURLParameter: function(paramName) {
+            var searchString = window.location.search.substring(1),
+                i, val, params = searchString.split("&");
+
+            for (i = 0; i < params.length; i++) {
+                val = params[i].split("=");
+                if (val[0] == paramName) {
+                    return unescape(val[1]);
+                }
+            }
+            return null;
+        },
+        // To get the correct viewport width based on  http://andylangton.co.uk/articles/javascript/get-viewport-size-javascript/
+        getViewPort: function() {
+            var e = window,
+                a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+
+            return {
+                width: e[a + 'Width'],
+                height: e[a + 'Height']
+            };
+        },
+        //public function to add callback a function which will be called on window resize
+        addResizeHandler: function(func) {
+            resizeHandlers.push(func);
+        },
+
+        //public functon to call _runresizeHandlers
+        runResizeHandlers: function() {
+            _runResizeHandlers();
+        },
+        // check IE8 mode
+        isIE8: function() {
+            return isIE8;
+        },
+
+        // check IE9 mode
+        isIE9: function() {
+            return isIE9;
         }
     };
 
 }(jQuery, window, document));
+
+$(function() {
+    Utils.init();
+});

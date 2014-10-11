@@ -51,7 +51,7 @@
         var that = this;
         $parent.hover(function(event) {
             // so a neighbor can't open the dropdown
-            if (!$parent.hasClass('open') && !this.$element.is(event.target)) {
+            if (!$parent.hasClass('open') && !that.$element.is(event.target)) {
                 // stop this event, stop executing any code
                 // in this callback but continue to propagate
                 return true;

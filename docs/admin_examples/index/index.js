@@ -13,7 +13,7 @@ var Index = (function($) {
             this.initBreadCrumb();
         },
         initBreadCrumb: function() {
-            $("#main-menu").on('complete.mu.mainMenu', function(event) {
+            $("#main-menu").on('complete.mu.compMenu', function(event) {
                 /* Act on the event */
                 
                 var  defaultVal = QueryString.title ? QueryString.title : '商品库存管理';

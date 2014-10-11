@@ -14,16 +14,15 @@ var InlineTable = (function($) {
             this.initTable();
         },
         initBreadCrumb: function() {
-            $("#main-menu").on('complete.mu.mainMenu', function(event) {
+            $("#main-menu").on('complete.mu.compMenu', function(event) {
                 /* Act on the event */
-
                 var defaultVal = QueryString.title ? QueryString.title : '商品库存管理';
 
                 $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i>' + decodeURIComponent(defaultVal));
             });
         },
         initMainMenu: function() {
-            $("#main-menu").mainMenu({
+            $("#main-menu").compMenu({
                 'url': "../../assets/ajax/data/menu.txt"
             });
 

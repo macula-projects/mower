@@ -65,9 +65,26 @@ var Base = (function($, window, document, undefined) {
         };
     };
 
+    var _resetIconContent = function() {
+        if ($.browser.msie && parseInt($.browser.version) === 8) {
+
+            var head = document.getElementsByTagName('head')[0];
+            var style = document.createElement('style');
+
+            style.type = 'text/css';
+            style.styleSheet.cssText = ':before,:after{content:none !important}';
+
+            head.appendChild(style);
+            setTimeout(function() {
+                head.removeChild(style);
+            }, 0);
+        }
+    };
+
     // public functions
     base.init = function() {
         _attachDomRemoveEvent();
+        _resetIconContent();
     };
 
     /**
@@ -126,7 +143,7 @@ var Base = (function($, window, document, undefined) {
                                 if (!$.isEmptyObject(cOpts)) $.extend(nestedOpts, cOpts); //maybe empty object
                             }
                             //maybe empty object
-                            if (!$.isEmptyObject(nestedOpts) || (typeof pvalue.default !== 'undefined' && pvalue.default === true)) {
+                            if (!$.isEmptyObject(nestedOpts) || (typeof pvalue.empty !== 'undefined' && pvalue.empty === true)) {
                                 opts[pkey] = nestedOpts;
                             }
                         }

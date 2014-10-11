@@ -12,7 +12,7 @@
 ;
 (function(json, utils, $, window, document, undefined) {
 
-    "use strict"; // jshint ;_;
+    "use strict"; // jshint
 
     /* MAINMENU CLASS DEFINITION
      * ====================== */
@@ -159,6 +159,8 @@
                 var instance = that.findMenuByCode(mcode); //origin
 
                 if ($this.is('a')) e.preventDefault();
+
+
 
                 var module = this;
                 var event = $.Event(CompMenu.DEFAULTS.events.clickMenu, {

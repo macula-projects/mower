@@ -147,7 +147,7 @@
                 var $this = $(this);
                 var mid = $this.attr('_mid') || $this.attr('mid');
                 var href = $this.attr('data-href');
-                var instance = that.findMenuById(mid); //origin
+                var instance = that.findMenuByCode(mid); //origin
 
                 if ($this.is('a')) e.preventDefault();
 
