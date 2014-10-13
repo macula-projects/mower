@@ -766,7 +766,7 @@ li .icon-large[class*=" icon-"] {
     border-right: 7px solid transparent;
     border-bottom: 7px solid @header-dropdown-list-header-bg-color;
     border-left: 7px solid transparent;
-    border-bottom-color: @header-dropdown-list-border-color;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
     content: '';
   }
 
@@ -780,7 +780,15 @@ li .icon-large[class*=" icon-"] {
     border-left: 6px solid transparent;
     content: '';
   }
+
+  &.dropdown-menu-bd-color {
+      &:before{
+        border-bottom-color: @header-dropdown-list-border-color;
+      }
+  }
 }
+
+
 
 @media (max-width: @screen-sm) {
   .mu-navbar-nav-sm > li > .dropdown-menu{
