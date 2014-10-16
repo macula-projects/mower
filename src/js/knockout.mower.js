@@ -57,11 +57,11 @@
         var column = [];
 
         if (operation === 'ADD') {
-            column.push('<a class="edit" data-inline-table-action="edit" data-toggle="tooltip" rel="tooltip" data-original-title="编辑" href="#"><i class="fa fa-check"></i></a>');
-            column.push('<a class="cancel" data-inline-table-action="cancel" data-toggle="tooltip" rel="tooltip" data-mode="new" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>');
+            column.push('<a class="edit" data-inline-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="#"><i class="fa fa-check"></i></a>');
+            column.push('<a class="cancel" data-inline-table-action="cancel" data-toggle="tooltip" data-mode="new" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>');
         } else if (operation === 'SAVE') {
-            column.push('<a class="edit" data-inline-table-action="edit" data-toggle="tooltip" rel="tooltip data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>');
-            column.push('<a class="delete" data-inline-table-action="delete" data-toggle="tooltip" rel="tooltip data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a></div>');
+            column.push('<a class="edit" data-inline-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>');
+            column.push('<a class="delete" data-inline-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a></div>');
         } else {
             column.push('<a class="edit" data-action-type="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>');
             column.push('<a class="delete" data-action-type="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a>');
@@ -84,14 +84,14 @@
         if ($.isPlainObject(data)) {
             for (var name in data) {
 
-                if(name === operationColumn) continue;
+                if (name === operationColumn) continue;
 
                 var isDrawed = false;
                 var colName = '';
                 for (var i = 0, iLen = columns.length; i < iLen; i++) {
                     if (columns[i].name && name === columns[i].name) {
                         colName = rowName ? (rowName + '.' + settings.oInit.columns[i].name) : settings.oInit.columns[i].name;
-                        !$('td:eq(' + i + ')', row).find('input[name="'+colName+'"]').size() && $('td:eq(' + i + ')', row).append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
+                        !$('td:eq(' + i + ')', row).find('input[name="' + colName + '"]').size() && $('td:eq(' + i + ')', row).append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
                         isDrawed = true;
                         break;
                     }
@@ -100,7 +100,7 @@
 
                 if (isDrawed !== true) {
                     colName = rowName ? (rowName + '.' + name) : name;
-                    !$row.find('input[name="'+colName+'"]').size() && $row.append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
+                    !$row.find('input[name="' + colName + '"]').size() && $row.append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
                 }
             }
         }
@@ -136,7 +136,7 @@
                 columnArray.push(adapter.getColumnsOption(this));
             });
 
-            $(rowDataSelector,element).append('<th></th>');//auto append operation column
+            $(rowDataSelector, element).append('<th></th>'); //auto append operation column
             var operationOpt = {};
             operationOpt["data"] = null;
             operationOpt["render"] = _operationRender;
@@ -151,7 +151,7 @@
                 if (columns && $.isArray(columns)) {
                     for (var i = 0; i < columns.length; i++) {
                         var column = columns[i];
-                        if(column.data === undefined && column.name)//may be (column.data === null)
+                        if (column.data === undefined && column.name) //may be (column.data === null)
                             column.data = column.name;
                     }
                 }
@@ -164,16 +164,19 @@
             var id = tableOptions.id || $(api.table().node()).attr("id");
 
             if (typeof tableOptions.validated !== 'undefined' && tableOptions.validated === true) {
+
+                var formId;
+
+                var attributes = $(element).prop("attributes");
+                var prefix = 'data-bv-';
+
                 if (!tableOptions.validateForm) {
-                    var formId = id + '_form';
+                    formId = '#' + id + '_form';
+
                     var $form = $('<form id="' + formId + '"></form>');
-
-                    var attributes = $(element).prop("attributes");
-                    var prefix = 'data-bv-';
-
                     // loop through <select> attributes and apply them on form
                     $.each(attributes, function() {
-                        if(this.name.indexOf(prefix) === 0){
+                        if (this.name.indexOf(prefix) === 0) {
                             $form.attr(this.name, this.value);
                         }
                     });
@@ -182,12 +185,24 @@
                     //apply bootstrap validator
                     $(api.table().node()).closest('form').bootstrapValidator();
 
-                    var settings = table.fnSettings();
-                    $.extend(settings.oInit, {
-                        'validateForm': '#' + formId
+                } else {
+
+                    formId = tableOptions.validateForm;
+                    
+                    // loop through <select> attributes and apply them on form
+                    $.each(attributes, function() {
+                        if (this.name.indexOf(prefix) === 0) {
+                            $(formId).attr(this.name, this.value);
+                        }
                     });
+
+                    $(formId).bootstrapValidator();
                 }
 
+                var settings = table.fnSettings();
+                $.extend(settings.oInit, {
+                    'validateForm': formId
+                });
                 //others init self
             }
 

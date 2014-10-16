@@ -175,10 +175,11 @@
         },
         populate: function() {
             var that = this;
-            var purl = this.options.url + (this.options.url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
+            var purl = this.options.url ;
 
             $.ajax({
                 url: purl,
+                cache:true,
                 data: this.options.param,
                 dataType: this.options.dataType,
                 type: this.options.method,

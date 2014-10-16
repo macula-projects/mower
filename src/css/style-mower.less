@@ -778,11 +778,15 @@ li .icon-large[class*=" icon-"] {
     border-right: 6px solid transparent;
     border-bottom: 6px solid @header-dropdown-list-header-bg-color;
     border-left: 6px solid transparent;
+    border-bottom-color: #fff;
     content: '';
   }
 
   &.dropdown-menu-bd-color {
       &:before{
+        border-bottom-color: @header-dropdown-list-border-color;
+      }
+      &:after{
         border-bottom-color: @header-dropdown-list-border-color;
       }
   }

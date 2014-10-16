@@ -29,4 +29,14 @@
     z-index: 100;
 }
 
+.has-feedback .form-control-feedback {
+    top: 5px !important;
+    right: 0;
+}
+
+.form-horizontal .has-feedback .form-control-feedback {
+    top: 5px !important;
+    right: 5px;
+}
+
 
