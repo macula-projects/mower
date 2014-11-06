@@ -2,11 +2,11 @@
     <div class="panel-heading">
         <div class="row mu-panel-toolbar">
             <div class="col-xs-12 col-md-6 mu-panel-toolbar-action-cont">
-                <a class="btn add" href="#" data-action-type="save" data-toggle="popBreadcrumb">
+                <a class="btn add" href="#"  data-toggle="popBreadcrumb" data-process="Form.processFormSave">
                     <i class="fa fa-check-circle fa-lg"></i>
                     保存
                 </a>
-                <a class="btn" href="#" data-action-type="cancel" data-toggle="popBreadcrumb">
+                <a class="btn" href="#"  data-toggle="popBreadcrumb">
                     <i class="fa fa-reply fa-lg"></i>
                     取消
                 </a>
@@ -199,6 +199,28 @@
                                     </div>
                                     <!--/span-->
                                     <div class="col-md-6">
+                                        <div class="mu-dd-table">
+                                            <div class="input-group" 
+                                                data-columns="{'名称':'name','编码':'code'}" 
+                                                data-width="500" 
+                                                data-initValue="006"
+                                                data-idField="code"
+                                                data-textField="name"
+                                                data-url="atagrid_data.json">
+                                              <input type="text" class="form-control" >
+                                              <span class="input-group-addon"><i class="fa fa-table"></i></span>
+                                            </div>
+                                            <div class="mu-dd-table-content">
+                                              <table>
+                                                    
+                                              </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label col-md-3">国籍</label>
                                             <div class="col-md-9">
@@ -211,7 +233,6 @@
                                     </div>
                                     <!--/span-->
                                 </div>
-                                <!--/row-->
                             </fieldset>
                         </div>
                     </form>
