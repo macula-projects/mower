@@ -65,7 +65,9 @@ module.exports = function(grunt) {
                     'dist/js/<%= pkg.name %>.js': [
                         'src/js/base.<%= pkg.name %>.js',
                         'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/alert.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
+                        'src/js/datatables.selectrows.<%= pkg.name %>.js',
                         'src/js/datatables.<%= pkg.name %>.js',
                         'src/js/knockout.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
@@ -78,7 +80,29 @@ module.exports = function(grunt) {
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/utils.<%= pkg.name %>.js',
-                        'src/js/validator.<%= pkg.name %>.js'
+                        'src/js/validator.<%= pkg.name %>.js',
+                        'src/js/messagebox.<%= pkg.name %>.js',
+                    ]
+                }
+            },
+            front_buildjs: {
+                options: {
+                    banner: '<%= meta.banner %>\n<%= meta.jqueryCheck %>'
+                },
+                files: {
+                    'dist/js/<%= pkg.name %>.js': [
+                        'src/js/base.<%= pkg.name %>.js',
+                        'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/dropdown.hover.<%= pkg.name %>.js',
+                        'src/js/dropdown.<%= pkg.name %>.js',
+                        'src/js/magnifier.<%= pkg.name %>.js',
+                        'src/js/cmenu.<%= pkg.name %>.js',
+                        'src/js/smenu.<%= pkg.name %>.js',
+                        'src/js/modal.<%= pkg.name %>.js',
+                        'src/js/popover.<%= pkg.name %>.js',
+                        'src/js/tab.<%= pkg.name %>.js',
+                        'src/js/tooltip.<%= pkg.name %>.js',
+                        'src/js/utils.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -91,13 +115,34 @@ module.exports = function(grunt) {
                         'plugins/font-awesome/css/font-awesome.css',
                         'dist/css/<%= pkg.name %>.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
-                        'plugins/jquery-treetable/css/jquery.treetable.css'
+                        'plugins/toastr/css/toastr.css',
+                        'plugins/jquery-treetable/css/jquery.treetable.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css'
                     ],
                     'dist/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
                         'dist/css/<%= pkg.name %>.min.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
-                        'plugins/jquery-treetable/css/jquery.treetable.min.css'
+                        'plugins/toastr/css/toastr.min.css',
+                        'plugins/jquery-treetable/css/jquery.treetable.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css'
+                    ]
+                }
+            },
+            front_mergecss: {
+                options: {
+                    separator: grunt.util.linefeed
+                },
+                files: {
+                    'dist/css/<%= pkg.name %>.css': [
+                        'plugins/font-awesome/css/font-awesome.css',
+                        'dist/css/<%= pkg.name %>.css'
+                    ],
+                    'dist/css/<%= pkg.name %>.min.css': [
+                        'plugins/font-awesome/css/font-awesome.min.css',
+                        'dist/css/<%= pkg.name %>.min.css'
                     ]
                 }
             },
@@ -109,6 +154,10 @@ module.exports = function(grunt) {
                     'dist/js/<%= pkg.name %>.js': [
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
+                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
+                        'plugins/bootstrap-modal/js/bootstrap-modal.js',
+                        'plugins/bootbox/js/bootbox.js',
+                        'plugins/toastr/js/toastr.js',
                         'plugins/datatables/js/jquery.dataTables.js',
                         'plugins/datatables/js/dataTables.bootstrap.js',
                         'plugins/jquery-treetable/js/jquery.treetable.js',
@@ -117,9 +166,30 @@ module.exports = function(grunt) {
                     'dist/js/<%= pkg.name %>.min.js': [
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
+                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
+                        'plugins/bootstrap-modal/js/bootstrap-modal.min.js',
+                        'plugins/bootbox/js/bootbox.min.js',
+                        'plugins/toastr/js/toastr.min.js',
                         'plugins/datatables/js/jquery.dataTables.min.js',
                         'plugins/datatables/js/dataTables.bootstrap.min.js',
                         'plugins/jquery-treetable/js/jquery.treetable.min.js',
+                        'dist/js/<%= pkg.name %>.min.js'
+                    ]
+                }
+            },
+            front_mergejs: {
+                options: {
+                    separator: grunt.util.linefeed + ";"
+                },
+                files: {
+                    'dist/js/<%= pkg.name %>.js': [
+                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
+                        'plugins/bootstrap-modal/js/bootstrap-modal.js',
+                        'dist/js/<%= pkg.name %>.js'
+                    ],
+                    'dist/js/<%= pkg.name %>.min.js': [
+                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
+                        'plugins/bootstrap-modal/js/bootstrap-modal.min.js',
                         'dist/js/<%= pkg.name %>.min.js'
                     ]
                 }
@@ -142,7 +212,10 @@ module.exports = function(grunt) {
                     'plugins/jquery-treetable/js/jquery.treetable.min.js': ['plugins/jquery-treetable/js/jquery.treetable.js'],
                     'plugins/datatables/js/dataTables.bootstrap.min.js': ['plugins/datatables/js/dataTables.bootstrap.js'],
                     'plugins/bootstrapvalidator/js/bootstrapValidator.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.js'],
-                    'plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.js']
+                    'plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.js'],
+                    'plugins/bootbox/js/bootbox.min.js': ['plugins/bootbox/js/bootbox.js'],
+                    'plugins/bootstrap-modal/js/bootstrap-modal.min.js': ['plugins/bootstrap-modal/js/bootstrap-modal.js'],
+                    'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js': ['plugins/bootstrap-modal/js/bootstrap-modalmanager.js']
                 }
             },
         },
@@ -177,7 +250,10 @@ module.exports = function(grunt) {
             minify_plugins: {
                 files: {
                     'plugins/jquery-treetable/css/jquery.treetable.min.css': ['plugins/jquery-treetable/css/jquery.treetable.css'],
-                    'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css']
+                    'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css'],
+                    'plugins/toastr/css/toastr.min.css': ['plugins/toastr/css/toastr.css'],
+                    'plugins/bootstrap-modal/css/bootstrap-modal.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal.css'],
+                    'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css']
                 }
             },
         },
@@ -286,8 +362,11 @@ module.exports = function(grunt) {
     // grunt dev
     grunt.registerTask('dev', ['clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
 
+    // grunt release admin
+    grunt.registerTask('releaseadmin', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+
     // grunt release
-    grunt.registerTask('release', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    grunt.registerTask('releasefront', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:front_buildjs', 'uglify', 'cssmin', 'concat:front_mergecss', 'concat:front_mergejs', 'copy']);
 
     // grunt
     grunt.registerTask('default', ['dev']);
