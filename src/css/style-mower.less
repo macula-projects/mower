@@ -24,6 +24,7 @@
 
 @header-dropdown-list-border-color:                                   #BCD4E5;
 @header-dropdown-list-bg-color:                                          #fff;
+@header-dropdown-list-content-color:                                  #333333;
 @header-dropdown-list-header-bg-color:                                #ECF2F7;
 @header-dropdown-list-header-color:                                   #8090A0;
 
@@ -802,7 +803,7 @@ li .icon-large[class*=" icon-"] {
     -webkit-border-radius: 0px !important;
     -moz-border-radius: 0px !important;
     border-radius: 0px !important;
-    
+
     &:before {
         position: absolute;
         top: -7px;
@@ -847,7 +848,7 @@ li .icon-large[class*=" icon-"] {
 
 .mu-header-dropdown-list-content {
   border-top-color: transparent;
-  color: #333333;
+  color: transparent;
 
   li {
 
@@ -933,6 +934,7 @@ li .icon-large[class*=" icon-"] {
     @header-dropdown-list-bg-color;
     @header-dropdown-list-header-bg-color;
     @header-dropdown-list-header-color;
+    @header-dropdown-list-content-color;
     )
 }
 
