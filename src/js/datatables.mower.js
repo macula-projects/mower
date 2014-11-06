@@ -63,8 +63,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     return {
         getTableOption: function(target) {
-            var t = $(target);
-
             var obj = $.extend({},
                 base.parseOptions(target, [
                     'id',
@@ -101,19 +99,18 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             return obj;
         },
         getRowOption: function(target) {
-            var t = $(target);
-
             var obj = $.extend({},
                 base.parseOptions(target, [
                     'id',
-                    'name'
+                    'name', {
+                        columns: 'array'
+                    }
                 ])
             );
 
             return obj;
         },
         getColumnsOption: function(target) {
-            var t = $(target);
             return $.extend({},
                 base.parseOptions(target, [
                     'name',
@@ -269,31 +266,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     function detachActionToolTip() {
         //bootstrap tooltip destory
         $('.mu-table-action a').tooltip('destroy');
-    }
-
-    function attachSelectedClass(table, settings) {
-        var defaults = $.fn.dataTable.defaults;
-
-        var oInit = $.extend({}, settings.oInit, defaults);
-        if (oInit.enableSelected === false) return;
-
-        var api = settings.oInstance.api();
-
-        var tr = api.$('tr:first').addClass('selected');
-        if (oInit.singleSelect === true) {
-            $(table).find('tbody').on('click', 'tr', function() {
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                } else {
-                    instance.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }
-            });
-        } else if (oInit.singleSelect === false) {
-            $(table).find('tbody').on('click', 'tr', function() {
-                $(this).toggleClass('selected');
-            });
-        }
     }
 
     var editors = {
@@ -526,7 +498,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             }
         });
 
-        $('<div class="mu-table-action"><a class="edit" data-inline-table-action="save" data-toggle="tooltip" rel="tooltip" data-original-title="保存" href="#"><i class="fa fa-check"></i></a>  <a class="cancel" data-inline-table-action="cancel" data-toggle="tooltip" rel="tooltip" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>').appendTo($(nRow).find('td:last').removeClass('mu-table-action-cont').addClass('mu-table-action-cont').empty());
+        $('<div class="mu-table-action"><a class="edit" data-inline-table-action="save" href="#"><i class="fa fa-check-circle"></i> 保存</a>  <a class="cancel" data-inline-table-action="cancel" href="#"><i class="fa fa-reply"></i> 取消</a></div>').appendTo($(nRow).find('td:last').removeClass('mu-table-action-cont').addClass('mu-table-action-cont').empty());
     }
 
     function saveRow(oTable, nRow) {
@@ -592,7 +564,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     $(document)
         .on('click.add.inline.datatables.data-api', '[data-inline-table-action="add"]', function(e) {
             e.preventDefault();
-            detachActionToolTip();
             try {
                 var $table = getTable($(this));
                 //get datatables object
@@ -616,12 +587,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             } catch (e) {
                 //NoOPS
             }
-
-            attachActionToolTip();
         })
         .on('click.delete.inline.datatables.data-api', '[data-inline-table-action="delete"]', function(e) {
             e.preventDefault();
-            detachActionToolTip();
             try {
                 if (confirm("Are you sure to delete this row ?") == false) {
                     return;
@@ -648,7 +616,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         typeof settings.oInit.row.id !== 'undefined') {
 
                         var $form = $(settings.oInit.validateForm);
-                        var id = rowData[settings.oInit.row.id];
+                        var id = rowData[settings.oInit.row.id]; //if row id exists,must append row html.
 
                         var rowName = '';
                         if (typeof settings.oInit.row.name !== 'undefined') {
@@ -660,7 +628,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         if (id && $form.size() > 0) {
                             var $cont = $('<div></div');
                             $.each($datatables.api().row(nRow).nodes().to$().find('input:hidden'), function(index, el) {
-                                if(columnName === $(el).attr('name')){
+                                if (columnName === $(el).attr('name')) {
                                     $(el).val(1);
                                 }
                                 $cont.append(el);
@@ -673,12 +641,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             } catch (e) {
 
             }
-
-            attachActionToolTip();
         })
         .on('click.save.inline.datatables.data-api', '[data-inline-table-action="save"]', function(e) {
             e.preventDefault();
-            detachActionToolTip();
             try {
 
                 //get closed tables
@@ -709,12 +674,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             } catch (e) {
 
             }
-
-            attachActionToolTip();
         })
         .on('click.cancel.inline.datatables.data-api', '[data-inline-table-action="cancel"]', function(e) {
             e.preventDefault();
-            detachActionToolTip();
             try {
                 //get closed tables
                 var $table = getTable($(this));
@@ -738,12 +700,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             } catch (e) {
 
             }
-
-            attachActionToolTip();
         })
         .on('click.edit.inline.datatables.data-api', '[data-inline-table-action="edit"]', function(e) {
             e.preventDefault();
-            detachActionToolTip();
             try {
                 //get closed tables
                 var $table = getTable($(this));
@@ -763,16 +722,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             } catch (e) {
 
             }
-
-            attachActionToolTip();
         });
 
     // Apply datatables to all elements with the rel="datatables" attribute
     // ====================================================================
-    $.extend(true, $.fn.dataTable.defaults, {
-        "enableSelected": true,
-        "singleSelect": false
-    });
 
     $(document).on('ready update', function(event, updatedFragment) {
         var $root = $(updatedFragment || 'html');
@@ -803,7 +756,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 var instance = $table
                     .on('init.dt', function(e, settings, json) {
                         //afterdo option
-                        attachSelectedClass(table, settings);
                     })
                     .on('preXhr.dt', function(e, settings, data) {
                         adapter.processReqData(settings, data);
@@ -815,8 +767,78 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                             //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
                         }
                     }).DataTable(option);
+
+                new $.fn.dataTable.SelectRows(instance, {
+                    "selectedClass": "selected"
+                });
+
             }
         });
     });
 
 })(Base || {}, DTAdapter || {}, jQuery, window, document);
+
+;
+(function(define) {
+
+    'use strict';
+
+    define(['jquery'], function($) {
+        return (function() {
+
+            return {
+                //return datatables api instance
+                getInstance: function(tableSelector) {
+                    return $(tableSelector).DataTable();
+                },
+                getSelectedRowIds: function(tableSelector) {
+                    try {
+                        var instance = this.getInstance(tableSelector);
+                        var sr = instance.settings()[0]._oSelectRows;
+                        return sr.fnGetSelectedRowIds();
+                    } catch (e) {
+
+                    }
+                    return [];
+                },
+                getSelectedRows: function(tableSelector) {
+                    try {
+                        var instance = this.getInstance(tableSelector);
+                        var sr = instance.settings()[0]._oSelectRows;
+                        return sr.fnGetSelectedRows();
+                    } catch (e) {
+
+                    }
+                    return [];
+                },
+                reload: function(tableSelector, resetPaging,rowSelector) {
+                    var that = this;
+                    this.getInstance(tableSelector).ajax.reload((resetPaging === true));
+                    $(tableSelector).on( 'draw.dt', function () {
+                        that.selectRow(tableSelector);
+                    } );
+                    
+                    return;
+                },
+                selectRow: function(tableSelector, rowSelector) {
+                    try {
+                        var instance = this.getInstance(tableSelector);
+                        var sr = instance.settings()[0]._oSelectRows;
+                        return sr.fnSelectRow(rowSelector);
+                    } catch (e) {
+
+                    }
+                    return;
+                }
+            };
+
+        })();
+    });
+
+}(typeof define === 'function' && define.amd ? define : function(deps, factory) {
+    if (typeof module !== 'undefined' && module.exports) { //Node
+        module.exports = factory(require('jquery'));
+    } else {
+        window['TableUtils'] = factory(window['jQuery']);
+    }
+}));

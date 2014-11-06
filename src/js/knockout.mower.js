@@ -57,14 +57,14 @@
         var column = [];
 
         if (operation === 'ADD') {
-            column.push('<a class="edit" data-inline-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="#"><i class="fa fa-check"></i></a>');
-            column.push('<a class="cancel" data-inline-table-action="cancel" data-toggle="tooltip" data-mode="new" data-original-title="取消" href="#"><i class="fa fa-reply"></i></a></div>');
+            column.push('<a class="edit" data-inline-table-action="edit" href="#"><i class="fa fa-check"></i> 编辑</a>');
+            column.push('<a class="cancel" data-inline-table-action="cancel"  data-mode="new" href="#"><i class="fa fa-reply"></i> 取消</a></div>');
         } else if (operation === 'SAVE') {
-            column.push('<a class="edit" data-inline-table-action="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>');
-            column.push('<a class="delete" data-inline-table-action="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a></div>');
+            column.push('<a class="edit" data-inline-table-action="edit"  href="javascript:;"><i class="fa fa-pencil "></i> 编辑</a>');
+            column.push('<a class="delete" data-inline-table-action="delete"  href="javascript:;"><i class="fa fa-trash-o"></i> 删除</a></div>');
         } else {
-            column.push('<a class="edit" data-action-type="edit" data-toggle="tooltip" data-original-title="编辑" href="javascript:;"><i class="fa fa-pencil "></i></a>');
-            column.push('<a class="delete" data-action-type="delete" data-toggle="tooltip" data-original-title="删除" href="javascript:;"><i class="fa fa-trash-o"></i></a>');
+            column.push('<a class="edit" data-inline-table-action="edit" href="javascript:;"><i class="fa fa-pencil "></i> 编辑</a>');
+            column.push('<a class="delete" data-inline-table-action="delete" href="javascript:;"><i class="fa fa-trash-o"></i> 删除</a>');
         }
 
         return '<div class="mu-table-action">' + column.join(" ") + '</div>';
@@ -80,29 +80,39 @@
             rowName = settings.oInit.row.name.replace(/_INDEX_/g, displayIndex);
         }
 
-        //may be array,depend on passing array/object to table data
-        if ($.isPlainObject(data)) {
-            for (var name in data) {
-
-                if (name === operationColumn) continue;
-
-                var isDrawed = false;
-                var colName = '';
-                for (var i = 0, iLen = columns.length; i < iLen; i++) {
-                    if (columns[i].name && name === columns[i].name) {
-                        colName = rowName ? (rowName + '.' + settings.oInit.columns[i].name) : settings.oInit.columns[i].name;
-                        !$('td:eq(' + i + ')', row).find('input[name="' + colName + '"]').size() && $('td:eq(' + i + ')', row).append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
-                        isDrawed = true;
-                        break;
-                    }
-                }
-
-
-                if (isDrawed !== true) {
-                    colName = rowName ? (rowName + '.' + name) : name;
-                    !$row.find('input[name="' + colName + '"]').size() && $row.append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
+        var columnNames = [];
+        if ($.isArray(settings.oInit.row.columns) && settings.oInit.row.columns.length > 0) {
+            columnNames = settings.oInit.row.columns;
+        } else {
+            if ($.isPlainObject(data)) {
+                //if data-columns not configed in table row,will  get all columns from table data default.
+                for (var name in data) {
+                    columnNames.push(name);
                 }
             }
+        }
+        
+        //may be array,depend on passing array/object to table data
+        for (var j = 0, len = columnNames.length; j < len; j++) {
+
+            var name = columnNames[j];
+
+            var isDrawed = false;
+            var colName = '';
+            for (var i = 0, iLen = columns.length; i < iLen; i++) {
+                if (columns[i].name && name === columns[i].name) {
+                    colName = rowName ? (rowName + '.' + settings.oInit.columns[i].name) : settings.oInit.columns[i].name;
+                    !$('td:eq(' + i + ')', row).find('input[name="' + colName + '"]').size() && $('td:eq(' + i + ')', row).append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
+                    isDrawed = true;
+                    break;
+                }
+            }
+
+            if (isDrawed !== true) {
+                colName = rowName ? (rowName + '.' + name) : name;
+                !$row.find('input[name="' + colName + '"]').size() && $row.append('<input type="hidden" name="' + colName + '" value="' + data[name] + '" />');
+            }
+
         }
     };
 
@@ -171,7 +181,7 @@
                 var prefix = 'data-bv-';
 
                 if (!tableOptions.validateForm) {
-                    formId = '#' + id + '_form';
+                    formId = id + '_form';
 
                     var $form = $('<form id="' + formId + '"></form>');
                     // loop through <select> attributes and apply them on form
@@ -188,20 +198,12 @@
                 } else {
 
                     formId = tableOptions.validateForm;
-                    
-                    // loop through <select> attributes and apply them on form
-                    $.each(attributes, function() {
-                        if (this.name.indexOf(prefix) === 0) {
-                            $(formId).attr(this.name, this.value);
-                        }
-                    });
 
-                    $(formId).bootstrapValidator();
                 }
 
                 var settings = table.fnSettings();
                 $.extend(settings.oInit, {
-                    'validateForm': formId
+                    'validateForm': '#' + formId
                 });
                 //others init self
             }
@@ -223,7 +225,8 @@
             $(element).DataTable().clear().draw();
 
             // Rebuild table from data source specified in binding
-            $(element).DataTable().rows.add((binding.data())).draw();
+            // get plain object,others edit row will fail
+            $(element).DataTable().rows.add(ko.toJS(binding.data())).draw();
         }
     };
 }(DTAdapter || {}, ko || {}, jQuery, window, document));

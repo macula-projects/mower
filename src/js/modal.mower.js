@@ -1,7 +1,7 @@
 /** ========================================================================
  * Mower: modal.mower.js - v1.0.0
  *
- *  bootstrap-tab support ajax capabilities
+ *  bootstrap-modal support ajax capabilities
  *
  * Dependencies :
  *                bootstrap-modal

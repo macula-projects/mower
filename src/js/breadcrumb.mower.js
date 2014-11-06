@@ -212,6 +212,8 @@
             //update breadcrumb's target content
             this._pushContent(panelId, url, callback);
 
+            this.cleanup(); //may be old state
+
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
                 "path": this._getXPath(this.$element.children('li:not(.favorite)'))
@@ -239,7 +241,7 @@
 
                 var li = [
                     '<li ',
-                    '" data-target="',
+                    ' data-target="',
                     lastTarget,
                     '" class="active">',
                     divider,
@@ -268,7 +270,7 @@
                 .children('[data-panel="' + showPanelId + '"]')
                 .removeClass('hidden');
         },
-        pop: function(popCount, relatedTarget) {
+        pop: function(popCount,relatedTarget) {
             if (parseInt(popCount) <= 0) return;
 
             //update header in breadcrumb
@@ -281,31 +283,11 @@
             this.current -= popArray.length;
             this._toggleFavorite();
 
+            this.cleanup(); //may be old state
+
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.poped, {
                 "path": this._getXPath(this.$element.children('li:not(.favorite)'))
-            });
-        },
-        command: function(relatedTarget) {
-            var $this = $(relatedTarget);
-            var e = $.Event(BreadCrumb.DEFAULTS.events.command);
-            $this.trigger(e);
-
-            if (e.isDefaultPrevented()) return;
-
-            var href = $this.attr('data-href') || $this.attr('href');
-            href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
-
-            $.ajax({
-                url: utils.getAbsoluteUrl(href, $this.getContextPath()),
-                type: 'post',
-                dataType: 'json',
-                success: function(data) {
-                    var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
-                    $this.trigger(e, {
-                        "data": data
-                    });
-                }
             });
         },
         reset: function() {
@@ -317,13 +299,16 @@
 
             this.$element.trigger(BreadCrumb.DEFAULTS.events.reset);
         },
+        cleanup: function() {
+            this.$element.closest('.mu-breadcrumb').next('._mower-alerts').remove();
+        },
         _destory: function() {}
-    }
+    };
 
     /* BREADCRUMB PLUGIN DEFINITION
      * ============================ */
 
-    var old = $.fn.breadcrumb
+    var old = $.fn.breadcrumb;
 
     $.fn.breadcrumb = function(options) {
         // slice arguments to leave only arguments after function name.
@@ -377,7 +362,6 @@
 
     /* BREADCRUMB DATA-API
      * ============== */
-
     $(document)
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="pushBreadcrumb"]', function(event) {
             var $this = $(this);
@@ -388,17 +372,35 @@
 
             if (e.isDefaultPrevented()) return;
 
-            var href = $this.attr('data-href') || $this.attr('href');
-            href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
-            var label = $this.attr('data-label');
-            var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
-            var option = $.extend({}, $target.data(), $this.data());
-            $target
-                .breadcrumb(option)
-                .breadcrumb("push", label, href, this)
-                .one('hide', function() {
-                    $this.is(':visible') && $this.focus();
-                });
+            var push = function() {
+                var href = $this.attr('data-href') || $this.attr('href');
+                href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
+                var label = $this.attr('data-label');
+                var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
+                var option = $.extend({}, $target.data(), $this.data());
+                $target
+                    .breadcrumb(option)
+                    .breadcrumb("push", label, href)
+                    .one('hide', function() {
+                        $this.is(':visible') && $this.focus();
+                    });
+            };
+
+            if ($this.attr('data-process')) {
+                var that = this;
+                var wait = function() {
+                    var dtd = $.Deferred();
+                    utils.executeFunctionByName($this.attr('data-process'), window, dtd, that);
+                    return dtd.promise();
+                };
+
+                $.when(wait())
+                    .done(function() {
+                        push();
+                    });
+            } else {
+                push();
+            }
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="popBreadcrumb"]', function(event) {
             var $this = $(this);
@@ -406,21 +408,75 @@
 
             var e = $.Event(BreadCrumb.DEFAULTS.events.pop);
             $this.trigger(e);
+
             if (e.isDefaultPrevented()) return;
 
-            var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
-            var option = $.extend({}, $target.data(), $this.data());
-            $target
-                .breadcrumb(option)
-                .breadcrumb("pop", 1, this)
-                .one('hide', function() {
-                    $this.is(':visible') && $this.focus();
-                });
+            var pop = function() {
+                var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
+                var option = $.extend({}, $target.data(), $this.data());
+                $target
+                    .breadcrumb(option)
+                    .breadcrumb("pop", 1)
+                    .one('hide', function() {
+                        $this.is(':visible') && $this.focus();
+                    });
+            };
+
+            if ($this.attr('data-process')) {
+                var that = this;
+                var wait = function() {
+                    var dtd = $.Deferred();
+                    utils.executeFunctionByName($this.attr('data-process'), window, dtd, that);
+                    return dtd.promise();
+                };
+
+                $.when(wait())
+                    .done(function() {
+                        pop();
+                    });
+            } else {
+                pop();
+            }
+
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="commandBreadcrumb"]', function(event) {
             var $this = $(this);
             if ($this.is('a')) event.preventDefault();
 
-            BreadCrumb.command(this);
+            var e = $.Event(BreadCrumb.DEFAULTS.events.command);
+            $this.trigger(e);
+
+            if (e.isDefaultPrevented()) return;
+
+            var command = function() {
+                var href = $this.attr('data-href') || $this.attr('href');
+                href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
+
+                $.ajax({
+                    url: utils.getAbsoluteUrl(href, $this.getContextPath()),
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data) {
+                        var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
+                        $this.trigger(e, data);
+                    }
+                });
+            };
+
+            if ($this.attr('data-process')) {
+                var that = this;
+                var wait = function() {
+                    var dtd = $.Deferred();
+                    utils.executeFunctionByName($this.attr('data-process'), window, dtd, that);
+                    return dtd.promise();
+                };
+
+                $.when(wait())
+                    .done(function() {
+                        command();
+                    });
+            } else {
+                command();
+            }
         });
 })(JSON || {}, Utils || {}, jQuery, window, document);

@@ -740,7 +740,15 @@ var Utils = (function($, window, document, undefined) {
             handleInit(); // initialize core variables
             handleOnResize(); // set and handle responsive    
         },
-        //some helper function
+        executeFunctionByName: function(functionName, context /*, args */ ) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            var namespaces = functionName.split(".");
+            var func = namespaces.pop();
+            for (var i = 0; i < namespaces.length; i++) {
+                context = context[namespaces[i]];
+            }
+            return context[func].apply(context, args);
+        },
         getAbsoluteUrl: function(url, contextPath) {
             if (url.indexOf('://') >= 0) {
                 return url;
