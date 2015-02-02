@@ -80,7 +80,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         lengthChange: 'boolean'
                     }, {
                         processing: 'boolean',
-                        scrollX: 'boolean',
+                        scrollX: 'string',
                         scrollCollapse: 'boolean',
                         scrollY: 'string'
                     }, {
@@ -88,7 +88,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         ajax: 'string'
                     }, {
                         enableSelected: 'boolean',
-                        singleSelect: 'boolean'
+                        singleSelect: 'boolean',
+                        initSelect: 'array'
                     }, {
                         validated: 'boolean',
                         validateForm: 'string'
@@ -242,6 +243,61 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 $.extend(json, dataSource);
             } catch (e) {
                 //NoOPS
+            }
+        },
+        //parse table options and apply table
+        applyDataTable: function(tableSelector) {
+            var table = tableSelector,
+                $table = $(tableSelector),
+                rowDataSelector = '> thead > tr:last-child, > thead > tr:last-child',
+                rowOptions = {},
+                columnDataSelector = '> thead > tr:last-child > th, > thead > tr:last-child > td',
+                columnArray = new Array();
+
+            if (!$.fn.DataTable.isDataTable(table)) {
+                //parse option
+                var that = this,
+                    option = $.extend({}, this.getTableOption(table));
+
+                //parse row data option
+                $.extend(true, rowOptions, this.getRowOption($table.find(rowDataSelector)));
+                option["row"] = rowOptions;
+
+                // Get the column data once for the life time of the plugin
+                $table.find(columnDataSelector).each(function() {
+                    var data = that.getColumnsOption(this);
+                    columnArray.push(data);
+                });
+                option = $.extend({}, {
+                    "columns": columnArray
+                }, option);
+
+                //predo option
+                this.processOption(this, option);
+
+                //apply datatables
+                var instance = $table
+                    .on('init.dt', function(e, settings, json) {
+                        //afterdo option
+                    })
+                    .on('preXhr.dt', function(e, settings, data) {
+                        that.processReqData(settings, data);
+                    })
+                    .on('xhr.dt', function(e, settings, json) {
+                        if (json.success) {
+                            that.processResData(settings, json);
+                        } else {
+                            //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
+                        }
+                    }).DataTable(option);
+
+                new $.fn.dataTable.SelectRows(instance, {
+                    "selectedClass": "selected",
+                    "idColumn": option.row.id ? option.row.id : 'id',
+                    "initValue": option.initSelect,
+                    "enableSelected": option.enableSelected === false ? false : true,
+                    "singleSelect": option.singleSelect === false ? false : true
+                });
             }
         }
     };
@@ -731,48 +787,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         var $root = $(updatedFragment || 'html');
 
         $root.find('[rel="datatables"]').each(function(index, el) {
-            var table = this,
-                $table = $(this),
-                columnDataSelector = '> thead > tr:last-child > th, > thead > tr:last-child > td',
-                columnArray = new Array();
-
-            if (!$.fn.DataTable.isDataTable(table)) {
-                //parse option
-                var option = $.extend({}, adapter.getTableOption(table));
-
-                // Get the column data once for the life time of the plugin
-                $table.find(columnDataSelector).each(function() {
-                    var data = adapter.getColumnsOption(this);
-                    columnArray.push(data);
-                });
-                option = $.extend({}, {
-                    "columns": columnArray
-                }, option);
-
-                //predo option
-                adapter.processOption(this, option);
-
-                //apply datatables
-                var instance = $table
-                    .on('init.dt', function(e, settings, json) {
-                        //afterdo option
-                    })
-                    .on('preXhr.dt', function(e, settings, data) {
-                        adapter.processReqData(settings, data);
-                    })
-                    .on('xhr.dt', function(e, settings, json) {
-                        if (json.success) {
-                            adapter.processResData(settings, json);
-                        } else {
-                            //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
-                        }
-                    }).DataTable(option);
-
-                new $.fn.dataTable.SelectRows(instance, {
-                    "selectedClass": "selected"
-                });
-
-            }
+            adapter.applyDataTable(this);
         });
     });
 
@@ -791,44 +806,52 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 getInstance: function(tableSelector) {
                     return $(tableSelector).DataTable();
                 },
+                //return datatables jQuery object
+                getObject: function(tableSelector) {
+                    return $(tableSelector).dataTable();
+                },
                 getSelectedRowIds: function(tableSelector) {
-                    try {
-                        var instance = this.getInstance(tableSelector);
-                        var sr = instance.settings()[0]._oSelectRows;
-                        return sr.fnGetSelectedRowIds();
-                    } catch (e) {
-
-                    }
-                    return [];
+                    var instance = this.getInstance(tableSelector);
+                    var sr = instance.settings()[0]._oSelectRows;
+                    return sr.fnGetSelectedRowIds();
                 },
                 getSelectedRows: function(tableSelector) {
-                    try {
-                        var instance = this.getInstance(tableSelector);
-                        var sr = instance.settings()[0]._oSelectRows;
-                        return sr.fnGetSelectedRows();
-                    } catch (e) {
-
-                    }
-                    return [];
+                    var instance = this.getInstance(tableSelector);
+                    var sr = instance.settings()[0]._oSelectRows;
+                    return sr.fnGetSelectedRows();
                 },
-                reload: function(tableSelector, resetPaging,rowSelector) {
+                reload: function(tableSelector, resetPaging, rowSelector) {
                     var that = this;
                     this.getInstance(tableSelector).ajax.reload((resetPaging === true));
-                    $(tableSelector).on( 'draw.dt', function () {
+                    $(tableSelector).on('draw.dt', function() {
                         that.selectRow(tableSelector);
-                    } );
-                    
-                    return;
+                    });
                 },
                 selectRow: function(tableSelector, rowSelector) {
-                    try {
-                        var instance = this.getInstance(tableSelector);
-                        var sr = instance.settings()[0]._oSelectRows;
-                        return sr.fnSelectRow(rowSelector);
-                    } catch (e) {
-
-                    }
-                    return;
+                    var instance = this.getInstance(tableSelector);
+                    var sr = instance.settings()[0]._oSelectRows;
+                    return sr.fnSelectRow(rowSelector);
+                },
+                selectRowById: function(tableSelector, id) {
+                    var instance = this.getInstance(tableSelector);
+                    var sr = instance.settings()[0]._oSelectRows;
+                    return sr.fnSelectRowsById(id);
+                },
+                adjustColumn: function(tableSelector) {
+                    var instance = this.getInstance(tableSelector);
+                    instance.columns.adjust().draw();
+                },
+                searchColumn: function(tableSelector, columnSelector, value) {
+                    var instance = this.getInstance(tableSelector);
+                    instance
+                        .column(columnSelector)
+                        .search(value)
+                        .draw();
+                },
+                unSelectRow: function(tableSelector, rowSelector) {
+                    var instance = this.getInstance(tableSelector);
+                    var sr = instance.settings()[0]._oSelectRows;
+                    sr.fnUnSelectRow(rowSelector);
                 }
             };
 

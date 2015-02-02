@@ -485,6 +485,7 @@ String.prototype.length2 = function() {
                     scripts.unshift($(this));
                 }
             });
+
             for (var i = 0; i < scripts.length; i++) {
                 var id = scripts[i].attr('id');
                 if (id) {
@@ -568,12 +569,15 @@ String.prototype.length2 = function() {
 
 }(UniqueId || {}, jQuery, window, document));
 
-JSON = {
-    useHasOwn: ({}.hasOwnProperty ? true : false),
-    pad: function(n) {
+var JSON = (function(json) {
+
+    json.useHasOwn = ({}.hasOwnProperty ? true : false);
+
+    json.pad = function(n) {
         return n < 10 ? "0" + n : n;
-    },
-    m: {
+    };
+
+    json.m = {
         "\b": '\\b',
         "\t": '\\t',
         "\n": '\\n',
@@ -581,8 +585,9 @@ JSON = {
         "\r": '\\r',
         '"': '\\"',
         "\\": '\\\\'
-    },
-    encodeString: function(s) {
+    };
+
+    json.encodeString = function(s) {
         if (/["\\\x00-\x1f]/.test(s)) {
             return '"' + s.replace(/([\x00-\x1f\\"])/g, function(a, b) {
                 var c = m[b];
@@ -594,8 +599,9 @@ JSON = {
             }) + '"';
         }
         return '"' + s + '"';
-    },
-    encodeArray: function(o) {
+    };
+
+    json.encodeArray = function(o) {
         var a = ["["],
             b = false,
             i, l = o.length,
@@ -617,11 +623,13 @@ JSON = {
         }
         a.push("]");
         return a.join("");
-    },
-    encodeDate: function(o) {
+    };
+
+    json.ncodeDate = function(o) {
         return '"' + o.getFullYear() + "-" + pad(o.getMonth() + 1) + "-" + pad(o.getDate()) + "T" + pad(o.getHours()) + ":" + pad(o.getMinutes()) + ":" + pad(o.getSeconds()) + '"';
-    },
-    encode: function(o) {
+    };
+
+    json.encode = function(o) {
         if (typeof o == "undefined" || o === null) {
             return "null";
         } else if (o instanceof Array) {
@@ -658,12 +666,15 @@ JSON = {
             a.push("}");
             return a.join("");
         }
-    },
-    decode: function(json) {
-        return eval("(" + json + ')');
-    }
-};
+    };
 
+    json.decode = function(json) {
+        return (new Function('return ' + json))();
+    }
+
+    return json;
+
+}(JSON || {}));
 
 var Utils = (function($, window, document, undefined) {
 
@@ -692,7 +703,7 @@ var Utils = (function($, window, document, undefined) {
         }
     };
 
-    // runs callback functions set by Metronic.addResponsiveHandler().
+    // runs callback functions set by Utils.addResizeHandler().
     var _runResizeHandlers = function() {
         // reinitialize other subscribed elements
         for (var i = 0; i < resizeHandlers.length; i++) {
@@ -796,15 +807,139 @@ var Utils = (function($, window, document, undefined) {
         runResizeHandlers: function() {
             _runResizeHandlers();
         },
+        strToJson: function(str) {
+            var json = (new Function("return " + str))();
+            return json;
+        },
         // check IE8 mode
         isIE8: function() {
             return isIE8;
         },
-
         // check IE9 mode
         isIE9: function() {
             return isIE9;
-        }
+        },
+        isMsie: function() {
+            return /(msie|trident)/i.test(navigator.userAgent) ? navigator.userAgent.match(/(msie |rv:)(\d+(.\d+)?)/i)[2] : false;
+        },
+        isBlankString: function(str) {
+            return !str || /^\s*$/.test(str);
+        },
+        escapeRegExChars: function(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        },
+        isString: function(obj) {
+            return typeof obj === "string";
+        },
+        isNumber: function(obj) {
+            return typeof obj === "number";
+        },
+        isArray: $.isArray,
+        isFunction: $.isFunction,
+        isObject: $.isPlainObject,
+        isUndefined: function(obj) {
+            return typeof obj === "undefined";
+        },
+        toStr: function toStr(s) {
+            return _.isUndefined(s) || s === null ? "" : s + "";
+        },
+        bind: $.proxy,
+        each: function(collection, cb) {
+            $.each(collection, reverseArgs);
+
+            function reverseArgs(index, value) {
+                return cb(value, index);
+            }
+        },
+        map: $.map,
+        filter: $.grep,
+        every: function(obj, test) {
+            var result = true;
+            if (!obj) {
+                return result;
+            }
+            $.each(obj, function(key, val) {
+                if (!(result = test.call(null, val, key, obj))) {
+                    return false;
+                }
+            });
+            return !!result;
+        },
+        some: function(obj, test) {
+            var result = false;
+            if (!obj) {
+                return result;
+            }
+            $.each(obj, function(key, val) {
+                if (result = test.call(null, val, key, obj)) {
+                    return false;
+                }
+            });
+            return !!result;
+        },
+        mixin: $.extend,
+        getUniqueId: function() {
+            var counter = 0;
+            return function() {
+                return counter++;
+            };
+        }(),
+        templatify: function templatify(obj) {
+            return $.isFunction(obj) ? obj : template;
+
+            function template() {
+                return String(obj);
+            }
+        },
+        defer: function(fn) {
+            setTimeout(fn, 0);
+        },
+        debounce: function(func, wait, immediate) {
+            var timeout, result;
+            return function() {
+                var context = this,
+                    args = arguments,
+                    later, callNow;
+                later = function() {
+                    timeout = null;
+                    if (!immediate) {
+                        result = func.apply(context, args);
+                    }
+                };
+                callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) {
+                    result = func.apply(context, args);
+                }
+                return result;
+            };
+        },
+        throttle: function(func, wait) {
+            var context, args, timeout, result, previous, later;
+            previous = 0;
+            later = function() {
+                previous = new Date();
+                timeout = null;
+                result = func.apply(context, args);
+            };
+            return function() {
+                var now = new Date(),
+                    remaining = wait - (now - previous);
+                context = this;
+                args = arguments;
+                if (remaining <= 0) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    previous = now;
+                    result = func.apply(context, args);
+                } else if (!timeout) {
+                    timeout = setTimeout(later, remaining);
+                }
+                return result;
+            };
+        },
+        noop: function() {}
     };
 
 }(jQuery, window, document));

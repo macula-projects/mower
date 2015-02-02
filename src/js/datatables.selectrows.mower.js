@@ -100,7 +100,8 @@
                 var data = this.s.dt.oInstance.api().rows('tr.selected').data();
                 data.each(function(item, index) {
                     var idName = that.s.sIdColumn;
-                    ids.push(item[idName]);
+                    if (item[idName])
+                        ids.push(item[idName]);
                 });
                 return ids;
             },
@@ -112,8 +113,59 @@
                 selector = selector || 'tr:first';
 
                 api.$(selector).addClass('selected');
-            },
 
+                var container = $(this.s.dt.nTable).closest('.dataTables_scrollBody');
+                var scrollTo = $(this.s.dt.nTable).find(selector);
+                if (scrollTo.length) {
+                    container.scrollTop(0);
+                    container.scrollTop(scrollTo.offset().top - container.offset().top);
+                }
+            },
+            "fnSelectRowsById": function(id) {
+                var that = this,
+                    api = this.s.dt.oInstance.api(),
+                    result;
+
+                if ($.isArray(id)) {
+                    result = [];
+                    api.rows().indexes().each(function(idx) {
+                        var data = api.row(idx).data();
+
+                        if (data[that.s.sIdColumn] && $.inArray(data[that.s.sIdColumn], id) >= 0) {
+                            that.fnSelectRow(api.row(idx).node());
+                            result.push(data);
+                        }
+                    });
+                } else if (id) {
+                    api.rows().indexes().each(function(idx) {
+                        var data = api.row(idx).data();
+
+                        if (data[that.s.sIdColumn] && data[that.s.sIdColumn] == id) {
+                            that.fnSelectRow(api.row(idx).node());
+                            result = data;
+                            return false;
+                        }
+                    });
+                } else {
+                    //this.fnSelectRow();
+                }
+
+                return result;
+            },
+            "fnUnSelectRow": function(rowSelector) {
+                var api = this.s.dt.oInstance.api();
+                if (rowSelector) {
+                    api.rows(rowSelector)
+                        .nodes()
+                        .to$()
+                        .removeClass('ready');
+                } else {
+                    api.rows('tr.selected')
+                        .nodes()
+                        .to$()
+                        .removeClass('selected');
+                }
+            },
 
 
             /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -127,27 +179,38 @@
              *  @private
              */
             "_fnConstruct": function(oInit) {
-                var that = this;
-
                 /* Apply the settings from the user / defaults */
                 this.s = $.extend(true, this.s, SelectRows.defaults, oInit);
 
                 if (this.s.bEnableSelected === false) return;
 
-                this.fnSelectRow();
+                this.fnSelectRowsById(this.s.sInitSelect);
+
+                var that = this,
+                    api = this.s.dt.oInstance.api();
+
+                var e = $.Event(SelectRows.defaults.events.select);
 
                 if (this.s.bSingleSelect === true) {
-                    $(this.s.dt.nTable).find('tbody').on('click', 'tr', function() {
+                    $(this.s.dt.nTable).find('tbody').on('click', 'tr', function(event) {
+                        event.stopPropagation();
+
                         if ($(this).hasClass(that.s.sSelectedClass)) {
                             $(this).removeClass(that.s.sSelectedClass);
                         } else {
                             api.$('tr.' + that.s.sSelectedClass).removeClass(that.s.sSelectedClass);
                             $(this).addClass(that.s.sSelectedClass);
                         }
+
+                        $(that.s.dt.nTable).trigger(e, [api.row(this).data()]);
                     });
                 } else if (this.s.bSingleSelect === false) {
-                    $(this.s.dt.nTable).find('tbody').on('click', 'tr', function() {
+                    $(this.s.dt.nTable).find('tbody').on('click', 'tr', function(event) {
+                        event.stopPropagation();
+
                         $(this).toggleClass(that.s.sSelectedClass);
+
+                        $(that.s.dt.nTable).trigger(e, [api.row(this).data()]);
                     });
                 }
             }
@@ -190,7 +253,14 @@
 
             "bSingleSelect": false,
 
-            "sIdColumn": "id"
+            "sIdColumn": "id",
+
+            "sInitSelect": '',
+
+            "events": {
+                select: "selected.mu.datatables"
+            }
+
         };
 
 

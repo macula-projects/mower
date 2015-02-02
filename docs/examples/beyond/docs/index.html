@@ -1,0 +1,279 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BeyondAdmin Documentation</title>
+    <meta name="description" content="BeyondAdmin Documentation">
+    <meta name="author" content="BeyondAdmin">
+    <!--
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&amp;subset=latin" rel="stylesheet" type="text/css">
+    -->
+    <link rel="stylesheet" href="css/documentation.css">
+    <link rel="stylesheet" href="js/jquery-ui-1.9.0.custom/css/no-theme/jquery-ui-1.9.0.custom.css" />
+    <script src="js/jquery-ui-1.9.0.custom/js/jquery-1.8.2.js"></script>
+    <script src="js/jquery-ui-1.9.0.custom/js/jquery-ui-1.9.0.custom.min.js"></script>
+
+    <!-- FancyBox -->
+    <link rel="stylesheet" href="js/fancybox/jquery.fancybox.css?v=2.1.2" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/fancybox/jquery.fancybox.pack.js?v=2.1.2"></script>
+
+    <!--[if lt IE 9]>
+     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+     <![endif]-->
+    <script>
+        $(document).ready(function ($) {
+            $(".accordion").accordion({
+                collapsible: true,
+                active: false,
+                autoHeight: true,
+                clearStyle: true
+            });
+
+            $(".section_entry").click(function (ev) {
+                var $this = $(this);
+
+                var id = $this.data('id');
+
+                var top = $(document).scrollTop();
+
+                window.location.hash = id;
+
+                $(document).scrollTop(top);
+            });
+
+            $("a img").each(function () {
+                var $a = $(this).parent();
+
+                $a.click(function (ev) {
+                    ev.preventDefault();
+                    $.fancybox.open($a.attr('href'), { padding: 0, radius: 0 });
+                });
+            });
+
+            // hash
+            var hash = window.location.hash.toString();
+            var matches;
+
+            if (matches = hash.match(/^#(([0-9]+)_([0-9]+))$/)) {
+                var section_id = matches[1];
+
+                var section_entry = $("h3.section_entry[data-id=" + section_id + "]");
+
+                if (section_entry.length) {
+                    section_entry.click();
+
+                    var offset_top = section_entry.offset().top;
+                    $(document).scrollTop(offset_top);
+                }
+            }
+        });
+    </script>
+</head>
+
+
+<body>
+    <header>
+        <div class="wrap">
+            <div class="logo">
+                <h1>
+                    BeyondAdmin (Documentation)
+
+                </h1>
+                <span class="last_update">
+                    Last update: <span>07/11/2014</span>
+                </span>
+
+                <div class="clear"></div>
+            </div>
+
+
+        </div>
+
+    </header>	<section>
+        <div class="wrap documentation">
+
+            <h1>1. Getting Started</h1>
+
+            <div class="heading_description"></div>
+
+            <div id="accordion_1157" class="accordion">
+                <h3 class="section_entry" data-id="1_1">1.1. BeyondAdmin Overview</h3>
+
+                <div>
+                    <p><strong>BeyondAdmin</strong> is a responsive and multipurpose admin theme powered with Twitter Bootstrap 3.1.1 Framework. </p>
+                    <p><strong>BeyondAdmin</strong> can be used for any type of web applications: admin panels, admin dashboards, CMS, CRM, and business websites. BeyondAdmin has a sleek, clean, intuitive and <strong>Colorful</strong> design which makes your website lovely and beyond expectations.</p>
+                </div>
+                <h3 class="section_entry" data-id="1_2">1.2. Start</h3>
+
+                <div>
+                    <p>To get you started with <strong>BeyondAdmin</strong> theme, you should be familiar with <em><strong>Twitter Bootstrap</strong> </em>which is widely used and most-preferred HTML framework from developers worldwide.</p>
+                    <p>First, open <em><strong>blank.html</strong></em> file to know more about the main theme structure. It basically includes the markup that all other pages will include it too.</p>
+
+
+                </div>
+            </div>
+            <h1>2. HTML Structure</h1>
+
+            <div class="heading_description">
+                <h2>Header Structure</h2>
+                <p><a href="images/header.png"><img alt="Header" src="images/header.png" width="963" height="505" /></a></p>
+                <p>There are 4 different sections in header:</p>
+                <ul>
+                    <li>
+                        <h4>Basic Styles</h4>
+                        <p>Contains all basic styles that is needed to set up BeyondAdmin</p>
+                        <p><strong>Note:</strong> you need <strong><em>bootstrap-rtl-link</em></strong> if you intend to use RTL direction. otherwise you can remove this link.</p>
+                    </li>
+                    <li>
+                        <h4>Fonts</h4>
+                        <p>You can put links to WebFonts that you want in this section</p>
+                    </li>
+                    <li>
+                        <h4>Beyond Styles</h4>
+                        <p>Contains other styles that is needed to set up BeyondAdmin</p>
+                        <p><strong>Note:</strong> you need <strong><em>skin-link</em></strong> if you intend to use pre-defined skins in your website.</p>
+                    </li>
+                    <li>
+                        <h4>Skin Script</h4>
+                        <p>Place this script in head to load scripts for skins and rtl support</p>
+                        <p>Do not use JQuery in skin.js if you want to change this script because this script loads before jquery.</p>
+                    </li>
+                </ul>
+                <hr />
+                <h2>Body Structure</h2>
+                <p><a href="images/body.png"><img alt="Body" src="images/body.png" width="935" height="390" /></a></p>
+                <p>There are 4 different sections in body:</p>
+                <ul>
+                    <li>
+                        <h4>Loading Container</h4>
+                        <p>Loading Markup to show before page loading completes</p>
+                        <p><strong>Note:</strong> you can put any html that you like in this section. loading works with your content.</p>
+                    </li>
+                    <li>
+                        <h4>Navbar (Top Menu)</h4>
+                        <p>Header of your page. see colorful top of demo page.</p>
+                    </li>
+                    <li>
+                        <h4>Main Container</h4>
+                        <p>Beside of Page Header and Loading all other html will be in this section. SideBar Menu, Breadcrumbs, Page Header and Page Content.</p>
+                    </li>
+                    <li>
+                        <h4>Scripts</h4>
+                        <p>Place all your desired scripts in this section at the end of page.</p>
+                        <p><strong>Note:</strong> All Demo Pages Contains Their Related Scripts in This Section.</p>
+                    </li>
+                </ul>
+                <hr />
+
+                <h2>Navabr (Top Menu) Structure</h2>
+                <p><a href="images/navbar.png"><img alt="Navbar" src="images/navbar.png" width="936" height="226" /></a></p>
+                <p>There are 2 different sections in Navbar:</p>
+                <ul>
+                    <li>
+                        <h4>Barnd</h4>
+                        <p>Your Logo goes here</p>
+                    </li>
+                    <li>
+                        <h4>Account Area and Setting</h4>
+                        <p>Notifications, Messages, Tasks, Account Setting and Skins are here.</p>
+                    </li>
+                </ul>
+                <hr />
+                <h2>Main-Container Structure</h2>
+                <p><a href="images/main-container.png"><img alt="main-container" src="images/main-container.png" width="936" height="226" /></a></p>
+                <p>There are 2 different sections in Main Container:</p>
+                <ul>
+                    <li>
+                        <h4>Sidebar Menu</h4>
+                    </li>
+                    <li>
+                        <h4>Page Content</h4>
+                    </li>
+                </ul>
+                <hr />
+                <h2>Page Content Structure</h2>
+                <p><a href="images/page-content.png"><img alt="page-content.png" src="images/page-content.png" width="936" height="226" /></a></p>
+                <p>There are 3 different sections in Page Content:</p>
+                <ul>
+                    <li>
+                        <h4>Breadcrumbs</h4>
+                    </li>
+                    <li>
+                        <h4>Page Header</h4>
+                    </li>
+                    <li>
+                        <h4>Page Body</h4>
+                    </li>
+                </ul>
+                <hr />
+            </div>
+
+            <div id="accordion_1159" class="accordion">
+            </div>
+            <h1>3. Layout</h1>
+            <div class="heading_description">
+                <p><a href="images/layout.png"><img alt="layout.png" src="images/layout.png" width="768" height="539" /></a></p>
+                <div class="heading_description">
+                </div>
+            </div>
+
+            <h1>4. Using the Theme</h1>
+            <div id="accordion_1165" class="accordion">
+                <h3 class="section_entry" data-id="5_1">4.1. Css Styles</h3>
+
+                <div>
+                    <p>BeyondAdmin is developed using LESS dynamic styling language, and all files are separated to make you more easy to find and customize any part of theme, add or remove parts of CSS that are not needed on your theme.</p>
+                    <p><a href="images/less.png"><img alt="less" src="images/less.png" width="334" height="536" /></a></p>
+                    <p>You can remove or customize any of these files for your own good. every component of BeyondAdmin is Completeley Seperated in JS or CSS and you are able to remove or modify any of these styles.</p>
+                    <p>There are 5 primary colors that you can define in your skin. these colors are:</p>
+                    <ul>
+                        <li>themeprimary</li>
+                        <li>themesecondary</li>
+                        <li>themethirdcolor</li>
+                        <li>themefourthcolor</li>
+                        <li>themefifthcolor</li>
+                    </ul>
+                    <p>All of predefined BeyondAdmin have these colors and you can easily use them like this:</p>
+                    <p><a href="images/themecolors.png"><img alt="themecolors" src="images/themecolors.png" width="684" height="112" /></a></p>
+                    <p>
+                        As you see you can use classes defined with these colors and also use them in data- attributes for creating charts. every time that you change your skin, all these 5 colors will change based on your skin.
+                    </p>
+                </div>
+               
+            </div>
+
+            <h1>5. Credits</h1>
+
+            <div class="heading_description">
+                <p><strong>BeyondAdmin</strong> is built with the presence of these great plugins and resources:</p>
+                <ul>
+                    <li><a href="http://getbootstrap.com" target="_blank">Twitter Bootstrap</a></li>
+                    <li><a href="http://www.flotcharts.org/" target="_blank">FLot Charts</a></li>
+                    <li><a href="http://oesmith.co.uk/morris.js/" target="_blank">Morris.js</a></li>
+                    <li><a href="http://omnipotent.net/jquery.sparkline/" target="_blank">jQuery Sparklines</a></li>
+                    <li><a href="http://rendro.github.io/easy-pie-chart/" target="_blank">EASY PIE CHART </a></li>
+                    <li><a href="http://arshaw.com/fullcalendar/" target="_blank">FullCalendar</a></li>
+                    <li><a href="http://google.com/webfonts" target="_blank">Google Webfonts</a></li>
+                    <li><a href="http://codeseven.github.io/toastr/" target="_blank">Toastr</a></li>
+                    <li><a href="http://anthonyterrien.com/knob/" target="_blank">JQuery Knob</a></li>
+                    <li><a href="https://github.com/MohammadYounes/rtlcss" target="_blank">RTLCSS</a></li>
+                    <li><a href="https://exacttarget.github.io/fuelux/" target="_blank">FuelUX</a></li>
+                    <li><a href="https://bootstrapvalidator.com/" target="_blank">Bootstrap Validator</a></li>
+                    <li><a href="https://labs.abeautifulsite.net/jquery-minicolors/" target="_blank">jQuery MiniColors</a></li>
+                    <li><a href="https://refreshless.com/nouislider/" target="_blank">noUiSlider</a></li>
+                    <li><a href="https://ghusse.github.io/jQRangeSlider/" target="_blank">jQRangeSlider</a></li>
+                    <li><a href="https://fortawesome.github.io/Font-Awesome/" target="_blank">Font Awesome 4.0.3</a></li>
+                    <li><a href="https://typicons.com/" target="_blank">Typicons </a></li>
+                    <li><a href="https://erikflowers.github.io/weather-icons/" target="_blank">Weather Icons</a></li>
+                    <li><a href="https://glyphicons.com/" target="_blank">Glyphicons </a></li>
+                    <li><a href="https://ivaynberg.github.io/select2/" target="_blank">JQuery Select2 </a></li>
+                </ul>
+            </div>
+
+            <div id="accordion_1167" class="accordion">
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>  

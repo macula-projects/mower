@@ -16,23 +16,6 @@
 @navbar-sm-min-height:                                                   26px;
 
 
-@header-min-height:                                        @navbar-min-height;
-@header-padding-horizontal:                        @navbar-padding-horizontal;
-@header-navbar-brand-width:                                             225px;
-
-@header-ddm-font-size:                                                    12px;
-
-@header-dropdown-list-border-color:                                   #BCD4E5;
-@header-dropdown-list-bg-color:                                          #fff;
-@header-dropdown-list-content-color:                                  #333333;
-@header-dropdown-list-header-bg-color:                                #ECF2F7;
-@header-dropdown-list-header-color:                                   #8090A0;
-
-@header-ddl-content-fontsize:                           @header-ddm-font-size;
-@header-ddl-content-padding:                                              5px;
-
-@header-logo-margin:                                                     20px;
-
 @main-navbar-margin-bottom-height:                                       10px;
 @main-navbar-menu-min-height:                                           200px;
 
@@ -52,9 +35,6 @@
 @main-menu-subitem-dd-width:     (@main-menu-item-main-min-width - @main-menu-subitem-dt-width -  @main-menu-subitem-main-padding * 2 - @main-menu-item-main-border * 2 - @main-menu-item-main-padding * 2 );
 @main-menu-subitem-a-color:                                            #D92432;
 
-@main-padding-top-height:                               (@navbar-sm-min-height + @navbar-min-height);
-
-@main-inner-bg-color:                                                 #FFFFFF;
 
 @main-navbar-menu-fontsize:                                  @navbar-fontsize;
 
@@ -625,469 +605,6 @@ li .icon-large[class*=" icon-"] {
   padding-left: 2px;
 }
 
-/* mower header.styles for  top navbar.
- ========================================================================== */
-
-/* global */
-.mu-navbar-transparent {
-    background-color: transparent;
-    border-color: transparent;
-}
-
-.mu-navbar-sm {
-    min-height: @navbar-sm-min-height;
-    margin-bottom: 0;
-
-    .divider-vertical {
-      height:@navbar-sm-min-height;
-      margin: 0 2px;
-      border-right: 1px solid #ffffff;
-      border-left: 1px solid #f2f2f2;
-    }
-
-    .navbar-nav.navbar-right:last-child {
-      margin-right:0;
-    }
-}
-
-
-/* content */
-.mu-navbar-nav-sm {
-  > li {
-    font-size: 12px;
-    margin: 0;
-    padding: 0;
-    color: #777;
-    line-height: 26px;
-
-    > span a {
-        color: #777;
-        font-size: 12px;
-        padding-left: 10px;
-        padding-right: 10px;
-        &:hover{
-          color: #333;
-        }
-    }
-
-    > a {
-      font-size: 12px;
-      padding: 5px 5px !important;
-      line-height: 16px;
-      >i {
-         font-size: 16px;
-      }
-
-    }
-
-    &.dropdown {
-      padding-left: 4px;
-      padding-right: 4px;
-
-      > a {
-        padding-left: 4px;
-        padding-right: 4px;
-
-        > .badge{
-          border-radius: 10px !important;
-        }
-
-        &:last-child{
-          padding-right: 0;
-        }
-
-      }
-
-      &:last-child{
-        padding-right: 2px;
-      }
-
-      .dropdown-toggle {
-        margin: 0px;
-        padding: 5px 10px;
-
-        > i {
-          font-size: 16px;
-        }
-
-        > i.fa-sm {
-          font-size: 12px;
-        }
-
-        > li > a > i {
-          font-size: 14px;
-        }
-
-        .badge {
-          position: absolute;
-          top: 2px;
-          left:-8px;
-        }
-      }
-
-      &.user {
-
-        .dropdown-toggle{
-
-          &:hover{
-            text-decoration: none;
-          }
-
-          i {
-            display: inline-block;
-            margin: 0;
-            font-size: 16px;
-          }
-        }
-
-        .dropdown-menu i {
-          width: 18px;
-          display: inline-block;
-        }
-      }
-
-    }
-    .dropdown-menu {
-      margin-top: 2px;
-
-      > li > a {
-        padding: 6px 0 6px 13px;
-        font-size: @header-ddm-font-size;
-      }
-    }
-  }
-}
-
-
-
-
-
-@media (max-width: @screen-sm) {
-  .mu-navbar-nav-sm > li > .dropdown-menu{
-    right: 0;
-    left: auto;
-
-    &:before {
-      right: 12px;
-      left: auto;
-    }
-
-    &:after {
-      right: 13px;
-      left: auto;
-    }
-  }
-}
-
-.mu-header-fixed .mu-navbar-under-small {
-    top: @navbar-sm-min-height;
-    z-index: 1020;
-
-    .navbar-toggle {
-        margin-top: 3px;
-        margin-bottom: 0;
-    }
-}
-
-
-
-/* dropdown content in mower header */
-
-.mu-header-dropdown-list {
-    max-width: 300px !important;
-    min-width: 160px !important;
-    width: 250px !important;
-    padding: 0px;
-    border: 1px solid transparent;
-    background-color: transparent;
-    -webkit-border-radius: 0px !important;
-    -moz-border-radius: 0px !important;
-    border-radius: 0px !important;
-
-    &:before {
-        position: absolute;
-        top: -7px;
-        left: 9px;
-        display: inline-block !important;
-        border-right: 7px solid transparent;
-        border-left: 7px solid transparent;
-        border-bottom: 7px solid transparent;
-        content: '';
-    }
-    &:after {
-        position: absolute;
-        top: -6px;
-        left: 10px;
-        display: inline-block !important;
-        border-right: 6px solid transparent;
-        border-left: 6px solid transparent;
-        border-bottom: 6px solid transparent;
-        content: '';
-    }
-}
-
-
-
-/* dropdown content header */
-
-.mu-header-dropdown-list-header {
-  padding: 0 8px;
-  background-color: transparent;
-  border-bottom: 1px solid transparent;
-  color: transparent;
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 34px;
-
-  > i {
-    margin-right: 5px !important;
-  }
-}
-
-/* dropdown content  content */
-
-.mu-header-dropdown-list-content {
-  border-top-color: transparent;
-  color: transparent;
-
-  li {
-
-    &:hover {
-      background-color: #F4F9FC ! important;
-    }
-
-    &:first-child a {
-      border-top: none;
-      border-bottom: 1px solid #E4ECF3 !important;
-    }
-
-    &:last-child a {
-      border-top: 1px solid white !important;
-      border-bottom: 1px solid #E4ECF3 !important;
-    }
-
-    > a {
-      display: block;
-      clear: both;
-      margin: 0px;
-      padding: @header-ddl-content-padding;
-      border-bottom: 1px solid;
-      line-height: 20px;
-      color: #555555;
-      font-size: @header-ddl-content-fontsize;
-      font-weight: normal;
-      white-space: normal !important;
-
-      &:active,&:hover,&:focus{
-        background-image: none;
-        background-color: rgba(0, 0, 0, 0) ! important;
-        color: #555555;
-        text-decoration: none;
-      }
-    }
-
-    i {
-      margin-right: 3px;
-    }
-
-    > a {
-      border-bottom-color: #E4ECF3;
-    }
-
-  }
-}
-
-/* dropdown content  footer */
-
-.mu-header-dropdown-list-footer {
-  padding: 10px 8px;
-  background-color: #f5f5f5;
-  border-top: 1px solid transparent;
-
-  a {
-    display: block;
-    white-space: normal !important;
-    font-size: 13px;
-
-    &:hover {
-
-      background-image: none;
-      background-color: #f5f5f5 !important;
-      color: #000 !important;
-
-    }
-  }
-
-}
-
-.mu-header-dropdown-list-footer > a > i{
-  float: right;
-  margin-top: 3px;
-  font-size: 16px !important;
-}
-
-
-
-.mu-header-dropdown-list-default {
-    .mu-header-dropdown-list-variant( 
-    @header-dropdown-list-border-color;
-    @header-dropdown-list-bg-color;
-    @header-dropdown-list-header-bg-color;
-    @header-dropdown-list-header-color;
-    @header-dropdown-list-content-color;
-    )
-}
-
-
-/* mower header.styles for mu-header.
- ========================================================================== */
-.mu-header {
-    margin-top: 5px;
-}
-.mu-header > div + div {
-    margin-top: 5px;
-}
-.mu-header-logo {
-    .search-container {
-        color: #777;
-        line-height: 34px;
-        position: relative;
-        p {
-            margin-bottom: 0;
-            a:hover {
-                text-decoration: underline;
-            }
-        }
-        ul {
-            margin-bottom: 0;
-        }
-        .search-form {
-            padding-right: 0;
-        }
-    }
-    
-    .search {
-      margin-top: @header-logo-margin;
-      margin-bottom: @header-logo-margin;
-    }
-
-    .search-content {
-      .nav > li > a {
-        padding: 3px 10px;
-      }
-      
-
-      .search-form {
-        .form-control {
-          border: 2px solid #ccc;
-        }
-
-      }
-    }
-
-    .search-default .search-form button {
-        color: #fff;
-        background-color: #faa619;
-        &:hover, &:focus {
-            background-color: #e59205;
-        }
-    }
-
-
-    .search-default .nav-pills>li.active>a, 
-    .search-default .nav-pills>li.active>a:hover,
-    .search-default .nav-pills>li.active>a:focus {
-      color: #fff;
-      background-color: #faa619;
-    }
-
-    .search-default .search-form .form-control,
-    .search-default .search-form .form-control + .input-group-btn {
-      border-color: #faa619;
-    }
-
-    .shortcut {
-        margin-top: @header-logo-margin;
-        margin-bottom: @header-logo-margin;
-        > ul {
-            > li {
-                width: 80px;
-                i {
-                  color:#faa619;
-                  &:hover,
-                  &:focus{
-                    color: #e59205;
-                  }
-                }
-                .tag {
-                  top: -14px;
-                  left: 20px;
-                }
-                .text {
-                    top: 25px;
-                    left: -5px;
-                    white-space: nowrap;
-                    font-size: 13px;
-                    color:#dd4814;
-                    &:hover,
-                    &:focus{
-                      color: #ae3910;
-                    }
-                }
-
-            }
-        }
-    }
-
-    .step-container {
-      margin-top: @header-logo-margin;
-      margin-bottom: @header-logo-margin;
-    }
-
-    .step-tooltip {
-        margin-top: @header-logo-margin;
-        margin-bottom: @header-logo-margin;
-
-        .step-tooltip-content {
-          padding-left: 15px;
-          margin-left: @header-logo-margin;
-          border-left: 2px solid #777;
-          color:#999;
-
-          span {
-                font-size: 20px;
-                font-weight: 700;
-                line-height: 45px;
-            }
-        }
-    }
-}
-
-.mu-header-navbar {
-  .navbar {
-    margin-bottom: 0;
-  }
-  .navbar-nav.navbar-right:last-child {
-    margin-right: 0;
-  }
-}
-@media (min-width:@screen-sm) {
-  .mu-header-navbar  .navbar-collapse {
-    padding-left: 0;
-  }
-}
-
-
-/* mower main.styles for main.
- ========================================================================== */
-
-.mu-header-fixed .mu-main {
-  padding-top: @main-padding-top-height;
-}
-.mu-main-inner {
-  background-color: @main-inner-bg-color;
-}
-
 
 
 /* mower navbar.styles for main navbar.
@@ -1124,7 +641,6 @@ li .icon-large[class*=" icon-"] {
     // -moz-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
     // box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
   }
-
 }
 
 /*
@@ -1293,13 +809,6 @@ li .icon-large[class*=" icon-"] {
 }
 
 
-/* mower main container. styles for main container.
- ========================================================================== */
-.mu-main-container{
-  padding: 0 5px 5px 5px;
-}
-
-
 /* mower breadcrumb. styles for breadcrumb.
  ========================================================================== */
 
@@ -1352,10 +861,6 @@ li .icon-large[class*=" icon-"] {
 /* mower panel. styles for panel.
  ========================================================================== */
 
-.mu-main-content .hide {
-    display: none !important;
-    visibility: hidden !important;
-}
 
 .mu-panel .panel-heading{
   .btn {
@@ -3246,20 +2751,163 @@ li .icon-large[class*=" icon-"] {
   display: inline-block;
 }
 
-
-
-/* mu-footer
+/* mu-picker
  ========================================================================== */
-.mu-footer {
-    color: #777;
-    font-size: 12px;
-    text-align: center;
-    margin-top: 15px;
+ .mu-picker {
+   border-radius: 4px;
+ }
+ .mu-picker-dropdown {
+   top: 0;
+   left: 0;
+ }
+ .mu-picker-dropdown:before {
+   content: '';
+   display: inline-block;
+   border-left: 7px solid transparent;
+   border-right: 7px solid transparent;
+   border-bottom: 7px solid #ccc;
+   border-top: 0;
+   border-bottom-color: rgba(0, 0, 0, 0.2);
+   position: absolute;
+ }
+ .mu-picker-dropdown:after {
+   content: '';
+   display: inline-block;
+   border-left: 6px solid transparent;
+   border-right: 6px solid transparent;
+   border-bottom: 6px solid #fff;
+   border-top: 0;
+   position: absolute;
+ }
+ .mu-picker-dropdown.mu-picker-orient-left:before {
+   left: 6px;
+ }
+ .mu-picker-dropdown.mu-picker-orient-left:after {
+   left: 7px;
+ }
+ .mu-picker-dropdown.mu-picker-orient-right:before {
+   right: 6px;
+ }
+ .mu-picker-dropdown.mu-picker-orient-right:after {
+   right: 7px;
+ }
+ .mu-picker-dropdown.mu-picker-orient-top:before {
+   top: -7px;
+ }
+ .mu-picker-dropdown.mu-picker-orient-top:after {
+   top: -6px;
+ }
+ .mu-picker-dropdown.mu-picker-orient-bottom:before {
+   bottom: -7px;
+   border-bottom: 0;
+   border-top: 7px solid #999;
+ }
+ .mu-picker-dropdown.mu-picker-orient-bottom:after {
+   bottom: -6px;
+   border-bottom: 0;
+   border-top: 6px solid #fff;
+ }
+
+.mu-picker.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  display: none;
+  min-width: 160px;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding:0;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+  line-height: 1.428571429;
 }
 
-.mu-footer footer p {
-    margin-bottom: 10px;
+ .input-group.mu-dropdowntable .input-group-addon i,
+ .input-group.mu-dropdowntree .input-group-addon i,
+ .input-group.mu-amodal .input-group-addon i {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
 }
+
+
+/* mu-tagsselect
+ ========================================================================== */
+ 
+.mu-tagsselect {
+    width: 100%;
+}
+.mu-tagsselect {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    display: inline-block;
+    padding: 4px 6px;
+    margin: 0;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 4px;
+    max-width: 100%;
+    width: 100%;
+    cursor: text;
+}
+.mu-tagsselect input {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    width: auto !important;
+    max-width: inherit;
+}
+.mu-tagsselect input:focus {
+    border: none;
+    box-shadow: none;
+}
+.mu-tagsselect .tag {
+    display: inline-block;
+    margin: 1px 0;
+    padding: 0;
+    border: 1px solid #afafb6;
+}
+.mu-tagsselect .tag-facet-category {
+    padding: 2px;
+    background: none repeat scroll 0 0 #aaa;
+    color: #fff;
+}
+.mu-tagsselect .tag-facet-value {
+    padding: 2px;
+    border-left: 1px solid #afafb6;
+    color: #4c4c4c;
+    text-shadow: 0 1px 1px white;
+}
+.mu-tagsselect .tag-facet-remove {
+    color: #aaa;
+    font-weight: bold;
+    margin: 0 3px;
+    vertical-align: top;
+    cursor: pointer;
+}
+.mu-tagsselect .tag-facet-remove:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.mu-tagsselect .tag-facet-remove:hover:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+
 
 
 

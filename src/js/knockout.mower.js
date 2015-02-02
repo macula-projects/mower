@@ -45,9 +45,12 @@
  * Copyright 2011-2014 Infinitus, Inc
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  * ======================================================================== */
-
 ;
-(function(adapter, knockout, $, window, document, undefined) {
+(function(factory) {
+    if (typeof ko === 'object') {
+        factory(DTAdapter , ko , jQuery, window, document);
+    }
+}(function(adapter, knockout, $, window, document, undefined) {
     'use strict';
 
     var operationColumn = "_OPERATE_";
@@ -91,7 +94,7 @@
                 }
             }
         }
-        
+
         //may be array,depend on passing array/object to table data
         for (var j = 0, len = columnNames.length; j < len; j++) {
 
@@ -118,7 +121,7 @@
 
     knockout.bindingHandlers.inlineEditTable = {
         init: function(element, valueAccessor) {
-            var binding = ko.utils.unwrapObservable(valueAccessor());
+            var binding = knockout.utils.unwrapObservable(valueAccessor());
 
             var tableOptions = {},
                 rowDataSelector = '> thead > tr:last-child, > thead > tr:last-child',
@@ -209,10 +212,10 @@
             }
 
             // inline table append _EDIT_
-            $(document).find('._EDIT_').html('<a class="btn btn-primary" href="javascript:void(0);" data-inline-table-action="add" data-target="#' + id + '"><i class="fa fa-plus-circle"></i>&nbsp;新增</a>');
+            $(api.table().container()).find('._EDIT_').html('<a class="btn btn-primary" href="javascript:void(0);" data-inline-table-action="add" data-target="#' + id + '"><i class="fa fa-plus-circle"></i>&nbsp;新增</a>');
         },
         update: function(element, valueAccessor) {
-            var binding = ko.utils.unwrapObservable(valueAccessor());
+            var binding = knockout.utils.unwrapObservable(valueAccessor());
 
             // If the binding isn't an object, turn it into one.
             if (!binding.data) {
@@ -226,7 +229,7 @@
 
             // Rebuild table from data source specified in binding
             // get plain object,others edit row will fail
-            $(element).DataTable().rows.add(ko.toJS(binding.data())).draw();
+            $(element).DataTable().rows.add(knockout.toJS(binding.data())).draw();
         }
     };
-}(DTAdapter || {}, ko || {}, jQuery, window, document));
+}));

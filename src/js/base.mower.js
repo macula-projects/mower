@@ -65,6 +65,7 @@ var Base = (function($, window, document, undefined) {
         };
     };
 
+    //
     var _resetIconContent = function() {
         if ($.browser.msie && parseInt($.browser.version) === 8) {
 
@@ -81,10 +82,21 @@ var Base = (function($, window, document, undefined) {
         }
     };
 
+    var _resettimezone = function() {
+        var timeZoneOffset = new Date().getTimezoneOffset();
+
+        var expireDate = new Date();
+        expireDate.setDate(expireDate.getDate() + 365);
+
+        document.cookie = "timezoneOffset=" + escape(timeZoneOffset * (-1)) + ";expires=" + expireDate.toGMTString();
+    };
+
     // public functions
     base.init = function() {
+        _resettimezone();
         _attachDomRemoveEvent();
         _resetIconContent();
+        
     };
 
     /**

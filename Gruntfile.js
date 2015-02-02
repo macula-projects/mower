@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         },
         // Task configuration
         clean: { // clean all
-            build: ['dist/**','docs/<%= pkg.name %>/**']
+            build: ['dist/**', 'docs/<%= pkg.name %>/**']
         },
         concat: { //files concat
             options: {
@@ -71,10 +71,13 @@ module.exports = function(grunt) {
                         'src/js/datatables.<%= pkg.name %>.js',
                         'src/js/knockout.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
+                        'src/js/dropdown.table.<%= pkg.name %>.js',
+                        'src/js/dropdown.tree.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/magnifier.<%= pkg.name %>.js',
                         'src/js/cmenu.<%= pkg.name %>.js',
                         'src/js/smenu.<%= pkg.name %>.js',
+                        'src/js/sidebar.<%= pkg.name %>.js',
                         'src/js/modal.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
@@ -117,8 +120,9 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'plugins/toastr/css/toastr.css',
                         'plugins/jquery-treetable/css/jquery.treetable.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
                         'plugins/bootstrap-modal/css/bootstrap-modal.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css'
+                        'plugins/jstree/css/style.css'
                     ],
                     'dist/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
@@ -126,8 +130,9 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'plugins/toastr/css/toastr.min.css',
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
                         'plugins/bootstrap-modal/css/bootstrap-modal.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css'
+                        'plugins/jstree/css/style.min.css'
                     ]
                 }
             },
@@ -138,11 +143,15 @@ module.exports = function(grunt) {
                 files: {
                     'dist/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
-                        'dist/css/<%= pkg.name %>.css'
+                        'dist/css/<%= pkg.name %>.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal.css'
                     ],
                     'dist/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
-                        'dist/css/<%= pkg.name %>.min.css'
+                        'dist/css/<%= pkg.name %>.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal.min.css'
                     ]
                 }
             },
@@ -161,6 +170,7 @@ module.exports = function(grunt) {
                         'plugins/datatables/js/jquery.dataTables.js',
                         'plugins/datatables/js/dataTables.bootstrap.js',
                         'plugins/jquery-treetable/js/jquery.treetable.js',
+                        'plugins/jstree/js/jstree.js',
                         'dist/js/<%= pkg.name %>.js'
                     ],
                     'dist/js/<%= pkg.name %>.min.js': [
@@ -173,6 +183,7 @@ module.exports = function(grunt) {
                         'plugins/datatables/js/jquery.dataTables.min.js',
                         'plugins/datatables/js/dataTables.bootstrap.min.js',
                         'plugins/jquery-treetable/js/jquery.treetable.min.js',
+                        'plugins/jstree/js/jstree.min.js',
                         'dist/js/<%= pkg.name %>.min.js'
                     ]
                 }
@@ -215,7 +226,8 @@ module.exports = function(grunt) {
                     'plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.js'],
                     'plugins/bootbox/js/bootbox.min.js': ['plugins/bootbox/js/bootbox.js'],
                     'plugins/bootstrap-modal/js/bootstrap-modal.min.js': ['plugins/bootstrap-modal/js/bootstrap-modal.js'],
-                    'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js': ['plugins/bootstrap-modal/js/bootstrap-modalmanager.js']
+                    'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js': ['plugins/bootstrap-modal/js/bootstrap-modalmanager.js'],
+                    'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js']
                 }
             },
         },
@@ -253,9 +265,10 @@ module.exports = function(grunt) {
                     'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css'],
                     'plugins/toastr/css/toastr.min.css': ['plugins/toastr/css/toastr.css'],
                     'plugins/bootstrap-modal/css/bootstrap-modal.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal.css'],
-                    'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css']
+                    'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css'],
+                    'plugins/jstree/css/style.min.css': ['plugins/jstree/css/style.css']
                 }
-            },
+            }
         },
         compress: {
             build: {
@@ -277,15 +290,18 @@ module.exports = function(grunt) {
                     cwd: 'plugins/font-awesome/',
                     src: ['fonts/*'],
                     dest: 'dist/'
-                },{
+                }, {
+                    expand: true,
+                    cwd: 'plugins/jstree/',
+                    src: ['img/*'],
+                    dest: 'dist/'
+                }]
+            },
+            buildDocs: {
+                files: [{
                     expand: true,
                     cwd: 'dist/',
                     src: ['**'],
-                    dest: 'docs/<%= pkg.name %>/'
-                },{
-                    expand: true,
-                    cwd: 'plugins/font-awesome/',
-                    src: ['fonts/*'],
                     dest: 'docs/<%= pkg.name %>/'
                 }]
             }
@@ -328,7 +344,7 @@ module.exports = function(grunt) {
         bowercopy: {
             options: {
                 srcPrefix: 'bower_components'
-                //clean: false // default false
+                    //clean: false // default false
             },
             libs: {
                 options: {
