@@ -7,6 +7,8 @@
 // Variables
 // =============================================================================
 
+@navbar-sm-min-height:                                                   26px;
+
 @header-min-height:                                        @navbar-min-height;
 @header-padding-horizontal:                        @navbar-padding-horizontal;
 @header-navbar-brand-width:                                             225px;
@@ -24,14 +26,13 @@
 
 @header-logo-margin:                                                     20px;
 
-@main-padding-top-height:         (@navbar-sm-min-height + @navbar-min-height);
+
+@main-padding-top-height:                               (@navbar-min-height);
 
 
 
 /* mower header.styles for  top navbar.
  ========================================================================== */
-
-/* global */
 .mu-navbar-transparent {
     background-color: transparent;
     border-color: transparent;
@@ -340,7 +341,7 @@
 .mu-header > div + div {
     margin-top: 5px;
 }
-.mu-header-logo {
+.mu-header-inner {
     .search-container {
         color: #777;
         line-height: 34px;
@@ -492,6 +493,7 @@
 .mu-header-fixed .mu-main-container {
   margin-top:  @main-padding-top-height;
 }
+
 .mu-footer-fixed.mu-footer-fixed-mobile .mu-main-container {
   margin-bottom: 20px !important;
 }
