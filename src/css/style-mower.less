@@ -42,7 +42,7 @@
 @main-menu-subitem-main-font-size:                                       12px;
 
 @mu-breadcrumb-content-margin:                                            5px;
-@main-breadcrumb-font-size:                                              12px;
+@main-breadcrumb-font-size:                                              13px;
 
 @wizard-li-height:                                                      30px;
 @wizard-mini-height:                                (@wizard-li-height + 1);
@@ -75,6 +75,7 @@
   height: @navbar-min-height;
   padding: @navbar-padding-vertical @navbar-padding-horizontal;
 }
+
 .navbar-nav > li > a {
   padding-top: @navbar-padding-vertical !important;
   padding-bottom: @navbar-padding-vertical !important;
@@ -116,7 +117,7 @@
   }
 }
 
-@media (max-width: @screen-sm) {
+@media (max-width: @screen-xs-max) {
 
   .nav > li > .dropdown-menu {
     right: 0;
@@ -389,16 +390,6 @@ fieldset[disabled] .navbar-default-red .btn-link:focus {
 /*
  * fa-icon icon  glyphicon
  */
-[class^="fa-"],
-[class^="glyphicon-"],
-[class^="icon-"],
-[class*=" fa-"],
-[class*=" glyphicon-"],
-[class*=" icon-"] {
-  display: inline-block;
-  margin-top: 1px;
-}
-
 li [class^="fa-"],
 li [class^="glyphicon-"],
 li [class^="icon-"],
@@ -808,116 +799,16 @@ li .icon-large[class*=" icon-"] {
   }
 }
 
-
-/* mower breadcrumb. styles for breadcrumb.
- ========================================================================== */
-
-.mu-breadcrumb-content {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  position:relative;
-  border-radius: 0px;
-  box-shadow: none;
-  padding-right: 30px;
-  padding-left: 8px;
-  margin:  @mu-breadcrumb-content-margin 0;
-  border:0px !important;
-  background-color: #F7F7F7;
-
-  &.breadcrumb > li > a,
-  &.breadcrumb > li > i,
-  &.breadcrumb > li > span {
-    color: #666666;
-    text-shadow:none;
-  }
-
-  &.breadcrumb > li > a,
-  &.breadcrumb > li > span {
-    font-size: @main-breadcrumb-font-size;
-  }
-
-  &.breadcrumb > li > i {
-    color: #999999;
-    font-size: 16px;
-  }
-
-  &.breadcrumb > li > i.home {
-    font-size: 18px;
-  }
-
-  &.breadcrumb > li+li:before {
-    display: none;
-  }
-
-  /* Dashboard breadcrumb Dropdown */
-  &.breadcrumb .favorite {
-    position: absolute;
-    right: 20px;
-    top: 8px;
-  }
-}
-
-
 /* mower panel. styles for panel.
  ========================================================================== */
-
-
-.mu-panel .panel-heading{
-  .btn {
-    color: #777777;
-
-    &:hover{
-      color: @text-color;
-    }
-  }
-}
-
 /*
  * toolbar
  */
 
 .mu-panel-toolbar {
-  padding: 5px 15px;
+    padding: 5px 15px;
 }
-.mu-panel-toolbar-action-cont {
-  .btn {
-    padding: 5px 8px;
-  }
-}
-.mu-panel-toolbar-query-cont {
-  .btn {
-    padding: 0;
-    line-height: 12px;
-  }
 
-  .input-group-addon {
-    padding: 7px 10px;
-    border: none;
-    transition: background-color 0.3s ease 0s;
-    background-color: transparent;
-    background-image: none;
-  }
-
-  .form-control {
-    background-image: none;
-    border: none;
-    border-radius: 0;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-    color: #555555;
-    display: block;
-    font-size: 14px;
-    height: 28px;
-    line-height: 25px;
-    padding: 3px 6px;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100%;
-
-    &:focus {
-      background-color: #FFFFFF;
-      box-shadow: 2px 2px 3px #D2D2D2 inset !important;
-    }
-  }
-}
 
 /*
  * advanced query in toolbar.
@@ -981,7 +872,13 @@ li .icon-large[class*=" icon-"] {
   padding: 0;
   margin-bottom: 10px;
   min-height: 41px;
+
+  &.bordered-bottom-highlight {
+    border-bottom: 3px solid #eee;
+  }
 }
+
+
 .mu-panel > .panel-heading:before,
 .mu-panel > .panel-heading:after {
   content: " ";

@@ -77,7 +77,7 @@ module.exports = function(grunt) {
                         'src/js/magnifier.<%= pkg.name %>.js',
                         'src/js/cmenu.<%= pkg.name %>.js',
                         'src/js/smenu.<%= pkg.name %>.js',
-                        'src/js/sidebar.<%= pkg.name %>.js',
+                        'src/js/sidebarmenu.<%= pkg.name %>.js',
                         'src/js/modal.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
@@ -246,9 +246,13 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>',
                     strictMath: true
                 },
-                files: {
-                    'dist/css/<%= pkg.name %>-theme.css': 'src/css/themes/theme.less'
-                }
+                files: [{
+                    expand: true,
+                    cwd: 'src/css/themes/',
+                    src: ['*.less', '!themes-mixins.less'],
+                    dest: 'dist/css',
+                    ext: '.css'
+                }]
             }
         },
         cssmin: { //css compress

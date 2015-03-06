@@ -6,7 +6,6 @@
     "assignable": false,
     "appId": null,
     "attributes": {
-        "iconUri": null,
         "helpUri": null,
         "openMode": null,
         "ordered": 20,

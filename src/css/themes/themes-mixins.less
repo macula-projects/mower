@@ -1,0 +1,214 @@
+.mower-theme (
+@theme-primary;
+@theme-secondary;
+@theme-thirdcolor;
+@theme-fourthcolor;
+@theme-fifthcolor;
+@theme-primary-active;
+@btn-primary-hover;
+@btn-primary-border;
+@btn-primary-active;
+@btn-primary-activeborder;
+@btn-primary-dropdown-border) {
+
+    /*Border Colors*/
+    .bordered-themeprimary {
+        border-color: @theme-primary !important;
+    }
+
+    .bordered-themesecondary {
+        border-color: @theme-secondary !important;
+    }
+
+    .bordered-themethirdcolor {
+        border-color: @theme-thirdcolor !important;
+    }
+
+    .bordered-themefourthcolor {
+        border-color: @theme-fourthcolor !important;
+    }
+
+    .bordered-themefifthcolor {
+        border-color: @theme-fifthcolor !important;
+    }
+
+    /*Navbar*/
+    
+    .mu-header-container {
+        .header-menu {
+            .navbar-nav {
+                margin: 0;
+                > li > a {
+                    color: #fff;
+                }
+                > li.open > a, > li.open > a:focus, > li.open > a:hover {
+                    background-color: @theme-primary-active;
+                }
+                > li.active > a, > li.active > a:focus, > li.active > a:hover {
+                    background-color: @theme-primary-active;
+                }
+                > li > a:focus, > li > a:hover, > li > a:active {
+                    background-color: @theme-primary-active;
+                    color: #fff;
+                }
+                .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+                    background-color: @theme-primary-active;
+                }
+            }
+        }
+
+        .navbar {
+            .navbar-inner {
+                background: @theme-primary;
+                .navbar-header {
+                    .navbar-account {
+                        .account-area {
+                            > li {
+                                > a {
+                                    .badge {
+                                        box-shadow: 1px 1px 0 @theme-primary;
+                                    }
+                                }
+                                .dropdown-menu {
+                                    &.dropdown-messages {
+                                        li {
+                                            .message-time {
+                                                color: @theme-primary;
+                                            }
+                                        }
+                                    }
+                                    &.dropdown-login-area {
+                                        > li {
+                                            .avatar-area {
+                                                .caption {
+                                                    background-color: @theme-primary;
+                                                }
+                                            }
+                                            &.dropdown-footer {
+                                                border-top: 3px solid @theme-primary;
+                                            }
+                                        }
+                                    }
+                                }
+                                &.open {
+                                    > a {
+                                        background-color: @theme-primary;
+                                    }
+                                }
+                            }
+                        }
+                        .setting-container {
+                            input[type=checkbox] {
+                                + .text {
+                                    &:before {
+                                        border-color: @theme-primary;
+                                    }
+                                }
+                                &:checked {
+                                    + .text {
+                                        &:before {
+                                            border-color: @theme-primary;
+                                            color: @theme-secondary;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        &.setting-open {
+                            .setting {
+                                background-color: @theme-primary;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /*Sidebar*/
+    
+    .mu-sidebar {
+        &:hover .sidebar-collapse .collapse-icon {
+            color: @theme-primary;
+        }
+        .sidebar-header-wrapper {
+            margin-left: 5px;
+            height: 40px;
+            margin-bottom: 0;
+            position: relative;
+            .searchicon {
+                color: @theme-primary;
+            }
+        }
+        .sidebar-menu {
+            li {
+                &:before {
+                    background-color: @theme-primary;
+                }
+                &:not(.open) {
+                    &:hover {
+                        &:before {
+                            background-color: @theme-secondary;
+                        }
+                    }
+                }
+            }
+        }
+        .sidebar-collapse {
+            &:before {
+                background-color: @theme-primary;
+            }
+            .collapse-icon {
+                &:hover {
+                    background-color: @theme-primary;
+                    color: #fff;
+                }
+            }
+        }
+    }
+    /*content Header*/
+    
+    .mu-content-header {
+        .header-buttons {
+            a {
+                &:before {
+                    background-color: @theme-primary;
+                }
+                &:hover {
+                    color: @theme-primary;
+                }
+                &.active {
+                    color: @theme-primary;
+                }
+                &.favorite {
+                    &:before {
+                        background-color: @theme-secondary;
+                    }
+                    &:hover, &.active {
+                        color: @theme-secondary;
+                    }
+                }
+                &.sidebar-toggler {
+                    &:before {
+                        background-color: @theme-primary;
+                    }
+                    &:hover, &.active {
+                        color: @theme-primary;
+                    }
+                }
+            }
+        }
+    }
+
+    //Breadcrumbs
+    .breadcrumb {
+        & > li > a {
+            color: @theme-primary;
+        }
+    }
+
+    /*Pagination*/
+    .pagination > li.active > a, .pagination > li.active > a:hover {
+        background-color: @theme-primary;
+        border-color: @theme-primary;
+    }
+}

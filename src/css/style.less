@@ -7,48 +7,9 @@
 // Variables
 // ========================================================================
 
-
-//== Colors
-//
-//## Gray and brand colors for use across Bootstrap.
-
-@gray-darker:            lighten(#000, 13.5%); // #222
-@gray-dark:              lighten(#000, 20%);   // #333
-@gray:                   lighten(#000, 33.5%); // #555
-@gray-light:             lighten(#000, 60%);   // #999
-@gray-lighter:           lighten(#000, 93.5%); // #eee
-
-@brand-primary:         #428bca;
-@brand-success:         #5cb85c;
-@brand-info:            #5bc0de;
-@brand-warning:         #f0ad4e;
-@brand-danger:          #d9534f;
-
-
 //== Scaffolding
 //
 // ## Settings for some of the most global styles.
-
-//** Background color for `<body>`.
-@body-bg-color:                                 #FCFCFC;
-
-//** Global text color on `<body>`.
-@text-color:                                    #333;
-
-//** Global textual link color.
-@link-color:                                    #777;
-
-//** Link hover color set via `darken()` function.
-@link-hover-color:                              @text-color;
-
-@font-family-sans-serif:                        "微软雅黑", "宋体", Arial, Verdana, sans-serif;;
-
-@font-family-base:                              @font-family-sans-serif;
-
-@font-size-base:                                13px;
-
-//** Unit-less `line-height` for use in components like buttons.
-@line-height-base:                              1.538461538461538; // 20/13
 
 @box-size-base:                                 2px;
 @box-4:                                         (@box-size-base*2);
@@ -104,11 +65,22 @@ html {
 body {
   padding: 0;
   margin: 0;
-  background-color: @body-bg-color;
   line-height: @line-height-base;
   color: @text-color;
   font-family: @font-family-base;
   font-size: @font-size-base;
+}
+
+body:before {
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background-color: @body-bg-color;
 }
 
 
@@ -133,6 +105,10 @@ h5.block,
 h6.block {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.btn {
+  font-size: @font-size-base;
 }
 
 a {
@@ -805,157 +781,466 @@ hr.dotted, .mu-hr-dotted {
 }
 
 
-/* Text
+/* Text modifiers
  ========================================================================== */
+.theme-primary {
+    color: @theme-primary !important;
+}
 
+.theme-secondary {
+    color: @theme-secondary !important;
+}
+.theme-thirdcolor {
+    color: @theme-thirdcolor !important;
+}
+.theme-fourthcolor {
+    color: @theme-fourthcolor !important;
+}
+.theme-fifthcolor {
+    color: @theme-fifthcolor !important;
+}
+.white {
+    color: @white !important;
+}
 
-/* Color modifiers.
+.mu-snow {
+    color: @snow !important;
+}
+
+.mu-whitesmoke {
+    color: @whitesmoke !important;
+}
+
+.mu-seashell {
+    color: @seashell !important;
+}
+
+.mu-ivory {
+    color: @ivory !important;
+}
+
+.mu-platinum {
+    color: @platinum !important;
+}
+
+.mu-lightgray {
+    color: @lightgray !important;
+}
+
+.mu-gray {
+    color: @gray !important;
+}
+
+.mu-darkgray {
+    color: @darkgray !important;
+}
+
+.mu-silver {
+    color: @silver !important;
+}
+
+.mu-sonic-silver {
+    color: @sonic-silver !important;
+}
+
+.mu-storm-cloud {
+    color: @storm-cloud !important;
+}
+
+.mu-lightcarbon {
+    color: @lightcarbon !important;
+}
+
+.mu-carbon {
+    color: @carbon !important;
+}
+
+.mu-slate-gray {
+    color: @slate-gray !important;
+}
+
+.mu-darkcarbon {
+    color: @darkcarbon !important;
+}
+
+.mu-blue {
+    color: @blue !important;
+}
+
+.mu-info {
+    color: @info !important;
+}
+
+.mu-sky {
+    color: @sky !important;
+}
+
+.mu-primary {
+    color: @primary !important;
+}
+
+.mu-azure {
+    color: @azure !important;
+}
+
+.mu-blueberry {
+    color: @blueberry !important;
+}
+
+.mu-palegreen {
+    color: @palegreen !important;
+}
+
+.mu-success {
+    color: @success !important;
+}
+
+.mu-green {
+    color: @green !important;
+}
+
+.mu-lightyellow {
+    color: @lightyellow !important;
+}
+
+.mu-mu-yellow {
+    color: @yellow !important;
+}
+
+.mu-warning {
+    color: @warning !important;
+}
+
+.mu-gold {
+    color: @gold !important;
+}
+
+.mu-orange {
+    color: @orange !important;
+}
+
+.mu-lightred {
+    color: @lightred !important;
+}
+
+.mu-darkorange {
+    color: @darkorange !important;
+}
+
+.mu-red {
+    color: @red !important;
+}
+
+.mu-pink {
+    color: @pink !important;
+}
+
+.mu-darkpink {
+    color: @darkpink !important;
+}
+
+.mu-danger {
+    color: @danger !important;
+}
+
+.mu-magenta {
+    color: @magenta !important;
+}
+
+.mu-purple {
+    color: @purple !important;
+}
+
+.mu-maroon {
+    color: @maroon !important;
+}
+
+/* border modifiers
  ========================================================================== */
-
-.mu-text-dark {
-  color: #333333 ;
+     /*Border Colors*/
+.bordered-solid {
+    border-style: solid !important;
+}
+.bordered-dashed {
+    border-style: dashed !important;
+}
+.bordered-dotted {
+    border-style: dotted !important;
+}
+.bordered-double {
+    border-style: double !important;
 }
 
-.mu-text-dark2 {
-  color: #404040 ;
+.bordered-1 {
+    border: 1px solid @white;
 }
 
-.mu-text-lighten {
-  color: #d5e7ec ;
+.bordered-2 {
+    border: 2px solid @white;
 }
 
-.mu-text-white {
-  color: #FFFFFF ;
+.bordered-3 {
+    border: 3px solid @white;
 }
 
-.mu-text-red {
-  color: #a90329 ;
+.bordered-4 {
+    border: 4px solid @white;
 }
 
-.mu-text-red2 {
-  color: #DD5A43 ;
+.bordered-5 {
+    border: 5px solid @white;
 }
 
-.mu-text-light-red {
-  color: #FF7777 ;
+ .bordered-bottom-1 {
+     border-bottom: 1px solid @white;
+ }
+
+ .bordered-bottom-2 {
+     border-bottom: 2px solid @white;
+ }
+
+ .bordered-bottom-3 {
+     border-bottom: 3px solid @white;
+ }
+
+ .bordered-bottom-4 {
+     border-bottom: 4px solid @white;
+ }
+
+ .bordered-bottom-5 {
+     border-bottom: 5px solid @white;
+ }
+
+ .bordered-top-1 {
+     border-top: 1px solid @white;
+ }
+
+ .bordered-top-2 {
+     border-top: 2px solid @white;
+ }
+
+ .bordered-top-3 {
+     border-top: 3px solid @white;
+ }
+
+ .bordered-top-4 {
+     border-top: 4px solid @white;
+ }
+
+ .bordered-top-5 {
+     border-top: 5px solid @white;
+ }
+
+ .bordered-left-1 {
+     border-left: 1px solid @white;
+ }
+
+ .bordered-left-2 {
+     border-left: 2px solid @white;
+ }
+
+ .bordered-left-3 {
+     border-left: 3px solid @white;
+ }
+
+ .bordered-left-4 {
+     border-left: 4px solid @white;
+ }
+
+ .bordered-left-5 {
+     border-left: 5px solid @white;
+ }
+
+ .bordered-right-1 {
+     border-right: 1px solid @white;
+ }
+
+ .bordered-right-2 {
+     border-right: 2px solid @white;
+ }
+
+ .bordered-right-3 {
+     border-right: 3px solid @white;
+ }
+
+ .bordered-right-4 {
+     border-right: 4px solid @white;
+ }
+
+ .bordered-right-5 {
+     border-right: 5px solid @white;
+ }
+
+ .bordered-themeprimary {
+     border-color: @theme-primary !important;
+ }
+ .bordered-themesecondary {
+     border-color: @theme-secondary !important;
+ }
+ .bordered-themethirdcolor {
+     border-color: @theme-thirdcolor !important;
+ }
+ .bordered-themefourthcolor {
+     border-color: @theme-fourthcolor !important;
+ }
+ .bordered-themefifthcolor {
+     border-color: @theme-fifthcolor !important;
+ }
+.bordered-white {
+    border-color: @white !important;
 }
 
-.mu-text-light-red {
-  color: #a65858 ;
+.bordered-snow {
+    border-color: @snow !important;
 }
 
-.mu-text-blue {
-  color: #478FCA ;
+.bordered-whitesmoke {
+    border-color: @whitesmoke !important;
 }
 
-.mu-text-blue2 {
-  color: #57889c ;
+.bordered-seashell {
+    border-color: @seashell !important;
 }
 
-.mu-text-light-blue {
-  color: #93CBF9 ;
+.bordered-ivory {
+    border-color: @ivory !important;
 }
 
-.mu-text-light-blue2 {
-  color: #92a2a8 ;
+.bordered-platinum {
+    border-color: @platinum !important;
 }
 
-.mu-text-dark-blue {
-  color: #4c4f53 ;
+.bordered-lightgray {
+    border-color: @lightgray !important;
 }
 
-.mu-text-green {
-  color: #69AA46 ;
+.bordered-gray {
+    border-color: @gray !important;
 }
 
-.mu-text-green2 {
-  color: #356e35 ;
+.bordered-darkgray {
+    border-color: @darkgray !important;
 }
 
-.mu-text-light-green {
-  color: #B0D877 ;
+.bordered-silver {
+    border-color: @silver !important;
 }
 
-.mu-text-light-green2 {
-  color: #71843f ;
+.bordered-sonic-silver {
+    border-color: @sonic-silver !important;
 }
 
-.mu-text-dark-green {
-  color: #496949 ;
+.bordered-storm-cloud {
+    border-color: @storm-cloud !important;
 }
 
-.mu-text-orange {
-  color: #FF892A ;
+.bordered-lightcarbon {
+    border-color: @lightcarbon !important;
 }
 
-.mu-text-orange2 {
-  color: #FEB902 ;
+.bordered-carbon {
+    border-color: @carbon !important;
 }
 
-.mu-text-light-orange {
-  color: #FCAC6F ;
+.bordered-slate-gray {
+    border-color: @slate-gray !important;
 }
 
-.mu-text-light-orange2 {
-  color: #b19a6b ;
+.bordered-darkcarbon {
+    border-color: @darkcarbon !important;
 }
 
-.mu-text-dark-orange {
-  color: #a57225 ;
+.bordered-blue {
+    border-color: @blue !important;
 }
 
-.mu-text-purple {
-  color: #A069C3 ;
+.bordered-info {
+    border-color: @info !important;
 }
 
-.mu-text-purple2 {
-  color: #6e587a ;
+.bordered-sky {
+    border-color: @sky !important;
 }
 
-.mu-text-pink {
-  color: #C6699F ;
+.bordered-primary {
+    border-color: @primary !important;
 }
 
-.mu-text-pink2 {
-  color: #D6487E ;
+.bordered-azure {
+    border-color: @azure !important;
 }
 
-.mu-text-pink3 {
-  color: #ac5287 ;
+.bordered-blueberry {
+    border-color: @blueberry !important;
 }
 
-.mu-text-dark-pink {
-  color: #a8829f ;
+.bordered-palegreen {
+    border-color: @palegreen !important;
 }
 
-.mu-text-brown {
-  color: #A52A2A ;
+.bordered-success {
+    border-color: @success !important;
 }
 
-.mu-text-grey {
-  color: #777777 ;
+.bordered-green {
+    border-color: @green !important;
 }
 
-.mu-text-dark-gray {
-  color: #525252 ;
+.bordered-lightyellow {
+    border-color: @lightyellow !important;
 }
 
-.mu-text-light-grey {
-  color: #BBBBBB ;
+.bordered-yellow {
+    border-color: @yellow !important;
 }
 
-.mu-text-yellow {
-  color: #b09b5b ;
+.bordered-warning {
+    border-color: @warning !important;
 }
 
-.mu-text-magenta {
-  color: #6e3671 ;
+.bordered-gold {
+    border-color: @gold !important;
 }
 
-.mu-text-teal {
-  color: #568a89 ;
+.bordered-orange {
+    border-color: @orange !important;
 }
 
+.bordered-lightred {
+    border-color: @lightred !important;
+}
+
+.bordered-darkorange {
+    border-color: @darkorange !important;
+}
+
+.bordered-red {
+    border-color: @red !important;
+}
+
+.bordered-danger {
+    border-color: @danger !important;
+}
+
+.bordered-pink {
+    border-color: @pink !important;
+}
+
+.bordered-darkpink {
+    border-color: @darkpink !important;
+}
+
+.bordered-magenta {
+    border-color: @magenta !important;
+}
+
+.bordered-purple {
+    border-color: @purple !important;
+}
+
+.bordered-maroon {
+    border-color: @maroon !important;
+}
 
 /* Size modifiers
  ========================================================================== */
@@ -1032,6 +1317,306 @@ hr.dotted, .mu-hr-dotted {
   -moz-hyphens: auto;
   hyphens: auto;
 }
+
+
+/*#region Blue Button*/
+
+.btn-blue {
+    &, &:focus {
+        background-color: @blue !important;
+        border-color: @blue;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #81c1fb !important;
+    }
+    &.active {
+        background-color: #449cec !important;
+        border-color: #3d90db;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#70bafd), to(#449cec)));
+    }
+}
+.btn-blue:hover, .open .btn-blue.dropdown-toggle {
+    background-color: #70bafd !important;
+    border-color: #70bafd;
+    color: #fff;
+}
+.btn-blue.disabled, .btn-blue[disabled], fieldset[disabled] .btn-blue, .btn-blue.disabled:hover, .btn-blue[disabled]:hover, fieldset[disabled] .btn-blue:hover, .btn-blue.disabled:focus, .btn-blue[disabled]:focus, fieldset[disabled] .btn-blue:focus, .btn-blue.disabled:active, .btn-blue[disabled]:active, fieldset[disabled] .btn-blue:active, .btn-blue.disabled.active, .btn-blue[disabled].active, fieldset[disabled] .btn-blue.active {
+    background-color: @blue !important;
+    border-color: @blue;
+    .opacity(.5);
+}
+/*#endregion Blue Button*/
+/*#region sky Button*/
+
+.btn-sky {
+    &, &:focus {
+        background-color: @sky !important;
+        border-color: @sky;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #81c1fb !important;
+    }
+    &.active {
+        background-color: #2095b0 !important;
+        border-color: #2f97af;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#28b3d3), to(#2095b0)));
+    }
+}
+.btn-sky:hover, .open .btn-sky.dropdown-toggle {
+    background-color: #28b3d3 !important;
+    border-color: #28b3d3;
+    color: #fff;
+}
+.btn-sky.disabled, .btn-sky[disabled], fieldset[disabled] .btn-sky, .btn-sky.disabled:hover, .btn-sky[disabled]:hover, fieldset[disabled] .btn-sky:hover, .btn-sky.disabled:focus, .btn-sky[disabled]:focus, fieldset[disabled] .btn-sky:focus, .btn-sky.disabled:active, .btn-sky[disabled]:active, fieldset[disabled] .btn-sky:active, .btn-sky.disabled.active, .btn-sky[disabled].active, fieldset[disabled] .btn-sky.active {
+    background-color: @sky !important;
+    border-color: @sky;
+    .opacity(.5);
+}
+/*#endregion sky Button*/
+/*#region azure Button*/
+
+.btn-azure {
+    &, &:focus {
+        background-color: @azure !important;
+        border-color: @azure;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #3ecdf1 !important;
+    }
+    &.active {
+        background-color: #2badce !important;
+        border-color: #2badce;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#3ecdf1), to(#2badce)));
+    }
+}
+.btn-azure:hover, .open .btn-azure.dropdown-toggle {
+    background-color: #3ecdf1 !important;
+    border-color: #3ecdf1;
+    color: #fff;
+}
+.btn-azure.disabled, .btn-azure[disabled], fieldset[disabled] .btn-azure, .btn-azure.disabled:hover, .btn-azure[disabled]:hover, fieldset[disabled] .btn-azure:hover, .btn-azure.disabled:focus, .btn-azure[disabled]:focus, fieldset[disabled] .btn-azure:focus, .btn-azure.disabled:active, .btn-azure[disabled]:active, fieldset[disabled] .btn-azure:active, .btn-azure.disabled.active, .btn-azure[disabled].active, fieldset[disabled] .btn-azure.active {
+    background-color: @azure !important;
+    border-color: @azure;
+    .opacity(.5);
+}
+/*#endregion azure Button*/
+/*#region palegreen Button*/
+
+.btn-palegreen {
+    &, &:focus {
+        background-color: @palegreen !important;
+        border-color: @palegreen;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #a6d791 !important;
+    }
+    &.active {
+        background-color: #74aa5d !important;
+        border-color: #699755;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#9cd584), to(#74aa5d)));
+    }
+}
+.btn-palegreen:hover, .open .btn-palegreen.dropdown-toggle {
+    background-color: #9cd584 !important;
+    border-color: #9cd584;
+    color: #fff;
+}
+.btn-palegreen.disabled, .btn-palegreen[disabled], fieldset[disabled] .btn-palegreen, .btn-palegreen.disabled:hover, .btn-palegreen[disabled]:hover, fieldset[disabled] .btn-palegreen:hover, .btn-palegreen.disabled:focus, .btn-palegreen[disabled]:focus, fieldset[disabled] .btn-palegreen:focus, .btn-palegreen.disabled:active, .btn-palegreen[disabled]:active, fieldset[disabled] .btn-palegreen:active, .btn-palegreen.disabled.active, .btn-palegreen[disabled].active, fieldset[disabled] .btn-palegreen.active {
+    background-color: @palegreen !important;
+    border-color: @palegreen;
+    .opacity(.5);
+}
+/*#endregion palegreen Button*/
+/*#region yellow Button*/
+
+.btn-yellow {
+    &, &:focus {
+        background-color: @yellow !important;
+        border-color: @yellow;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: @lightyellow !important;
+    }
+    &.active {
+        background-color: #fbc220 !important;
+        border-color: #f3ba17;
+        color: @white !important;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#fdd35a), to(#fbc220)));
+    }
+}
+.btn-yellow:hover, .open .btn-yellow.dropdown-toggle {
+    background-color: #fdd35a !important;
+    border-color: #fdd35a;
+    color: #fff;
+}
+.btn-yellow.disabled, .btn-yellow[disabled], fieldset[disabled] .btn-yellow, .btn-yellow.disabled:hover, .btn-yellow[disabled]:hover, fieldset[disabled] .btn-yellow:hover, .btn-yellow.disabled:focus, .btn-yellow[disabled]:focus, fieldset[disabled] .btn-yellow:focus, .btn-yellow.disabled:active, .btn-yellow[disabled]:active, fieldset[disabled] .btn-yellow:active, .btn-yellow.disabled.active, .btn-yellow[disabled].active, fieldset[disabled] .btn-yellow.active {
+    background-color: @yellow !important;
+    border-color: @yellow;
+    .opacity(.5);
+}
+/*#endregion yellow Button*/
+/*#region darkorange Button*/
+
+.btn-darkorange {
+    &, &:focus {
+        background-color: @darkorange !important;
+        border-color: @darkorange;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #f07154 !important;
+    }
+    &.active {
+        background-color: #da411f !important;
+        border-color: #cc3918;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#ef694b), to(#da411f)));
+    }
+}
+.btn-darkorange:hover, .open .btn-darkorange.dropdown-toggle {
+    background-color: #ef694b !important;
+    border-color: #ef694b;
+    color: #fff;
+}
+.btn-darkorange.disabled, .btn-darkorange[disabled], fieldset[disabled] .btn-darkorange, .btn-darkorange.disabled:hover, .btn-darkorange[disabled]:hover, fieldset[disabled] .btn-darkorange:hover, .btn-darkorange.disabled:focus, .btn-darkorange[disabled]:focus, fieldset[disabled] .btn-darkorange:focus, .btn-darkorange.disabled:active, .btn-darkorange[disabled]:active, fieldset[disabled] .btn-darkorange:active, .btn-darkorange.disabled.active, .btn-darkorange[disabled].active, fieldset[disabled] .btn-darkorange.active {
+    background-color: @darkorange !important;
+    border-color: @darkorange;
+    .opacity(.5);
+}
+/*#endregion darkorange Button*/
+/*#region magenta Button*/
+
+.btn-magenta {
+    &, &:focus {
+        background-color: @magenta !important;
+        border-color: @magenta;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #c96d8c !important;
+    }
+    &.active {
+        background-color: #a5325a !important;
+        border-color: #9f3156;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#c46283), to(#a5325a)));
+    }
+}
+.btn-magenta:hover, .open .btn-magenta.dropdown-toggle {
+    background-color: #c46283 !important;
+    border-color: #c46283;
+    color: #fff;
+}
+.btn-magenta.disabled, .btn-magenta[disabled], fieldset[disabled] .btn-magenta, .btn-magenta.disabled:hover, .btn-magenta[disabled]:hover, fieldset[disabled] .btn-magenta:hover, .btn-magenta.disabled:focus, .btn-magenta[disabled]:focus, fieldset[disabled] .btn-magenta:focus, .btn-magenta.disabled:active, .btn-magenta[disabled]:active, fieldset[disabled] .btn-magenta:active, .btn-magenta.disabled.active, .btn-magenta[disabled].active, fieldset[disabled] .btn-magenta.active {
+    background-color: @magenta !important;
+    border-color: @magenta;
+    .opacity(.5);
+}
+/*#endregion magenta Button*/
+/*#region purple Button*/
+
+.btn-purple {
+    &, &:focus {
+        background-color: @purple !important;
+        border-color: @purple;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #9852ae !important;
+    }
+    &.active {
+        background-color: #69257e !important;
+        border-color: #601e74;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#8c44a2), to(#69257e)));
+    }
+}
+.btn-purple:hover, .open .btn-purple.dropdown-toggle {
+    background-color: #8c44a2 !important;
+    border-color: #8c44a2;
+    color: #fff;
+}
+.btn-purple.disabled, .btn-purple[disabled], fieldset[disabled] .btn-purple, .btn-purple.disabled:hover, .btn-purple[disabled]:hover, fieldset[disabled] .btn-purple:hover, .btn-purple.disabled:focus, .btn-purple[disabled]:focus, fieldset[disabled] .btn-purple:focus, .btn-purple.disabled:active, .btn-purple[disabled]:active, fieldset[disabled] .btn-purple:active, .btn-purple.disabled.active, .btn-purple[disabled].active, fieldset[disabled] .btn-purple.active {
+    background-color: @purple !important;
+    border-color: @purple;
+    .opacity(.5);
+}
+/*#endregion purple Button*/
+/*#region maroon Button*/
+
+.btn-maroon {
+    &, &:focus {
+        background-color: @maroon !important;
+        border-color: @maroon;
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+    }
+    &.dropdown-toggle {
+        border-left-color: #b55274 !important;
+    }
+    &.active {
+        background-color: #7c1138 !important;
+        border-color: #9f3156;
+    }
+    &.shiny {
+        .background-image(linear-gradient(linear, left top, left bottom, from(#a82856), to(#86123c)));
+    }
+}
+.btn-maroon:hover, .open .btn-maroon.dropdown-toggle {
+    background-color: #a82856 !important;
+    border-color: #a82856;
+    color: #fff;
+}
+.btn-maroon.disabled, .btn-maroon[disabled], fieldset[disabled] .btn-maroon, .btn-maroon.disabled:hover, .btn-maroon[disabled]:hover, fieldset[disabled] .btn-maroon:hover, .btn-maroon.disabled:focus, .btn-maroon[disabled]:focus, fieldset[disabled] .btn-maroon:focus, .btn-maroon.disabled:active, .btn-maroon[disabled]:active, fieldset[disabled] .btn-maroon:active, .btn-maroon.disabled.active, .btn-maroon[disabled].active, fieldset[disabled] .btn-maroon.active {
+    background-color: @maroon !important;
+    border-color: @maroon;
+    .opacity(.5);
+}
+/*#endregion maroon Button*/
 
 
 /* Hack

@@ -51,14 +51,14 @@
         param: '{}', //data to be sent to the server.
         method: 'GET', // data sending method
         dataType: 'json', // type of data loaded
-        defaultTemplate: function() {
+        groupTemplate: function() {
             if (typeof $.template === "function") {
                 return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
             } else {
                 return "";
             }
         },
-        twoTemplate: function() {
+        defaultTemplate: function() {
             if (typeof $.template === "function") {
                 return $.template(null, '{{each(index2, menu2) children}} <li>   <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> </li> {{/each}}');
             } else {
@@ -125,11 +125,11 @@
                         var $menuContent;
                         if (dataLevel === 'two') {
                           $menuContent = $('<ul class="dropdown-menu" role="menu"></ul>');
-                          $.tmpl(that.options.twoTemplate(), menuObj).appendTo($menuContent);
+                          $.tmpl(that.options.defaultTemplate(), menuObj).appendTo($menuContent);
                           $menuContent.appendTo($parent);
                         } else {
                             $menuContent = $('<ul class="dropdown-menu" role="menu"> <li> <div class="yamm-content"> <ul class="list-unstyled"> </ul> </div> </li> </ul>');
-                            $.tmpl(that.options.defaultTemplate(), menuObj).appendTo($menuContent.find('.yamm-content').children('ul'));
+                            $.tmpl(that.options.groupTemplate(), menuObj).appendTo($menuContent.find('.yamm-content').children('ul'));
                             $menuContent.appendTo($parent);
                             $menuContent.find('li.divider').filter(':last').remove();
                         }
@@ -142,12 +142,11 @@
                 }
             });
 
-            var that = this;
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
                 var $this = $(this);
-                var mid = $this.attr('_mid') || $this.attr('mid');
+                var mcode = $this.attr('_mcode') || $this.attr('mcode');
                 var href = $this.attr('data-href');
-                var instance = that.findMenuByCode(mid); //origin
+                var instance = that.findMenuByCode(mcode); //origin
 
                 if ($this.is('a')) e.preventDefault();
 
@@ -155,7 +154,7 @@
                 var event = $.Event(SimpMenu.DEFAULTS.events.clickMenu, {
                     relatedTarget: that.element,
                     target: module,
-                    mid: mid,
+                    mcode: mcode,
                     href: href,
                     instance: instance
                 });

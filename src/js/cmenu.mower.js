@@ -160,8 +160,6 @@
 
                 if ($this.is('a')) e.preventDefault();
 
-
-
                 var module = this;
                 var event = $.Event(CompMenu.DEFAULTS.events.clickMenu, {
                     relatedTarget: that.element,

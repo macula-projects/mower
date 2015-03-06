@@ -32,10 +32,7 @@
         param: '{}',
         home: '<i class="fa fa-home home"></i>',
         divider: '<i class="fa fa-angle-right"></i>',
-        favoritable: true,
-        favoriteTmp: '<a href="#" data-favorite="breadcrumb" data-toggle="tooltip" rel="tooltip" data-original-title="\u6536\u85CF"><i class="fa fa-star fa-lg"></i></a>',
         keyboard: false,
-        favoriteClick: false,
         events: {
             command: "command.mu.breadcrumb",
             commanded: "commanded.mu.breadcrumb",
@@ -45,8 +42,7 @@
             poped: "poped.mu.breadcrumb",
             reset: "reset.mu.breadcrumb",
             populateError: "error.populate.mu.breadcrumb",
-            populateSuccess: "success.populate.mu.breadcrumb",
-            clickFavorite: "click.favorite.mu.breadcrumb"
+            populateSuccess: "success.populate.mu.breadcrumb"
         }
     };
 
@@ -58,33 +54,6 @@
             var $element = $(element);
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
             this.options.param = json.decode(this.options.param || '{}');
-
-            this._appendFavorite();
-            var that = this;
-            $element.on("click.favorite.mu.breadcrumb", 'li.favorite > a', function(event) {
-                event.preventDefault();
-
-                var href = window.location.href;
-                that.options.favoriteClick && $.isFunction(that.options.favoriteClick) && that.options.favoriteClick(href);
-            });
-        },
-        _appendFavorite: function() {
-            if (this.options.favoritable === true &&
-                this.$element.children('li:not(.favorite)').length > 0 &&
-                this.$element.children('li.favorite').length <= 0) {
-                var $li = $('<li class="favorite ">' + this.options.favoriteTmp + '</li>');
-                this.$element.prepend($li);
-                $li.find('[rel="tooltip"]').tooltip({
-                    'container': 'body'
-                });
-            }
-        },
-        _toggleFavorite: function() {
-            if (this.current === 0) {
-                this.$element.children('li.favorite').removeClass('hidden');
-            } else {
-                this.$element.children('li.favorite').removeClass('hidden').addClass('hidden');
-            }
         },
         _getXPath: function(elements) {
             var path = new Array();
@@ -109,10 +78,10 @@
             return $content.attr('data-target');
         },
         _pushHeader: function(label, url) {
-            var path = this._getXPath(this.$element.children('li:not(.favorite)')); //exclude favorite
+            var path = this._getXPath(this.$element.children('li'));
 
             if (path.length > 0) {
-                var $last = this.$element.children('li:not(.favorite)').filter(':last');
+                var $last = this.$element.children('li').filter(':last');
                 var previousLabel = this._getLabel($last);
                 var previousTarget = this._getTarget($last);
 
@@ -136,7 +105,7 @@
                         event.preventDefault();
                         /* Act on the event */
                         var index = path.length - 1;
-                        var popCount = that.$element.children('li:not(.favorite)').length - index;
+                        var popCount = that.$element.children('li').length - index;
                         that.pop(popCount);
                     });
             }
@@ -178,7 +147,7 @@
 
                 //call jquery.fn extend appendcontent defined in utils.mower.js
                 url = utils.getAbsoluteUrl(url, this.$element.getContextPath());
-                $panel.appendAajxContents(url, ajaxOpt, _callback, true);
+                $panel.appendAjaxContents(url, ajaxOpt, _callback, true);
             }
         },
         /**
@@ -190,8 +159,6 @@
         push: function(label, url, relatedTarget) {
             if (!label || !url) return;
 
-            this._appendFavorite();
-
             //update header in breadcrumb
             var panelId = this._pushHeader(label, url);
 
@@ -199,7 +166,6 @@
             var callback = function(data) {
                 //move forward
                 that.current++;
-                that._toggleFavorite();
 
                 //trigger populdate success event 
                 var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
@@ -216,19 +182,19 @@
 
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
-                "path": this._getXPath(this.$element.children('li:not(.favorite)'))
+                "path": this._getXPath(this.$element.children('li'))
             });
         },
         _popHeader: function(popCount) {
             var popArray = new Array();
 
             for (var i = 0; i < this._valueof(popCount, 1); i++) {
-                var $li = this.$element.children('li:not(.favorite)').filter(':last');
+                var $li = this.$element.children('li').filter(':last');
                 popArray.push($li.attr('data-target'));
                 $li.remove();
             }
 
-            var $last = this.$element.children('li:not(.favorite)').filter(':last');
+            var $last = this.$element.children('li').filter(':last');
 
             if ($last.length > 0) {
                 var lastLabel = this._getLabel($last);
@@ -236,7 +202,7 @@
 
                 $last.remove();
 
-                var level = (this.$element.children('li:not(.favorite)').length + 1);
+                var level = (this.$element.children('li').length + 1);
                 var divider = (level === 1 ? this.options.home : this.options.divider);
 
                 var li = [
@@ -281,18 +247,17 @@
 
             //move backward
             this.current -= popArray.length;
-            this._toggleFavorite();
 
             this.cleanup(); //may be old state
 
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.poped, {
-                "path": this._getXPath(this.$element.children('li:not(.favorite)'))
+                "path": this._getXPath(this.$element.children('li'))
             });
         },
         reset: function() {
             //remove header
-            this.$element.children('li:not(.favorite)').remove();
+            this.$element.children('li').remove();
 
             //remove content
             this.$element.data("target").children().remove();

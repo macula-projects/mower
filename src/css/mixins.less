@@ -132,3 +132,135 @@
     }
 }
 
+.mower-skin(@themeprimary; @themesecondary; @themethirdcolor; @themefourthcolor; @themefifthcolor; @btn-primary-hover; @btn-primary-border; @btn-primary-active; @btn-primary-activeborder; @btn-primary-dropdown-border ) {
+    /*Navbar*/
+    .navbar {
+        .navbar-inner {
+            background: @themeprimary;
+
+            .navbar-header {
+                .navbar-account {
+                    .account-area {
+                        > li {
+                            > a {
+                                .badge {
+                                    box-shadow: 1px 1px 0 @themeprimary;
+                                }
+                            }
+
+                            .dropdown-menu {
+                                &.dropdown-messages {
+                                    li {
+                                        .message-time {
+                                            color: @themeprimary;
+                                        }
+                                    }
+                                }
+
+                                &.dropdown-login-area {
+                                    > li {
+                                        .avatar-area {
+                                            .caption {
+                                                background-color: @themeprimary;
+                                            }
+                                        }
+
+                                        &.dropdown-footer {
+                                            border-top: 3px solid @themeprimary;
+                                        }
+                                    }
+                                }
+                            }
+
+                            &.open {
+                                > a {
+                                    background-color: @themeprimary;
+                                }
+                            }
+                        }
+
+                        .login-area {
+                            .avatar {
+                                border-left: 2px solid @themesecondary;
+                            }
+                        }
+                    }
+
+                    .setting-container {
+
+                        input[type=checkbox] {
+                            + .text {
+                                &:before {
+                                    border-color: @themeprimary;
+                                }
+                            }
+
+                            &:checked {
+                                + .text {
+                                    &:before {
+                                        border-color: @themeprimary;
+                                        color: @themesecondary;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    &.setting-open {
+                        .setting {
+                            background-color: @themeprimary;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /*Sidebar*/
+    .mu-sidebar {
+        &:hover .sidebar-collapse .collapse-icon {
+            color: @themeprimary;
+        }
+
+        .sidebar-header-wrapper {
+            margin-left: 5px;
+            height: 40px;
+            margin-bottom: 0;
+            position: relative;
+
+            .searchicon {
+                color: @themeprimary;
+            }
+        }
+
+        .sidebar-menu {
+            li {
+                &:before {
+                    background-color: @themeprimary;
+                }
+
+                &:not(.open) {
+                    &:hover {
+                        &:before {
+                            background-color: @themesecondary;
+                        }
+                    }
+                }
+            }
+        }
+
+        .sidebar-collapse {
+            &:before {
+                background-color: @themeprimary;
+            }
+
+            .collapse-icon {
+                &:hover {
+                    background-color: @themeprimary;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+}
+

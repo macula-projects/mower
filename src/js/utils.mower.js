@@ -440,13 +440,13 @@ String.prototype.length2 = function() {
             }, ajaxOptions || {});
             $.ajax(s);
         },
-        updateAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
+        updateAjaxContents: function(url, ajaxOptions, callback, isScrollTop) {
             $(this)._privateProcessContents(url, ajaxOptions, _update, callback, isScrollTop);
         },
-        replaceAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
+        replaceAjaxContents: function(url, ajaxOptions, callback, isScrollTop) {
             $(this)._privateProcessContents(url, ajaxOptions, _replace, callback, isScrollTop);
         },
-        appendAajxContents: function(url, ajaxOptions, callback, isScrollTop) {
+        appendAjaxContents: function(url, ajaxOptions, callback, isScrollTop) {
             $(this)._privateProcessContents(url, ajaxOptions, _append, callback, isScrollTop);
         },
         updateHtml: function(data, action, callback) {
@@ -802,10 +802,20 @@ var Utils = (function($, window, document, undefined) {
         addResizeHandler: function(func) {
             resizeHandlers.push(func);
         },
-
         //public functon to call _runresizeHandlers
         runResizeHandlers: function() {
             _runResizeHandlers();
+        },
+        getResponsiveBreakpoint: function(size) {
+            // bootstrap responsive breakpoints
+            var sizes = {
+                'xs': 480, // extra small
+                'sm': 768, // small
+                'md': 992, // medium
+                'lg': 1200 // large
+            };
+
+            return sizes[size] ? sizes[size] : 0;
         },
         strToJson: function(str) {
             var json = (new Function("return " + str))();
@@ -939,7 +949,20 @@ var Utils = (function($, window, document, undefined) {
                 return result;
             };
         },
-        noop: function() {}
+        noop: function() {},
+        scrollTo: function(el, offeset) {
+            var pos = (el && el.size() > 0) ? el.offset().top : 0;
+
+            if (el) {
+                //caution: if use boostrap navbar-fixed-top,substract it's height.
+                
+                pos = pos + (offeset ? offeset : -1 * el.height());
+            }
+
+            $('html,body').animate({
+                scrollTop: pos
+            }, 'slow');
+        }
     };
 
 }(jQuery, window, document));

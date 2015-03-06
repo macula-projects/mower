@@ -1,7 +1,7 @@
 <div id="panelForm" class="panel panel-default mu-panel">
-    <div class="panel-heading">
+    <div class="panel-heading bordered-bottom-highlight bordered-themesecondary">
         <div class="row mu-panel-toolbar">
-            <div class="col-xs-12 col-md-6 mu-panel-toolbar-action-cont">
+            <div class="col-xs-12 col-md-3 mu-panel-toolbar-action-cont">
                 <a class="btn" href="#" data-toggle="popBreadcrumb" data-process="Form.processFormSave">
                     <i class="fa fa-check-circle fa-lg"></i> 保存
                 </a>
@@ -9,7 +9,7 @@
                     <i class="fa fa-reply fa-lg"></i> 取消
                 </a>
             </div>
-            <div class="col-xs-12  col-md-offset-1 col-md-5 mu-panel-toolbar-step-cont">
+            <div class="col-xs-12 col-md-9 mu-panel-toolbar-step-cont">
                 <div class="fuelux pull-right">
                     <div id="MyWizard" class="wizard">
                         <ul class="steps">
@@ -511,14 +511,5 @@
     </div>
 </div>
 
-<script type="text/javascript" src="form.js"></script>
+ <script type="text/javascript" src="form.js"></script> 
 
-<script type="text/javascript">
-$('[data-action-type="save"]').on('pop.mu.breadcrumb', function(event) {
-
-    //var t = setTimeout("alert('5 seconds!')",5000);
-
-    //event.preventDefault();
-
-});
-</script>
