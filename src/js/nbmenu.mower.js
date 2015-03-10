@@ -1,7 +1,26 @@
 /** ========================================================================
- * Mower: cmenu.bootstrap.js - v1.0.0
+ * Mower: smenu.bootstrap.js - v1.0.0
  *
- * complex menu for the main layout.display menu as three level lay.
+ * navbar mega menu to display menu as two level lay.
+ *
+ * <ul class="dropdown-menu">
+ *      <li>
+ *          <div class="yamm-content">
+ *              <ul class="list-unstyled">
+ *                  {{each(index2, menu2) children}}
+ *                  <li>
+ *                      <h4 class="title">${menu2.name}</h4>
+ *                      <ul class="list-unstyled list-inline">{{each(index3, menu3) menu2.children}}
+ *                          <li><a mid="${menu3.id}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a>
+ *                          </li>{{/each}}</ul>
+ *                  </li>
+ *                  {{if (($index2 + 1) < children.length)}}
+ *                      <li class="divider"></li>
+ *                  {{/if}} {{/each}}
+ *              </ul>
+ *          </div>
+ *      </li>
+ *  </ul>
  *
  * Dependencies:
  *              jquery.tmpl.js
@@ -12,12 +31,14 @@
 ;
 (function(json, utils, $, window, document, undefined) {
 
-    "use strict"; // jshint
+    "use strict"; // jshint ;_;
 
     /* MAINMENU CLASS DEFINITION
      * ====================== */
 
-    var CompMenu = function(element, options) {
+    var menuItemSelector = '[data-toggle=menu]';
+
+    var NBMenu = function(element, options) {
         this.element = element;
         this.$element = $(element);
         this.options = options;
@@ -25,47 +46,49 @@
     };
 
     //you can put your plugin defaults in here.
-    CompMenu.DEFAULTS = {
+    NBMenu.DEFAULTS = {
         url: '', //ajax url
-        isAlwaysShown: 'false',
         param: '{}', //data to be sent to the server.
         method: 'GET', // data sending method
         dataType: 'json', // type of data loaded
-        template: function() {
+        groupTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li  class="mu-menu-item"><h3><a mcode="${code}" data-toggle="menu"><span>${name}</span></a><i class="fa fa-caret-right pull-right"></i></h3><div class="mu-menu-item-main" ><div class="mu-menu-subitem-main">{{each(index2, menu2) children}}<dl><dt><a href="javascript:void(0)"><span>${menu2.name}</span></a></dt><dd>{{each(index3, menu3) menu2.children}}<em><a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a></em>{{/each}}</dd></dl>{{/each}}</div></div></li>');
+                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
+            } else {
+                return "";
+            }
+        },
+        defaultTemplate: function() {
+            if (typeof $.template === "function") {
+                return $.template(null, '{{each(index2, menu2) children}} <li>   <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> </li> {{/each}}');
             } else {
                 return "";
             }
         },
         events: {
-            clickMenu: "clickMenu.mu.compMenu",
-            complete: "complete.mu.compMenu",
-            populateError: "error.populate.mu.compMenu",
-            populateSuccess: "success.populate.mu.compMenu"
+            clickMenu: "clickMenu.mu.nbMenu",
+            complete: "complete.mu.nbMenu",
+            populateError: "error.populate.mu.nbMenu",
+            populateSuccess: "success.populate.mu.nbMenu"
         }
     };
 
-    CompMenu.prototype = {
+    NBMenu.prototype = {
 
-        constructor: CompMenu,
+        constructor: NBMenu,
 
         _init: function(element, options) {
             var $element = $(element);
-            this.options = $.extend({}, CompMenu.DEFAULTS, $element.data(), typeof options === 'object' && options);
+            this.options = $.extend({}, NBMenu.DEFAULTS, $element.data(), typeof options === 'object' && options);
             this.options.url && (this.options.url = utils.getAbsoluteUrl(this.options.url, $element.getContextPath()));
 
             this.options.param = json.decode(this.options.param || '{}');
 
-            if (this.options.isAlwaysShown === 'true') {
-                this.populate();
-                $element.closest('li.dropdown').addClass('open');
-            } else {
-                var that = this;
-                $element.closest('.dropdown').one("mouseover", function() {
-                    that.populate();
-                });
-            }
+            var that = this;
+            $element.one("mouseover", function(event) {
+                var target = event.relatedTarget;
+                that.populate();
+            });
         },
         constructTree: function(treeFlatData) {
             var datasource = treeFlatData.makeLevelTree({
@@ -75,83 +98,50 @@
                 }
             });
 
-            this.renderMenu(datasource.tree);
-
-            var that = this;
-            this.$element.on("mouseenter", "li.mu-menu-item", function(e) {
-                //stuff to do on mouse enter
-                var $menuItem = $(this),
-                    $subMenu = $menuItem.find('.mu-menu-item-main'),
-                    width = that.$element.outerWidth();
-
-                $menuItem.addClass('hover');
-
-                var p = that.$element.offset().top; //Main Menu top
-                var o = $menuItem.offset().top - p; //menu item top
-
-                var t = document.documentElement.scrollTop || document.body.scrollTop;
-                var r = o + $subMenu.height() + p - t;
-
-                var q = $(window).height() - 30;
-                var s = r - q;
-                if (r > q) {
-                    if ($menuItem.offset().top - t + $menuItem.height() - q > -10) {
-                        o = $menuItem.position().top - $subMenu.height() + $menuItem.height() - 2;
-                    } else {
-                        o = o - s - 10;
-                    }
-                }
-
-                if ($subMenu.height() > q) {
-                    o = t - p;
-                }
-
-                //because of main menu z-index lt top main menu.
-                //so .mu-menu-subitem-main top substract top menu height 
-                if (o < (0 - (p - 26))) {
-                    o = (0 - (p - 26)); //26 top menu height
-                }
-
-                // Show the submenu
-                $subMenu.css({
-                    display: "block",
-                    top: o,
-                    left: width - 2 // main should overlay submenu
-                });
-            }).on("mouseleave", "li.mu-menu-item", function(e) {
-                //stuff to do on mouse leave
-                var $menuItem = $(this),
-                    $subMenu = $menuItem.find('.mu-menu-item-main');
-
-                $menuItem.removeClass('hover');
-                // Hide the submenu and remove the row's highlighted look
-                $subMenu.css("display", "none");
-            });
-
             this.nodes = datasource.nodes;
 
-            var e = $.Event(CompMenu.DEFAULTS.events.complete);
+            this.renderMenu(datasource.tree);
+
+            var e = $.Event(NBMenu.DEFAULTS.events.complete);
             this.$element.trigger(e);
 
             return datasource.tree;
         },
         renderMenu: function(tree) {
-            this.$element.empty();
 
-            for (var i = 0; i < tree.length; i++) {
-                $.tmpl(this.options.template(), tree[i].children).appendTo(this.element);
-            }
+            var that = this;
+            $(menuItemSelector, this.$element).each(function(index, el) {
+                /* iterate through array or object */
+                var $parent = $(el).closest('li');
+                var menuCode = $(el).attr("data-code");
+                var $menu = $(el);
 
-            //set first occur href of a for top parent.
-            this.$element.find('li').each(function() {
-                var selfArch = $(this).find('a:first'),
-                    firstArch = $(this).find('a[data-href]:first');
-                if (firstArch.length) {
-                    selfArch.attr('_mcode', firstArch.attr('mcode')).attr('data-href', firstArch.attr('data-href'));
+                if (menuCode) {
+                    $parent.children('.dropdown-menu').remove();
+                    var menuObj = that.findMenuByCode(menuCode);
+
+                    if ($.isPlainObject(menuObj)) {
+                        var dataLevel = $(el).attr("data-level");
+                        var $menuContent;
+                        if (dataLevel === 'two') {
+                          $menuContent = $('<ul class="dropdown-menu" role="menu"></ul>');
+                          $.tmpl(that.options.defaultTemplate(), menuObj).appendTo($menuContent);
+                          $menuContent.appendTo($parent);
+                        } else {
+                            $menuContent = $('<ul class="dropdown-menu" role="menu"> <li> <div class="yamm-content"> <ul class="list-unstyled"> </ul> </div> </li> </ul>');
+                            $.tmpl(that.options.groupTemplate(), menuObj).appendTo($menuContent.find('.yamm-content').children('ul'));
+                            $menuContent.appendTo($parent);
+                            $menuContent.find('li.divider').filter(':last').remove();
+                        }
+
+                        $menu.attr("data-toggle", "dropdown").attr('data-hover', 'dropdown').addClass('dropdown-toggle');
+                        $parent.addClass('dropdown');
+
+                        $(document).triggerHandler('update', $parent);
+                    }
                 }
             });
 
-            var that = this;
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
                 var $this = $(this);
                 var mcode = $this.attr('_mcode') || $this.attr('mcode');
@@ -161,7 +151,7 @@
                 if ($this.is('a')) e.preventDefault();
 
                 var module = this;
-                var event = $.Event(CompMenu.DEFAULTS.events.clickMenu, {
+                var event = $.Event(NBMenu.DEFAULTS.events.clickMenu, {
                     relatedTarget: that.element,
                     target: module,
                     mcode: mcode,
@@ -196,21 +186,21 @@
                     var e;
 
                     if (data != null && data.error != null) {
-                        e = $.Event(CompMenu.DEFAULTS.events.populateError, {
+                        e = $.Event(NBMenu.DEFAULTS.events.populateError, {
                             "data": data
                         });
                         that.$element.trigger(e);
                     } else {
                         that.constructTree(data);
 
-                        e = $.Event(CompMenu.DEFAULTS.events.populateSuccess, {
+                        e = $.Event(NBMenu.DEFAULTS.events.populateSuccess, {
                             "data": data
                         });
                         that.$element.trigger(e);
                     }
                 },
                 error: function(data) {
-                    var e = $.Event(CompMenu.DEFAULTS.events.populateError, {
+                    var e = $.Event(NBMenu.DEFAULTS.events.populateError, {
                         "data": data
                     });
                     that.$element.trigger(e);
@@ -228,9 +218,9 @@
     /* MAINMENU PLUGIN DEFINITION
      * ======================= */
 
-    var old = $.fn.compMenu;
+    var old = $.fn.nbMenu;
 
-    $.fn.compMenu = function(options) {
+    $.fn.nbMenu = function(options) {
 
         // slice arguments to leave only arguments after function name.
         var args = Array.prototype.slice.call(arguments, 1);
@@ -241,23 +231,23 @@
         this.each(function() {
             var element = this,
                 $element = $(element),
-                pluginKey = 'mu.compMenu',
+                pluginKey = 'mu.nbMenu',
                 instance = $.data(element, pluginKey)
 
 
             // if there's no plugin instance for this element, create a new one, calling its "init" method, if it exists.
             if (!instance) {
-                instance = $.data(element, pluginKey, new CompMenu(element, options));
-                if (instance && typeof CompMenu.prototype['_init'] === 'function')
-                    CompMenu.prototype['_init'].apply(instance, [element, options]);
+                instance = $.data(element, pluginKey, new NBMenu(element, options));
+                if (instance && typeof NBMenu.prototype['_init'] === 'function')
+                    NBMenu.prototype['_init'].apply(instance, [element, options]);
             }
 
             // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
             if (instance && typeof options === 'string' && options[0] !== '_' && options !== 'init') {
 
                 var methodName = (options == 'destroy' ? '_destroy' : options);
-                if (typeof CompMenu.prototype[methodName] === 'function')
-                    results = CompMenu.prototype[methodName].apply(instance, args);
+                if (typeof NBMenu.prototype[methodName] === 'function')
+                    results = NBMenu.prototype[methodName].apply(instance, args);
 
                 // Allow instances to be destroyed via the 'destroy' method
                 if (options === 'destroy')
@@ -269,15 +259,15 @@
         return results !== undefined ? results : this;
     };
 
-    $.fn.compMenu.Constructor = CompMenu;
+    $.fn.nbMenu.Constructor = NBMenu;
 
 
     /* MAINMENU NO CONFLICT
      * ================= */
 
-    $.fn.compMenu.noConflict = function() {
-        $.fn.compMenu = old
-        return this
+    $.fn.nbMenu.noConflict = function() {
+        $.fn.nbMenu = old;
+        return this;
     };
 
 
@@ -287,10 +277,10 @@
         /* Act on the event */
         var $root = $(updatedFragment || 'html');
 
-        $root.find('[rel=compMenu]').each(function(index, el) {
+        $root.find('[rel=nbMenu]').each(function(index, el) {
             var $this = $(this);
-            if (!$this.data('mu.compMenu')) {
-                $(this).compMenu();
+            if (!$this.data('mu.nbMenu')) {
+                $(this).nbMenu();
             }
         });
     });

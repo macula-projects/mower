@@ -70,13 +70,15 @@ module.exports = function(grunt) {
                         'src/js/datatables.selectrows.<%= pkg.name %>.js',
                         'src/js/datatables.<%= pkg.name %>.js',
                         'src/js/knockout.<%= pkg.name %>.js',
+                        'src/js/dropdown.query.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.table.<%= pkg.name %>.js',
                         'src/js/dropdown.tree.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
+                        'src/js/tagsselect.<%= pkg.name %>.js',
                         'src/js/magnifier.<%= pkg.name %>.js',
-                        'src/js/cmenu.<%= pkg.name %>.js',
-                        'src/js/smenu.<%= pkg.name %>.js',
+                        'src/js/nbmenu.<%= pkg.name %>.js',
+                        'src/js/vmmenu.<%= pkg.name %>.js',
                         'src/js/sidebarmenu.<%= pkg.name %>.js',
                         'src/js/modal.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
@@ -122,6 +124,7 @@ module.exports = function(grunt) {
                         'plugins/jquery-treetable/css/jquery.treetable.css',
                         'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
                         'plugins/bootstrap-modal/css/bootstrap-modal.css',
+                        'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css',
                         'plugins/jstree/css/style.css'
                     ],
                     'dist/css/<%= pkg.name %>.min.css': [
@@ -132,6 +135,7 @@ module.exports = function(grunt) {
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
                         'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
                         'plugins/bootstrap-modal/css/bootstrap-modal.min.css',
+                        'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css',
                         'plugins/jstree/css/style.min.css'
                     ]
                 }
@@ -165,6 +169,7 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
                         'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
                         'plugins/bootstrap-modal/js/bootstrap-modal.js',
+                        'plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js',
                         'plugins/bootbox/js/bootbox.js',
                         'plugins/toastr/js/toastr.js',
                         'plugins/datatables/js/jquery.dataTables.js',
@@ -178,6 +183,7 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
                         'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
                         'plugins/bootstrap-modal/js/bootstrap-modal.min.js',
+                        'plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js',
                         'plugins/bootbox/js/bootbox.min.js',
                         'plugins/toastr/js/toastr.min.js',
                         'plugins/datatables/js/jquery.dataTables.min.js',
@@ -267,6 +273,7 @@ module.exports = function(grunt) {
                 files: {
                     'plugins/jquery-treetable/css/jquery.treetable.min.css': ['plugins/jquery-treetable/css/jquery.treetable.css'],
                     'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css'],
+                    'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css': ['plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css'],
                     'plugins/toastr/css/toastr.min.css': ['plugins/toastr/css/toastr.css'],
                     'plugins/bootstrap-modal/css/bootstrap-modal.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal.css'],
                     'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css'],
