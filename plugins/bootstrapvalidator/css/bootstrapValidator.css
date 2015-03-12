@@ -20,23 +20,25 @@
     color: #a94442;
 }
 
-.bv-form .has-feedback .no-label-feedback-icon {
-	top: 4px;
+.bv-form .bv-no-label {
+    top: 0;
 }
 
-.bv-form .has-feedback .input-group-feedback-icon {
+.bv-form .bv-input-group {
     top: 0;
     z-index: 100;
 }
 
 .dataTable .has-feedback .form-control-feedback {
-    top: 5px !important;
-    right: 0;
+    top: 15px !important;
+    pointer-events:auto;
 }
 
 .dataTable .form-horizontal .has-feedback .form-control-feedback {
-    top: 5px !important;
+    top: 15px !important;
     right: 5px;
+    pointer-events:auto;
 }
+
 
 

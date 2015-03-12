@@ -33,7 +33,6 @@
         realField: '',
         multiple: false,
         separator: ',',
-        width: 500,
         height: 200,
         initValue: '',
         orientation: "auto",
@@ -68,16 +67,12 @@
             this.$treeContainer.append('<div></div');
             this.$tree = this.$treeContainer.find('div:first');
 
-            //add width style
-            this.$tree.css('width', this.options.width + 'px');
             this.$tree.css('height', this.options.height + 'px');
             this.$tree.css('overflow', 'auto');
 
             this._process_options();
-
             this._buildEvents();
             this._attachEvents();
-
             this.construct();
 
             // var that = this;
@@ -296,6 +291,10 @@
 
             return existed;
         },
+        _resize: function() {
+            var width = this.$element.outerWidth(true);
+            this.$treeContainer.css('width', width);
+        },
         construct: function() {
             //wrap table and append to input backend
             if ($.isArray(this.options.initValue)) {
@@ -419,6 +418,9 @@
             this.$input.val('');
         },
         place: function() {
+            //adjustment treeContainer width
+            this._resize();
+
             var treeContainerWidth = this.$treeContainer.outerWidth(),
                 treeContainerHeight = this.$treeContainer.outerHeight(),
                 visualPadding = 10,

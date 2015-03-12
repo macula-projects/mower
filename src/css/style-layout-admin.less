@@ -26,9 +26,7 @@
 
 @header-logo-margin:                                                     20px;
 
-
-@main-padding-top-height:                               (@navbar-min-height);
-
+@main-padding-top-height:         (@navbar-sm-min-height + @navbar-min-height);
 
 
 /* mower header.styles for  top navbar.
@@ -879,7 +877,7 @@
 
     > a {
       font-size: 12px;
-      padding: 5px 5px !important;
+      padding: 5px 5px ;
       line-height: 16px;
       >i {
          font-size: 16px;
@@ -1700,6 +1698,10 @@
 
 /* mower main container. styles for main container.
  ========================================================================== */
+.mu-header-fixed .mu-main-container {
+  padding-top: @main-padding-top-height;
+}
+
 .mu-main-container {
   padding: 0px;
   position: relative;

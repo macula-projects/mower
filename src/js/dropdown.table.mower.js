@@ -31,8 +31,7 @@
         realField: '',
         multiple: false,
         separator: ',',
-        width: 500,
-        height:200,
+        height: 200,
         columns: '',
         initValue: '',
         orientation: "auto",
@@ -56,15 +55,12 @@
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
             this.$table = this.$tableContainer.find('table:first');
-            
-            this.$tableContainer.css('width', this.options.width + 'px');
-            this.$table.attr('data-scrollY', this.options.height +'px');
+
+            this.$table.attr('data-scrollY', this.options.height + 'px');
 
             this._process_options();
-
             this._buildEvents();
             this._attachEvents();
-
             this.construct();
 
             var that = this;
@@ -74,7 +70,6 @@
             });
 
             if (this.options.multiple === false) {
-
                 this.$input.on('keyup', function(event) {
 
                     if (event.keyCode == 13) return;
@@ -247,6 +242,10 @@
 
             return existed;
         },
+        _resize: function() {
+            var width = this.$element.outerWidth(true);
+            this.$tableContainer.css('width', width);
+        },
         construct: function() {
             //make columns
             if (this.options.columns) {
@@ -375,9 +374,12 @@
             this.$input.val('');
         },
         place: function() {
+            //change tableContainer width  depend on element width
+            this._resize();
+
             var tableContainerWidth = this.$tableContainer.outerWidth(),
                 tableContainerHeight = this.$tableContainer.outerHeight(),
-                visualPadding = 10,
+                visualPadding = 5,
                 windowWidth = $window.width(),
                 windowHeight = $window.height(),
                 scrollTop = $window.scrollTop();
