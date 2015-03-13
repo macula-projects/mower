@@ -20,25 +20,15 @@
     color: #a94442;
 }
 
-.bv-form .bv-no-label {
-    top: 0;
+.bv-form .has-feedback .bv-no-label {
+    top: 4px
 }
 
-.bv-form .bv-input-group {
+.bv-form .has-feedback .bv-input-group {
     top: 0;
     z-index: 100;
 }
 
-.dataTable .has-feedback .form-control-feedback {
-    top: 15px !important;
-    pointer-events:auto;
-}
-
-.dataTable .form-horizontal .has-feedback .form-control-feedback {
-    top: 15px !important;
-    right: 5px;
-    pointer-events:auto;
-}
 
 
 

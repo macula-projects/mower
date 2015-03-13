@@ -119,6 +119,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     'data', {
                         render: 'function'
                     },
+                    'class',
                     'width',
                     'title', {
                         orderable: 'boolean',

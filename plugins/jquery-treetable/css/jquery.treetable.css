@@ -30,11 +30,11 @@ table.treetable span.indenter a {
 
 }
 
-table.treetable tr.branch {
-    background-color: #f9f9f9;
+table.treetable tbody tr.branch {
+    background-color: #f9f9f9 ;
 }
 
-table.treetable tr.selected {
+table.treetable tbody tr.selected {
     background-color:#DE5E39;
     color: #fff;
 }

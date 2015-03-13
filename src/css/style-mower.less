@@ -371,6 +371,21 @@ fieldset[disabled] .navbar-default-red .btn-link:focus {
   color: #ccc;
 }
 
+// fix an issue with form-control-feedback and fontawesome
+// see https://github.com/FortAwesome/Font-Awesome/issues/4313
+.form-control + .form-control-feedback {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    pointer-events: auto;
+}
+
 /*
  *Iconic Labels
  */
@@ -380,6 +395,7 @@ fieldset[disabled] .navbar-default-red .btn-link:focus {
   margin-right: 2px;
   text-align: center !important;
 }
+
 
 /*
  * fa-icon icon  glyphicon
@@ -496,46 +512,68 @@ li .icon-large[class*=" icon-"] {
   margin-bottom: 0;
 }
 
-/*
- * input with icon
- */
-.input-icon-right {
+/***
+Input icons
+***/
+.input-icon {
   position: relative;
 }
-.input-icon-right > i,
-.input-icon-left > i {
+.input-icon > .form-control {
+  padding-left: 33px;
+}
+.input-group .input-icon > .form-control {
+  -webkit-border-radius: 4px 0 0 4px;
+  -moz-border-radius: 4px 0 0 4px;
+  -ms-border-radius: 4px 0 0 4px;
+  -o-border-radius: 4px 0 0 4px;
+  border-radius: 4px 0 0 4px;
+}
+.input-icon > i {
+  color: #ccc;
+  display: block;
   position: absolute;
-  right: 10px;
-  top: 30%;
+  margin: 11px 2px 4px 10px;
+  z-index: 3;
+  width: 16px;
   font-size: 16px;
-  color: #bfbfbf;
+  text-align: center;
 }
-.input-icon-left > i {
-  right: auto;
-  left: 24px;
+.modal .input-icon > i {
+  z-index: 10055;
 }
-.input-icon-right .form-control {
-  padding-right: 27px;
+.has-success .input-icon > i {
+  color: #45B6AF;
 }
-.input-icon-left .form-control {
-  padding-left: 29px;
+.has-warning .input-icon > i {
+  color: #dfba49;
 }
-
-.input-group-addon .checkbox,
-.input-group-addon .radio {
-  min-height: 0px;
-  margin-right: 0px !important;
-  padding-top: 0;
+.has-info .input-icon > i {
+  color: #89C4F4;
 }
-.input-group-addon label input[type="checkbox"].checkbox + span,
-.input-group-addon label input[type="radio"].radiobox + span,
-.input-group-addon label input[type="radio"].radiobox + span:before,
-.input-group-addon label input[type="checkbox"].checkbox + span:before {
-  margin-right: 0px;
+.has-error .input-icon > i {
+  color: #F3565D;
 }
-.input-group-addon .onoffswitch,
-.input-group-addon .onoffswitch-label {
-  margin: 0;
+.input-icon.right > .form-control {
+  padding-right: 33px;
+  padding-left: 12px;
+}
+.input-group .input-icon.right > .form-control {
+  -webkit-border-radius: 0 4px 4px 0;
+  -moz-border-radius: 0 4px 4px 0;
+  -ms-border-radius: 0 4px 4px 0;
+  -o-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+}
+.input-icon.right > i {
+  right: 8px;
+  float: right;
+}
+.input-icon.input-icon-lg > i {
+  margin-top: 16px;
+}
+.input-icon.input-icon-sm > i {
+  margin-top: 8px;
+  font-size: 13px;
 }
 
 /*

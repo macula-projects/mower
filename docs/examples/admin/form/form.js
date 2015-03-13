@@ -1,55 +1,38 @@
 var Form = (function($) {
 
     // private functions & variables
-    var onFavoriteClick = function(href) {
-        alert("want to favorite href:" + href);
-    };
+
 
     // public functions
     return {
         //main function
         init: function() {
-            this.initMainMenu();
-            this.initBreadCrumb();
+            this.initTab();
+            this.validateForm();
         },
-        initBreadCrumb: function() {
-            $("#main-menu").on('complete.mu.mainMenu', function(event) {
+        initTab: function() {
+            $('.nav-tabs')
+                .atab()
+                .atab('add', '动态新增', './basic.html');
+        },
+        validateForm: function() {
+            $('.mu-panel').on('click', '[data-form-action="save"]', function(event) {
                 /* Act on the event */
-                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
+                $('#form_sample_1').bootstrapValidator('validate');
 
-                // menuItem && $(".breadcrumb")
-                //                 .breadcrumb({
-                //                     divider: '<i class="fa fa-angle-right"></i>',
-                //                     favoriteClick: onFavoriteClick
-                //                 })
-                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
-                //                 
+                var valid = $('#form_sample_1').data('bootstrapValidator').isValid();
 
-                menuItem && $(".breadcrumb")
-                    .breadcrumb({
-                        divider: '<i class="fa fa-angle-right"></i>',
-                        favoriteClick: onFavoriteClick
-                    })
-                    .breadcrumb("push", menuItem.name, 'formdetail.html')
-            });
-        },
-        initMainMenu: function() {
-            $("#main-menu").mainMenu({
-                'url': "../../assets/ajax/data/menu.txt"
-            });
-
-            $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
-                // alert(event.mid +"[ name: " +event.instance.name + " ] " + "[ heaf :" + event.href + "]");
-                // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
-                // window.location= purl;
-
-                var purl = 'form.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
-                window.location = purl;
+                if (valid) {
+                    $("#alert").toggle(false);
+                } else {
+                    $("#alert").toggle(true);
+                }
             });
         }
     }
 }(jQuery));
 
 $(document).ready(function() {
+    App.init();
     Form.init();
 });

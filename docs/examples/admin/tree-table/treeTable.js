@@ -12,47 +12,49 @@ var TreeTable = (function($) {
 
         //main function
         init: function() {
-            this.initMainMenu();
-            this.initBreadCrumb();
-        },
-        initBreadCrumb: function() {
-            $("#main-menu").on('complete.mu.mainMenu', function(event) {
-                /* Act on the event */
-                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
+            $('#dt_basic').dataTable({
+                "ajax": "../../../assets/ajax/data/tree_arrays_data.txt",
+                "ordering": false,
+                "paging": false,
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false
+                }, {
+                    "targets": [1],
+                    "visible": false
+                }],
+                "createdRow": function(row, data, index) {
 
-                // menuItem && $(".breadcrumb")
-                //                 .breadcrumb({
-                //                     divider: '<i class="fa fa-angle-right"></i>',
-                //                     favoriteClick: onFavoriteClick
-                //                 })
-                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
-                //                 
+                    var idAttrName = "data-tt-id";
 
-                menuItem && $(".breadcrumb")
-                    .breadcrumb({
-                        divider: '<i class="fa fa-angle-right"></i>',
-                        favoriteClick: onFavoriteClick
-                    })
-                    .breadcrumb("push", menuItem.name, 'table.html')
+                    var pIdAttrName = "data-tt-parent-id";
+
+                    var $row = $(row).attr(idAttrName, data[0]);
+
+                    if (data[1]) $row.attr(pIdAttrName, data[1]);
+
+                },
+                "initComplete": function() {
+
+                    $("#dt_basic").treetable({
+                        expandable: true
+                    });
+                }
             });
-        },
-        initMainMenu: function() {
-            $("#main-menu").mainMenu({
-                'url': "../../assets/ajax/data/menu.txt"
+
+            // Highlight selected row
+            $("#dt_basic tbody").on("mousedown", "tr", function() {
+
+                $(".selected").not(this).removeClass("selected");
+
+                $(this).toggleClass("selected");
             });
 
-            $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
-                // alert(event.mid +"[ name: " +event.instance.name + " ] " + "[ heaf :" + event.href + "]");
-                // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
-                // window.location= purl;
-
-                var purl = 'tree-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
-                window.location = purl;
-            });
         }
     };
 }(jQuery));
 
 $(document).ready(function() {
+    App.init();
     TreeTable.init();
 });

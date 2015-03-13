@@ -3,57 +3,57 @@ var DetailsTable = (function($) {
     'use strict';
 
     // private functions & variables
-    var onFavoriteClick = function(href) {
-        alert("want to favorite href:" + href);
-    };
-
+    /* Formatting function for row details - modify as you need */
+    function format(d) {
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+            '<tr>' +
+            '<td>Full name:</td>' +
+            '<td>' + d.name + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>Extension number:</td>' +
+            '<td>' + d.extn + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>Extra info:</td>' +
+            '<td>And any further details here (images etc)...</td>' +
+            '</tr>' +
+            '</table>';
+    }
 
     // public functions
     return {
 
         //main function
         init: function() {
-            this.initMainMenu();
-            this.initBreadCrumb();
+            this.bindClickOnDetailsTable();
         },
-        initBreadCrumb: function() {
-            $("#main-menu").on('complete.mu.mainMenu', function(event) {
-                /* Act on the event */
-                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
+        bindClickOnDetailsTable: function() {
+            // Add event listener for opening and closing details
+            $('#example ').on('click', 'tbody td.details-control', function() {
 
-                // menuItem && $(".breadcrumb")
-                //                 .breadcrumb({
-                //                     divider: '<i class="fa fa-angle-right"></i>',
-                //                     favoriteClick: onFavoriteClick
-                //                 })
-                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
-                //                 
+                var tr = $(this).parents('tr');
 
-                menuItem && $(".breadcrumb")
-                    .breadcrumb({
-                        divider: '<i class="fa fa-angle-right"></i>',
-                        favoriteClick: onFavoriteClick
-                    })
-                    .breadcrumb("push", menuItem.name, 'table.html')
-            });
-        },
-        initMainMenu: function() {
-            $("#main-menu").mainMenu({
-                'url': "../../assets/ajax/data/menu.txt"
+                var row = $("#example").DataTable().row(tr);
+
+                if (row.child.isShown()) {
+                    tr.removeClass('details');
+
+                    // This row is already open - close it
+                    row.child.hide();
+                } else {
+                    tr.addClass('details');
+                    // Open this row
+                    row.child(format(row.data())).show();
+                }
             });
 
-            $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
-                // alert(event.mid +"[ name: " +event.instance.name + " ] " + "[ heaf :" + event.href + "]");
-                // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
-                // window.location= purl;
-
-                var purl = 'details-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
-                window.location = purl;
-            });
         }
     };
 }(jQuery));
 
 $(document).ready(function() {
+    App.init();
     DetailsTable.init();
 });

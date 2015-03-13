@@ -3,59 +3,55 @@ var NestedTable = (function($) {
     'use strict';
 
     // private functions & variables
-    var onFavoriteClick = function(href) {
-        alert("want to favorite href:" + href);
-    };
-
+    function fnFormatDetails(table_id, html) {
+        var sOut = "<table class=\"table table-striped table-bordered table-hover\" id=\"exampleTable_" + table_id + "\">";
+        sOut += html;
+        sOut += "</table>";
+        return sOut;
+    }
 
 
     // public functions
     return {
 
         //main function
-        //main function
         init: function() {
-            this.initMainMenu();
-            this.initBreadCrumb();
+            this.bindClickOnNestTable();
         },
-        initBreadCrumb: function() {
-            $("#main-menu").on('complete.mu.mainMenu', function(event) {
-                /* Act on the event */
-                var menuItem = $(this).mainMenu("findMenuById", QueryString.mid);
+        bindClickOnNestTable: function() {
+            // you would probably be using templates here
+            var iTableCounter = 1;
+            // Add event listener for opening and closing details
+            // caution: maybe as this init before parent table ,in order to disable click event 
+            $('#example').on('click', 'tbody td.details-control', function() {
+                var tr = $(this).parents('tr');
+                var $pTable = $("#example").DataTable(), row = $pTable.row(tr);
 
-                // menuItem && $(".breadcrumb")
-                //                 .breadcrumb({
-                //                     divider: '<i class="fa fa-angle-right"></i>',
-                //                     favoriteClick: onFavoriteClick
-                //                 })
-                //                 .breadcrumb("push", menuItem.name, menuItem.uri)
-                //                 
+                if (row.child.isShown()) {
+                    tr.removeClass('details');
 
-                menuItem && $(".breadcrumb")
-                    .breadcrumb({
-                        divider: '<i class="fa fa-angle-right"></i>',
-                        favoriteClick: onFavoriteClick
-                    })
-                    .breadcrumb("push", menuItem.name, 'table.html')
-            });
-        },
-        initMainMenu: function() {
-            $("#main-menu").mainMenu({
-                'url': "../../assets/ajax/data/menu.txt"
-            });
+                    // This row is already open - close it
+                    row.child.hide();
+                } else {
+                    tr.addClass('details');
 
-            $("#main-menu").on("clickMenu.mu.mainMenu", function(event) {
-                // alert(event.mid +"[ name: " +event.instance.name + " ] " + "[ heaf :" + event.href + "]");
-                // var purl = href + (href.indexOf('?') > -1 ? '&' : '?') + 'mid=' + mid + '&_=' + (new Date()).valueOf();
-                // window.location= purl;
-
-                var purl = 'nested-table.html?' + 'mid=' + event.mid + '&_=' + (new Date()).valueOf();
-                window.location = purl;
+                    // Open this row
+                    row.child(fnFormatDetails(iTableCounter, $("#detailsTable").html())).show();
+                    var oInnerTable = $("#exampleTable_" + iTableCounter).dataTable({
+                        "ajax": {
+                            "url": "../../../assets/ajax/data/arrays_custom_prop.txt",
+                            "dataSrc": "demo"
+                        },
+                        "ordering": true
+                    });
+                    iTableCounter = iTableCounter + 1;
+                }
             });
         }
     };
 }(jQuery));
 
 $(document).ready(function() {
+    App.init();//init menu 
     NestedTable.init();
 });
