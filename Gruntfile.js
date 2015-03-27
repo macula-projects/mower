@@ -238,16 +238,25 @@ module.exports = function(grunt) {
             },
         },
         less: { //convert less to css
-            buildcore: {
+            build_admincore: {
                 options: {
                     banner: '<%= meta.banner %>',
                     strictMath: true
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>.less'
+                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>-admin.less'
                 }
             },
-            buildtheme: {
+            build_frontcore: {
+                options: {
+                    banner: '<%= meta.banner %>',
+                    strictMath: true
+                },
+                files: {
+                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>-front.less'
+                }
+            },
+            build_theme: {
                 options: {
                     banner: '<%= meta.banner %>',
                     strictMath: true
@@ -331,6 +340,14 @@ module.exports = function(grunt) {
                 src: ['src/js/**/*.js']
             }
         },
+        focus: {
+            admin: {
+                exclude: ['livereload_front']
+            },
+            front: {
+                exclude: ['livereload_admin']
+            }
+        },
         watch: { //recompile watching on file change
             gruntfile: {
                 files: '<%= jshint.gruntfile.src %>',
@@ -340,16 +357,29 @@ module.exports = function(grunt) {
                 files: '<%= jshint.src.src %>',
                 tasks: ['jshint:src']
             },
-            livereload: {
+            livereload_admin: {
                 options: {
                     livereload: '<%= connect.options.livereload %>' // this port must be same with the connect livereload port
                 },
                 // Watch whatever files you needed.
                 files: [
                     'src/css/**/*.less',
-                    'src/js/**/*.js'
+                    'src/js/**/*.js',
+                    '!src/css/style-mower-front.less'
                 ],
-                tasks: ['dev']
+                tasks: ['admindev']
+            },
+            livereload_front: {
+                options: {
+                    livereload: '<%= connect.options.livereload %>' // this port must be same with the connect livereload port
+                },
+                // Watch whatever files you needed.
+                files: [
+                    'src/css/**/*.less',
+                    'src/js/**/*.js',
+                    '!src/css/style-mower-admin.less'
+                ],
+                tasks: ['frontdev']
             }
         },
         bowercopy: {
@@ -381,13 +411,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-bowercopy');
+    grunt.loadNpmTasks('grunt-focus');
 
 
     // Creates the 'server' task
-    grunt.registerTask('server', ['connect:all', 'watch']);
+    grunt.registerTask('svradmin', ['connect:all', 'focus:admin']);
 
-    // grunt dev
-    grunt.registerTask('dev', ['clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    grunt.registerTask('svrfront', ['connect:all', 'focus:front']);
+
+    // grunt dev admin
+    grunt.registerTask('admindev', ['clean', 'less:build_admincore','less:build_theme', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+
+    // grunt dev front
+    grunt.registerTask('frontdev', ['clean', 'less:build_frontcore', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
 
     // grunt release admin
     grunt.registerTask('releaseadmin', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
@@ -396,7 +432,7 @@ module.exports = function(grunt) {
     grunt.registerTask('releasefront', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:front_buildjs', 'uglify', 'cssmin', 'concat:front_mergecss', 'concat:front_mergejs', 'copy']);
 
     // grunt
-    grunt.registerTask('default', ['dev']);
+    grunt.registerTask('default', ['admindev']);
 
     //copy bower files to libs or anywhere
     //grunt.registerTask('init', ['bowercopy']);

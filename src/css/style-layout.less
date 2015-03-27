@@ -1,5 +1,5 @@
 // Name:            Style layout
-// Description:     Sets  values for page layout HTML elements and customization.
+// Description:     Sets  values for admin page layout HTML elements and customization.
 //
 // =============================================================================
 
@@ -31,6 +31,10 @@
 
 /* mower header.styles for  top navbar.
  ========================================================================== */
+ .mu-header-container .navbar .navbar-header {
+   width: 235px;
+  }
+   
 .mu-header-container {
     .header-menu {
         .navbar-nav {
@@ -1739,7 +1743,13 @@
           .text-shadow(none);
       }
       & > li + li:before {
-          display: none;
+          // display: none;
+          content: "\f105";
+          font-family: FontAwesome;
+          font-style: normal;
+          font-weight: normal;
+          text-decoration: inherit;
+          font-size: 14px;
       }
       & > li > .divider {
           padding: 0 4px;

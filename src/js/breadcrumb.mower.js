@@ -31,7 +31,7 @@
         prefix: "breadcrumb",
         param: '{}',
         home: '<i class="fa fa-home home"></i>',
-        divider: '<i class="fa fa-angle-right"></i>',
+        divider: '',
         keyboard: false,
         events: {
             command: "command.mu.breadcrumb",
