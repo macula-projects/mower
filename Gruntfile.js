@@ -238,6 +238,15 @@ module.exports = function(grunt) {
             },
         },
         less: { //convert less to css
+            build: {
+                options: {
+                    banner: '<%= meta.banner %>',
+                    strictMath: true
+                },
+                files: {
+                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>.less'
+                }
+            },
             build_admincore: {
                 options: {
                     banner: '<%= meta.banner %>',
@@ -341,11 +350,14 @@ module.exports = function(grunt) {
             }
         },
         focus: {
+            base:{
+                exclude:['livereload_admin','livereload_front']
+            },
             admin: {
-                exclude: ['livereload_front']
+                exclude: ['livereload','livereload_front']
             },
             front: {
-                exclude: ['livereload_admin']
+                exclude: ['livereload','livereload_admin']
             }
         },
         watch: { //recompile watching on file change
@@ -356,6 +368,19 @@ module.exports = function(grunt) {
             src: {
                 files: '<%= jshint.src.src %>',
                 tasks: ['jshint:src']
+            },
+            livereload: {
+                options: {
+                    livereload: '<%= connect.options.livereload %>' // this port must be same with the connect livereload port
+                },
+                // Watch whatever files you needed.
+                files: [
+                    'src/css/**/*.less',
+                    'src/js/**/*.js',
+                    '!src/css/style-mower-admin.less',
+                    '!src/css/style-mower-front.less'
+                ],
+                tasks: ['dev']
             },
             livereload_admin: {
                 options: {
@@ -415,12 +440,19 @@ module.exports = function(grunt) {
 
 
     // Creates the 'server' task
+    
+    grunt.registerTask('svrbase', ['connect:all', 'focus:base']);
+
     grunt.registerTask('svradmin', ['connect:all', 'focus:admin']);
 
     grunt.registerTask('svrfront', ['connect:all', 'focus:front']);
 
+    //grunt dev base
+    grunt.registerTask('dev', ['clean', 'less:build','less:build_theme', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+
     // grunt dev admin
     grunt.registerTask('admindev', ['clean', 'less:build_admincore','less:build_theme', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    
 
     // grunt dev front
     grunt.registerTask('frontdev', ['clean', 'less:build_frontcore', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
