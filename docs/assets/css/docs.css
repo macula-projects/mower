@@ -9,6 +9,10 @@ body {
     background-color: #fff;
 }
 
+body:before{
+    content:none;
+}
+
 .table code {
     font-size: 13px;
     font-weight: 400

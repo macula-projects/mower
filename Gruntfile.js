@@ -43,26 +43,19 @@ module.exports = function(grunt) {
         },
         // Task configuration
         clean: { // clean all
-            build: ['dist/**', 'docs/<%= pkg.name %>/**']
+            build_admin: ['dist/admin/**', 'docs/<%= pkg.name %>/admin/**'],
+            build_front: ['dist/front/**', 'docs/<%= pkg.name %>/front/**']
         },
         concat: { //files concat
             options: {
                 separator: ';'
             },
-            buildcss: {
-                options: {
-                    banner: '<%= meta.banner %>'
-                },
-                files: {
-                    'dist/css/<%= pkg.name %>-modules.css': ['src/css/modules/**/*.css', '!**/*.min.css']
-                }
-            },
-            buildjs: {
+            buildjs_admin: {
                 options: {
                     banner: '<%= meta.banner %>\n<%= meta.jqueryCheck %>'
                 },
                 files: {
-                    'dist/js/<%= pkg.name %>.js': [
+                    'dist/admin/js/<%= pkg.name %>.js': [
                         'src/js/base.<%= pkg.name %>.js',
                         'src/js/utils.<%= pkg.name %>.js',
                         'src/js/alert.<%= pkg.name %>.js',
@@ -77,9 +70,9 @@ module.exports = function(grunt) {
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/tagsselect.<%= pkg.name %>.js',
                         'src/js/magnifier.<%= pkg.name %>.js',
-                        'src/js/nbmenu.<%= pkg.name %>.js',
-                        'src/js/vmmenu.<%= pkg.name %>.js',
-                        'src/js/sidebarmenu.<%= pkg.name %>.js',
+                        'src/js/navbar.menu.<%= pkg.name %>.js',
+                        'src/js/vertical.menu.<%= pkg.name %>.js',
+                        'src/js/sidebar.menu.<%= pkg.name %>.js',
                         'src/js/modal.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
@@ -90,35 +83,14 @@ module.exports = function(grunt) {
                     ]
                 }
             },
-            front_buildjs: {
-                options: {
-                    banner: '<%= meta.banner %>\n<%= meta.jqueryCheck %>'
-                },
-                files: {
-                    'dist/js/<%= pkg.name %>.js': [
-                        'src/js/base.<%= pkg.name %>.js',
-                        'src/js/utils.<%= pkg.name %>.js',
-                        'src/js/dropdown.hover.<%= pkg.name %>.js',
-                        'src/js/dropdown.<%= pkg.name %>.js',
-                        'src/js/magnifier.<%= pkg.name %>.js',
-                        'src/js/cmenu.<%= pkg.name %>.js',
-                        'src/js/smenu.<%= pkg.name %>.js',
-                        'src/js/modal.<%= pkg.name %>.js',
-                        'src/js/popover.<%= pkg.name %>.js',
-                        'src/js/tab.<%= pkg.name %>.js',
-                        'src/js/tooltip.<%= pkg.name %>.js',
-                        'src/js/utils.<%= pkg.name %>.js'
-                    ]
-                }
-            },
-            mergecss: {
+            mergecss_admin: {
                 options: {
                     separator: grunt.util.linefeed
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>.css': [
+                    'dist/admin/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
-                        'dist/css/<%= pkg.name %>.css',
+                        'dist/admin/css/<%= pkg.name %>.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'plugins/toastr/css/toastr.css',
                         'plugins/jquery-treetable/css/jquery.treetable.css',
@@ -127,9 +99,9 @@ module.exports = function(grunt) {
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css',
                         'plugins/jstree/css/style.css'
                     ],
-                    'dist/css/<%= pkg.name %>.min.css': [
+                    'dist/admin/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
-                        'dist/css/<%= pkg.name %>.min.css',
+                        'dist/admin/css/<%= pkg.name %>.min.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'plugins/toastr/css/toastr.min.css',
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
@@ -140,31 +112,12 @@ module.exports = function(grunt) {
                     ]
                 }
             },
-            front_mergecss: {
-                options: {
-                    separator: grunt.util.linefeed
-                },
-                files: {
-                    'dist/css/<%= pkg.name %>.css': [
-                        'plugins/font-awesome/css/font-awesome.css',
-                        'dist/css/<%= pkg.name %>.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal.css'
-                    ],
-                    'dist/css/<%= pkg.name %>.min.css': [
-                        'plugins/font-awesome/css/font-awesome.min.css',
-                        'dist/css/<%= pkg.name %>.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal.min.css'
-                    ]
-                }
-            },
-            mergejs: {
+            mergejs_admin: {
                 options: {
                     separator: grunt.util.linefeed + ";"
                 },
                 files: {
-                    'dist/js/<%= pkg.name %>.js': [
+                    'dist/admin/js/<%= pkg.name %>.js': [
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
                         'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
@@ -176,9 +129,9 @@ module.exports = function(grunt) {
                         'plugins/datatables/js/dataTables.bootstrap.js',
                         'plugins/jquery-treetable/js/jquery.treetable.js',
                         'plugins/jstree/js/jstree.js',
-                        'dist/js/<%= pkg.name %>.js'
+                        'dist/admin/js/<%= pkg.name %>.js'
                     ],
-                    'dist/js/<%= pkg.name %>.min.js': [
+                    'dist/admin/js/<%= pkg.name %>.min.js': [
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
                         'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
@@ -190,24 +143,64 @@ module.exports = function(grunt) {
                         'plugins/datatables/js/dataTables.bootstrap.min.js',
                         'plugins/jquery-treetable/js/jquery.treetable.min.js',
                         'plugins/jstree/js/jstree.min.js',
-                        'dist/js/<%= pkg.name %>.min.js'
+                        'dist/admin/js/<%= pkg.name %>.min.js'
                     ]
                 }
             },
-            front_mergejs: {
+            buildjs_front: {
+                options: {
+                    banner: '<%= meta.banner %>\n<%= meta.jqueryCheck %>'
+                },
+                files: {
+                    'dist/front/js/<%= pkg.name %>.js': [
+                        'src/js/base.<%= pkg.name %>.js',
+                        'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/dropdown.hover.<%= pkg.name %>.js',
+                        'src/js/dropdown.<%= pkg.name %>.js',
+                        'src/js/magnifier.<%= pkg.name %>.js',
+                        'src/js/navbar.menu.<%= pkg.name %>.js',
+                        'src/js/vertival.menu.<%= pkg.name %>.js',
+                        'src/js/modal.<%= pkg.name %>.js',
+                        'src/js/popover.<%= pkg.name %>.js',
+                        'src/js/tab.<%= pkg.name %>.js',
+                        'src/js/tooltip.<%= pkg.name %>.js',
+                        'src/js/utils.<%= pkg.name %>.js'
+                    ]
+                }
+            },
+            mergecss_front: {
+                options: {
+                    separator: grunt.util.linefeed
+                },
+                files: {
+                    'dist/front/css/<%= pkg.name %>.css': [
+                        'plugins/font-awesome/css/font-awesome.css',
+                        'dist/front/css/<%= pkg.name %>.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal.css'
+                    ],
+                    'dist/front/css/<%= pkg.name %>.min.css': [
+                        'plugins/font-awesome/css/font-awesome.min.css',
+                        'dist/front/css/<%= pkg.name %>.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
+                        'plugins/bootstrap-modal/css/bootstrap-modal.min.css'
+                    ]
+                }
+            },
+            mergejs_front: {
                 options: {
                     separator: grunt.util.linefeed + ";"
                 },
                 files: {
-                    'dist/js/<%= pkg.name %>.js': [
+                    'dist/front/js/<%= pkg.name %>.js': [
                         'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
                         'plugins/bootstrap-modal/js/bootstrap-modal.js',
-                        'dist/js/<%= pkg.name %>.js'
+                        'dist/front/js/<%= pkg.name %>.js'
                     ],
-                    'dist/js/<%= pkg.name %>.min.js': [
+                    'dist/front/js/<%= pkg.name %>.min.js': [
                         'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
                         'plugins/bootstrap-modal/js/bootstrap-modal.min.js',
-                        'dist/js/<%= pkg.name %>.min.js'
+                        'dist/front/js/<%= pkg.name %>.min.js'
                     ]
                 }
             }
@@ -218,7 +211,8 @@ module.exports = function(grunt) {
                     banner: '<%= meta.banner %>'
                 },
                 files: {
-                    'dist/js/<%= pkg.name %>.min.js': ['dist/js/<%= pkg.name %>.js']
+                    'dist/admin/js/<%= pkg.name %>.min.js': ['dist/admin/js/<%= pkg.name %>.js'],
+                    'dist/front/js/<%= pkg.name %>.min.js': ['dist/front/js/<%= pkg.name %>.js']
                 }
             },
             minify_plugins: {
@@ -238,34 +232,25 @@ module.exports = function(grunt) {
             },
         },
         less: { //convert less to css
-            build: {
+            build_admin: {
                 options: {
                     banner: '<%= meta.banner %>',
                     strictMath: true
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>.less'
+                    'dist/admin/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>-admin.less'
                 }
             },
-            build_admincore: {
+            build_front: {
                 options: {
                     banner: '<%= meta.banner %>',
                     strictMath: true
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>-admin.less'
+                    'dist/front/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>-front.less'
                 }
             },
-            build_frontcore: {
-                options: {
-                    banner: '<%= meta.banner %>',
-                    strictMath: true
-                },
-                files: {
-                    'dist/css/<%= pkg.name %>.css': 'src/css/<%= pkg.name %>-front.less'
-                }
-            },
-            build_theme: {
+            build_admintheme: {
                 options: {
                     banner: '<%= meta.banner %>',
                     strictMath: true
@@ -274,17 +259,24 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'src/css/themes/',
                     src: ['*.less', '!themes-mixins.less'],
-                    dest: 'dist/css',
+                    dest: 'dist/admin/css',
                     ext: '.css'
                 }]
             }
         },
         cssmin: { //css compress
-            minify: {
+            minify_admin: {
                 expand: true,
-                cwd: 'dist/css/',
+                cwd: 'dist/admin/css/',
                 src: ['*.css', '!*.min.css'],
-                dest: 'dist/css/',
+                dest: 'dist/admin/css/',
+                ext: '.min.css'
+            },
+            minify_front: {
+                expand: true,
+                cwd: 'dist/front/css/',
+                src: ['*.css', '!*.min.css'],
+                dest: 'dist/front/css/',
                 ext: '.min.css'
             },
             minify_plugins: {
@@ -313,17 +305,30 @@ module.exports = function(grunt) {
             }
         },
         copy: { //copy files to dist
-            build: {
+            build_admin: {
                 files: [{
                     expand: true,
                     cwd: 'plugins/font-awesome/',
                     src: ['fonts/*'],
-                    dest: 'dist/'
-                }, {
+                    dest: 'dist/admin/'
+                },{
                     expand: true,
                     cwd: 'plugins/jstree/',
                     src: ['img/*'],
-                    dest: 'dist/'
+                    dest: 'dist/admin/'
+                }]
+            },
+            build_front:{
+                files: [{
+                    expand: true,
+                    cwd: 'plugins/font-awesome/',
+                    src: ['fonts/*'],
+                    dest: 'dist/front/'
+                },{
+                    expand: true,
+                    cwd: 'plugins/jstree/',
+                    src: ['img/*'],
+                    dest: 'dist/front/'
                 }]
             },
             buildDocs: {
@@ -350,9 +355,6 @@ module.exports = function(grunt) {
             }
         },
         focus: {
-            base:{
-                exclude:['livereload_admin','livereload_front']
-            },
             admin: {
                 exclude: ['livereload','livereload_front']
             },
@@ -369,19 +371,6 @@ module.exports = function(grunt) {
                 files: '<%= jshint.src.src %>',
                 tasks: ['jshint:src']
             },
-            livereload: {
-                options: {
-                    livereload: '<%= connect.options.livereload %>' // this port must be same with the connect livereload port
-                },
-                // Watch whatever files you needed.
-                files: [
-                    'src/css/**/*.less',
-                    'src/js/**/*.js',
-                    '!src/css/style-mower-admin.less',
-                    '!src/css/style-mower-front.less'
-                ],
-                tasks: ['dev']
-            },
             livereload_admin: {
                 options: {
                     livereload: '<%= connect.options.livereload %>' // this port must be same with the connect livereload port
@@ -392,7 +381,7 @@ module.exports = function(grunt) {
                     'src/js/**/*.js',
                     '!src/css/style-mower-front.less'
                 ],
-                tasks: ['admindev']
+                tasks: ['admin']
             },
             livereload_front: {
                 options: {
@@ -404,7 +393,7 @@ module.exports = function(grunt) {
                     'src/js/**/*.js',
                     '!src/css/style-mower-admin.less'
                 ],
-                tasks: ['frontdev']
+                tasks: ['front']
             }
         },
         bowercopy: {
@@ -440,31 +429,24 @@ module.exports = function(grunt) {
 
 
     // Creates the 'server' task
-    
-    grunt.registerTask('svrbase', ['connect:all', 'focus:base']);
-
     grunt.registerTask('svradmin', ['connect:all', 'focus:admin']);
 
     grunt.registerTask('svrfront', ['connect:all', 'focus:front']);
 
-    //grunt dev base
-    grunt.registerTask('dev', ['clean', 'less:build','less:build_theme', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
-
-    // grunt dev admin
-    grunt.registerTask('admindev', ['clean', 'less:build_admincore','less:build_theme', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    // grunt admin
+    grunt.registerTask('admin', ['clean:build_admin', 'less:build_admin','less:build_admintheme',  'concat:buildjs_admin', 'uglify', 'cssmin', 'concat:mergecss_admin', 'concat:mergejs_admin', 'copy:build_admin','copy:buildDocs']);
     
-
-    // grunt dev front
-    grunt.registerTask('frontdev', ['clean', 'less:build_frontcore', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    // grunt front
+    grunt.registerTask('front', ['clean:build_front', 'less:build_front',  'concat:buildjs_front', 'uglify', 'cssmin', 'concat:mergecss_front', 'concat:mergejs_front', 'copy:build_front','copy:buildDocs']);
 
     // grunt release admin
-    grunt.registerTask('releaseadmin', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:buildjs', 'uglify', 'cssmin', 'concat:mergecss', 'concat:mergejs', 'copy']);
+    grunt.registerTask('releaseadmin', ['compress', 'admin']);
 
     // grunt release
-    grunt.registerTask('releasefront', ['compress', 'clean', 'less', 'concat:buildcss', 'concat:front_buildjs', 'uglify', 'cssmin', 'concat:front_mergecss', 'concat:front_mergejs', 'copy']);
+    grunt.registerTask('releasefront', ['compress', 'front']);
 
     // grunt
-    grunt.registerTask('default', ['admindev']);
+    grunt.registerTask('default', ['admin']);
 
     //copy bower files to libs or anywhere
     //grunt.registerTask('init', ['bowercopy']);

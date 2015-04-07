@@ -1,5 +1,5 @@
 /** ========================================================================
- * Mower: sidebarMenu.mower.js - v1.0.0
+ * Mower: sidebar.menu.mower.js - v1.0.0
  *
  * sidebar menu to display menu stay on main content left.
  *
