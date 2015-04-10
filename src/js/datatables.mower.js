@@ -203,6 +203,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     settings.iDisplayStart = (pageNumber - 1) * data.length;
                 }
 
+                //process only one column
                 var orderData = {};
                 for (var i = 0; i < data.order.length; i++) {
                     var item = data.order[i];
@@ -213,15 +214,16 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                             order: item.dir
                         };
                     }
-                    //process only one column
                     break;
                 }
+
+                var filterData = settings.oInit.oAjaxParams || {};
 
                 //clear all data
                 for (var name in data)
                     delete data[name];
 
-                $.extend(data, pageData, orderData);
+                $.extend(data, pageData, orderData,filterData);
             } catch (e) {
                 //NoOPS
             }
@@ -801,7 +803,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     define(['jquery'], function($) {
         return (function() {
-
             return {
                 //return datatables api instance
                 getInstance: function(tableSelector) {
@@ -821,7 +822,27 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     var sr = instance.settings()[0]._oSelectRows;
                     return sr.fnGetSelectedRows();
                 },
-                reload: function(tableSelector, resetPaging, rowSelector) {
+                setAjaxParams:function(tableSelector,parameters){
+                    //save data in oinit object temporary
+                    if(typeof parameters === 'string')
+                    {
+                        var obj = {}; 
+                        parameters.replace(/([^=&]+)=([^&]*)/g, function(m, key, value) {
+                            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+                        });
+
+                        parameters = obj; 
+                    } 
+
+                    if ($.isPlainObject(parameters)){
+                        this.getInstance(tableSelector).settings()[0].oInit.oAjaxParams = parameters;
+                    }
+                    return this;
+                },
+                getAjaxParams:function(tableSelector){
+                    return this.getInstance(tableSelector).ajax.params();
+                },
+                reload: function(tableSelector, resetPaging) {
                     var that = this;
                     this.getInstance(tableSelector).ajax.reload((resetPaging === true));
                     $(tableSelector).on('draw.dt', function() {
