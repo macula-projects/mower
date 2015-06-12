@@ -28,12 +28,11 @@
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" href="../apple-touch-icon-precomposed.png">
     <link rel="icon" href="../favicon.ico">
 </head>
 
@@ -59,6 +58,9 @@
                     </li>
                     <li >
                         <a href="css.html">基础</a>
+                    </li>
+                    <li>
+                        <a href="controls.html">控件</a>
                     </li>
                     <li>
                         <a href="components.html">组件</a>
@@ -112,14 +114,14 @@
                 <div class="bs-docs-section">
                     <h2 id="rules" class="page-header">约定</h2>
                     <h3>UI元素类型及定义</h3>
-                            <p>ZUI中包含各种各样的界面元素（或控件），例如按钮、列表、表格等，甚至一些特定场景用到的一组元素也会在ZUI中精心设计，例如评论列表。为了更好的展示我们的设计理念，把这些元素归为如下四类：</p>
+                            <p>Mower中包含各种各样的界面元素（或控件），例如按钮、列表、表格等。现把这些元素归为如下四类：</p>
                             <ul>
                               <li><strong>基本控件</strong>：用来构建网页应用的基本界面单元，例如按钮、文本标签、输入框等。</li>
                               <li><strong>组件</strong>：通过一个以上的基本控件组合而成的较复杂的界面单元。例如表单、菜单、表格等。</li>
                               <li><strong>Javascript 组件</strong>：这些组件要正常使用会使用到Javascript。某些Javascript组件需要手动调用来启用。</li>
-                              <li><strong>视图</strong>：视图是将基本控件和组件组合使用来展现网站上的通用内容，例如评论视图及文章预览列表视图。</li>
+                              <li><strong>视图</strong>：视图是将基本控件和组件组合使用来展现网站上的通用内容，例如前后端模板等。</li>
                             </ul>
-                            <p>ZUI中的大多数界面元素都有不同的子类型、状态及参数。关于类型、状态及参数的定义如下：</p>
+                            <p>Mower中的大多数界面元素都有不同的子类型、状态及参数。关于类型、状态及参数的定义如下：</p>
                             <ul>
                               <li><strong>类型</strong>：同一种界面单元的不同类型，例如按钮有主要按钮、次要按钮及危险按钮等，导航菜单类型有普通导航及顶部固定导航等。任何时候都应该只为同一个界面元素指定一种类型，默认类型无需指定。</li>
                               <li><strong>状态</strong>：状态为同一种界面单元允许在不同的状态中切换，例如按钮有正常状态和不可用状态，下拉菜单有展开及收拢状态，菜单项目有选中和未选中状态等。在同一个界面元素中允许叠加多个状态。</li>
@@ -127,7 +129,7 @@
                             </ul>
 
                             <h3>通用状态和参数</h3>
-                            <p>很多状态和参数在不同的控件或组件中具有一致的用法和相同的含义。在ZUI中，这些通用的状态和参数具有固定的名字（CSS 类名）。</p>
+                            <p>很多状态和参数在不同的控件或组件中具有一致的用法和相同的含义。在Mower中，这些通用的状态和参数具有固定的名字（CSS 类名）。</p>
                             <p>常用通用状态如下：</p>
                             <table class="table table-bordered">
                               <thead>
@@ -222,342 +224,131 @@
                                 </tr>
                               </tbody>
                             </table>
-
                             <h3>界面元素的命名</h3>
                             <h4>命名原则</h4>
                             <ul>
                               <li>所有控件、组件、视图、模块和行为的命名都应该使用最常见的名称，准确提现界面元素功能。例如菜单应该命名为menu，而不是navigation。</li>
                               <li>类型、状态及参数的命名均为元素名加上类型（或状态及参数名）前缀，中间用间隔号分隔，例如固定位置的菜单为<code>.menu-fixed</code>。对于通用状态或参数可以省略前缀，例如一个菜单项目处于激活状态，则只需命名为<code>.active</code>，而不许命名为<code>.menu-active</code>。</li>
-                              <li>所有控件、组件、视图、模块和行为的命名均不加与当前元素功能无关的前缀和额外命名，例如一个导航菜单命名为<code>.nav</code>，而不增加额外命名为<code>.ui.nav</code>或者<code>.zui.nav</code>。</li>
+                              <li>所有控件、组件、模块和行为的命名均不加与当前元素功能无关的前缀和额外命名，例如一个导航菜单命名为<code>.nav</code>，而不增加额外命名为<code>.ui.nav</code>或者<code>.mu.nav</code>。</li>
                             </ul>
                 </div>
-
                 <div class="bs-docs-section">
-                    <h1 id="whats-included" class="page-header">What's included</h1>
+                        <div class="page-header">
+                          <h2>文件目录结构</h2>
+                        </div>
 
-                    <p class="lead">Bootstrap is downloadable in two forms, within which you'll find the following directories and files, logically grouping common resources and providing both compiled and minified variations.</p>
+                        <h3>预编译的内容</h3>
+                        <p>下载预编译压缩包解压后将会得到以下目录结构：</p>
+                        <pre>
+mower/
+├── admin
+│    ├── css/
+│    │   ├── azure.css
+│    │   ├── azure.min.css
+│    │   ├── ......
+│    │   ├── orange.css
+│    │   ├── orange.min.css
+│    │   ├── mower.css
+│    │   └── mower.min.css
+│    ├── js/
+│    │   ├── mower.js
+│    │   ├── mower.min.js
+│    ├── fonts/
+│    │   ├── fontawesome-webfont.eot
+│    │   ├── fontawesome-webfont.svg
+│    │   ├── fontawesome-webfont.ttf
+│    │   ├── fontawesome-webfont.ttf
+│    │   ├── fontawesome-webfont2.ttf
+│    │   └── FontAwesome.otf
+│    └── img/
+├── front
+│    ├── css/
+│    │   ├── mower.css
+│    │   └── mower.min.css
+│    ├── js/
+│    │   ├── mower.js
+│    │   ├── mower.min.js
+│    ├── fonts/
+│    │   ├── fontawesome-webfont.eot
+│    │   ├── fontawesome-webfont.svg
+│    │   ├── fontawesome-webfont.ttf
+│    │   ├── fontawesome-webfont.ttf
+│    │   ├── fontawesome-webfont2.ttf
+│    │   └── FontAwesome.otf
+│    └── img/
+                        </pre>
+                        <p>mower目录下提供了两种编译类型：‘admin’、‘front’，其中‘admin’适用于后端应用系统，而‘front’去除某些Javascript组件等，例如Datatables，编译得到适用于前端系统的精简版本。每种编译类型均提供了压缩版本，对应的文件名为‘*.min.css’。js目录下提供对应的js文件。字体图标放在‘fonts’文件夹下。admin/css目录下存放一些主题样式。</p>
 
-                    <div class="bs-callout bs-callout-warning" id="jquery-required">
-                        <h4>jQuery required</h4>
-                        <p>Please note that <strong>all JavaScript plugins require jQuery</strong> to be included, as shown in the <a href="#template">starter template</a>. <a href="https://github.com/twbs/bootstrap/blob/v3.2.0/bower.json">Consult our <code>bower.json</code></a> to see which versions of jQuery are supported.</p>
-                    </div>
-
-                    <h2 id="whats-included-precompiled">Precompiled Bootstrap</h2>
-                    <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Bootstrap. You'll see something like this:</p>
-                    <!-- NOTE: This info is intentionally duplicated in the README.
-Copy any changes made here over to the README too. -->
-                    <div class="highlight"><pre><code class="bash">bootstrap/
-├── css/
-│   ├── bootstrap.css
-│   ├── bootstrap.min.css
-│   ├── bootstrap-theme.css
-│   └── bootstrap-theme.min.css
-├── js/
-│   ├── bootstrap.js
-│   └── bootstrap.min.js
-└── fonts/
-    ├── glyphicons-halflings-regular.eot
-    ├── glyphicons-halflings-regular.svg
-    ├── glyphicons-halflings-regular.ttf
-    └── glyphicons-halflings-regular.woff</code></pre>
-                    </div>
-
-                    <p>This is the most basic form of Bootstrap: precompiled files for quick drop-in usage in nearly any web project. We provide compiled CSS and JS (<code>bootstrap.*</code>), as well as compiled and minified CSS and JS (<code>bootstrap.min.*</code>). Fonts from Glyphicons are included, as is the optional Bootstrap theme.</p>
-
-                    <h2 id="whats-included-source">Bootstrap source code</h2>
-                    <p>The Bootstrap source code download includes the precompiled CSS, JavaScript, and font assets, along with source Less, JavaScript, and documentation. More specifically, it includes the following and more:</p>
-                    <div class="highlight"><pre><code class="bash">bootstrap/
-├── less/
-├── js/
-├── fonts/
-├── dist/
+                        <h3>源码目录结构</h3>
+                        <p>可以随时从Github上下载Mower的源码。不仅仅包含所有开发源码文件，而且包含完整的文档和示例。如果你需要定制的编译版本更应该下载源码。以下简要说明源码目录结构。</p>
+                <pre>
+mower/
+├── src/                         Mower的源码目录
 │   ├── css/
 │   ├── js/
-│   └── fonts/
-└── docs/
-    └── examples/</code></pre>
-                    </div>
-                    <p>The <code>less/</code>, <code>js/</code>, and <code>fonts/</code> are the source code for our CSS, JS, and icon fonts (respectively). The <code>dist/</code> folder includes everything listed in the precompiled download section above. The <code>docs/</code> folder includes the source code for our documentation, and <code>examples/</code> of Bootstrap usage. Beyond that, any other included file provides support for packages, license information, and development.</p>
+├── plugins/                     一些依赖通用插件
+│   ├── css/
+│   ├── js/
+├── dist/                        预编译输出目录
+│   ├── admin/
+│   ├── front/
+├── docs/                        文档
+│   ├── assets/                  一些依赖的或者配合examples使用的其他资源
+│   ├── bootstrap/               bootstrap 基础包
+│   ├── examples/                文档中用到的例子   
+│   └── libs/                    一些依赖的库文件，例如Jquery                   
+└── Gruntfile.js                 Grunt编译脚本
+                </pre>
+                      </section>
                 </div>
-
                 <div class="bs-docs-section">
-                    <h1 id="grunt" class="page-header">Compiling CSS and JavaScript</h1>
-
-                    <p class="lead">Bootstrap uses <a href="http://gruntjs.com/">Grunt</a> for its build system, with convenient methods for working with the framework. It's how we compile our code, run tests, and more.</p>
-
-                    <h2 id="grunt-installing">Installing Grunt</h2>
-                    <p>To install Grunt, you must <strong>first <a href="http://nodejs.org/download/">download and install node.js</a></strong> (which includes npm). npm stands for <a href="http://npmjs.org/">node packaged modules</a> and is a way to manage development dependencies through node.js.</p>
-
-                    Then, from the command line:
-                    <ol>
-                        <li>Install <code>grunt-cli</code> globally with <code>npm install -g grunt-cli</code>.</li>
-                        <li>Navigate to the root <code>/bootstrap/</code> directory, then run <code>npm install</code>. npm will look at the <a href="https://github.com/twbs/bootstrap/blob/master/package.json"><code>package.json</code></a> file and automatically install the necessary local dependencies listed there.</li>
-                    </ol>
-
-                    <p>When completed, you'll be able to run the various Grunt commands provided from the command line.</p>
-
-                    <h2 id="grunt-commands">Available Grunt commands</h2>
-                    <h3><code>grunt dist</code> (Just compile CSS and JavaScript)</h3>
-                    <p>Regenerates the <code>/dist/</code> directory with compiled and minified CSS and JavaScript files. As a Bootstrap user, this is normally the command you want.</p>
-
-                    <h3><code>grunt watch</code> (Watch)</h3>
-                    <p>Watches the Less source files and automatically recompiles them to CSS whenever you save a change.</p>
-
-                    <h3><code>grunt test</code> (Run tests)</h3>
-                    <p>Runs <a href="http://jshint.com/">JSHint</a> and runs the <a href="http://qunitjs.com/">QUnit</a> tests headlessly in <a href="http://phantomjs.org/">PhantomJS</a>.</p>
-
-                    <h3><code>grunt</code> (Build absolutely everything and run tests)</h3>
-                    <p>Compiles and minifies CSS and JavaScript, builds the documentation website, runs the HTML5 validator against the docs, regenerates the Customizer assets, and more. Usually only necessary if you're hacking on Bootstrap itself.</p>
-
-                    <h2 id="grunt-troubleshooting">Troubleshooting</h2>
-                    <p>Should you encounter problems with installing dependencies or running Grunt commands, first delete the <code>/node_modules/</code> directory generated by npm. Then, rerun <code>npm install</code>.</p>
+                  <h2 id="rules" class="page-header">编译及定制</h2>
+                  <p>Mower使用 <a href="http://gruntjs.com/">Grunt</a> 作为编译系统。如果不了解 Grunt 也没有关系，Grunt是一个非常棒而且容易上手的工具。下面给出简要步骤来准备编译ZUI，如果想了解更多请访问Grunt官方网站。</p>
+                  <h3>安装Grunt</h3>
+                  <p>Grunt构建在nodejs之上。在安装Grunt之前需要首先<a href="http://nodejs.org/download/" target="_blank">下载并安装node.js</a>。最新版的nodejs已包含npm（<a href="http://npmjs.org/" target="_blank">node packaged modules</a>）。npm是nodejs用来管理扩展包的工具。</p>
+                  <p>安装nodejs之后，在命令行进行如下操作：</p>
+                  <ol>
+                    <li>在全局环境中安装<code>grunt-cli</code>：<code>npm install -g grunt-cli</code>。</li>
+                    <li>进入Mower源码目录，执行<code>npm install</code>命令。nmp将读取包配置文件<code>package.json</code>文件并自动安装所有依赖的扩展包。</li>
+                  </ol>
+                  <p>完成上述步骤就可以进行编译了。只需要进入ZUI中使用命令行输入对应的命令就可以启动编译任务。内置的<code>build</code>命令可以完成大部分编译任务。以下为Mower内置的一些常用任务命令。</p>
+                  <table class="table table-bordered">
+                    <thead>
+                      <th style="width: 200px">命令</th>
+                      <th style="width: 40%">说明</th>
+                      <th>输出目录</th>
+                    </thead>
+                    <tr>
+                      <td><code>grunt admin</code></td>
+                      <td>编译后端版</td>
+                      <td><ul>
+                        <li>dist/admin/js/mower*.js</li>
+                        <li>dist/admin/css/mower*.css</li>
+                        <li>dist/admin/fonts/**</li>
+                        <li>dist/admin/img/**</li>
+                      </ul></td>
+                    </tr>
+                    <tr>
+                      <td><code>grunt front</code></td>
+                      <td>编译前端版</td>
+                      <td><ul>
+                        <li>dist/front/js/mower*.js</li>
+                        <li>dist/front/css/mower*.css</li>
+                        <li>dist/front/fonts/**</li>
+                        <li>dist/front/img/**</li>
+                      </ul></td>
+                    </tr>
+                  </table>
+                  <p>如果了解Grunt，当然可以通过编辑<code>Gruntfile.js</code>文件来定义自己的编译任务。</p>
                 </div>
-
                 <div class="bs-docs-section">
-                    <h1 id="template" class="page-header">Basic template</h1>
-
-                    <p class="lead">Start with this basic HTML template, or modify <a href="#examples">these examples</a>. We hope you'll customize our templates and examples, adapting them to suit your needs.</p>
-
-                    <p>Copy the HTML below to begin working with a minimal Bootstrap document.</p>
-                    <div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;head&gt;</span>
-    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;X-UA-Compatible&quot;</span> <span class="na">content=</span><span class="s">&quot;IE=edge&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;title&gt;</span>Bootstrap 101 Template<span class="nt">&lt;/title&gt;</span>
-
-    <span class="c">&lt;!-- Bootstrap --&gt;</span>
-    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;css/bootstrap.min.css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span><span class="nt">&gt;</span>
-
-    <span class="c">&lt;!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --&gt;</span>
-    <span class="c">&lt;!-- WARNING: Respond.js doesn&#39;t work if you view the page via file:// --&gt;</span>
-    <span class="c">&lt;!--[if lt IE 9]&gt;</span>
-<span class="c">      &lt;script src=&quot;https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js&quot;&gt;&lt;/script&gt;</span>
-<span class="c">      &lt;script src=&quot;https://oss.maxcdn.com/respond/1.4.2/respond.min.js&quot;&gt;&lt;/script&gt;</span>
-<span class="c">    &lt;![endif]--&gt;</span>
-  <span class="nt">&lt;/head&gt;</span>
-  <span class="nt">&lt;body&gt;</span>
-    <span class="nt">&lt;h1&gt;</span>Hello, world!<span class="nt">&lt;/h1&gt;</span>
-
-    <span class="c">&lt;!-- jQuery (necessary for Bootstrap&#39;s JavaScript plugins) --&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="c">&lt;!-- Include all compiled plugins (below), or include individual files as needed --&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;js/bootstrap.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-  <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span></code></pre>
+                    <h2 id="support" class="page-header">浏览器和设备的支持情况</h2>
+                    <div class="bs-callout bs-callout-info" id="callout-glyphicons-location">
+                        <p><i class="fa fa-pencil-square-o fa-2x"></i> 以下说明信息来自于 <a href="http://v3.bootcss.com/">Bootstrap中文官方</a> 文档说明，同样适用于Mower。</p>
                     </div>
-                </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="examples" class="page-header">Examples</h1>
-
-                    <p class="lead">Build on the basic template above with Bootstrap's many components. We encourage you to customize and adapt Bootstrap to suit your individual project's needs.</p>
-
-                    <h3 id="examples-framework">Using the framework</h3>
-                    <div class="row bs-examples">
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/starter-template/index.html">
-                                <img src="../examples/screenshots/starter-template.jpg" alt="">
-                            </a>
-                            <h4>Starter template</h4>
-                            <p>Nothing but the basics: compiled CSS and JavaScript along with a container.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/theme/index.html">
-                                <img src="../examples/screenshots/theme.jpg" alt="">
-                            </a>
-                            <h4>Bootstrap theme</h4>
-                            <p>Load the optional Bootstrap theme for a visually enhanced experience.</p>
-                        </div>
-                        <div class="clearfix visible-xs"></div>
-
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/grid/index.html">
-                                <img src="../examples/screenshots/grid.jpg" alt="">
-                            </a>
-                            <h4>Grids</h4>
-                            <p>Multiple examples of grid layouts with all four tiers, nesting, and more.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/jumbotron/index.html">
-                                <img src="../examples/screenshots/jumbotron.jpg" alt="">
-                            </a>
-                            <h4>Jumbotron</h4>
-                            <p>Build around the jumbotron with a navbar and some basic grid columns.</p>
-                        </div>
-                        <div class="clearfix visible-xs"></div>
-
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/jumbotron-narrow/index.html">
-                                <img src="../examples/screenshots/jumbotron-narrow.jpg" alt="">
-                            </a>
-                            <h4>Narrow jumbotron</h4>
-                            <p>Build a more custom page by narrowing the default container and jumbotron.</p>
-                        </div>
-                    </div>
-
-                    <h3 id="examples-navbars">Navbars in action</h3>
-                    <div class="row bs-examples">
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/navbar/index.html">
-                                <img src="../examples/screenshots/navbar.jpg" alt="">
-                            </a>
-                            <h4>Navbar</h4>
-                            <p>Super basic template that includes the navbar along with some additional content.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/navbar-static-top/index.html">
-                                <img src="../examples/screenshots/navbar-static.jpg" alt="">
-                            </a>
-                            <h4>Static top navbar</h4>
-                            <p>Super basic template with a static top navbar along with some additional content.</p>
-                        </div>
-                        <div class="clearfix visible-xs"></div>
-
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/navbar-fixed-top/index.html">
-                                <img src="../examples/screenshots/navbar-fixed.jpg" alt="">
-                            </a>
-                            <h4>Fixed navbar</h4>
-                            <p>Super basic template with a fixed top navbar along with some additional content.</p>
-                        </div>
-                    </div>
-
-                    <h3 id="examples-custom">Custom components</h3>
-                    <div class="row bs-examples">
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/cover/index.html">
-                                <img src="../examples/screenshots/cover.jpg" alt="">
-                            </a>
-                            <h4>Cover</h4>
-                            <p>A one-page template for building simple and beautiful home pages.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/carousel/index.html">
-                                <img src="../examples/screenshots/carousel.jpg" alt="">
-                            </a>
-                            <h4>Carousel</h4>
-                            <p>Customize the navbar and carousel, then add some new components.</p>
-                        </div>
-                        <div class="clearfix visible-xs"></div>
-
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/blog/index.html">
-                                <img src="../examples/screenshots/blog.jpg" alt="">
-                            </a>
-                            <h4>Blog</h4>
-                            <p>Simple two-column blog layout with custom navigation, header, and type.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/dashboard/index.html">
-                                <img src="../examples/screenshots/dashboard.jpg" alt="">
-                            </a>
-                            <h4>Dashboard</h4>
-                            <p>Basic structure for a admin dashboard with fixed sidebar and navbar.</p>
-                        </div>
-                        <div class="clearfix visible-xs"></div>
-
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/signin/index.html">
-                                <img src="../examples/screenshots/sign-in.jpg" alt="">
-                            </a>
-                            <h4>Sign-in page</h4>
-                            <p>Custom form layout and design for a simple sign in form.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/justified-nav/index.html">
-                                <img src="../examples/screenshots/justified-nav.jpg" alt="">
-                            </a>
-                            <h4>Justified nav</h4>
-                            <p>Create a custom navbar with justified links. Heads up! <a href="../components/index.html#nav-justified">Not too Safari friendly.</a>
-                            </p>
-                        </div>
-                        <div class="clearfix visible-xs"></div>
-
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/sticky-footer/index.html">
-                                <img src="../examples/screenshots/sticky-footer.jpg" alt="">
-                            </a>
-                            <h4>Sticky footer</h4>
-                            <p>Attach a footer to the bottom of the viewport when the content is shorter than it.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/sticky-footer-navbar/index.html">
-                                <img src="../examples/screenshots/sticky-footer-navbar.jpg" alt="">
-                            </a>
-                            <h4>Sticky footer with navbar</h4>
-                            <p>Attach a footer to the bottom of the viewport with a fixed navbar at the top.</p>
-                        </div>
-                    </div>
-
-                    <h3 id="examples-experiments">Experiments</h3>
-                    <div class="row bs-examples">
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/non-responsive/index.html">
-                                <img src="../examples/screenshots/non-responsive.jpg" alt="">
-                            </a>
-                            <h4>Non-responsive Bootstrap</h4>
-                            <p>Easily disable the responsiveness of Bootstrap <a href="#disable-responsive">per our docs</a>.</p>
-                        </div>
-                        <div class="col-xs-6 col-md-4">
-                            <a class="thumbnail" href="../examples/offcanvas/index.html">
-                                <img src="../examples/screenshots/offcanvas.jpg" alt="">
-                            </a>
-                            <h4>Offcanvas</h4>
-                            <p>Build a toggleable off-canvas navigation menu for use with Bootstrap.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="community" class="page-header">Community</h1>
-
-                    <p class="lead">Stay up to date on the development of Bootstrap and reach out to the community with these helpful resources.</p>
-                    <ul>
-                        <li>Read and subscribe to <a href="http://blog.getbootstrap.com/">The Official Bootstrap Blog</a>.</li>
-                        <li>Chat with fellow Bootstrappers using IRC in the <code>irc.freenode.net</code> server, in the <a href="irc://irc.freenode.net/#twitter-bootstrap">##twitter-bootstrap channel</a>.</li>
-                        <li>For help using Bootstrap, ask on <a href="http://stackoverflow.com/questions/tagged/twitter-bootstrap-3">StackOverflow using the tag <code>twitter-bootstrap-3</code></a>.</li>
-                        <li>Find inspiring examples of people building with Bootstrap at the <a href="http://expo.getbootstrap.com/">Bootstrap Expo</a>.</li>
-                    </ul>
-                    <p>You can also follow <a href="https://twitter.com/twbootstrap">@twbootstrap on Twitter</a> for the latest gossip and awesome music videos.</p>
-                </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="disable-responsive" class="page-header">Disabling responsiveness</h1>
-
-                    <p class="lead">Bootstrap automatically adapts your pages for various screen sizes. Here's how to disable this feature so your page works like in <a href="../examples/non-responsive/index.html">this non-responsive example</a>.</p>
-
-                    <h3>Steps to disable page responsiveness</h3>
-                    <ol>
-                        <li>Omit the viewport <code>&lt;meta&gt;</code> mentioned in <a href="../css/index.html#overview-mobile">the CSS docs</a>
-                        </li>
-                        <li>Override the <code>width</code> on the <code>.container</code> for each grid tier with a single width, for example <code>width: 970px !important;</code> Be sure that this comes after the default Bootstrap CSS. You can optionally avoid the <code>!important</code> with media queries or some selector-fu.</li>
-                        <li>If using navbars, remove all navbar collapsing and expanding behavior.</li>
-                        <li>For grid layouts, use <code>.col-xs-*</code> classes in addition to, or in place of, the medium/large ones. Don't worry, the extra-small device grid scales to all resolutions.</li>
-                    </ol>
-                    <p>You'll still need Respond.js for IE8 (since our media queries are still there and need to be processed). This disables the "mobile site" aspects of Bootstrap.</p>
-
-                    <h3>Bootstrap template with responsiveness disabled</h3>
-                    <p>We've applied these steps to an example. Read its source code to see the specific changes implemented.</p>
-                    <p>
-                        <a href="../examples/non-responsive/index.html" class="btn btn-primary">View non-responsive example</a>
-                    </p>
-                </div>
-
-
-                <!-- Cross link to new migration page -->
-                <div class="bs-callout bs-callout-info" id="migration">
-                    <h4>Migrating from v2.x to v3.x</h4>
-                    <p>Looking to migrate from an older version of Bootstrap to v3.x? Check out <a href="../migration/index.html">our migration guide</a>.</p>
-                </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="support" class="page-header">Browser and device support</h1>
-                    <p class="lead">Bootstrap is built to work best in the latest desktop and mobile browsers, meaning older browsers might display differently styled, though fully functional, renderings of certain components.</p>
-
-                    <h3 id="support-browsers">Supported browsers</h3>
-                    <p>Specifically, we support the <strong>latest versions</strong> of the following browsers and platforms. On Windows, <strong>we support Internet Explorer 8-11</strong>. More specific support information is provided below.</p>
+                    <p class="lead">Boostrap 的目标是在最新的桌面和移动浏览器上有最佳的表现，也就是说，在较老旧的浏览器上可能会导致某些组件表现出的样式有些不同，但是功能是完整的。</p>
+                    <h3 id="support-browsers">被支持的浏览器</h3>
+                    <p>特别注意，我们坚决支持这些浏览器的<strong>最新版本</strong>。在 Windows 平台，我们支持<strong> Internet Explorer 8-11</strong>。请看下面列出的详细信息。</p>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead>
@@ -572,450 +363,333 @@ Copy any changes made here over to the README too. -->
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th>Android</th>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
+                                    <th scope="row">Android</th>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
                                     <td class="text-muted" rowspan="3" style="vertical-align: middle;">N/A</td>
-                                    <td class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="sr-only">Not Supported</span>
-                                    </td>
+                                    <td class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
                                     <td class="text-muted">N/A</td>
                                 </tr>
                                 <tr>
-                                    <th>iOS</th>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
+                                    <th scope="row">iOS</th>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
                                     <td class="text-muted">N/A</td>
-                                    <td class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="sr-only">Not Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
+                                    <td class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
                                 </tr>
                                 <tr>
-                                    <th>Mac OS X</th>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
+                                    <th scope="row">Mac OS X</th>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
                                 </tr>
                                 <tr>
-                                    <th>Windows</th>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="sr-only">Supported</span>
-                                    </td>
-                                    <td class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="sr-only">Not Supported</span>
-                                    </td>
+                                    <th scope="row">Windows</th>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
+                                    <td class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <p>Unofficially, Bootstrap should look and behave well enough in Chromium and Chrome for Linux, Firefox for Linux, and Internet Explorer 7, though they are not officially supported.</p>
-                    <p>For a list of some of the browser bugs that Bootstrap has to grapple with, see our <a href="../browser-bugs/index.html">Wall of browser bugs</a>.</p>
-
-                    <h3 id="support-ie8-ie9">Internet Explorer 8 and 9</h3>
-                    <p>Internet Explorer 8 and 9 are also supported, however, please be aware that some CSS3 properties and HTML5 elements are not fully supported by these browsers. In addition, <strong>Internet Explorer 8 requires the use of <a href="https://github.com/scottjehl/Respond">Respond.js</a> to enable media query support.</strong>
-                    </p>
+                    <p>Bootstrap 在 Chromium 和 Linux 版 Chrome、Linux 版 Firefox 和 Internet Explorer 7 上的表现也是很不错的，虽然我们不对其进行官方支持。</p>
+                    <p><a href="../browser-bugs/">浏览器 bug 列表</a>中列出了影响 Bootstrap 正常功能的浏览器 bug。</p>
+                    <h3 id="support-ie8-ie9">Internet Explorer 8 和 9</h3>
+                    <p>Internet Explorer 8 和 9 是被支持的，然而，你要知道，很多 CSS3 属性和 HTML5 元素 -- 例如，圆角矩形和投影 -- 是肯定不被支持的。另外， <strong>Internet Explorer 8 需要 <a href="https://github.com/scottjehl/Respond">Respond.js</a> 配合才能实现对媒体查询（media query）的支持。</strong></p>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="col-xs-4">Feature</th>
-                                    <th scope="col" class="col-xs-4">Internet Explorer 8</th>
-                                    <th scope="col" class="col-xs-4">Internet Explorer 9</th>
+                                    <th class="col-xs-4">Feature</th>
+                                    <th class="col-xs-4">Internet Explorer 8</th>
+                                    <th class="col-xs-4">Internet Explorer 9</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row"><code>border-radius</code>
-                                    </th>
-                                    <td class="text-danger"><span class="glyphicon glyphicon-remove"></span> Not supported</td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> Supported</td>
+                                    <th scope="row"><code>border-radius</code></th>
+                                    <td class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><code>box-shadow</code>
-                                    </th>
-                                    <td class="text-danger"><span class="glyphicon glyphicon-remove"></span> Not supported</td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> Supported</td>
+                                    <th scope="row"><code>box-shadow</code></th>
+                                    <td class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><code>transform</code>
-                                    </th>
-                                    <td class="text-danger"><span class="glyphicon glyphicon-remove"></span> Not supported</td>
-                                    <td class="text-success"><span class="glyphicon glyphicon-ok"></span> Supported, with <code>-ms</code> prefix</td>
+                                    <th scope="row"><code>transform</code></th>
+                                    <td class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
+                                    <td class="text-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 支持, with <code>-ms</code> prefix</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><code>transition</code>
-                                    </th>
-                                    <td colspan="2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Not supported</td>
+                                    <th scope="row"><code>transition</code></th>
+                                    <td colspan="2" class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><code>placeholder</code>
-                                    </th>
-                                    <td colspan="2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Not supported</td>
+                                    <th scope="row"><code>placeholder</code></th>
+                                    <td colspan="2" class="text-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 不支持</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
-                    <p>Visit <a href="http://caniuse.com/">Can I use...</a> for details on browser support of CSS3 and HTML5 features.</p>
-
-                    <h3 id="support-ie8-respondjs">Internet Explorer 8 and Respond.js</h3>
-                    <p>Beware of the following caveats when using Respond.js in your development and production environments for Internet Explorer 8.</p>
-                    <h4 id="respond-js-x-domain">Respond.js and cross-domain CSS</h4>
-                    <p>Using Respond.js with CSS hosted on a different (sub)domain (for example, on a CDN) requires some additional setup. <a href="https://github.com/scottjehl/Respond/blob/master/README.md#cdnx-domain-setup">See the Respond.js docs</a> for details.</p>
-                    <h4 id="respond-file-proto">Respond.js and <code>file://</code></h4>
-                    <p>Due to browser security rules, Respond.js doesn't work with pages viewed via the <code>file://</code> protocol (like when opening a local HTML file). To test responsive features in IE8, view your pages over HTTP(S). <a href="https://github.com/scottjehl/Respond/blob/master/README.md#support--caveats">See the Respond.js docs</a> for details.</p>
-                    <h4 id="respond-import">Respond.js and <code>@import</code></h4>
-                    <p>Respond.js doesn't work with CSS that's referenced via <code>@import</code>. In particular, some Drupal configurations are known to use <code>@import</code>. <a href="https://github.com/scottjehl/Respond/blob/master/README.md#support--caveats">See the Respond.js docs</a> for details.</p>
-
-                    <h3 id="support-ie8-box-sizing">Internet Explorer 8 and box-sizing</h3>
-                    <p>IE8 does not fully support <code>box-sizing: border-box;</code> when combined with <code>min-width</code>, <code>max-width</code>, <code>min-height</code>, or <code>max-height</code>. For that reason, as of v3.0.1, we no longer use <code>max-width</code> on <code>.container</code>s.</p>
-
-                    <h3 id="support-ie8-font-face">Internet Explorer 8 and @font-face</h3>
-                    <p>IE8 has some issues with <code>@font-face</code> when combined with <code>:before</code>. Bootstrap uses that combination with its Glyphicons. If a page is cached, and loaded without the mouse over the window (i.e. hit the refresh button or load something in an iframe) then the page gets rendered before the font loads. Hovering over the page (body) will show some of the icons and hovering over the remaining icons will show those as well. <a href="https://github.com/twbs/bootstrap/issues/13863">See issue #13863</a> for details.</p>
-
-                    <h3 id="support-ie-compatibility-modes">IE Compatibility modes</h3>
-                    <p>Bootstrap is not supported in the old Internet Explorer compatibility modes. To be sure you're using the latest rendering mode for IE, consider including the appropriate <code>&lt;meta&gt;</code> tag in your pages:</p>
-                    <div class="highlight"><pre><code class="html"><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;X-UA-Compatible&quot;</span> <span class="na">content=</span><span class="s">&quot;IE=edge&quot;</span><span class="nt">&gt;</span></code></pre>
+                    <p>请参考 <a href="http://caniuse.com/">Can I use...</a> 以获取详细的 CSS3 和 HTML5 特性在各个浏览器上的支持情况。</p>
+                    <h3 id="support-ie8-respondjs">Internet Explorer 8 与 Respond.js</h3>
+                    <p>在开发环境和生产（线上）环境需要支持 Internet Explorer 8 时，请务必注意下面给出的警告。</p>
+                    <h4 id="respond-js-x-domain">Respond.js 与 跨域（cross-domain） CSS 的问题</h4>
+                    <p>如果 Respond.js 和 CSS 文件被放在不同的域名或子域名下面（例如，使用CDN）时需要一些额外的设置。请参考 <a href="https://github.com/scottjehl/Respond/blob/master/README.md#cdnx-domain-setup"> Respond.js 文档</a> 获取详细信息。</p>
+                    <h4 id="respond-file-proto">Respond.js 与 <code>file://</code> 协议</h4>
+                    <p>由于浏览器的安全机制，Respond.js 不能在通过 <code>file://</code> 协议（打开本地HTML文件所用的协议）访问的页面上发挥正常的功能。如果需要测试 IE8 下面的响应式特性，务必通过 http 协议访问页面（例如搭建 apache、nginx 等）。请参考 <a href="https://github.com/scottjehl/Respond/blob/master/README.md#support--caveats">Respond.js 文档</a>获取更多信息。</p>
+                    <h4 id="respond-import">Respond.js 与 <code>@import</code> 指令</h4>
+                    <p>Respond.js 不支持通过 <code>@import</code> 指令所引入的 CSS 文件。例如，Drupal 一般被配置为通过 <code>@import</code> 指令引入CSS文件，Respond.js 对其将无法起到作用。请参考 <a href="https://github.com/scottjehl/Respond/blob/master/README.md#support--caveats">Respond.js 文档</a>获取更多信息。</p>
+                    <h3 id="support-ie8-box-sizing">Internet Explorer 8 与 box-sizing 属性</h3>
+                    <p>当 <code>box-sizing: border-box;</code> 与 <code>min-width</code>、<code>max-width</code>、<code>min-height</code> 或 <code>max-height</code> 一同使用时，IE8 不能完全支持 box-sizing 属性。由于此原因，从 Bootstrap v3.0.1 版本开始，我们不再为 <code>.container</code> 赋予 <code>max-width</code> 属性。</p>
+                    <h3 id="support-ie8-font-face">Internet Explorer 8 与 @font-face</h3>
+                    <p>当 <code>@font-face</code> 与 <code>:before</code> 在 IE8 下共同使用时会出现问题。由于 Bootstrap 对 Glyphicons 的样式设置使用了这一组合方式，如果某个页面被浏览器缓存了，并且此页面不是通过点击“刷新”按钮或通过 iframe 加载的，那么就会导致字体文件尚未加载的情况下就开始绘制此页面。当鼠标滑过页面（body）时，页面上的某些图标就会显现，鼠标滑过其他没有显现的图标时，这些图标就能显示出来了。请参考 <a href="https://github.com/twbs/bootstrap/issues/13863">issue #13863</a> 了解详细信息。</p>
+                    <h3 id="support-ie-compatibility-modes">IE 兼容模式</h3>
+                    <p>Bootstrap 不支持 IE 古老的兼容模式。为了让 IE 浏览器运行最新的渲染模式下，建议将此 <code>&lt;meta&gt;</code> 标签加入到你的页面中：</p>
+                    <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span></code></pre></div>
+                    <p>按
+                        <kbd>F12</kbd> 键打开 IE 的调试工具，就可以看到 IE 当前的渲染模式是什么。</p>
+                    <p>此 meta 标签被包含在了所有 Bootstrap 文档和实例页面中，为的就是在每个被支持的 IE 版本中拥有最好的绘制效果。</p>
+                    <p>请参考 <a href="http://stackoverflow.com/questions/6771258/whats-the-difference-if-meta-http-equiv-x-ua-compatible-content-ie-edge">这个发表在 StackOverflow 上的问题</a>。</p>
+                    <h3 id="support-chinese-browsers-renderer-modes">国产浏览器高速模式</h3>
+                    <p>国内浏览器厂商一般都支持兼容模式（即 IE 内核）和高速模式（即 webkit 内核），不幸的是，所有国产浏览器都是默认使用兼容模式，这就造成由于低版本 IE （IE8 及以下）内核让基于 Bootstrap 构建的网站展现效果很糟糕的情况。幸运的是，国内浏览器厂商逐渐意识到了这一点，某些厂商已经开始有所作为了！</p>
+                    <p>将下面的 <code>&lt;meta&gt;</code> 标签加入到页面中，可以让部分国产浏览器默认采用高速模式渲染页面：</p>
+                    <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"renderer"</span> <span class="na">content=</span><span class="s">"webkit"</span><span class="nt">&gt;</span></code></pre></div>
+                    <p>目前只有<a href="http://se.360.cn/v6/help/meta.html">360浏览器</a>支持此 <code>&lt;meta&gt;</code> 标签。希望更多国内浏览器尽快采取行动、尽快进入高速时代！</p>
+                    <h3 id="support-ie10-width">Windows 8 中的 Internet Explorer 10 和 Windows Phone 8</h3>
+                    <p>Internet Explorer 10 并没有对 <strong>屏幕的宽度</strong> 和 <strong>视口（viewport）的宽度</strong> 进行区分，这就导致 Bootstrap 中的媒体查询并不能很好的发挥作用。为了解决这个问题，你可以引入下面列出的这段 CSS 代码暂时修复此问题：</p>
+                    <div class="highlight">
+<pre class="prettyprint lang-css">
+  @-ms-viewport       { width: device-width; }
+</pre>
                     </div>
-                    <p>Confirm the document mode by opening the debugging tools: press
-                        <kbd>F12</kbd> and check the "Document Mode".</p>
-                    <p>This tag is included in all of Bootstrap's documentation and examples to ensure the best rendering possible in each supported version of Internet Explorer.</p>
-                    <p>See <a href="http://stackoverflow.com/questions/6771258/whats-the-difference-if-meta-http-equiv-x-ua-compatible-content-ie-edge">this StackOverflow question</a> for more information.</p>
-
-                    <h3 id="support-ie10-width">Internet Explorer 10 in Windows 8 and Windows Phone 8</h3>
-                    <p>Internet Explorer 10 doesn't differentiate <strong>device width</strong> from <strong>viewport width</strong>, and thus doesn't properly apply the media queries in Bootstrap's CSS. Normally you'd just add a quick snippet of CSS to fix this:</p>
-                    <div class="highlight"><pre><code class="scss"><span class="k">@-ms-viewport</span>       <span class="p">{</span> <span class="na">width</span><span class="o">:</span> <span class="n">device-width</span><span class="p">;</span> <span class="p">}</span></code></pre>
+                    <p>然而，这样做并不能对 Windows Phone 8 <a href="http://blogs.windows.com/windows_phone/b/wpdev/archive/2013/10/14/introducing-windows-phone-preview-for-developers.aspx">Update 3 (a.k.a. GDR3)</a> 版本之前的设备起作用，由于这样做将导致 Windows Phone 8 设备按照桌面浏览器的方式呈现页面，而不是较窄的“手机”呈现方式，为了解决这个问题，还需要<strong>加入以下 CSS 和 JavaScript 代码来化解此问题</strong>。</p>
+                    <div class="highlight">
+<pre class="prettyprint lang-css">
+  @-webkit-viewport   { width: device-width; }
+  @-moz-viewport      { width: device-width; }
+  @-ms-viewport       { width: device-width; }
+  @-o-viewport        { width: device-width; }
+  @viewport           { width: device-width; }
+</pre>
                     </div>
-                    <p>However, this doesn't work for devices running Windows Phone 8 versions older than <a href="http://blogs.windows.com/windows_phone/b/wpdev/archive/2013/10/14/introducing-windows-phone-preview-for-developers.aspx">Update 3 (a.k.a. GDR3)</a>, as it causes such devices to show a mostly desktop view instead of narrow "phone" view. To address this, you'll need to <strong>include the following CSS and JavaScript to work around the bug</strong>.</p>
-                    <div class="highlight"><pre><code class="scss"><span class="k">@-webkit-viewport</span>   <span class="p">{</span> <span class="na">width</span><span class="o">:</span> <span class="n">device-width</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">@-moz-viewport</span>      <span class="p">{</span> <span class="na">width</span><span class="o">:</span> <span class="n">device-width</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">@-ms-viewport</span>       <span class="p">{</span> <span class="na">width</span><span class="o">:</span> <span class="n">device-width</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">@-o-viewport</span>        <span class="p">{</span> <span class="na">width</span><span class="o">:</span> <span class="n">device-width</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">@viewport</span>           <span class="p">{</span> <span class="na">width</span><span class="o">:</span> <span class="n">device-width</span><span class="p">;</span> <span class="p">}</span></code></pre>
+                    <div class="highlight">      
+<pre class="prettyprint lang-js">
+ if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+   var msViewportStyle = document.createElement('style')
+   msViewportStyle.appendChild(
+     document.createTextNode(
+       '@-ms-viewport{width:auto!important}'
+     )
+   )
+   document.querySelector('head').appendChild(msViewportStyle)
+ } 
+</pre>
                     </div>
-
-                    <div class="highlight"><pre><code class="js"><span class="k">if</span> <span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/IEMobile\/10\.0/</span><span class="p">))</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">msViewportStyle</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">)</span>
-  <span class="nx">msViewportStyle</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">createTextNode</span><span class="p">(</span>
-      <span class="s1">&#39;@-ms-viewport{width:auto!important}&#39;</span>
-    <span class="p">)</span>
-  <span class="p">)</span>
-  <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">&#39;head&#39;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">msViewportStyle</span><span class="p">)</span>
-<span class="p">}</span></code></pre>
-                    </div>
-                    <p>For more information and usage guidelines, read <a href="http://timkadlec.com/2013/01/windows-phone-8-and-device-width/">Windows Phone 8 and Device-Width</a>.</p>
-                    <p>As a heads up, we include this in all of Bootstrap's documentation and examples as a demonstration.</p>
-
-                    <h3 id="support-safari-percentages">Safari percent rounding</h3>
-                    <p>As of Safari v7.0.1 for OS X and Safari for iOS v7.0.1, Safari's rendering engine has some trouble with the number of decimal places used in our <code>.col-*-1</code> grid classes. So if you have 12 individual grid columns, you'll notice that they come up short compared to other rows of columns. We can't do much here (<a href="https://github.com/twbs/bootstrap/issues/9282">see #9282</a>) but you do have some options:</p>
+                    <p>请查看 <a href="http://timkadlec.com/2013/01/windows-phone-8-and-device-width/">Windows Phone 8 and Device-Width</a> 以了解更多信息。</p>
+                    <p>作为提醒，我们将上面的代码加入到了所有 Bootstrap 文档和实例页面中。</p>
+                    <h3 id="support-safari-percentages">Safari 对百分比数字凑整的问题</h3>
+                    <p>OS X 上搭载的 v7.1 以前 Safari 和 iOS v8.0 上搭载的 Safari 浏览器的绘制引擎对于处理 <code>.col-*-1</code> 类所对应的很长的百分比小数存在 bug。也就是说，如果你在一行（row）之中定义了12个单独的列（.col-*-1），你就会看到这一行比其他行要短一些。除了升级 Safari/iOS 外，有以下几种方式来应对此问题：</p>
                     <ul>
-                        <li>Add <code>.pull-right</code> to your last grid column to get the hard-right alignment</li>
-                        <li>Tweak your percentages manually to get the perfect rounding for Safari (more difficult than the first option)</li>
+                        <li>为最后一列添加 <code>.pull-right</code> 类，将其暴力向右对齐</li>
+                        <li>手动调整百分比数字，让其针对Safari表现更好（这比第一种方式更困难）</li>
                     </ul>
-                    <p>We'll keep an eye on this though and update our code if we have an easy solution.</p>
-
-                    <h3 id="support-fixed-position-keyboards">Modals, navbars, and virtual keyboards</h3>
-                    <h4>Overflow and scrolling</h4>
-                    <p>Support for <code>overflow: hidden</code> on the <code>&lt;body&gt;</code> element is quite limited in iOS and Android. To that end, when you scroll past the top or bottom of a modal in either of those devices' browsers, the <code>&lt;body&gt;</code> content will begin to scroll.</p>
-                    <h4>Virtual keyboards</h4>
-                    <p>Also, note that if you're using inputs in your modal or navbar, iOS has a rendering bug that doesn't update the position of fixed elements when the virtual keyboard is triggered. A few workarounds for this include transforming your elements to <code>position: absolute</code> or invoking a timer on focus to try to correct the positioning manually. This is not handled by Bootstrap, so it is up to you to decide which solution is best for your application.</p>
-                    <h4>Navbar Dropdowns</h4>
-                    <p>The <code>.dropdown-backdrop</code> element isn't used on iOS in the nav because of the complexity of z-indexing. Thus, to close dropdowns in navbars, you must directly click the dropdown element (or any other element which will fire a click event in iOS).</p>
-
-                    <h3 id="support-browser-zooming">Browser zooming</h3>
-                    <p>Page zooming inevitably presents rendering artifacts in some components, both in Bootstrap and the rest of the web. Depending on the issue, we may be able to fix it (search first and then open an issue if need be). However, we tend to ignore these as they often have no direct solution other than hacky workarounds.</p>
-
-                    <h3 id="support-printing">Printer viewports</h3>
-                    <p>Even in some modern browsers, printing can be quirky. In particular, as of Chrome v32 and regardless of margin settings, Chrome uses a viewport width significantly narrower than the physical paper size when resolving media queries while printing a webpage. This can result in Bootstrap's extra-small grid being unexpectedly activated when printing. <a href="https://github.com/twbs/bootstrap/issues/12078">See #12078 for some details.</a> Suggested workarounds:</p>
+                    <h3 id="support-fixed-position-keyboards">模态框、导航条和虚拟键盘</h3>
+                    <h4>超出范围和滚动</h4>
+                    <p><code>&lt;body&gt;</code> 元素在 iOS 和 Android 上对 <code>overflow: hidden</code> 的支持很有限。结果就是，在这两种设备上的浏览器中，当你滚动屏幕超过模态框的顶部或底部时，<code>&lt;body&gt;</code> 中的内容将开始随着滚动。</p>
+                    <h4>虚拟键盘</h4>
+                    <p>还有，如果你正在使用 fixed 定位的导航条或在模态框上面使用输入框，还会遇到 iOS 在页面绘制上的 bug，当触发虚拟键盘之后，其不会更新 fixed 定位的元素的位置。这里有几种解决方案，包括将 fixed 定位转变为 <code>position: absolute</code> 定位，或者启动一个定时器手工修正组件的位置。这些没有加入 Bootstrap 中，因此，需要由你自己选择最好的解决方案并加入到你的应用中。</p>
+                    <h4>导航条上的下拉菜单</h4>
+                    <p>在 iOS 设备上，由于导航组件（nav）的复杂的 z-indexing 属性，<code>.dropdown-backdrop</code> 元素并未被使用。因此，为了关闭导航条上的下拉菜单，必须直接点击下拉菜单上的元素（或者<a href="https://developer.mozilla.org/en-US/docs/Web/Events/click#Safari_Mobile">任何其他能够触发 iOS 上 click 事件的元素</a>）。</p>
+                    <h3 id="support-browser-zooming">浏览器的缩放功能</h3>
+                    <p>页面缩放功能不可避免的会将某些组件搞得乱七八糟，不光是 Bootstrap ，整个互联网上的所有页面都是这样。针对具体问题，我们或许可以修复它（如果有必要的话，请先搜索一下你的问题，看看是否已有解决方案，然后在向我们提交 issue）。然而，我们更倾向于忽略这些问题，由于这些问题除了一些 hack 手段，一般没有直接的解决方案。</p>
+                    <h3 id="support-sticky-hover-mobile">移动设备上应用 <code>:hover</code>/<code>:focus</code></h3>
+                    <p>尽管在大多数触摸屏上没有真正的悬停状态，大部分移动设备浏览器模拟了悬停（hover）状态并让 <code>:hover</code> 状态"多展现一会儿"。换句话说，轻触元素后开始应用 <code>:hover</code> 样式，并且在用户轻触其他的元素之后停止应用 <code>:hover</code> 样式。在这些浏览器中，Bootstrap 的 <code>:hover</code> 状态可能不是你所期望的。某些移动浏览器中的 <code>:focus</code> 状态也存在同样的问题。对于这些问题，除了完全清除这些样式，目前还没有简单的解决方法。</p>
+                    <h3 id="support-printing">打印</h3>
+                    <p>即便是在某些很现代的浏览器中，打印页面功能也还是存在很多陷阱。</p>
+                    <p>举个例子，从 Chrome v32 开始，打印一个支持媒体查询的页面时，不管如何设置留白，Chrome 总是使用一个远远小于实际页面尺寸的视口宽度的值作为页面宽度。这就导致被打印的页面总是被呈现为在超小屏幕（extra-small）上的效果（也就是激活了 Bootstrap 针对超小屏幕的栅格排布方式）。 <a href="https://github.com/twbs/bootstrap/issues/12078">参考 #12078 了解更多信息。</a> 推荐解决方案：</p>
                     <ul>
-                        <li>Embrace the extra-small grid and make sure your page looks acceptable under it.</li>
-                        <li>Customize the values of the <code>@screen-*</code> Less variables so that your printer paper is considered larger than extra-small.</li>
-                        <li>Add custom media queries to change the grid size breakpoints for print media only.</li>
+                        <li>让你的页面在超小（extra-small）屏幕上看起来不那么太差劲。</li>
+                        <li>修改 <code>@screen-*</code> Less 变量的值，让你的页面总是大于 extra-small </li>
+                        <li>添加额外的媒体查询代码，针对打印机修改栅格阈值。</li>
                     </ul>
-
-                    <h3 id="support-android-stock-browser">Android stock browser</h3>
-                    <p>Out of the box, Android 4.1 (and even some newer releases apparently) ship with the Browser app as the default web browser of choice (as opposed to Chrome). Unfortunately, the Browser app has lots of bugs and inconsistencies with CSS in general.</p>
-                    <h4>Select menus</h4>
-                    <p>On <code>&lt;select&gt;</code> elements, the Android stock browser will not display the side controls if there is a <code>border-radius</code> and/or <code>border</code> applied. (See <a href="http://stackoverflow.com/questions/14744437/html-select-box-not-showing-drop-down-arrow-on-android-version-4-0-when-set-with">this StackOverflow question</a> for details.) Use the snippet of code below to remove the offending CSS and render the <code>&lt;select&gt;</code> as an unstyled element on the Android stock browser. The user agent sniffing avoids interference with Chrome, Safari, and Mozilla browsers.</p>
-                    <div class="highlight"><pre><code class="html"><span class="nt">&lt;script&gt;</span>
-<span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">nua</span> <span class="o">=</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span>
-  <span class="kd">var</span> <span class="nx">isAndroid</span> <span class="o">=</span> <span class="p">(</span><span class="nx">nua</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;Mozilla/5.0&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">nua</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;Android &#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">nua</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;AppleWebKit&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">nua</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;Chrome&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">isAndroid</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;select.form-control&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;form-control&#39;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;100%&#39;</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">})</span>
-<span class="nt">&lt;/script&gt;</span></code></pre>
-                    </div>
-                    <p>Want to see an example? <a href="http://jsbin.com/OyaqoDO/2">Check out this JS Bin demo.</a>
-                    </p>
+                    <p>另外，从Safari v8.0 开始，固定宽度的 <code>.container</code> 会导致 Safari 使用非常小的字号来打印页面。参见 <a href="https://github.com/twbs/bootstrap/issues/14868">#14868</a> 了解跟多信息。下面这段 CSS 代码提供了一个临时解决方案：</p>
+                    <div class="highlight">    
+<pre class="prettyprint lang-css">
+  @media print {
+      .container {
+      width: auto;
+     }
+  }
+</pre>
+                    </div>        
+                    <h3 id="support-android-stock-browser">Android 系统默认浏览器</h3>
+                    <p>Android 4.1 （甚至某些较新版本）系统的默认浏览器被设置为默认打开页面的应用程序（不同于 Chrome）。不幸的是， 一般情况下，这些浏览器有很多bug以及和CSS标准不一致的地方。</p>
+                    <h4>选择菜单</h4>
+                    <p>如果 <code>&lt;select&gt;</code> 元素应用了 <code>border-radius</code> 和/或 <code>border</code> 样式，Android 系统默认的浏览器将不会显示侧边栏控件。（详见 <a href="http://stackoverflow.com/questions/14744437/html-select-box-not-showing-drop-down-arrow-on-android-version-4-0-when-set-with">这个 StackOverflow 上的问题</a> 。） 使用下面的代码片段来删除有问题的CSS并且在Android系统默认的浏览器上，<code>&lt;select&gt;</code> as an呈现为无样式元素。可以通过检测用户代理（user agent）的特征串来避免干扰 Chrome、Safari和 Mozilla 浏览器。</p>
+                    <div class="highlight"> 
+<pre  class="prettyprint lang-js">
+&lt;script&gt;
+    $(function () {
+      var nua = navigator.userAgent
+      var isAndroid = (nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1 && nua.indexOf('Chrome') === -1)
+      if (isAndroid) {
+        $('select.form-control').removeClass('form-control').css('width', '100%')
+      }
+    })
+&lt;/script&gt;                
+</pre>
+                    </div> 
+                    <p>见 <a href="http://jsbin.com/kuvoz/1"> JS Bin 上的 demo。</a></p>
+                    <h3 id="support-validators">W3C 页面源码校验</h3>
+                    <p>为了在老旧的浏览器上尽量提供最好的展现，Bootstrap 针对浏览器使用了一些 <a href="http://browserhacks.com">CSS hack</a> 手段，为的是针对特定浏览器版本弥补浏览器自身的 bug。这些 CSS hack 手段在 CSS 校验器那里会被认为是无效代码。还有一些地方，我们使用了某些未被完全标准化的 CSS 特性，纯粹是为了实现渐进式增强的思路。</p>
+                    <p>上面提到的这些校验器报告的警告信息并不会对实际使用造成影响，因为非 hack 部分的 CSS 是完全合格的，hack 部分不会对非 hack 部分的功能产生影响，这就是我们故意无视这些校验器警告的原因。</p>
+                    <p>同样，我们的 HTML 文档中也有一些针对 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=654072">Firefox bug</a> 的 hack 代码，在 HTML 校验时也会被警告。</p>
                 </div>
-
                 <div class="bs-docs-section">
-                    <h1 id="third-parties" class="page-header">Third party support</h1>
-                    <p class="lead">While we don't officially support any third party plugins or add-ons, we do offer some useful advice to help avoid potential issues in your projects.</p>
-
-                    <h3 id="third-box-sizing">Box-sizing</h3>
-                    <p>Some third party software, including Google Maps and Google Custom Search Engine, conflict with Bootstrap due to <code>* { box-sizing: border-box; }</code>, a rule which makes it so <code>padding</code> does not affect the final computed width of an element. Learn more about <a href="http://css-tricks.com/box-sizing/">box model and sizing at CSS Tricks</a>.</p>
-                    <p>Depending on the context, you may override as-needed (Option 1) or reset the box-sizing for entire regions (Option 2).</p>
-                    <div class="highlight"><pre><code class="scss"><span class="cm">/* Box-sizing resets</span>
-<span class="cm"> *</span>
-<span class="cm"> * Reset individual elements or override regions to avoid conflicts due to</span>
-<span class="cm"> * global box model settings of Bootstrap. Two options, individual overrides and</span>
-<span class="cm"> * region resets, are available as plain CSS and uncompiled Less formats.</span>
-<span class="cm"> */</span>
-
-<span class="cm">/* Option 1A: Override a single element&#39;s box model via CSS */</span>
-<span class="nc">.element</span> <span class="p">{</span>
-  <span class="na">-webkit-box-sizing</span><span class="o">:</span> <span class="no">content</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
-     <span class="na">-moz-box-sizing</span><span class="o">:</span> <span class="no">content</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
-          <span class="na">box-sizing</span><span class="o">:</span> <span class="no">content</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/* Option 1B: Override a single element&#39;s box model by using a Bootstrap Less mixin */</span>
-<span class="nc">.element</span> <span class="p">{</span>
-  <span class="nc">.box-sizing</span><span class="o">(</span><span class="nt">content-box</span><span class="o">);</span>
-<span class="p">}</span>
-
-<span class="cm">/* Option 2A: Reset an entire region via CSS */</span>
-<span class="nc">.reset-box-sizing</span><span class="o">,</span>
-<span class="nc">.reset-box-sizing</span> <span class="o">*,</span>
-<span class="nc">.reset-box-sizing</span> <span class="o">*</span><span class="nd">:before</span><span class="o">,</span>
-<span class="nc">.reset-box-sizing</span> <span class="o">*</span><span class="nd">:after</span> <span class="p">{</span>
-  <span class="na">-webkit-box-sizing</span><span class="o">:</span> <span class="no">content</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
-     <span class="na">-moz-box-sizing</span><span class="o">:</span> <span class="no">content</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
-          <span class="na">box-sizing</span><span class="o">:</span> <span class="no">content</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/* Option 2B: Reset an entire region with a custom Less mixin */</span>
-<span class="nc">.reset-box-sizing</span> <span class="p">{</span>
-  <span class="k">&amp;</span><span class="o">,</span>
-  <span class="o">*,</span>
-  <span class="o">*</span><span class="nd">:before</span><span class="o">,</span>
-  <span class="o">*</span><span class="nd">:after</span> <span class="p">{</span>
-    <span class="nc">.box-sizing</span><span class="o">(</span><span class="nt">content-box</span><span class="o">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="nc">.element</span> <span class="p">{</span>
-  <span class="nc">.reset-box-sizing</span><span class="o">();</span>
-<span class="p">}</span></code></pre>
+                    <h2 id="third-parties" class="page-header">对第三方组件的支持</h2>
+                    <div class="bs-callout bs-callout-info" id="callout-glyphicons-location">
+                      <p><i class="fa fa-pencil-square-o fa-2x"></i> 以下说明信息来自于 <a href="http://v3.bootcss.com/">Bootstrap中文官方</a> 文档说明，同样适用于Mower。</p>
                     </div>
+                    <p class="lead">虽然我们并不官方支持任何第三方插件，我们还是提供一些建议，帮你避免可能在你的项目中会出现的问题。</p>
+                    <h3 id="third-box-sizing">box-sizing 属性</h3>
+                    <p>某些第三方软件，包括 Google 地图和 Google 定制搜索引擎都会由于 <code>* { box-sizing: border-box; }</code> 的设置而产生冲突，这一设置使 <code>padding</code> 不影响页面元素最终宽度的计算。更多信息请参考 <a href="http://css-tricks.com/box-sizing/">盒模型与尺寸计算 - CSS Tricks</a>。</p>
+                    <p>根据不同情况，你可能需要根据情况覆盖（第1种选择）或为所有区域设置（第2种选择）。</p>
+                    <div class="highlight">
+<pre class="prettyprint lang-css">
+/* Box-sizing resets
+*
+* 为了避免 Bootstrap 设置的全局盒模型所带来的影响，可以重置单个页面元素或覆盖整个区域的盒模型。
+* 你有两种选择：覆盖单个页面元素或重置整个区域。它们都可以通过纯 CSS 或 LESS 代码的形式实现。
+*/
+
+/* Option 1A: 通过 CSS 代码覆盖单个页面元素的盒模型 */
+.element {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+
+/* Option 1B: 通过使用 Bootstrap 提供的 LESS mixin 覆盖单个页面元素的盒模型 */
+.element {
+  .box-sizing(content-box);
+}
+
+/* Option 2A: 通过 CSS 代码重置整个区域 */
+.reset-box-sizing,
+.reset-box-sizing *,
+.reset-box-sizing *:before,
+.reset-box-sizing *:after {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+
+/* Option 2B: 通过使用自定义的 LESS mixin 重置整个区域 */
+.reset-box-sizing {
+  &,
+  *,
+  *:before,
+  *:after {
+    .box-sizing(content-box);
+  }
+}
+.element {
+  .reset-box-sizing();
+}
+</pre></div>
                 </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="accessibility" class="page-header">Accessibility</h1>
-                    <p class="lead">Bootstrap follows common web standards and&mdash;with minimal extra effort&mdash;can be used to create sites that are accessible to those using
-                        <abbr title="Assistive Technology" class="initialism">AT</abbr>.</p>
-
-                    <h3>Skip navigation</h3>
-                    <p>If your navigation contains many links and comes before the main content in the DOM, add a <code>Skip to main content</code> link immediately after your opening <code>&lt;body&gt;</code> tag. <a href="http://a11yproject.com/posts/skip-nav-links/">(read why)</a>
-                    </p>
-                    <div class="highlight"><pre><code class="html"><span class="nt">&lt;body&gt;</span>
-  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#content&quot;</span> <span class="na">class=</span><span class="s">&quot;sr-only sr-only-focusable&quot;</span><span class="nt">&gt;</span>Skip to main content<span class="nt">&lt;/a&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span> <span class="na">id=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
-    The main page content.
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/body&gt;</span></code></pre>
-                    </div>
-
-                    <h3>Nested headings</h3>
-                    <p>When nesting headings (<code>&lt;h1&gt;</code> - <code>&lt;h6&gt;</code>), your primary document header should be an <code>&lt;h1&gt;</code>. Subsequent headings should make logical use of <code>&lt;h2&gt;</code> - <code>&lt;h6&gt;</code> such that screen readers can construct a table of contents for your pages.</p>
-                    <p>Learn more at <a href="http://squizlabs.github.io/HTML_CodeSniffer/Standards/Section508/">HTML CodeSniffer</a> and <a href="http://accessibility.psu.edu/headings">Penn State's AccessAbility</a>.</p>
-
-                    <h3>Additional resources</h3>
-                    <ul>
-                        <li><a href="https://github.com/squizlabs/HTML_CodeSniffer">"HTML Codesniffer" bookmarklet for identifying accessibility issues</a>
-                        </li>
-                        <li><a href="http://a11yproject.com/">The A11Y Project</a>
-                        </li>
-                        <li><a href="https://developer.mozilla.org/en-US/docs/Accessibility">MDN accessibility documentation</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="license-faqs" class="page-header">License FAQs</h1>
-                    <p class="lead">Bootstrap is released under the MIT license and is copyright 2014 Twitter. Boiled down to smaller chunks, it can be described with the following conditions.</p>
-
-                    <h4>It requires you to:</h4>
-                    <ul>
-                        <li>Include the license and copyright notice in your works</li>
-                    </ul>
-
-                    <h4>It permits you to:</h4>
-                    <ul>
-                        <li>Freely download and use Bootstrap, in whole or in part, for personal, private, company internal, or commercial purposes</li>
-                        <li>Use Bootstrap in packages or distributions that you create</li>
-                        <li>Modify the source code</li>
-                        <li>Grant a sublicense to modify and distribute Bootstrap to third parties not included in the license</li>
-                    </ul>
-
-                    <h4>It forbids you to:</h4>
-                    <ul>
-                        <li>Hold the authors and license owners liable for damages as Bootstrap is provided without warranty</li>
-                        <li>Hold the creators or copyright holders of Bootstrap liable</li>
-                        <li>Redistribute any piece of Bootstrap without proper attribution</li>
-                        <li>Use any marks owned by Twitter in any way that might state or imply that Twitter endorses your distribution</li>
-                        <li>Use any marks owned by Twitter in any way that might state or imply that you created the Twitter software in question</li>
-                    </ul>
-
-                    <h4>It does not require you to:</h4>
-                    <ul>
-                        <li>Include the source of Bootstrap itself, or of any modifications you may have made to it, in any redistribution you may assemble that includes it</li>
-                        <li>Submit changes that you make to Bootstrap back to the Bootstrap project (though such feedback is encouraged)</li>
-                    </ul>
-
-                    <p>The full Bootstrap license is located <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE">in the project repository</a> for more information.</p>
-                </div>
-
-                <div class="bs-docs-section">
-                    <h1 id="translations" class="page-header">Translations</h1>
-
-                    <p class="lead">Community members have translated Bootstrap's documentation into various languages. None are officially supported and they may not always be up to date.</p>
-                    <ul>
-
-                        <li><a href="http://v3.bootcss.com/" hreflang="zh">Bootstrap 中文文档 (Chinese)</a>
-                        </li>
-
-                        <li><a href="http://www.oneskyapp.com/docs/bootstrap/fr" hreflang="fr">Bootstrap en Français (French)</a>
-                        </li>
-
-                        <li><a href="http://holdirbootstrap.de/" hreflang="de">Bootstrap auf Deutsch (German)</a>
-                        </li>
-
-                        <li><a href="http://www.hackerstribe.com/guide/IT-bootstrap-3.1.1/" hreflang="it">Bootstrap in Italiano (Italian)</a>
-                        </li>
-
-                        <li><a href="http://bootstrapk.com/BS3/" hreflang="ko">Bootstrap 한국어 (Korean)</a>
-                        </li>
-
-                        <li><a href="http://www.oneskyapp.com/docs/bootstrap/ru" hreflang="ru">Bootstrap по-русски (Russian)</a>
-                        </li>
-
-                        <li><a href="http://www.oneskyapp.com/docs/bootstrap/es" hreflang="es">Bootstrap en Español (Spanish)</a>
-                        </li>
-
-                        <li><a href="http://twbs.site-konstruktor.com.ua/" hreflang="uk">Bootstrap ua Українською (Ukrainian)</a>
-                        </li>
-
-                    </ul>
-                    <p><strong class="text-danger">We don't help organize or host translations, we just link to them.</strong>
-                    </p>
-                    <p>Finished a new or better translation? Open a pull request to add it to our list.</p>
-                </div>
-
-
             </div>
+
             <div class="col-md-3">
                 <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
                     <ul class="nav bs-docs-sidenav">
 
                         <li>
                             <a href="#intruduction">说明</a>
-                        </li>
-                        <li>
-                            <a href="#whats-included">What's included</a>
-                            <ul class="nav">
-                                <li><a href="#whats-included-precompiled">Precompiled</a>
+                             <ul class="nav">
+                                <li><a href="#with-bootstrap">与bootstrap的关系</a>
                                 </li>
-                                <li><a href="#whats-included-source">Source code</a>
+                                <li><a href="#choice-mower">选择使用Mower</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#grunt">Compiling CSS and JavaScript</a>
+                            <a href="#rules">约定</a>
                             <ul class="nav">
-                                <li><a href="#grunt-installing">Installing Grunt</a>
+                                <li><a href="#rules-uitype">UI元素类型及定义</a>
                                 </li>
-                                <li><a href="#grunt-commands">Available Grunt commands</a>
+                                <li><a href="#rules-status">通用状态和参数</a>
                                 </li>
-                                <li><a href="#grunt-troubleshooting">Troubleshooting</a>
+                                 <li><a href="#rules-naming">界面元素的命名</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#template">Basic template</a>
-                        </li>
-                        <li>
-                            <a href="#examples">Examples</a>
+                            <a href="#fileContent">文件目录结构</a>
                             <ul class="nav">
-                                <li><a href="#examples-framework">Using the framework</a>
+                                <li><a href="#fileContent-ctx">预编译的内容</a>
                                 </li>
-                                <li><a href="#examples-navbars">Navbars in action</a>
-                                </li>
-                                <li><a href="#examples-custom">Custom components</a>
-                                </li>
-                                <li><a href="#examples-experiments">Experiments</a>
+                                <li><a href="#fileContent-struc">源码目录结构</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#community">Community</a>
-                        </li>
-                        <li>
-                            <a href="#disable-responsive">Disabling responsiveness</a>
-                        </li>
-                        <li>
-                            <a href="#migration">Migrating from 2.x to 3.0</a>
-                        </li>
-                        <li>
-                            <a href="#support">Browser and device support</a>
+                            <a href="#compile">编译及定制</a>
                             <ul class="nav">
-                                <li><a href="#support-browsers">Supported browsers</a>
-                                </li>
-                                <li><a href="#support-ie8-ie9">Internet Explorer 8-9</a>
-                                </li>
-                                <li><a href="#support-ie8-respondjs">IE8 and Respond.js</a>
-                                </li>
-                                <li><a href="#support-ie8-box-sizing">IE8 and box-sizing</a>
-                                </li>
-                                <li><a href="#support-ie8-font-face">IE8 and @font-face</a>
-                                </li>
-                                <li><a href="#support-ie-compatibility-modes">IE Compatibility modes</a>
-                                </li>
-                                <li><a href="#support-ie10-width">IE10 and Windows (Phone) 8</a>
-                                </li>
-                                <li><a href="#support-safari-percentages">Safari percent rounding</a>
-                                </li>
-                                <li><a href="#support-fixed-position-keyboards">Modals, navbars, and virtual keyboards</a>
-                                </li>
-                                <li><a href="#support-browser-zooming">Browser zooming</a>
-                                </li>
-                                <li><a href="#support-printing">Printer viewports</a>
-                                </li>
-                                <li><a href="#support-android-stock-browser">Android stock browser</a>
+                                <li><a href="#grunt-installing">安装Grunt</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#third-parties">Third party support</a>
+                            <a href="#support">浏览器及设备的支持情况</a>
+                            <ul class="nav">
+                                <li><a href="#support-browsers">被支持的浏览器</a>
+                                </li>
+                                <li><a href="#support-ie8-ie9">Internet Explorer 8和9</a>
+                                </li>
+                                <li><a href="#support-ie8-respondjs">IE8 与 Respond.js</a>
+                                </li>
+                                <li><a href="#support-ie8-box-sizing">IE8 与 box-sizing属性</a>
+                                </li>
+                                <li><a href="#support-ie8-font-face">IE8 与 @font-face</a>
+                                </li>
+                                <li><a href="#support-ie-compatibility-modes">IE兼容模式</a>
+                                </li>
+                                <li><a href="#support-chinese-browsers-renderer-modes">国产浏览器高速模式</a>
+                                </li>
+                                <li><a href="#support-ie10-width">Windows 8 中的IE10 和 Windows (Phone) 8</a>
+                                </li>
+                                <li><a href="#support-safari-percentages">Safari对百分比数字凑整的问题</a>
+                                </li>
+                                <li><a href="#support-fixed-position-keyboards">模态框、导航条和虚拟键盘</a>
+                                </li>
+                                <li><a href="#support-browser-zooming">浏览器的缩放功能</a>
+                                </li>
+                                <li><a href="#support-sticky-hover-mobile">移动设备上应用：hover/:focus</a>
+                                </li>
+                                <li><a href="#support-printing">打印</a>
+                                </li>
+                                <li><a href="#support-android-stock-browser">Android 系统默认浏览器</a>
+                                </li>
+                                <li><a href="#support-validators">W3C 页面源码校验</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
-                            <a href="#accessibility">Accessibility</a>
+                            <a href="#third-parties">对第三方组件的支持</a>
+                             <ul class="nav">
+                                <li><a href="#third-box-sizing">box-sizing 属性</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li>
-                            <a href="#license-faqs">License FAQs</a>
-                        </li>
-                        <li>
-                            <a href="#translations">Translations</a>
-                        </li>
-
-
                     </ul>
                     <a class="back-to-top" href="#top">
-              Back to top
+              回到顶部
             </a>
 
                 </div>
@@ -1023,70 +697,15 @@ Copy any changes made here over to the README too. -->
         </div>
     </div>
 
-    <!-- Footer
-================================================== -->
-    <footer class="bs-docs-footer" role="contentinfo">
-        <div class="container">
-            <div class="bs-docs-social">
-                <ul class="bs-docs-social-buttons">
-                    <li>
-                        <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=twbs&amp;repo=bootstrap&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
-                    </li>
-                    <li>
-                        <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=twbs&amp;repo=bootstrap&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
-                    </li>
-                    <li class="follow-btn">
-                        <a href="https://twitter.com/twbootstrap" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @twbootstrap</a>
-                    </li>
-                    <li class="tweet-btn">
-                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://getbootstrap.com/" data-count="horizontal" data-via="twbootstrap" data-related="mdo:Creator of Bootstrap">Tweet</a>
-                    </li>
-                </ul>
-            </div>
-
-
-            <p>Designed and built with all the love in the world by <a href="http://twitter.com/mdo" target="_blank">@mdo</a> and <a href="http://twitter.com/fat" target="_blank">@fat</a>.</p>
-            <p>Maintained by the <a href="https://github.com/twbs?tab=members">core team</a> with the help of <a href="https://github.com/twbs/bootstrap/graphs/contributors">our contributors</a>.</p>
-            <p>Code licensed under <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
-            <ul class="bs-docs-footer-links muted">
-                <li>Currently v3.2.0</li>
-                <li>&middot;</li>
-                <li><a href="https://github.com/twbs/bootstrap">GitHub</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="index.html#examples">Examples</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="../2.3.2/index.html">v2.3.2 docs</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="../about/index.html">About</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="http://expo.getbootstrap.com/">Expo</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="http://blog.getbootstrap.com/">Blog</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="https://github.com/twbs/bootstrap/issues?state=open">Issues</a>
-                </li>
-                <li>&middot;</li>
-                <li><a href="https://github.com/twbs/bootstrap/releases">Releases</a>
-                </li>
-            </ul>
-        </div>
-    </footer>
-
     <!-- Bootstrap core JavaScript
 ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="libs/jquery/jquery-1.11.1.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="assets/plugins/google-code-prettify/prettify.js"></script>
+
     <script src="assets/js/docs.min.js"></script>
-
-
-
 </body>
 
 </html>

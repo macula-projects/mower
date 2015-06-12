@@ -33,14 +33,30 @@ var App = (function($, utils, window, document, undefined) {
         }
     };
 
+    var loading = function() {
+        /*Loading*/
+        $(window)
+            .load(function() {
+                setTimeout(function() {
+                    $('.loading-container')
+                        .addClass('loading-inactive');
+                }, 1000);
+            });
+    };
+
+
+
 
     // public functions
     return {
         //main function
         init: function() {
+            
+            loading();
+            
             this.initMainMenu();
             this.initBreadCrumb();
-            this.initiateSideMenu();
+            this.initSidebarMenu();
 
             utils.addResizeHandler(resizeHeaderMenu);
             resizeHeaderMenu();
@@ -93,9 +109,12 @@ var App = (function($, utils, window, document, undefined) {
                 event.preventDefault();
 
                 var $this = $(this),
-                    rcode = $this.attr('mcode');
+                    rcode = $this.attr('mcode'),
+                    menuObj = $(".sidebar-menu").sidebarMenu('findMenuByCode', rcode),
+                    purl;
 
-                var purl = window.location.href;
+
+                purl = window.location.href;
                 var i = purl.indexOf("?");
                 purl = purl.substring(0, i);
 
@@ -109,7 +128,7 @@ var App = (function($, utils, window, document, undefined) {
                 window.location = purl;
             });
         },
-        initiateSideMenu: function() {
+        initSidebarMenu: function() {
 
             //Sidebar Toggler
             $(".sidebar-toggler").on('click', function() {

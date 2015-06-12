@@ -560,7 +560,7 @@
      * data-role=tagsselect
      */
     $(function() {
-        $("input[data-role=tagsselect], select[multiple][data-role=tagsselect]").tagsselect();
+        $('input[rel=tagsselect], select[multiple][rel=tagsselect]').tagsselect();
     });
 
 })(window.jQuery);

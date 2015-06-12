@@ -96,6 +96,16 @@ h6.block {
   padding-bottom: 10px;
 }
 
+h1.header-dividing,
+h2.header-dividing,
+h3.header-dividing,
+h4.header-dividing,
+h5.header-dividing,
+h6.header-dividing {
+  padding-bottom: 9px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
 .btn {
   font-size: @font-size-base;
 }
@@ -158,8 +168,6 @@ div,
 input,
 select,
 textarea,
-span,
-img,
 table,
 td,
 th,
@@ -222,6 +230,23 @@ legend {
 }
 
 
+/***
+Fontawesome Icons
+***/
+[class^="fa-"]:not(.fa-stack),
+[class^="glyphicon-"],
+[class^="icon-"],
+[class*=" fa-"]:not(.fa-stack),
+[class*=" glyphicon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  font-size: 14px;
+  *margin-right: .3em;
+  line-height: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+
 // header {
 //   display: block;
 //   padding: 8px 0;
@@ -243,45 +268,45 @@ legend {
 
 /* Double hr and hr margin
  ========================================================================== */
-.mu-hr-double {
+.hr-double {
   border-bottom: 1px solid #FEFEFE;
   border-top: 1px solid #E0DFDF;
   height: 3px;
 }
 
-hr.dotted, .mu-hr-dotted {
+hr.dotted, .hr-dotted {
   border-top-style: dotted;
 }
 
-.mu-hr-double.dotted {
+.hr-double.dotted {
   border-bottom-style: dotted;
 }
 
-.mu-hr-14 {
+.hr-14 {
   margin: @box-14 0;
 }
 
-.mu-hr-12 {
+.hr-12 {
   margin: @box-12 0;
 }
 
-.mu-hr-10 {
+.hr-10 {
   margin: @box-10 0;
 }
 
-.mu-hr-8 {
+.hr-8 {
   margin: @box-8 0;
 }
 
-.mu-hr-6 {
+.hr-6 {
   margin: @box-6 0;
 }
 
-.mu-hr-4 {
+.hr-4 {
   margin: @box-4 0;
 }
 
-.mu-hr-2 {
+.hr-2 {
   margin: @box-size-base 0;
 }
 
@@ -293,9 +318,9 @@ hr.dotted, .mu-hr-dotted {
  * Display
  */
 
-.mu-display-block { display: block !important; }
-.mu-display-inline { display: inline !important; }
-.mu-display-inline-block { display: inline-block !important; }
+.display-block { display: block !important; }
+.display-inline { display: inline !important; }
+.display-inline-block { display: inline-block !important; }
 
 /*
  * Visibility
@@ -305,48 +330,48 @@ hr.dotted, .mu-hr-dotted {
 /* Desktop and bigger */
 @media (min-width: @screen-md) {
 
-  .mu-visible-small { display: none !important; }
-  .mu-visible-medium { display: none !important; }
-  .mu-hidden-large { display: none !important; }
+  .visible-small { display: none !important; }
+  .visible-medium { display: none !important; }
+  .hidden-large { display: none !important; }
 
 }
 
 /* Only tablets portrait */
 @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
 
-  .mu-visible-small { display: none !important; }
-  .mu-visible-large { display: none !important ; }
-  .mu-hidden-medium { display: none !important; }
+  .visible-small { display: none !important; }
+  .visible-large { display: none !important ; }
+  .hidden-medium { display: none !important; }
 
 }
 
 /* Phone landscape and smaller */
 @media (max-width: @screen-xs-max) {
 
-  .mu-visible-medium { display: none !important; }
-  .mu-visible-large { display: none !important; }
-  .mu-hidden-small { display: none !important; }
+  .visible-medium { display: none !important; }
+  .visible-large { display: none !important; }
+  .hidden-small { display: none !important; }
 
 }
 
 /* Remove from the flow and screen readers on any device */
-.mu-hidden {
+.hidden {
   display: none !important;
   visibility: hidden !important;
 }
 
 /* It's hidden, but still affects layout */
-.mu-invisible { visibility: hidden !important; }
+.invisible { visibility: hidden !important; }
 
 /* Show on hover */
-.mu-visible-hover:hover .mu-hidden,
-.mu-visible-hover:hover .mu-invisible {
+.visible-hover:hover .hidden,
+.visible-hover:hover .invisible {
   display: block !important;
   visibility: visible !important;
 }
 
-.mu-visible-hover-inline:hover .mu-hidden,
-.mu-visible-hover-inline:hover .mu-invisible {
+.visible-hover-inline:hover .hidden,
+.visible-hover-inline:hover .invisible {
   display: inline-block !important;
   visibility: visible !important;
 }
@@ -354,11 +379,11 @@ hr.dotted, .mu-hr-dotted {
 /* Position of block elements
  ========================================================================== */
 
-.mu-position-relative {
+.position-relative {
   position: relative;
 }
 
-.mu-position-absolute {
+.position-absolute {
   position: absolute;
 }
 
@@ -371,11 +396,11 @@ hr.dotted, .mu-hr-dotted {
  * 1. Prevent content overflow on small devices
  */
 
-.mu-float-left { float: left; }
-.mu-float-right { float: right; }
+.float-left { float: left; }
+.float-right { float: right; }
 
 /* 1 */
-[class*='mu-float-'] { max-width: 100%; }
+[class*='float-'] { max-width: 100%; }
 
 
 /* Alignment of images and objects
@@ -385,17 +410,17 @@ hr.dotted, .mu-hr-dotted {
  * Alignment
  */
 
-[class*='mu-align-'] {
+[class*='align-'] {
   display: block;
   margin-bottom: @utility-align-vertical;
 }
 
-.mu-align-left {
+.align-left {
   margin-right: @utility-align-horizontal;
   float: left;
 }
 
-.mu-align-right {
+.align-right {
   margin-left: @utility-align-horizontal;
   float: right;
 }
@@ -403,13 +428,13 @@ hr.dotted, .mu-hr-dotted {
 /* Tablet and bigger */
 @media (min-width: @screen-sm) {
 
-  .mu-align-medium-left {
+  .align-medium-left {
     margin-right: @utility-align-horizontal;
     margin-bottom: @utility-align-vertical;
     float: left;
   }
 
-  .mu-align-medium-right {
+  .align-medium-right {
     margin-left: @utility-align-horizontal;
     margin-bottom: @utility-align-vertical;
     float: right;
@@ -417,7 +442,7 @@ hr.dotted, .mu-hr-dotted {
 
 }
 
-.mu-align-center {
+.align-center {
   margin-left: auto;
   margin-right: auto;
 }
@@ -430,13 +455,13 @@ hr.dotted, .mu-hr-dotted {
  * Remove whitespace between child elements when using `inline-block`
  */
 
-.mu-vertical-align { font-size: 0.001px; }
+.vertical-align { font-size: 0.001px; }
 
 /*
- *  The `mu-vertical-align` container needs a specific height
+ *  The `vertical-align` container needs a specific height
  */
 
-.mu-vertical-align:before {
+.vertical-align:before {
   content: '';
   display: inline-block;
   height: 100%;
@@ -448,22 +473,22 @@ hr.dotted, .mu-hr-dotted {
  * 1. Reset whitespace hack
  */
 
-.mu-vertical-align-middle,
-.mu-vertical-align-bottom {
+.vertical-align-middle,
+.vertical-align-bottom {
   display: inline-block;
   max-width: 100%;
   /* 1 */
   font-size: 1rem;
 }
 
-.mu-vertical-align-middle { vertical-align: middle; }
-.mu-vertical-align-bottom { vertical-align: bottom; }
+.vertical-align-middle { vertical-align: middle; }
+.vertical-align-bottom { vertical-align: bottom; }
 
 /*
  *  This helper class is very useful to extend the `html` and `body` element to the full height of the page.
  */
 
-.mu-height-1-1 { height: 100%; }
+.height-1-1 { height: 100%; }
 
 
 /* Responsive objects
@@ -474,8 +499,8 @@ hr.dotted, .mu-hr-dotted {
  * 1. Corrects max-width/max-height behavior if padding and border are used
  */
 
-.mu-responsive-width,
-.mu-responsive-height {
+.responsive-width,
+.responsive-height {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -484,7 +509,7 @@ hr.dotted, .mu-hr-dotted {
  * Responsiveness: Sets a maximum width relative to the parent and auto scales the height
  */
 
-.mu-responsive-width {
+.responsive-width {
   max-width: 100%;
   height: auto;
 }
@@ -494,7 +519,7 @@ hr.dotted, .mu-hr-dotted {
  * Only works if the parent element has a fixed height.
  */
 
-.mu-responsive-height {
+.responsive-height {
   max-height: 100%;
   width: auto;
 }
@@ -508,52 +533,52 @@ hr.dotted, .mu-hr-dotted {
  * Add margin if adjacent element
  */
 
-.mu-margin { margin-bottom: @utility-margin; }
-* + .mu-margin { margin-top: @utility-margin; }
+.margin { margin-bottom: @utility-margin; }
+* + .margin { margin-top: @utility-margin; }
 
-.mu-margin-top { margin-top: @utility-margin !important; }
-.mu-margin-bottom { margin-bottom: @utility-margin !important; }
-.mu-margin-left { margin-left: @utility-margin !important; }
-.mu-margin-right { margin-right: @utility-margin !important; }
+.margin-top { margin-top: @utility-margin !important; }
+.margin-bottom { margin-bottom: @utility-margin !important; }
+.margin-left { margin-left: @utility-margin !important; }
+.margin-right { margin-right: @utility-margin !important; }
 
 /*
  * Larger margins
  */
 
-.mu-margin-large { margin-bottom: @utility-margin-large; }
-* + .mu-margin-large { margin-top: @utility-margin-large; }
+.margin-large { margin-bottom: @utility-margin-large; }
+* + .margin-large { margin-top: @utility-margin-large; }
 
-.mu-margin-large-top { margin-top: @utility-margin-large !important; }
-.mu-margin-large-bottom { margin-bottom: @utility-margin-large !important; }
-.mu-margin-large-left { margin-left: @utility-margin-large !important; }
-.mu-margin-large-right { margin-right: @utility-margin-large !important; }
+.margin-large-top { margin-top: @utility-margin-large !important; }
+.margin-large-bottom { margin-bottom: @utility-margin-large !important; }
+.margin-large-left { margin-left: @utility-margin-large !important; }
+.margin-large-right { margin-right: @utility-margin-large !important; }
 
 /*
  * Smaller margins
  */
 
-.mu-margin-small { margin-bottom: @utility-margin-small; }
-* + .mu-margin-small { margin-top: @utility-margin-small; }
+.margin-small { margin-bottom: @utility-margin-small; }
+* + .margin-small { margin-top: @utility-margin-small; }
 
-.mu-margin-small-top { margin-top: @utility-margin-small !important; }
-.mu-margin-small-bottom { margin-bottom: @utility-margin-small !important; }
-.mu-margin-small-left { margin-left: @utility-margin-small !important; }
-.mu-margin-small-right { margin-right: @utility-margin-small !important; }
+.margin-small-top { margin-top: @utility-margin-small !important; }
+.margin-small-bottom { margin-bottom: @utility-margin-small !important; }
+.margin-small-left { margin-left: @utility-margin-small !important; }
+.margin-small-right { margin-right: @utility-margin-small !important; }
 
 /*
  * Remove margins
  */
 
-.mu-margin-remove { margin: 0 !important; }
-.mu-margin-top-remove { margin-top: 0 !important; }
-.mu-margin-bottom-remove { margin-bottom: 0 !important; }
-.mu-margin-left-remove { margin-left: 0 !important; }
-.mu-margin-right-remove { margin-right: 0 !important; }
+.marginless { margin: 0 !important; }
+.margin-top-less { margin-top: 0 !important; }
+.margin-bottom-less { margin-bottom: 0 !important; }
+.margin-left-less { margin-left: 0 !important; }
+.margin-right-less { margin-right: 0 !important; }
 
 /*
  * Remove all
  */
-.mu-margin-padding-remove {
+.margin-padding-less {
   margin: 0px !important;
   padding: 0px !important;
 }
@@ -565,49 +590,49 @@ hr.dotted, .mu-hr-dotted {
  * Remove paddings
  */
 
-.mu-padding-remove { padding: 0 !important; }
-.mu-padding-top-remove { padding-top: 0 !important; }
-.mu-padding-bottom-remove { padding-bottom: 0 !important; }
-.mu-padding-left-remove { padding-left: 0 !important; }
-.mu-padding-right-remove { padding-right: 0 !important; }
+.paddingless { padding: 0 !important; }
+.padding-top-less { padding-top: 0 !important; }
+.padding-bottom-less { padding-bottom: 0 !important; }
+.padding-left-less { padding-left: 0 !important; }
+.padding-right-less { padding-right: 0 !important; }
 
 
 /* Border
  ========================================================================== */
 
-.mu-border-circle { border-radius: 50%; }
-.mu-border-rounded { border-radius: @utility-border-rounded; }
+.border-circle { border-radius: 50%; }
+.border-rounded { border-radius: @utility-border-rounded; }
 
 /*
  * Remove border
  */
 
-.mu-border-remove { border: 0 none !important; }
-.mu-border-top-remove { border-top: 0 none  !important; }
-.mu-border-bottom-remove { border-bottom: 0 none !important; }
-.mu-border-left-remove { border-left: 0 none !important; }
-.mu-border-right-remove { border-right: 0 none !important; }
+.borderless { border: 0 none !important; }
+.border-top-less { border-top: 0 none  !important; }
+.border-bottom-less { border-bottom: 0 none !important; }
+.border-left-less { border-left: 0 none !important; }
+.border-right-less { border-right: 0 none !important; }
 
 
 /* Underline
  ========================================================================== */
 
-.mu-underline_remove {
+.underlineless {
   text-decoration: none ! important;
 }
 
-.mu-underline_remove:hover {
+.underlineless:hover {
   text-decoration: none ! important;
 }
 
 /* box-shadow
  ========================================================================== */
 
-.mu-box-shadow-remove {
+.boxshadowless {
   box-shadow: none ! important;
 }
 
-.mu-text-shadow-remove {
+.textshadowless {
   text-shadow: none ! important;
 }
 
@@ -615,11 +640,11 @@ hr.dotted, .mu-hr-dotted {
 /* Link
  ========================================================================== */
 
-.mu-link-muted,
-.mu-link-muted a { color: @utility-link-muted-color; }
+.link-muted,
+.link-muted a { color: @utility-link-muted-color; }
 
-.mu-link-muted:hover,
-.mu-link-muted a:hover { color: @utility-link-muted-hover-color; }
+.link-muted:hover,
+.link-muted a:hover { color: @utility-link-muted-hover-color; }
 
 
 /* Scrollable
@@ -629,7 +654,7 @@ hr.dotted, .mu-hr-dotted {
  * Enable scrolling for preformatted text
  */
 
-.mu-scrollable-text {
+.scrollable-text {
   height: @utility-scrollable-text-height;
   overflow-y: scroll;
   resize: both;
@@ -639,7 +664,7 @@ hr.dotted, .mu-hr-dotted {
  * Box with scrolling enabled
  */
 
-.mu-scrollable-box {
+.scrollable-box {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: @utility-scrollable-box-height;
@@ -653,120 +678,158 @@ hr.dotted, .mu-hr-dotted {
  * Remove margin from the last-child
  */
 
-.mu-scrollable-box > :last-child { margin-bottom: 0; }
+.scrollable-box > :last-child { margin-bottom: 0; }
 
 
 /* Background color.
  ========================================================================== */
 
-.mu-bg-blue {
-  background-color: #4b8df8 ;
+.bg-blue {
+  background-color: @blue;
 }
 
-.mu-bg-blue2 {
-  background-color: #57889c ;
+.bg-light-blue {
+  background-color: @lightblue;
 }
 
-.mu-bg-light-blue {
-  color: #93CBF9;
+.bg-dark-blue {
+  background-color: @darkblue;
 }
 
-.mu-bg-light-blue2 {
-  background-color: #92a2a8 ;
+.bg-red {
+  background-color: @red;
 }
 
-.mu-bg-dark-blue {
-  background-color: #4c4f53 ;
+.bg-dark-red {
+  background-color: @darkred ;
 }
 
-.mu-bg-red {
-  background-color: #e02222 ;
+.bg-yellow {
+  background-color: @yellow ;
 }
 
-.mu-bg-red2 {
-  background-color: #a90329 ;
+.bg-green {
+  background-color: @green ;
 }
 
-.mu-bg-light-red {
-  background-color: #a65858 ;
+.bg-pale-green {
+  background-color: @palegreen;
+}
+.bg-dark-green {
+  background-color: @darkgreen ;
 }
 
-.mu-bg-yellow {
-  background-color: #ffb848 ;
+.bg-purple {
+  background-color: @purple ;
 }
 
-.mu-bg-yellow2 {
-  background-color: #b09b5b ;
+.bg-light-gray {
+  background-color: @lightgray;
 }
 
-.mu-bg-green {
-  background-color: #35aa47 ;
+.bg-grey {
+  background-color: @gray ;
 }
 
-.mu-bg-green2 {
-  background-color: #356e35 ;
-}
-.mu-bg-light-green {
-  background-color: #71843f ;
-}
-.mu-bg-dark-green {
-  background-color: #496949 ;
+.bg-dark-gray {
+  background-color: @darkgray ;
 }
 
-.mu-bg-purple {
-  background-color: #852b99 ;
+.bg-lighten {
+  background-color: @lighten ;
 }
 
-.mu-bg-purple2 {
-  background-color: #6e587a ;
+.bg-white {
+  background-color: @white ;
 }
 
-.mu-bg-dark {
-  background-color: #555555 ;
+.bg-orange {
+  background-color: @orange ;
 }
 
-.mu-bg-dark2 {
-  background-color: #404040 ;
+.bg-dark-orange {
+  background-color: @darkorange ;
 }
 
-.mu-bg-grey {
-  background-color: #fafafa ;
+.bg-pink {
+  background-color: @pink ;
 }
 
-.mu-bg-dark-gray {
-  background-color: #525252 ;
+.bg-dark-pink {
+  background-color: @darkpink ;
 }
 
-.mu-bg-lighten {
-  background-color: #d5e7ec ;
+.bg-magenta {
+  background-color: @magenta ;
 }
 
-.mu-bg-white {
-  background-color: #ffffff ;
+.bg-teal {
+  background-color: @teal ;
 }
 
-.mu-bg-orange {
-  background-color: #c79121 ;
+
+.bg-snow {
+  background-color: @snow ;
 }
 
-.mu-bg-dark-orange {
-  background-color: #a57225 ;
+.bg-whitesmoke {
+  background-color: @whitesmoke;
 }
 
-.mu-bg-pink {
-  background-color: #ac5287 ;
+.bg-seashell {
+  background-color: @seashell ;
 }
 
-.mu-bg-dark-pink {
-  background-color: #a8829f ;
+.bg-ivory {
+  background-color: @ivory ;
 }
 
-.mu-bg-magenta {
-  background-color: #6e3671 ;
+.bg-platinum {
+  background-color: @platinum ;
 }
 
-.mu-bg-teal {
-  background-color: #568a89 ;
+.bg-silver {
+  background-color: @silver ;
+}
+
+.bg-sonic-silver {
+  background-color: @sonic-silver ;
+}
+
+.bg-storm-cloud {
+  background-color: @storm-cloud ;
+}
+
+.bg-lightcarbon {
+  background-color: @lightcarbon;
+}
+
+.bg-carbon {
+  background-color: @carbon;
+}
+
+.bg-darkcarbon {
+  background-color: @darkcarbon ;
+}
+
+.bg-sky {
+  background-color: @sky ;
+}
+
+.bg-azure {
+  background-color: @azure ;
+}
+
+.bg-blueberry {
+  background-color: @blueberry ;
+}
+
+.bg-gold {
+  background-color: @gold ;
+}
+
+.bg-maroon {
+  background-color: @maroon ;
 }
 
 
@@ -788,159 +851,140 @@ hr.dotted, .mu-hr-dotted {
 .theme-fifthcolor {
     color: @theme-fifthcolor !important;
 }
-.white {
+
+.text-white {
     color: @white !important;
 }
 
-.mu-snow {
+.text-snow {
     color: @snow !important;
 }
 
-.mu-whitesmoke {
+.text-whitesmoke {
     color: @whitesmoke !important;
 }
 
-.mu-seashell {
+.text-seashell {
     color: @seashell !important;
 }
 
-.mu-ivory {
+.text-ivory {
     color: @ivory !important;
 }
 
-.mu-platinum {
+.text-platinum {
     color: @platinum !important;
 }
 
-.mu-lightgray {
+.text-lightgray {
     color: @lightgray !important;
 }
 
-.mu-gray {
+.text-gray {
     color: @gray !important;
 }
 
-.mu-darkgray {
+.text-darkgray {
     color: @darkgray !important;
 }
 
-.mu-silver {
+.text-silver {
     color: @silver !important;
 }
 
-.mu-sonic-silver {
+.text-sonic-silver {
     color: @sonic-silver !important;
 }
 
-.mu-storm-cloud {
+.text-storm-cloud {
     color: @storm-cloud !important;
 }
 
-.mu-lightcarbon {
+.text-lightcarbon {
     color: @lightcarbon !important;
 }
 
-.mu-carbon {
+.text-carbon {
     color: @carbon !important;
 }
 
-.mu-slate-gray {
+.text-slate-gray {
     color: @slate-gray !important;
 }
 
-.mu-darkcarbon {
+.text-darkcarbon {
     color: @darkcarbon !important;
 }
 
-.mu-blue {
+.text-blue {
     color: @blue !important;
 }
 
-.mu-info {
-    color: @info !important;
-}
-
-.mu-sky {
+.text-sky {
     color: @sky !important;
 }
 
-.mu-primary {
-    color: @primary !important;
-}
-
-.mu-azure {
+.text-azure {
     color: @azure !important;
 }
 
-.mu-blueberry {
+.text-blueberry {
     color: @blueberry !important;
 }
 
-.mu-palegreen {
+.text-palegreen {
     color: @palegreen !important;
 }
 
-.mu-success {
-    color: @success !important;
-}
-
-.mu-green {
+.text-green {
     color: @green !important;
 }
 
-.mu-lightyellow {
+.text-lightyellow {
     color: @lightyellow !important;
 }
 
-.mu-mu-yellow {
+.text-yellow {
     color: @yellow !important;
 }
 
-.mu-warning {
-    color: @warning !important;
-}
-
-.mu-gold {
+.text-gold {
     color: @gold !important;
 }
 
-.mu-orange {
+.text-orange {
     color: @orange !important;
 }
 
-.mu-lightred {
-    color: @lightred !important;
+.text-darkred {
+    color: @darkred !important;
 }
 
-.mu-darkorange {
+.text-darkorange {
     color: @darkorange !important;
 }
 
-.mu-red {
+.text-red {
     color: @red !important;
 }
 
-.mu-pink {
+.text-pink {
     color: @pink !important;
 }
 
-.mu-darkpink {
+.text-darkpink {
     color: @darkpink !important;
 }
 
-.mu-danger {
-    color: @danger !important;
-}
-
-.mu-magenta {
+.text-magenta {
     color: @magenta !important;
 }
 
-.mu-purple {
+.text-purple {
     color: @purple !important;
 }
 
-.mu-maroon {
+.text-maroon {
     color: @maroon !important;
 }
 
@@ -1143,17 +1187,13 @@ hr.dotted, .mu-hr-dotted {
     border-color: @blue !important;
 }
 
-.bordered-info {
-    border-color: @info !important;
-}
+
 
 .bordered-sky {
     border-color: @sky !important;
 }
 
-.bordered-primary {
-    border-color: @primary !important;
-}
+
 
 .bordered-azure {
     border-color: @azure !important;
@@ -1167,9 +1207,6 @@ hr.dotted, .mu-hr-dotted {
     border-color: @palegreen !important;
 }
 
-.bordered-success {
-    border-color: @success !important;
-}
 
 .bordered-green {
     border-color: @green !important;
@@ -1183,9 +1220,6 @@ hr.dotted, .mu-hr-dotted {
     border-color: @yellow !important;
 }
 
-.bordered-warning {
-    border-color: @warning !important;
-}
 
 .bordered-gold {
     border-color: @gold !important;
@@ -1195,8 +1229,8 @@ hr.dotted, .mu-hr-dotted {
     border-color: @orange !important;
 }
 
-.bordered-lightred {
-    border-color: @lightred !important;
+.bordered-darkred {
+    border-color: @darkred !important;
 }
 
 .bordered-darkorange {
@@ -1205,10 +1239,6 @@ hr.dotted, .mu-hr-dotted {
 
 .bordered-red {
     border-color: @red !important;
-}
-
-.bordered-danger {
-    border-color: @danger !important;
 }
 
 .bordered-pink {
@@ -1231,7 +1261,6 @@ hr.dotted, .mu-hr-dotted {
     border-color: @maroon !important;
 }
 
-
 .bordered-radius {
     -webkit-border-radius: 2px !important;
     -moz-border-radius: 2px !important;
@@ -1253,12 +1282,12 @@ hr.dotted, .mu-hr-dotted {
 /* Size modifiers
  ========================================================================== */
 
-.mu-text-small {
+.text-small {
   font-size: @text-small-font-size;
   line-height: @text-small-line-height;
 }
 
-.mu-text-large {
+.text-large {
   font-size: @text-large-font-size;
   line-height: @text-large-line-height;
 }
@@ -1266,31 +1295,31 @@ hr.dotted, .mu-hr-dotted {
 /* Alignment modifiers
  ========================================================================== */
 
-.mu-text-left { text-align: left !important; }
-.mu-text-right { text-align: right !important; }
-.mu-text-center { text-align: center !important; }
-.mu-text-justify { text-align: justify !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-center { text-align: center !important; }
+.text-justify { text-align: justify !important; }
 
-.mu-text-top { vertical-align: top !important; }
-.mu-text-middle { vertical-align: middle !important; }
-.mu-text-bottom { vertical-align: bottom !important; }
+.text-top { vertical-align: top !important; }
+.text-middle { vertical-align: middle !important; }
+.text-bottom { vertical-align: bottom !important; }
 
 /* Weight modifiers
  ========================================================================== */
 
-.mu-text-bold { font-weight: bold; }
+.text-bold { font-weight: bold; }
 
 /* Only tablets portrait */
 @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
 
-  .mu-text-center-medium { text-align: center !important; }
+  .text-center-medium { text-align: center !important; }
 
 }
 
 /* Phone landscape and smaller */
 @media (max-width: @screen-xs-max) {
 
-  .mu-text-center-small { text-align: center !important; }
+  .text-center-small { text-align: center !important; }
 
 }
 
@@ -1302,13 +1331,13 @@ hr.dotted, .mu-hr-dotted {
  * Prevent text from wrapping onto multiple lines
  */
 
-.mu-text-nowrap { white-space: nowrap; }
+.text-nowrap { white-space: nowrap; }
 
 /*
  * Prevent text from wrapping onto multiple lines, and truncate with an ellipsis
  */
 
-.mu-text-truncate {
+.text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1318,7 +1347,7 @@ hr.dotted, .mu-hr-dotted {
  * Break strings if their length exceeds the width of their container
  */
 
-.mu-text-break {
+.text-break {
   word-wrap: break-word;
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
@@ -1626,6 +1655,27 @@ hr.dotted, .mu-hr-dotted {
 }
 /*#endregion maroon Button*/
 
+/* badge
+ ========================================================================== */
+ .badge-primary {
+     background-color: @badge-primary;
+ }
+ 
+ .badge-success {
+     background-color: @badge-success;
+ }
+ 
+ .badge-info {
+     background-color: @badge-info;
+ }
+ 
+ .badge-warning {
+     background-color: @badge-warning;
+ }
+ 
+ .badge-danger {
+     background-color: @badge-danger;
+ }
 
 /* Hack
  ========================================================================== */

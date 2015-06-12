@@ -69,7 +69,6 @@ module.exports = function(grunt) {
                         'src/js/dropdown.tree.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/tagsselect.<%= pkg.name %>.js',
-                        'src/js/magnifier.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertical.menu.<%= pkg.name %>.js',
                         'src/js/sidebar.menu.<%= pkg.name %>.js',
@@ -230,6 +229,11 @@ module.exports = function(grunt) {
                     'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js']
                 }
             },
+            minify_doc:{
+                files:{
+                    'docs/assets/js/test.min.js': ['docs/assets/js/test.js']
+                }
+            }
         },
         less: { //convert less to css
             build_admin: {
@@ -291,6 +295,25 @@ module.exports = function(grunt) {
                 }
             }
         },
+        csscomb: {
+          options: {
+            config: 'src/css/.csscomb.json'
+          },
+          admin: {
+            files: [{
+                expand: true,
+                cwd: 'dist/admin/css/',
+                src: ['*.css', '!*.min.css'],
+                dest: 'dist/admin/css/',
+                ext: '.css'
+            }]
+          },
+          front: {
+            files: {
+              'dist/front/css/<%= pkg.name %>.css': 'dist/front/css/<%= pkg.name %>.css'
+            }
+          }
+        },
         compress: {
             build: {
                 options: {
@@ -331,7 +354,7 @@ module.exports = function(grunt) {
                     dest: 'dist/front/'
                 }]
             },
-            buildDocs: {
+            build_docs: {
                 files: [{
                     expand: true,
                     cwd: 'dist/',
@@ -356,10 +379,10 @@ module.exports = function(grunt) {
         },
         focus: {
             admin: {
-                exclude: ['livereload','livereload_front']
+                exclude: ['livereload_front']
             },
             front: {
-                exclude: ['livereload','livereload_admin']
+                exclude: ['livereload_admin']
             }
         },
         watch: { //recompile watching on file change
@@ -379,7 +402,7 @@ module.exports = function(grunt) {
                 files: [
                     'src/css/**/*.less',
                     'src/js/**/*.js',
-                    '!src/css/style-mower-front.less'
+                    '!src/css/style-<%= pkg.name %>-front.less'
                 ],
                 tasks: ['admin']
             },
@@ -391,7 +414,7 @@ module.exports = function(grunt) {
                 files: [
                     'src/css/**/*.less',
                     'src/js/**/*.js',
-                    '!src/css/style-mower-admin.less'
+                    '!src/css/style-<%= pkg.name %>-admin.less'
                 ],
                 tasks: ['front']
             }
@@ -418,6 +441,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-csscomb');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -434,19 +458,21 @@ module.exports = function(grunt) {
     grunt.registerTask('svrfront', ['connect:all', 'focus:front']);
 
     // grunt admin
-    grunt.registerTask('admin', ['clean:build_admin', 'less:build_admin','less:build_admintheme',  'concat:buildjs_admin', 'uglify', 'cssmin', 'concat:mergecss_admin', 'concat:mergejs_admin', 'copy:build_admin','copy:buildDocs']);
+    grunt.registerTask('admin', ['clean:build_admin', 'less:build_admin','less:build_admintheme', 'csscomb:admin', 'concat:buildjs_admin', 'uglify', 'cssmin', 'concat:mergecss_admin', 'concat:mergejs_admin', 'copy:build_admin','copy:build_docs']);
     
     // grunt front
-    grunt.registerTask('front', ['clean:build_front', 'less:build_front',  'concat:buildjs_front', 'uglify', 'cssmin', 'concat:mergecss_front', 'concat:mergejs_front', 'copy:build_front','copy:buildDocs']);
+    grunt.registerTask('front', ['clean:build_front', 'less:build_front',  'concat:buildjs_front', 'csscomb:front', 'uglify', 'cssmin', 'concat:mergecss_front', 'concat:mergejs_front', 'copy:build_front','copy:build_docs']);
 
     // grunt release admin
-    grunt.registerTask('releaseadmin', ['compress', 'admin']);
+    grunt.registerTask('admin-with-compress', ['compress', 'admin']);
 
     // grunt release
-    grunt.registerTask('releasefront', ['compress', 'front']);
+    grunt.registerTask('front-with-compress', ['compress', 'front']);
 
     // grunt
-    grunt.registerTask('default', ['admin']);
+    grunt.registerTask('default', ['svradmin']);
+
+    grunt.registerTask('doc', ['uglify:minify_doc']);
 
     //copy bower files to libs or anywhere
     //grunt.registerTask('init', ['bowercopy']);

@@ -20,7 +20,7 @@
 //** Link hover color set via `darken()` function.
 @link-hover-color:                              @text-color;
 
-@font-family-sans-serif:                        "微软雅黑", "宋体", Arial, Lucida, Verdana,Helvetica, sans-serif;;
+@font-family-sans-serif:                        "Helvetica Neue", Helvetica, "宋体", Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
 
 @font-family-base:                              @font-family-sans-serif;
 
@@ -63,6 +63,13 @@
 @screen-sm-max:              (@screen-md-min - 1);
 @screen-md-max:              (@screen-lg-min - 1);
 
+//consistent with bootstrap's brand color
+@badge-primary:         	 #428bca;
+@badge-success:         	 #5cb85c;
+@badge-info:            	 #5bc0de;
+@badge-warning:           	 #f0ad4e;
+@badge-danger:               #d9534f;
+
 //Theme Colors
 @theme-primary: 			 #2dc3e8;
 @theme-secondary: 			 #fb6e52;
@@ -91,28 +98,36 @@
 @black2: 					rgba(0, 0, 0, 0.2);
 @black: 					#000;
 @blue: 						#5DB2FF;
-@info: 						#57b5e3;
+@lightblue:                 #93CBF9;
+@darkblue:                  #4c4f53;
 @sky: 						#11a9cc;
-@primary: 					#4374e0;
 @azure: 					#2dc3e8;
 @blueberry: 				#6f85bf;
 @palegreen: 				#a0d468;
-@success: 					#53a93f;
 @green: 					#8cc474;
+@darkgreen: 				#496949;
 @lightyellow: 				#f6d52e;
 @yellow: 					#ffce55;
-@warning: 					#f4b400;
 @gold: 						#f9b256;
 @orange: 					#fb6e52;
 @darkorange: 				#ed4e2a;
-@lightred: 					#e46f61;
 @red: 						#df5138;
-@danger: 					#d73d32;
+@darkred: 					#a65858;
 @pink: 						#e75b8d;
 @darkpink: 					#cc324b;
 @magenta: 					#bc5679;
 @purple: 					#7e3794;
 @maroon: 					#981b48;
+@lighten:                   #d5e7ec;
+@teal:                      #568a89;		
+
+
+// ANIMATION
+// --------------------------
+@animation-speed-normal:             0.5s;
+@animation-speed-fast:               0.3s;
+@animation-speed-slow:               0.8s;
+@animation-type:                     cubic-bezier(0.175,.885,.32,1);
 
 
 

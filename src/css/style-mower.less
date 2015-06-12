@@ -620,6 +620,65 @@ Input icons
   border-radius: 0px;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
+
+  // Improve alignment and spacing of inner content
+  > p,
+  > ul
+  {
+    margin-bottom: 0;
+  }
+  > p + p
+  {
+    margin-top: 5px;
+  }
+
+  > [class*="fa-"],
+  > [class*="icon-"]
+  {
+    float: left;
+    font-size: 42px;
+    opacity: 0.6;
+    margin-top: -5px;
+    .transition(opacity,@animation-speed-fast,@animation-type);
+  }
+
+  >[class*="fa-"] + .content,
+  >[class*="icon-"] + .content
+  {
+    margin-left: 50px;
+    min-height: 30px;
+  }
+
+  &.alert-icon
+  {
+    width: 100%;
+    display: table;
+    padding: 15px;
+
+    >[class*="icon-"] , 
+    > [class*="fa-"],  
+    >[class*="fa-"] + .content, 
+    >[class*="icon-"] + .content
+    {
+      float: none;
+      margin: 0;
+      display: table-cell;
+      vertical-align: middle;
+      min-height: 0;
+    }
+
+    >[class*="icon-"],
+    > [class*="fa-"],
+    {
+      width: 40px;
+    }
+    
+    >[class*="fa-"] + .content,
+    >[class*="icon-"] + .content
+    {
+      padding-left: 1em;
+    }
+  }
 }
 .alert .close {
   font-size: 16px;
@@ -630,6 +689,14 @@ Input icons
 .alert-heading {
   font-weight: 600;
 }
+
+.alert-default {
+  border-color: #e4e4e4;
+  color: #353535;
+  background: #f1f1f1;
+  text-shadow: none;
+}
+
 .alert-danger {
   border-color: #953b39;
   color: #ffffff;
@@ -656,6 +723,41 @@ Input icons
   color: #E02222;
   font-size: 12px;
   padding-left: 2px;
+}
+
+// Block alert
+.alert-block
+{
+    margin: 0;
+    border-radius: 0;
+}
+
+
+.alert:hover
+{
+
+  background-color: darken(#f1f1f1,5%);
+  &.alert-success
+  {
+    background-color: darken(#cde0c4,5%);
+  }
+  &.alert-info
+  {
+    background-color: darken(#d6dde7,5%);
+  }
+  &.alert-warning
+  {
+    background-color: darken(#efe1b3,5%);
+  }
+  &.alert-danger
+  {
+    background-color: darken(#c26565,5%);
+  }
+  >[class*="icon-"],
+  >[class*="fa-"]
+  {
+    opacity: 1;
+  }
 }
 
 

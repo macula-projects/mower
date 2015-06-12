@@ -283,7 +283,7 @@
     // Define as an AMD module if possible
     if (typeof define === 'function' && define.amd) {
         define('datatables-selectrows', ['jquery', 'datatables'], factory);
-    } else if (jQuery && !jQuery.fn.dataTable.FixedColumns) {
+    } else if (jQuery && !jQuery.fn.dataTable.SelectRows) {
         // Otherwise simply initialise as normal, stopping multiple evaluation
         factory(jQuery, jQuery.fn.dataTable);
     }

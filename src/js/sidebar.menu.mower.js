@@ -218,7 +218,7 @@
                 $(this).prepend('<i class="menu-icon ' + SidebarMenu.DEFAULTS.icons[index % SidebarMenu.DEFAULTS.icons.length] + '"></i>');
             });
 
-            this.setMenuActiveLink(selectedNode || this.$element.find('a[data-toggle="menu"]').filter(':first').attr('mcode'));
+            this.setMenuActiveLink(selectedNode);
         },
         populate: function(rootcode, selectedNode) {
             var that = this;
@@ -260,11 +260,13 @@
         },
         setMenuActiveLink: function(code) {
             if(code){
-                var activeMenu = this.$element.find('a[data-toggle="menu"][mcode="' + code + '"]');
+                var $activeMenu = this.$element.find('a[data-toggle="menu"][mcode="' + code + '"]');
 
-                activeMenu.closest('li').addClass('active');
+                $activeMenu.closest('li').addClass('active');
 
-                activeMenu.parent('li').parents('li').addClass('open');
+                var parents = $activeMenu.parentsUntil(this.$element,'li');
+
+                $(parents[parents.length-1]).addClass('open');
             }
         },
         _destroy: function() {
