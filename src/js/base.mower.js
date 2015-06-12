@@ -8,7 +8,7 @@
  * ======================================================================== */
 
 ;
-var Base = (function($, window, document, undefined) {
+var Base = (function($, utils, window, document, undefined) {
 
     'use strict';
 
@@ -67,7 +67,7 @@ var Base = (function($, window, document, undefined) {
 
     //
     var _resetIconContent = function() {
-        if ($.browser.msie && parseInt($.browser.version) === 8) {
+        if (utils.isIE8()) {
 
             var head = document.getElementsByTagName('head')[0];
             var style = document.createElement('style');
@@ -170,7 +170,7 @@ var Base = (function($, window, document, undefined) {
 
     return base;
 
-}(jQuery, window, document));
+}(jQuery, Utils, window, document));
 
 $(function() {
     Base.init();

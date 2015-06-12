@@ -56,8 +56,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/admin/js/<%= pkg.name %>.js': [
-                        'src/js/base.<%= pkg.name %>.js',
                         'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/base.<%= pkg.name %>.js',
                         'src/js/alert.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
                         'src/js/datatables.selectrows.<%= pkg.name %>.js',
