@@ -152,8 +152,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/front/js/<%= pkg.name %>.js': [
-                        'src/js/base.<%= pkg.name %>.js',
                         'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/base.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/magnifier.<%= pkg.name %>.js',

@@ -141,6 +141,7 @@
 }
 
 .mu-header-navbar {
+  background-color: #d40b07;
   .navbar {
     margin-bottom: 0;
   }
@@ -254,10 +255,6 @@
   .mu-navbar-under-small{
     top: @navbar-sm-min-height;
   }
-
-  .mu-main {
-    padding-top: @main-padding-top-height;
-  }
 }
 /* Width range  [ < small devices ]. the most extra small device portrait mode only.
  ========================================================================== */
@@ -270,11 +267,18 @@
     }
 }
 
-/* Width range  [ < small devices ]. the most extra small device portrait mode only.
- ========================================================================== */
-.mu-breadcrumb-wrapper{
+.mu-breadcrumb-wrapper {
   min-height: 40px;
   line-height: 39px;
   padding: 0;
   display: block;
+
+  .breadcrumb > li > a {
+    color: #777;
+  }
+
+  .breadcrumb > li.active {
+    font-weight: 700;
+  }
+
 }

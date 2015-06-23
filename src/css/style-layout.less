@@ -1256,8 +1256,8 @@
         margin-left: 5px;
         a {
             display: block;
-            height: 38px;
-            line-height: 36px;
+            height: 35px;
+            line-height: 35px;
             margin: 0;
             padding: 0 16px 0 7px;
             .text-shadow(none) !important;
@@ -1857,11 +1857,70 @@
     }
 }
 
+
+/* styles for panel .
+ ========================================================================== */
+
+.mu-panel-toolbar {
+    padding: 8px 10px;
+}
+
+
+/*
+ * advanced query in toolbar.
+ */
+.advanced-query-container {
+  position: absolute;
+  right: 0;
+  left: auto;
+  top: 40px;
+  z-index: 1010;
+  display: none;
+  text-align: left;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  white-space: normal;
+
+  &:before {
+    position: absolute;
+    top: -7px;
+    right: 9px;
+    display: inline-block !important;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #ccc;
+    border-left: 7px solid transparent;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    content: '';
+  }
+
+  &:after {
+    position: absolute;
+    top: -6px;
+    right: 10px;
+    display: inline-block !important;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #fff;
+    border-left: 6px solid transparent;
+    content: '';
+  }
+}
+
+.advanced-query-content {
+  width: 400px;
+  height: 400px;
+  padding: 200px 10px;
+}
+
 /* styles for mower content body.
  ========================================================================== */
 .mu-content-body {
     background: #eee;
-    padding: 18px 15px 24px;
+    padding: 10px 10px 24px;
 }
 
 /* styles for mower footer container.
@@ -1932,7 +1991,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: @theme-primary;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    background: #333;
 
     &.loading-inactive {
         display: none;

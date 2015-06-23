@@ -932,7 +932,7 @@ var Utils = (function($, window, document, undefined) {
 
             if (el) {
                 //caution: if use boostrap navbar-fixed-top,substract it's height.
-                
+
                 pos = pos + (offeset ? offeset : -1 * el.height());
             }
 

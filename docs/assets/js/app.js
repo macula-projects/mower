@@ -108,13 +108,11 @@ var App = (function($, utils, window, document, undefined) {
             $('.header-menu').on('click', 'li:not(.dropdown) > a', function(event) {
                 event.preventDefault();
 
+
                 var $this = $(this),
-                    rcode = $this.attr('mcode'),
-                    menuObj = $(".sidebar-menu").sidebarMenu('findMenuByCode', rcode),
-                    purl;
+                    rcode = $this.attr('mcode');
 
-
-                purl = window.location.href;
+                var purl = window.location.href;
                 var i = purl.indexOf("?");
                 purl = purl.substring(0, i);
 
