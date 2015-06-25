@@ -16,8 +16,6 @@
 
 /* mower header.styles for mu-header.
  ========================================================================== */
-
-
 .mu-header {
     margin-top: 5px;
 }
@@ -155,6 +153,162 @@
   }
 }
 
+
+.mu-navbar-transparent {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.mu-navbar-sm {
+    min-height: @navbar-sm-min-height;
+    margin-bottom: 0;
+
+    .divider-vertical {
+      height:@navbar-sm-min-height;
+      margin: 0 2px;
+      border-right: 1px solid #ffffff;
+      border-left: 1px solid #f2f2f2;
+    }
+
+    .navbar-nav.navbar-right:last-child {
+      margin-right:0;
+    }
+}
+
+/* content */
+.mu-navbar-nav-sm {
+  > li {
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    color: #777;
+    line-height: 26px;
+
+    > span a {
+        color: #777;
+        font-size: 12px;
+        padding-left: 10px;
+        padding-right: 10px;
+        &:hover{
+          color: #333;
+        }
+    }
+
+    > a {
+      font-size: 12px;
+      padding: 5px 5px ;
+      line-height: 16px;
+      >i {
+         font-size: 16px;
+      }
+
+    }
+
+    &.dropdown {
+      padding-left: 4px;
+      padding-right: 4px;
+
+      > a {
+        padding-left: 4px;
+        padding-right: 4px;
+
+        > .badge{
+          border-radius: 10px !important;
+        }
+
+        &:last-child{
+          padding-right: 0;
+        }
+
+      }
+
+      &:last-child{
+        padding-right: 2px;
+      }
+
+      .dropdown-toggle {
+        margin: 0px;
+        padding: 5px 10px;
+
+        > i {
+          font-size: 16px;
+        }
+
+        > i.fa-sm {
+          font-size: 12px;
+        }
+
+        > li > a > i {
+          font-size: 14px;
+        }
+
+        .badge {
+          position: absolute;
+          top: 2px;
+          left:-8px;
+        }
+      }
+
+      &.user {
+
+        .dropdown-toggle{
+
+          &:hover{
+            text-decoration: none;
+          }
+
+          i {
+            display: inline-block;
+            margin: 0;
+            font-size: 16px;
+          }
+        }
+
+        .dropdown-menu i {
+          width: 18px;
+          display: inline-block;
+        }
+      }
+
+    }
+    .dropdown-menu {
+      margin-top: 2px;
+
+      > li > a {
+        padding: 6px 0 6px 13px;
+        font-size: @header-ddm-font-size;
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-sm) {
+  .mu-navbar-nav-sm > li > .dropdown-menu{
+    right: 0;
+    left: auto;
+
+    &:before {
+      right: 12px;
+      left: auto;
+    }
+
+    &:after {
+      right: 13px;
+      left: auto;
+    }
+  }
+}
+
+.mu-header-fixed .mu-navbar-under-small {
+    top: @navbar-sm-min-height;
+    z-index: 1020;
+
+    .navbar-toggle {
+        margin-top: 3px;
+        margin-bottom: 0;
+    }
+}
+
 @media (max-width: @screen-sm-max) {
 
     .mu-navbar-nav-sm {
@@ -267,6 +421,8 @@
     }
 }
 
+/* mu-breadcrumb-wrapper
+ ========================================================================== */
 .mu-breadcrumb-wrapper {
   min-height: 40px;
   line-height: 39px;
@@ -280,5 +436,21 @@
   .breadcrumb > li.active {
     font-weight: 700;
   }
+}
 
+/* mu-content
+ ========================================================================== */
+.mu-content-wrapper {
+    display: table;
+    width: 100%;
+}
+
+.mu-sidebar{
+  display:table-cell;
+  vertical-align: top;
+}
+
+
+.mu-content {
+  display:table-cell;
 }

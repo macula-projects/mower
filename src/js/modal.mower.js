@@ -39,17 +39,9 @@
         classes: '', //modal body class
         btnClasses: {}, //modal footer button classes
         handlers: [], //modal footer button handler
-        icons: {},
         param: '{}',
-        width: null,
-        height: null,
-        maxHeight: null,
-        modalOverflow: false,
-        spinner: '<div class="loading-spinner" style="width: 200px; margin-left: -100px;"><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></div>',
-        backdropTemplate: '<div class="modal-backdrop" />',
         show: true,
-        container: 'body', //default container of ajax modal append
-        manager: 'body' //ModalManager
+        container:'body'
     };
 
     AModal.prototype._dialog = function(str, options) {
@@ -136,7 +128,7 @@
             callbacks[i] = callback;
         }
 
-        var parts = ["<div id=" + options.dialogId + " class='modal' tabindex='-1'>"];
+        var parts = ["<div id=" + options.dialogId + " class='modal' tabindex='-1'>","<div class='modal-dialog'>","<div class='modal-content'>"];
 
         if (options['header']) {
             var closeButton = '';
@@ -154,7 +146,7 @@
             parts.push("<div class='modal-footer'>" + buttons + "</div>");
         }
 
-        parts.push("</div>");
+        parts.push("</div></div></div>");
 
         var div = $(parts.join("\n"));
 
@@ -219,8 +211,6 @@
             if (typeof cb === 'function') {
                 hideModal = cb(e);
             }
-
-            that.$element.trigger('amodal:selected', [hideModal]);
 
             // the only way hideModal *will* be false is if a callback exists and
             // returns it as a value. in those situations, don't hide the dialog

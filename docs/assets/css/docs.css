@@ -575,37 +575,18 @@ a {
     margin-bottom: 60px
 }
 
-.bs-docs-section h3:before{
+.bs-docs-section h3.item-header:before{
     font-family: FontAwesome;
     content:"\f0a4";
     color:#666;
     padding-right: 5px;
 }
 
-.typography h3:before{
-    content:none !important;
-}
 
-.bs-docs-section h4:before{
+.bs-docs-section h4.subitem-header:before{
     font-family: FontAwesome;
     content:"\f046";
     color:#888;
-}
-
-.typography h4:before,
-.labels h4:before,
-.labels h3:before,
-.thumbnail h3:before,
-.basic-titles h3:before,
-.basic-titles h4:before,
-.extra-titles h3:before,
-.extra-titles h4:before,
-.header-dividing-wrapper h3:before,
-.alert h3:before,
-.alert h4:before,
-.list-group h3:before,
-.list-group h4:before {
-    content: none !important;
 }
 
 

@@ -93,8 +93,6 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'plugins/toastr/css/toastr.css',
                         'plugins/jquery-treetable/css/jquery.treetable.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css',
                         'plugins/jstree/css/style.css'
                     ],
@@ -104,8 +102,6 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'plugins/toastr/css/toastr.min.css',
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal.min.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css',
                         'plugins/jstree/css/style.min.css'
                     ]
@@ -119,8 +115,6 @@ module.exports = function(grunt) {
                     'dist/admin/js/<%= pkg.name %>.js': [
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
-                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
-                        'plugins/bootstrap-modal/js/bootstrap-modal.js',
                         'plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js',
                         'plugins/bootbox/js/bootbox.js',
                         'plugins/toastr/js/toastr.js',
@@ -133,8 +127,6 @@ module.exports = function(grunt) {
                     'dist/admin/js/<%= pkg.name %>.min.js': [
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
-                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
-                        'plugins/bootstrap-modal/js/bootstrap-modal.min.js',
                         'plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js',
                         'plugins/bootbox/js/bootbox.min.js',
                         'plugins/toastr/js/toastr.min.js',

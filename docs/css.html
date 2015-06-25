@@ -117,7 +117,7 @@
                 <div class="bs-docs-section">
                     <h2 id="grid" class="page-header">全局样式表</h2>
                     <p>Mower使用 <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a> 来重置样式，这样尽可能保证在所有浏览器中有一致的体验。</p>
-                    <h3 id="grid-intro">为何使用 Normalize.css</h3>
+                    <h3 class="item-header" id="grid-intro">为何使用 Normalize.css</h3>
                     <p>如果一份没有任何样式设置的html文档在浏览器打开时，浏览器会使用默认的样式来呈现文档，确保更易于阅读文本和区分文档中不同的内容。</p>
                     <p>但是当我们需要应用自己的样式时，浏览器默认的样式会造成干扰，更重要的是不同的浏览器的默认样式并不相同，这使得我们希望的样式最终呈现效果变得不可控。<code>Normalize.css</code> 正是为了解决此问题而生，而且做的更好。</p>
                 </div>
@@ -125,7 +125,7 @@
                     <h2 id="type" class="page-header">响应式布局</h2>
                     <p>为了加快对移动设备友好的页面开发工作，利用媒体查询功能并使用这些工具类可以方便的针对不同设备展示或隐藏页面内容。另外还包含了针对打印机显示或隐藏内容的工具类。</p>
                     <p>有针对性的使用这类工具类，从而避免为同一个网站创建完全不同的版本。相反，通过使用这些工具类可以在不同设备上提供不同的展现形式。</p>
-                    <h3 id="type-headings">可用的类<a class="anchorjs-link" href="#responsive-utilities-classes"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="type-headings">可用的类<a class="anchorjs-link" href="#responsive-utilities-classes"><span class="anchorjs-icon"></span></a></h3>
                     <p>通过单独或联合使用以下列出的类，可以针对不同屏幕尺寸隐藏或显示页面内容。</p>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped responsive-utilities">
@@ -239,7 +239,7 @@
                     </div>
                     <p>因此，以超小屏幕（<code>xs</code>）为例，可用的 <code>.visible-*-*</code> 类是：<code>.visible-xs-block</code>、<code>.visible-xs-inline</code> 和 <code>.visible-xs-inline-block</code>。</p>
                     <p><code>.visible-xs</code>、<code>.visible-sm</code>、<code>.visible-md</code> 和 <code>.visible-lg</code> 类也同时存在。但是<strong>从 v3.2.0 版本开始不再建议使用</strong>。除了 <code>&lt;table&gt;</code> 相关的元素的特殊情况外，它们与 <code>.visible-*-block</code> 大体相同。</p>
-                    <h3 id="type-body-copy">打印类<a class="anchorjs-link" href="#responsive-utilities-print"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="type-body-copy">打印类<a class="anchorjs-link" href="#responsive-utilities-print"><span class="anchorjs-icon"></span></a></h3>
                     <p>和常规的响应式类一样，使用下面的类可以针对打印机隐藏或显示某些内容。</p>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped responsive-utilities">
@@ -271,7 +271,7 @@
                         </table>
                     </div>
                     <p><code>.visible-print</code> 类也是存在的，但是从 v3.2.0 版本开始<strong>不建议使用</strong>。它与 <code>.visible-print-block</code> 类大致相同，除了 <code>&lt;table&gt;</code> 相关元素的特殊情况外。</p>
-                    <h3 id="type-inline-text">禁用响应式布局</h3>
+                    <h3 class="item-header" id="type-inline-text">禁用响应式布局</h3>
                     <p>有时你所开发应用仅针对一个设备或平台，并不需要响应式布局。即使这样，也建议你使用响应式布局，因为不需要额外的代码，而且为跨屏提供了可能性。</p>
                     <p>在Mower中并没用一个全局的开关来控制是否启用响应式布局。如果确实要禁用该功能，请参考下面的建议：</p>
                     <ul>
@@ -358,10 +358,10 @@
                 </div>
                 <div class="bs-docs-section">
                     <h2 id="tables" class="page-header">排版</h2>
-                    <h3 id="tables-example">字体</h3>
+                    <h3 class="item-header" id="tables-example">字体</h3>
                     <p>Mower中使用字体集：<code> "Helvetica Neue", Helvetica, "宋体", Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;</code></p>
                     <p>默认的字体大小为 <strong>13px</strong>，以保证在所有屏幕上都能有最佳效果。Mower中也允许使用更小号的字体，不过不要小于 <strong>12px</strong>。默认行高为字体大小的1.53倍，一般为20px。</p>
-                    <h3 id="tables-striped">文字排版</h3>
+                    <h3 class="item-header" id="tables-striped">文字排版</h3>
                     <p>字是组成页面的重要内容，一个好的排版是构建好的用户界面的基石。应根据我们的设计原则来进行文字排版。下表中列举了web设计时会用到的文字排版方式。</p>
                     <table class="table typography">
                         <tbody>
@@ -514,7 +514,7 @@
                         <li>尽量少用或不用辅助类，如果有对应的控件或组件使用。</li>
                         <li>当相同的场景需要大量使用辅助类时，这时应该考虑是否单独定义一个新的控件或组件。</li>
                     </ul>
-                    <h3 id="forms-example">小字号文本</h3>
+                    <h3 class="item-header" id="forms-example">小字号文本</h3>
                     <p>使用标签<code>&lt;small&gt;</code>或者CSS类名<code>.small</code>来使得文本字号比正常情况小一号。</p>
                     <div class="bs-example">
                         <small>小字号文本，small text.</small>
@@ -522,7 +522,7 @@
                     <div class="highlight">
                         <pre><code>&lt;small&gt;...&lt;/small&gt;</code></pre>
                     </div>
-                    <h3 id="forms-inline">情境文本颜色<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="forms-inline">情境文本颜色<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
                     <p>通过颜色来展示意图 提供了一组工具类。这些类可以应用于链接，并且在鼠标经过时颜色可以还可以加深，就像默认的链接一样。</p>
                     <div class="bs-example" data-example-id="contextual-colors-helpers">
                         <p class="text-muted">haha,this text color is text-muted.</p>
@@ -610,7 +610,7 @@
 &lt;p class="text-maroon"&gt;...&lt;/p&gt;
 </pre>
                     </div>
-                    <h3 id="forms-horizontal">情境背景色<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="forms-horizontal">情境背景色<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
                     <p>和情境文本颜色类一样，使用任意情境背景色类就可以设置元素的背景。</p>
                     <div class="bs-example bs-example-bg-classes" data-example-id="contextual-backgrounds-helpers">
                                               <p class="bg-primary">haha,this text background color is bg-primary.</p>
@@ -703,12 +703,12 @@
 &lt;p class="bg-maroon"&gt...&lt;/p&gt;
 </pre>
                     </div>
-                    <h3 id="forms-controls">禁用文本换行<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="forms-controls">禁用文本换行<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
                     <p>使所有文本在一行显示。超出的部分将会被隐藏。只需要使用<code>.text-nowrap</code>或者<code>.nobr</code>。</p>
                     <div class="highlight">
                         <pre class='prettyprint'>&lt;h2 class="text-nowrap"&gt;...&lt;/h2&gt;</pre>
                     </div>
-                    <h3 id="forms-controls-static">文本超出省略<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="forms-controls-static">文本超出省略<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
                     <p>使所有文本在一行显示。超出的部分会被截断，并且在文本末尾添加省略号。使用<code>.text-ellipsis</code>。</p>
                     <div class="highlight">
                         <pre class='prettyprint'>&lt;h2 class="text-ellipsis"&gt;...&lt;/h2&gt;</pre>
@@ -716,17 +716,17 @@
                     <div class="alert alert-warning">
                         <p>并不是所有浏览器都支持此选项。</p>
                     </div>
-                    <h3 id="forms-control-focus">关闭按钮</h3>
+                    <h3 class="item-header" id="forms-control-focus">关闭按钮</h3>
                     <p>通常用来关闭消息框或者模态框。</p>
                     <div class="bs-example">
                         <button type="button" class="close" style="float:none"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     </div>
                     <div class="highlight">
                     <pre class="prettyprint"><code>&lt;button type="button" class="close"&gt;&lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;&lt;span class="sr-only"&gt;Close&lt;/span&gt;&lt;/button&gt;</code></pre></div>
-                    <h3 id="forms-control-disabled">三角符号</h3>
+                    <h3 class="item-header" id="forms-control-disabled">三角符号</h3>
                     <div class="bs-example"><span class="caret"></span></div>
                     <div class="highlight"><pre class="prettyprint"><code>&lt;span class="caret"&gt;&lt;/span&gt;</code></pre></div>
-                    <h3 id="forms-control-readonly">浮动</h3>
+                    <h3 class="item-header" id="forms-control-readonly">浮动</h3>
                     <p>强制使得一个元素向左或者向右浮动。</p>
                     <div class="highlight">
 <pre class="prettyprint">
@@ -748,11 +748,11 @@
 }
 </div>
 </pre>
-                <h3 id="forms-control-validation">清除浮动</h3>
+                <h3 class="item-header" id="forms-control-validation">清除浮动</h3>
                 <p>只需要一个CSS类名即可使得内部浮动元素也具备高度等特性。</p>
                 <div class="highlight"><pre class="prettyprint">&lt;div class="clearfix"&gt;...&lt;/div&gt;</pre></div>
 
-                <h3 id="forms-control-sizes">块居中</h3>
+                <h3 class="item-header" id="forms-control-sizes">块居中</h3>
                 <p>使得一个具备固定宽度的能够在父级容器中居中显示。</p>
                 <div class="highlight"><pre class="prettyprint">&lt;div class="center-block"&gt;...&lt;/div&gt;</pre></div>
                 <p>对应的CSS代码：</p>
@@ -763,7 +763,7 @@ margin-left: auto;
 margin-right: auto;
 }</pre>
                 </div>
-                <h3 id="forms-help-text">显示或隐藏元素</h3>
+                <h3 class="item-header" id="forms-help-text">显示或隐藏元素</h3>
                 <p><code>.show</code> 和 <code>.hidden</code> 类可以强制任意元素显示或隐藏(<strong>对于屏幕阅读器也能起效</strong>)。这些类通过 <code>!important</code> 来避免 CSS 样式优先级问题，就像 <a href="#helper-classes-floats">quick floats</a> 一样的做法。注意，这些类只对块级元素起作用，另外，还可以作为 mixin 使用。</p>
                 <p><code>.hide</code> 类仍然可用，但是它不能对屏幕阅读器起作用，并且从 Bootstrap v3.0.1 版本开始就<strong>不建议使用</strong>了。请使用 <code>.hidden</code> 或 <code>.sr-only</code> 。</p>
                 <p>另外，<code>.invisible</code> 类可以被用来仅仅影响元素的可见性，也就是所，元素的 <code>display</code> 属性不被改变，并且这个元素仍然能够影响文档流的排布。</p>
@@ -794,7 +794,7 @@ margin-right: auto;
                     <h2 id="buttons" class="page-header">配色</h2> 
                     <p>Mower的界面应该简洁，易于识别，让人感觉舒适而不失严谨。所使用的配色应该尽可能达到该目的。</p>
                     <p>Mower的配色表包含三部分：主要颜色，灰度颜色及其他颜色。</p>  
-                    <h3 id="buttons-options">主要颜色</h3>
+                    <h3 class="item-header" id="buttons-options">主要颜色</h3>
                     <p>在Mower默认配色方案中含3～5种颜色，决定了界面整体色调。主要颜色会用在菜单、导航、链接、高亮选项等。</p>
                     <div class="colorset">
                       <div class="color-primarycolor"></div>
@@ -803,7 +803,7 @@ margin-right: auto;
                       <div class="color-fourthcolor"></div>
                       <div class="color-fifthcolor"></div>
                     </div>
-                    <h3 id="buttons-sizes">灰度颜色</h3>
+                    <h3 class="item-header" id="buttons-sizes">灰度颜色</h3>
                     <p>灰度颜色强制使用同一色调不同亮度的一组颜色。在无特别需求的情况下，一般使用黑色灰度。灰度颜色会用在块的背景，边框，次要的文本上。灰度颜色为界面创建了层次感，加深了内容与内容间的边界，更易于体现内容的重要程度。</p>
                     <div class="colorset">
                       <div class="color-gray-darker"></div>
@@ -821,7 +821,7 @@ margin-right: auto;
                       <div class="color-light"></div>
                       <div class="color-dark"></div>
                     </div>
-                    <h3 id="buttons-active">额外颜色</h3>
+                    <h3 class="item-header" id="buttons-active">额外颜色</h3>
                     <p>其他的颜色为特殊控件提供的更多的色彩选择。例如各种级别的消息框，特殊作用的按钮，特殊文本等。</p>
                     <div class="colorset">
                       <div class="color-blue"></div>
@@ -849,7 +849,7 @@ margin-right: auto;
                       <div class="color-lightblue"></div>
                       <div class="color-lightcarbon"></div>
                     </div>
-                    <h3 id="buttons-disabled">配色设计要点</h3>
+                    <h3 class="item-header" id="buttons-disabled">配色设计要点</h3>
                     <ul>
                       <li>配色表中的每种颜色都可以在亮度上上下浮动10%左右来生成一个相近但又有些许不同的颜色作为边框及悬停渐变使用。</li>
                       <li>在界面中运用的所有配色尽量使用配色表中已列明的颜色；</li>
