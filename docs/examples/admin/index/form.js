@@ -20,7 +20,7 @@ var Form = (function($) {
             
             this.initTagsSelect();
 
-            this.initTagsInput();
+            //this.initTagsInput();
         },
         initTagsSelect: function() {
             var cities = [{

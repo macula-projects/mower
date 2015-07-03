@@ -424,16 +424,23 @@
 /* mu-breadcrumb-wrapper
  ========================================================================== */
 .mu-breadcrumb-wrapper {
-  min-height: 40px;
-  line-height: 39px;
-  padding: 0;
   display: block;
+  line-height: 15px;
+  margin: 5px 0 15px;
+  min-height: 40px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+
+  .home {
+    color: #999;
+  }
 
   .breadcrumb > li > a {
-    color: #777;
+    color: #999;
   }
 
   .breadcrumb > li.active {
+    color:#000;
     font-weight: 700;
   }
 }

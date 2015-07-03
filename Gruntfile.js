@@ -57,6 +57,7 @@ module.exports = function(grunt) {
                 files: {
                     'dist/admin/js/<%= pkg.name %>.js': [
                         'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/string.<%= pkg.name %>.js',
                         'src/js/base.<%= pkg.name %>.js',
                         'src/js/alert.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
@@ -72,11 +73,10 @@ module.exports = function(grunt) {
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertical.menu.<%= pkg.name %>.js',
                         'src/js/sidebar.menu.<%= pkg.name %>.js',
-                        'src/js/modal.<%= pkg.name %>.js',
+                        'src/js/remotemodal.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
-                        'src/js/utils.<%= pkg.name %>.js',
                         'src/js/validator.<%= pkg.name %>.js',
                         'src/js/messagebox.<%= pkg.name %>.js',
                     ]
@@ -145,17 +145,17 @@ module.exports = function(grunt) {
                 files: {
                     'dist/front/js/<%= pkg.name %>.js': [
                         'src/js/utils.<%= pkg.name %>.js',
+                        'src/js/string.<%= pkg.name %>.js',
                         'src/js/base.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/magnifier.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertival.menu.<%= pkg.name %>.js',
-                        'src/js/modal.<%= pkg.name %>.js',
+                        'src/js/remotemodal.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
-                        'src/js/tooltip.<%= pkg.name %>.js',
-                        'src/js/utils.<%= pkg.name %>.js'
+                        'src/js/tooltip.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -166,15 +166,11 @@ module.exports = function(grunt) {
                 files: {
                     'dist/front/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
-                        'dist/front/css/<%= pkg.name %>.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal.css'
+                        'dist/front/css/<%= pkg.name %>.css'
                     ],
                     'dist/front/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
-                        'dist/front/css/<%= pkg.name %>.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css',
-                        'plugins/bootstrap-modal/css/bootstrap-modal.min.css'
+                        'dist/front/css/<%= pkg.name %>.min.css'
                     ]
                 }
             },
@@ -184,13 +180,9 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/front/js/<%= pkg.name %>.js': [
-                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
-                        'plugins/bootstrap-modal/js/bootstrap-modal.js',
                         'dist/front/js/<%= pkg.name %>.js'
                     ],
                     'dist/front/js/<%= pkg.name %>.min.js': [
-                        'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js',
-                        'plugins/bootstrap-modal/js/bootstrap-modal.min.js',
                         'dist/front/js/<%= pkg.name %>.min.js'
                     ]
                 }
@@ -216,8 +208,6 @@ module.exports = function(grunt) {
                     'plugins/bootstrapvalidator/js/bootstrapValidator.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.js'],
                     'plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.js'],
                     'plugins/bootbox/js/bootbox.min.js': ['plugins/bootbox/js/bootbox.js'],
-                    'plugins/bootstrap-modal/js/bootstrap-modal.min.js': ['plugins/bootstrap-modal/js/bootstrap-modal.js'],
-                    'plugins/bootstrap-modal/js/bootstrap-modalmanager.min.js': ['plugins/bootstrap-modal/js/bootstrap-modalmanager.js'],
                     'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js']
                 }
             },
@@ -281,8 +271,6 @@ module.exports = function(grunt) {
                     'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css'],
                     'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css': ['plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css'],
                     'plugins/toastr/css/toastr.min.css': ['plugins/toastr/css/toastr.css'],
-                    'plugins/bootstrap-modal/css/bootstrap-modal.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal.css'],
-                    'plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.min.css': ['plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css'],
                     'plugins/jstree/css/style.min.css': ['plugins/jstree/css/style.css']
                 }
             }

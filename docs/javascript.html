@@ -80,14 +80,14 @@
       <div class="row">
         <div class="col-md-9" role="main">
               <div class="bs-docs-section">
-                <h2 id="modals" class="page-header"><a class="anchorjs-link " href="#modals" aria-label="Anchor link for: modals" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>模态框 <small>modal.js</small></h2>
+                <h2 id="modals" class="page-header">模态框 <small>modal.js</small></h2>
                 <p>模态框经过了优化，更加灵活，以弹出对话框的形式出现，具有最小和最实用的功能集。</p>
                 <div class="alert alert-warning" id="callout-stacked-modals">
                     <h4>不支持同时打开多个模态框</h4>
                     <p>千万不要在一个模态框上重叠另一个模态框。要想同时支持多个模态框，需要自己写额外的代码来实现。</p>
                 </div>
-                <h3 id="modals-examples"><a class="anchorjs-link " href="#modals-examples" aria-label="Anchor link for: modals examples" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>实例</h3>
-                <h4 id="-4"><a class="anchorjs-link " href="#-4" aria-label="Anchor link for:  4" data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>静态实例</h4>
+                <h3 id="modals-examples" class="item-header">实例</h3>
+                <h4 id="-4" class="subitem-header">静态实例</h4>
                 <p>以下模态框包含了模态框的头、体和一组放置于底部的按钮。</p>
                 <div class="bs-example bs-example-modal">
                     <div class="modal">
@@ -108,7 +108,7 @@
                       </div>
                     </div>
                 </div>
-                <h4>动态实例</h4>
+                <h4 class="subitem-header">动态实例</h4>
                 <p>点击下面的按钮即可通过 JavaScript 启动一个模态框。此模态框将从上到下、逐渐浮现到页面前。</p>
                 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
                     <div class="modal-dialog" role="document">
@@ -119,27 +119,9 @@
                           <h4 class="modal-title" id="myModalLabel">对话框标题</h4>
                         </div>
                         <div class="modal-body">
-                          <h4>Text in a modal</h4>
-                          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-
-                          <h4>Popover in a modal</h4>
-                          <p>This <a href="#" role="button" class="btn btn-default popover-test" title="" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title">button</a> should trigger a popover on click.</p>
-
-                          <h4>Tooltips in a modal</h4>
-                          <p><a href="#" class="tooltip-test" title="" data-original-title="Tooltip">This link</a> and <a href="#" class="tooltip-test" title="" data-original-title="Tooltip">that link</a> should have tooltips on hover.</p>
-
-                          <hr>
-
-                          <h4>Overflowing text to show scroll behavior</h4>
-                          <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                          <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                          <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                          <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                          <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                          <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                          <h4>春晓 <small>唐代·孟浩然</small></h4>
+                          <p>春眠不觉晓⑴，处处闻啼鸟⑵。<br>
+                              夜来风雨声⑶，花落知多少⑷。</p>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -148,9 +130,1199 @@
 
                       </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
+                </div>
+                <div class="bs-example bs-example-padded-bottom">
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                      启动模态框
+                    </button>
                   </div>
+              <h4 class="subitem-header">更改模态框的大小</h4>
+              <p>模态框提供了两个可选尺寸，通过为 <code>.modal-dialog</code> 增加一个样式调整类实现。</p>
+              <div class="bs-example">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">大模态框</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">小模态框</button>
               </div>
+              <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
 
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title" id="myLargeModalLabel">大模态框</h4>
+                    </div>
+                    <div class="modal-body">
+                      ...
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div>
+              <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                <div class="modal-dialog modal-sm">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title" id="mySmallModalLabel">小模态框</h4>
+                    </div>
+                    <div class="modal-body">
+                      ...
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;!-- Large modal --&gt;
+&lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg"&gt;Large modal&lt;/button&gt;
+
+&lt;div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"&gt;
+  &lt;div class="modal-dialog modal-lg"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Small modal --&gt;
+&lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm"&gt;Small modal&lt;/button&gt;
+
+&lt;div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"&gt;
+  &lt;div class="modal-dialog modal-sm"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+             <h4 class="subitem-header">禁用动画效果</h4>
+             <p>模态框在弹出或隐藏时会伴随动画效果（淡入淡出效果），如果不需要，只需要移除<code>.modal</code>标签上的<code>.fade</code>类即可。</p>
+             <div class="bs-example">
+                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fastModal">立即展现</button>
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div class="modal-dialog"&gt;
+  &lt;div class="modal-content"&gt;
+    &lt;div class="modal-header"&gt;
+      &lt;button type="button" class="close" data-dismiss="modal"&gt;&lt;span aria-hidden="true"&gt;×&lt;/span&gt;&lt;span class="sr-only"&gt;关闭&lt;/span&gt;&lt;/button&gt;
+      &lt;h4 class="modal-title"&gt;禁用动画效果演示&lt;/h4&gt;
+    &lt;/div&gt;
+    &lt;div class="mzodal-body"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <div class="modal" id="fastModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                      <h4 class="modal-title">禁用动画效果演示</h4>
+                    </div>
+                    <div class="modal-body">...</div>
+                  </div>
+                </div>
+              </div>
+          <h4 class="subitem-header">模态框内容嵌套栅格系统</h4>
+          <p>为了模态框更好地利用栅格系统，只需要在<code>.modal-body</code>里面添加<code>.container-fluid</code>,这样就可以在容器里面正常使用栅格系统。</p>
+          <div id="gridSystemModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" style="display: none;">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="gridModalLabel">对话框标题</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col-md-4">.col-md-4</div>
+                        <div class="col-md-4 col-md-offset-4">.col-md-4 .col-md-offset-4</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-3 col-md-offset-3">.col-md-3 .col-md-offset-3</div>
+                        <div class="col-md-2 col-md-offset-4">.col-md-2 .col-md-offset-4</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 col-md-offset-3">.col-md-6 .col-md-offset-3</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-9">
+                          Level 1: .col-sm-9
+                          <div class="row">
+                            <div class="col-xs-8 col-sm-6">
+                              Level 2: .col-xs-8 .col-sm-6
+                            </div>
+                            <div class="col-xs-4 col-sm-6">
+                              Level 2: .col-xs-4 .col-sm-6
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div>
+          <div class="bs-example bs-example-padded-bottom">
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#gridSystemModal">
+              启动模态框
+            </button>
+          </div>
+          <div class="highlight">
+            <pre class="prettyprint">
+&lt;div class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel"&gt;
+  &lt;div class="modal-dialog" role="document"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;&lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;&lt;/button&gt;
+        &lt;h4 class="modal-title" id="gridSystemModalLabel"&gt;Modal title&lt;/h4&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        &lt;div class="container-fluid"&gt;
+          &lt;div class="row"&gt;
+            &lt;div class="col-md-4"&gt;.col-md-4&lt;/div&gt;
+            &lt;div class="col-md-4 col-md-offset-4"&gt;.col-md-4 .col-md-offset-4&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="row"&gt;
+            &lt;div class="col-md-3 col-md-offset-3"&gt;.col-md-3 .col-md-offset-3&lt;/div&gt;
+            &lt;div class="col-md-2 col-md-offset-4"&gt;.col-md-2 .col-md-offset-4&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="row"&gt;
+            &lt;div class="col-md-6 col-md-offset-3"&gt;.col-md-6 .col-md-offset-3&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="row"&gt;
+            &lt;div class="col-sm-9"&gt;
+              Level 1: .col-sm-9
+              &lt;div class="row"&gt;
+                &lt;div class="col-xs-8 col-sm-6"&gt;
+                  Level 2: .col-xs-8 .col-sm-6
+                &lt;/div&gt;
+                &lt;div class="col-xs-4 col-sm-6"&gt;
+                  Level 2: .col-xs-4 .col-sm-6
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-footer"&gt;
+        &lt;button type="button" class="btn btn-default" data-dismiss="modal"&gt;Close&lt;/button&gt;
+        &lt;button type="button" class="btn btn-primary"&gt;Save changes&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;&lt;!-- /.modal-content --&gt;
+  &lt;/div&gt;&lt;!-- /.modal-dialog --&gt;
+&lt;/div&gt;&lt;!-- /.modal --&gt;
+            </pre>
+          </div>
+          <h4 class="subitem-header">关闭模态框</h4>
+          <p>在静态模态框HTML中增加一个按钮并添加data属性<code>data-dismiss="modal"</code>，这样当点击该按钮时会关闭此对话框。你可以将该属性添加至模态框内的任何元素。</p>
+          <div class="highlight">
+            <pre class="prettyprint">
+&lt;button type="button" class="close" data-dismiss="modal"&gt;&lt;span aria-hidden="true"&gt;×&lt;/span&gt;&lt;span class="sr-only"&gt;关闭&lt;/span&gt;&lt;/button&gt;
+            </pre>
+          </div>
+          <h3 class="item-header">如何使用</h3>
+          <h4 class="subitem-header">使用data属性</h4>
+          <p>一般情况下不需要手动调用Javascript来使用模态框，只需要在触发模态框的按钮或链接上增加两个额外的data属性即可：<code>data-toggle="modal"</code>和<code>data-target="#myModal"</code>。</p>
+          <p>其中<code>data-toggle</code>属性声明该按钮或链接点击后会显示或隐藏模态框。<code>data-target</code>属性指明静态模态框的ID属性。</p>
+          <p>如果使用<code>&lt;a&gt;</code>触发模态框，可以直接将静态模块框的ID写在<code>href</code>属性内，<code>data-target</code>属性则可以忽略。</p>
+          <p>使用data属性也可以来为对话框提供其他参数。</p>
+          <div class="highlight">
+            <pre class="prettyprint">
+&lt;!-- 使用按钮 --&gt;
+&lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"&gt;启动模态框&lt;/button&gt;
+
+&lt;!-- 使用超链接 --&gt;
+&lt;a data-toggle="modal" href="#myModal"&gt;启动模态框&lt;/a&gt;
+            </pre>
+          </div>
+          <h4 class="subitem-header">手动调用Javascript</h4>
+          <p>不使用按钮或链接来触发模态框也可以使用Javascript来手动触发。</p>
+          <div class="highlight">
+            <pre class="prettyprint">
+$('#myModal').modal(options)
+            </pre>
+          </div>
+          <h4 class="subitem-header">参数</h4>
+          <p>参数既可以在手动调用的时候指定，也可以在静态模态框或者触发器上使用data属性来指定。</p>
+          <p>可用的参数如下：</p>
+          <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>参数</th>
+                  <th style="width: 80px">名称</th>
+                  <th style="width: 300px">可选值</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>backdrop</code></td>
+                  <td>背景遮罩</td>
+                  <td>
+                    <ul>
+                      <li><code>'static'</code></li>
+                      <li><code>true</code>（默认）</li>
+                      <li><code>false</code></li>
+                    </ul>
+                  </td>
+                  <td>使用布尔值来启用或禁用背景遮罩，如果指定为<code>'static'</code>则会启动背景遮罩，但点击背景遮罩时不会触发关闭模态框的过程。</td>
+                </tr>
+                <tr>
+                  <td><code>keyboard</code></td>
+                  <td>按键</td>
+                  <td>
+                    <ul>
+                      <li><code>true</code>（默认）</li>
+                      <li><code>false</code></li>
+                    </ul>
+                  </td>
+                  <td>当为<code>ture</code>时，按下<code>esc</code>键会关闭模态框。</td>
+                </tr>
+                <tr>
+                  <td><code>show</code></td>
+                  <td>立即显示</td>
+                  <td>
+                    <ul>
+                      <li><code>true</code>（默认）</li>
+                      <li><code>false</code></li>
+                    </ul>
+                  </td>
+                  <td>是否在模态框初始化之后立即显示出来。</td>
+                </tr>
+              </tbody>
+            </table>
+            <h4 class="subitem-header">方法</h4>
+            <h5><code>.modal(options)</code></h5>
+            <p>使用参数对象来初始化模态框。</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#myModal').modal(
+{
+    keyboard : false,
+    show     : true
+})
+              </pre>
+            </div>
+            <h5><code>.modal('toggle')</code></h5>
+            <p>手动打开或关闭模态框。<strong>在模态框显示或隐藏之前返回到主调函数中</strong>（也就是，在触发 <code>shown.bs.modal</code> 或 <code>hidden.bs.modal</code> 事件之前）。</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#myModal').modal('toggle')
+              </pre>
+            </div>
+            <h5><code>.modal('show')</code></h5>
+            <p>手动打开模态框。<strong>在模态框显示之前返回到主调函数中</strong> （也就是，在触发 <code>shown.bs.modal</code> 事件之前）。</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#myModal').modal('show')
+              </pre>
+            </div>
+            <h5><code>.modal('hide')</code></h5>
+            <p>手动隐藏模态框。<strong>在模态框隐藏之前返回到主调函数中</strong> （也就是，在触发 <code>hidden.bs.modal</code> 事件之前）。</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#myModal').modal('hide')
+              </pre>
+            </div>
+            <h5><code>.modal('handleUpdate')</code></h5>
+            <p>重新调整模态框位置及大小</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#myModal').modal('handleUpdate')
+              </pre>
+            </div>
+            <h4 class="subitem-header">事件</h4>
+            <p>模态框提供了一系列事件用于监听模态框运行状态，便于在合适的时机运行你自己的代码。</p>
+            <p>在模态框本身自己触发事件 (i.e. at the <code>&lt;div class="modal"&gt;</code>)。</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped bs-events-table">
+                  <thead>
+                   <tr>
+                     <th>事件类型</th>
+                     <th>描述</th>
+                   </tr>
+                  </thead>
+                  <tbody>
+                   <tr>
+                     <td>show.bs.modal</td>
+                     <td><code>show</code> 方法调用之后立即触发该事件。如果是通过点击某个作为触发器的元素，则此元素可以通过事件的 <code>relatedTarget</code> 属性进行访问。</td>
+                   </tr>
+                   <tr>
+                     <td>shown.bs.modal</td>
+                     <td>此事件在模态框已经显示出来（并且同时在 CSS 过渡效果完成）之后被触发。如果是通过点击某个作为触发器的元素，则此元素可以通过事件的 <code>relatedTarget</code> 属性进行访问。</td>
+                   </tr>
+                   <tr>
+                     <td>hide.bs.modal</td>
+                     <td><code>hide</code> 方法调用之后立即触发该事件。</td>
+                   </tr>
+                   <tr>
+                     <td>hidden.bs.modal</td>
+                     <td>此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。</td>
+                   </tr>
+                   <tr>
+                     <td>loaded.bs.modal</td>
+                     <td>从<code>远端的数据源</code>加载完数据之后触发该事件。</td>
+                   </tr>
+                  </tbody>
+                </table>
+              </div>
+              <h4 class="subitem-header">使用要点</h4>
+              <ul>
+                <li>不能在一个模态框上重叠另一个模态框，也不支持在遮罩层同时显示两个以上的模态框；</li>
+                <li>静态模态框的HTML代码应该放在文档最高层级内，作为<code>&lt;body&gt;</code>的直接子元素，以避免与文档中的其他组件冲突；</li>
+                <li>模态框继承自Bootstrap模态框(v3.2)，包含其所有功能和接口。参考：<a target="_blank" href="http://getbootstrap.com/javascript/#modals">英</a>，<a target="_blank" href="http://v3.bootcss.com/javascript/#modals">中</a>。</li>
+              </ul>
+          </div>
+          <div class="bs-docs-section">
+            <h2 id="modals" class="page-header">远程模态框 <small>modal.mower.js</small></h2>
+            <p>远程模态框允许你不需要书写静态模态框HTML，直接使用触发按钮或者一行Javascript代码即可让一个全新的模态框展现。支持使用Ajax从远程获取内容，当然不使用远程内容，直接使用本地内容也是很方便。</p>
+            <h3 class="item-header">实例</h3>
+            <h4 class="subitem-header">加载远程内容</h4>
+            <p>这里提供两种方法（Ajax和iframe）来加载远程内容，使用起来几乎似乎没有任何区别，你只需要确保远程地址所提供的内容是正确的类型。</p>
+            <p>在获取远程内容到显示的过程中，会显示正在加载的图标动画。</p>
+            <h5 class="text-bold">使用Ajax</h5>
+            <p>使用<code>data-remote="(ajax get url)"</code>属性来指定ajax片段获取地址。或者同时指定<code>data-type="ajax"</code>和<code>data-url="(ajax get url)"</code>属性。</p>
+            <div class="bs-example">
+              <button type="button" class="btn btn-primary" data-remote="partial/remote-modal.html" data-toggle="modal">Ajax模态框</button>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;!-- 使用data-remote属性 --&gt;
+&lt;button type="button" class="btn btn-primary" data-remote="partial/remote-modal.html" data-toggle="modal"&gt;Ajax模态框&lt;/button&gt;
+
+&lt;!-- 使用data-type 和data-url属性 --&gt;
+&lt;button type="button" class="btn btn-primary" data-type="ajax" data-url="partial/remote-modal.html" data-toggle="modal"&gt;Ajax模态框&lt;/button&gt;
+              </pre>
+            </div>
+            <p>在返回的ajax片段中，你可以包含一个完整的<code>.modal-dialog</code>内容，或者仅包含<code>.modal-content</code>，甚至不是任何静态modal结构，远端模态框会根据所包含的内容自动补全对话框的缺失部分。</p>
+
+            <h5 class="text-bold">使用iframe（内嵌框架）</h5>
+            <p>使用<code>data-iframe="(iframe url)"</code>属性来指定远程页面内容获取地址。或者同时指定<code>data-type="iframe"</code>和<code>data-url="(iframe url)"</code>属性。</p>
+            <div class="bs-example">
+              <button type="button" class="btn btn-primary" data-iframe="partial/iframe-modal.html" data-toggle="modal">iframe模态框</button>
+            </div>
+            <h4 class="subitem-header">加载自定义内容</h4>
+            <p>通过定义<code>custom</code>属性可以更灵活的为模态框更新内容。</p>
+            <h5 class="text-bold">指定内容文本</h5>
+            <p>最简单的方法是为custom指定内容文本即可。同样可以使用<code>data-custom</code>属性。</p>
+            <div class="bs-example">
+              <button type="button" class="btn btn-primary" data-custom="<h1>此内容是自定义的</h1><p>哈哈:)</p>" data-toggle="modal">指定内容文本</button>
+            </div>
+            <div class="highlight">
+<pre class='prettyprint'><code>&lt;!-- 使用data-custom 属性 --&gt;
+&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-custom=&quot;此内容是自定义的:)&quot; data-toggle=&quot;modal&quot;&gt;指定内容文本&lt;/button&gt;</code></pre>
+
+<pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+$('#triggerButton').remoteModal({custom: '&lt;h1&gt;此内容是自定义的&lt;/h1&gt;&lt;p&gt;哈哈:)&lt;/p&gt;'});
+</code>
+</pre>              
+            </div>
+
+            <h5 class="text-bold">指定页面元素作为内容</h5>
+            <p>通过指定一个jQuery选择器名称来获取其内容作为模态框的内容。</p>
+            <div class="bs-example">
+              <div id="myModalAlert" class="alert alert-success with-icon">
+                <i class="fa fa-check"></i>
+                <div class="content">我希望能够在对话框看到此消息。</div>
+              </div>
+              <button type="button" class="btn btn-primary" data-custom="#myModalAlert" data-toggle="modal">指定页面元素的内容</button>
+            </div>
+            <div class="highlight">
+      <pre class='prettyprint'><code>&lt;!-- 使用data-custom 属性 --&gt;
+&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-custom=&quot;#myModalAlert&quot; data-toggle=&quot;modal&quot;&gt;指定页面元素的内容&lt;/button&gt;</code></pre>
+      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+$('#triggerButton').remoteModal({custom: '#myModalAlert'});</code></pre>              
+            </div>
+
+            <h5 class="text-bold">使用jQuery对象作为内容</h5>
+            <p>直接为custom参数赋值为一个jQuery对象，此对象的内容将显示在对话框中。此方式无法使用data属性调用。</p>
+            <div class="highlight">
+      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+$('#triggerButton').remoteModal({custom: $('#myModalAlert')});</code></pre>              
+            </div>
+
+            <h5 class="text-bold">使用回调函数动态生成内容</h5>
+            <p>将一个回调函数赋值给custom参数，触发器对象会自动调用此函数来实时获得动态内容并显示在模态框中。</p>
+            <p>回调函数提供一个参数对象，可以在生成内容时灵活运用。如果生成的内容是异步的时候，需要在内容准备就绪时调用参数提供的<code>.ready()</code>方法来显示模态框。</p>
+
+            <div class="bs-example">
+              <button type="button" class="btn btn-primary" id="modalTriggerByFunc">使用函数生成内容</button>
+            </div>
+      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+$('#triggerButton').remoteModal({custom: function()
+{
+    return "当模态框显示时，时间是：" + (new Date).toString();
+}});</code>
+</pre>
+            <p>如果你的回调函数是全局的，则只需要将custom参数指定为该函数的名称的字符串。</p>
+            <h4 class="subitem-header">自定义头部</h4>
+
+            <h5>不显示头部</h5>
+            <p>不显示头部需要指定参数<code>showHeader</code>为<code>false</code>。</p>
+            <div class="bs-example">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-custom="这个模态框不显示头部" data-show-header="false" id="modalTriggerByFunc">不显示头部</button>
+            </div>
+            <div class="highlight">
+      <pre class='prettyprint'><code>&lt;!-- 使用data-showHeader 属性 --&gt;
+&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-show-header=&quot;false&quot; data-toggle=&quot;modal&quot;&gt;不显示头部&lt;/button&gt;</code></pre>
+      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+$('#triggerButton').remoteModal({showHeader: false});</code></pre>
+            </div>
+           <h5 class="text-bold">自定义模态框标题</h5>
+          <p>如果不指定模态框的标题，会自动使用触发按钮的title属性或文本作为模态框的标题。</p>
+          <div class="bs-example"><button type="button" class="btn btn-primary" data-toggle="modal" data-custom="此模态框的标题是新的" data-title="新的标题很重要" id="modalTriggerByFunc">自定义标题</button></div>
+          <div class="highlight">
+ <pre class='prettyprint'><code>&lt;!-- 使用data-title 属性 --&gt;
+ &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-title=&quot;新的标题&quot; data-toggle=&quot;modal&quot;&gt;不显示头部&lt;/button&gt;</code></pre>
+ <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+ $('#triggerButton').modalTrigger({title: '新的标题'});</code></pre>           
+          </div>
+
+
+          <h5 class="text-bold">使用图标</h5>
+          <p>通过指定<code>icon</code>属性来在标题前面增加一个图标。</p>
+          <p>图标的定义请参考“控件->图标”章节。</p>
+          <div class="bs-example"><button type="button" class="btn btn-primary" data-toggle="modal" data-custom="此模态框标题包含一个图标" data-icon="fa fa-heart" data-title="图标很重要" id="modalTriggerByFunc">看看图标是什么</button></div>
+          <div class="highlight">
+      <pre class='prettyprint'><code>&lt;!-- 使用data-title 属性 --&gt;
+&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-icon=&quot;heart&quot; data-toggle=&quot;modal&quot;&gt;不显示头部&lt;/button&gt;</code></pre>
+      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
+$('#triggerButton').modalTrigger({icon: 'heart'});</code></pre>
+          </div>
+          <h3 class="item-header">如何使用</h3>
+          <h4 class="subitem-header">使用data属性来调用</h4>
+          <p>使用在触发按钮上设置data属性即可使用。此方法与常规模态框触发按钮属性书写方式完全一致，只不过需要增加几个特殊属性，包括<code>data-remote</code>、<code>data-iframe</code>和<code>data-custom</code>。</p>
+          <p>使用data属性来调用请参考上面的实例章节。</p>
+          <h4 class="subitem-header">使用Javascript手动调用</h4>
+          <p>Javascript方法也十分灵活。</p>
+          <h5 class="text-bold">jQuery对象方法</h5>
+          <p>使得一个jquery对象能够监听事件（一般为点击）并启动模态框。</p>
+          <div class="highlight">
+<pre class='prettyprint'><code>$('#triggerButton').modalTrigger(options);</code></pre>
+          </div>
+          <h4 class="subitem-header">参数</h4>
+          <p>在初始化模态框或者显示时都能够使用参数来个性化你的模态框。</p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>参数</th>
+                <th>名称</th>
+                <th>可选值</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>type</code></td>
+                <td>模态框类型</td>
+                <td>
+                  <ul>
+                    <li><code>'custom'</code>（默认），自定义类型</li>
+                    <li><code>'iframe'</code></li>
+                    <li><code>'ajax'</code></li>
+                  </ul>
+                </td>
+                <td>通常该参数和参数<code>url</code>一起使用，当指定了<code>custom</code>、<code>remote</code>和<code>iframe</code>参数时该参数可以忽略</td>
+              </tr>
+              <tr>
+                <td><code>url</code></td>
+                <td>远程内容地址</td>
+                <td>
+                  远程地址字符串
+                </td>
+                <td>通常该参数和<code>type</code>一起似乎用，当指定了<code>custom</code>、<code>remote</code>和<code>iframe</code>参数时该参数可以忽略</td>
+              </tr>
+              <tr>
+                <td><code>remote</code></td>
+                <td>Ajax内容地址</td>
+                <td>
+                  远程地址字符串
+                </td>
+                <td>如果使用该参数，则参数<code>type</code>和<code>url</code>可以忽略</td>
+              </tr>
+              <tr>
+                <td><code>iframe</code></td>
+                <td>iframe页面地址</td>
+                <td>
+                  远程地址字符串
+                </td>
+                <td>如果使用该参数，则参数<code>type</code>和<code>url</code>可以忽略</td>
+              </tr>
+              <tr>
+                <td><code>size</code></td>
+                <td>模态框大小</td>
+                <td>
+                  <ul>
+                    <li><code>''</code>（默认），默认大小</li>
+                    <li><code>'lg'</code>，大模态框</li>
+                    <li><code>'sm'</code>，小模态框</li>
+                    <li><code>'fullscreen'</code>，全屏显示</li>
+                  </ul>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>width</code></td>
+                <td>模态框宽度</td>
+                <td>
+                  <ul>
+                    <li><code>null</code>（默认），默认宽度</li>
+                    <li>其他表示宽度的CSS值字符串</li>
+                  </ul>
+                </td>
+                <td>如果使用<code>size</code>参数，则可以忽略该参数</td>
+              </tr>
+              <tr>
+                <td><code>height</code></td>
+                <td>模态框宽度</td>
+                <td>
+                  <ul>
+                    <li><code>'auto'</code>（默认），自动根据内容调整</li>
+                    <li>其他表示高度的CSS值字符串</li>
+                  </ul>
+                </td>
+                <td>如果指定了高度不是<code>'auto'</code>则可能出现内容与高度不匹配的情况。</td>
+              </tr>
+              <tr>
+                <td><code>showHeader</code></td>
+                <td>是否显示标题</td>
+                <td>
+                  <ul>
+                    <li><code>true</code>（默认）</li>
+                    <li><code>false</code></li>
+                  </ul>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>title</code></td>
+                <td>模态框标题文本</td>
+                <td>
+                  字符串
+                </td>
+                <td>当参数<code>showHeader</code>为<code>false</code>则此参数无效。</td>
+              </tr>
+              <tr>
+                <td><code>icon</code></td>
+                <td>模态框标题图标</td>
+                <td>
+                  图标名称字符串
+                </td>
+                <td>当参数<code>showHeader</code>为<code>false</code>则此参数无效。</td>
+              </tr>
+              <tr>
+                <td><code>fade</code></td>
+                <td>是否使用淡入淡出动画</td>
+                <td>
+                  <ul>
+                    <li><code>true</code>（默认）</li>
+                    <li><code>false</code></li>
+                  </ul>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>backdrop</code></td>
+                <td>背景遮罩</td>
+                <td>
+                  <ul>
+                    <li><code>true</code>（默认）</li>
+                    <li><code>false</code></li>
+                    <li><code>'static'</code></li>
+                  </ul>
+                </td>
+                <td>使用布尔值来启用或禁用背景遮罩，如果指定为<code>'static'</code>则会启动背景遮罩，但点击背景遮罩时不会触发关闭模态框的过程。</td>
+              </tr>
+              <tr>
+                <td><code>keyboard</code></td>
+                <td>按键</td>
+                <td>
+                  <ul>
+                    <li><code>true</code>（默认）</li>
+                    <li><code>false</code></li>
+                  </ul>
+                </td>
+                <td>当为<code>ture</code>时，按下<code>esc</code>键会关闭模态框。</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4 class="subitem-header">方法</h4>
+          <h5 class="text-bold">获取触发器对象实例</h5>
+          <p>要使用触发器方法，需要首先获取触发器对象的实例。</p>
+          <h6>通过触发按钮的data属性</h6>
+          <div class="highlight">
+<pre class='prettyprint'><code>var modalTrigger = $('#triggerButton').data('zui.modaltrigger');</code></pre>
+          </div>
+          <h5  class="text-bold">显示模态框</h5>
+          <p>在显示模态框时，可以重新传入新的参数，而不影响触发器对象原来的参数。</p>
+          <div class="highlight">
+          <pre class='prettyprint'><code>myModalTrigger.show(options);</code></pre>
+        </div>
+
+          <h5 class="text-bold">关闭模态框</h5>
+          <div class="highlight">
+          <pre class='prettyprint'><code>myModalTrigger.close();</code></pre>
+          </div>
+
+          <h5 class="text-bold">切换显示和关闭状态</h5>
+          <p>如果模态框没有显示，则立即显示，如果已经显示则关闭。</p>
+          <p>在切换显示和关闭状态时，可以重新传入新的参数，而不影响触发器对象原来的参数。</p>
+                    <div class="highlight">
+          <pre class='prettyprint'><code>myModalTrigger.toggle(options);</code></pre>
+          </div>
+
+          <h4 class="subitem-header">事件</h4>
+          <p>因为模态框的DOM内容是动态生成的，不方便使用jQuery方法来绑定事件，不过可以将监听事件的回调函数传入参数中。</p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>事件</th>
+                <th>jquery事件名称</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>onShow</code></td>
+                <td><code>show.mower.modal</code></td>
+                <td>当模态框的show方法被调用时立即发生</td>
+              </tr>
+              <tr>
+                <td><code>shown</code></td>
+                <td><code>shown.mower.modal</code></td>
+                <td>当模态框完全显示后发生（执行完显示动画之后）</td>
+              </tr>
+              <tr>
+                <td><code>onHide</code></td>
+                <td><code>hide.mower.modal</code></td>
+                <td>当模态框hide方法被调用是立即发生</td>
+              </tr>
+              <tr>
+                <td><code>hidden</code></td>
+                <td><code>hidden.mower.modal</code></td>
+                <td>当模态框完全隐藏后发生（执行完隐藏动画之后）</td>
+              </tr>
+              <tr>
+                <td><code>loaded</code></td>
+                <td><code>loaded.mower.modal</code></td>
+                <td>当远程内容加载完成后发生</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <pre class='prettyprint'><code>myModalTrigger.show({shown: function()
+    {
+        alert('模态框已显示。');
+    }});</code></pre>
+
+          <p>如果模态框的<code>name</code>参数是已知的，则可以获取模态框的jquery对象实例通过jQuery对象的on方法来绑定事件。</p>
+          <pre class='prettyprint'><code>$('#triggerModal').on('shown.mower.modal', function(){...});</code></pre>
+
+          </div>
+          <div class="bs-docs-section">
+            <h2 class="page-header">下拉菜单</h2>
+
+            <h3 class="item-header">类型</h3>
+            
+            <h4 class="subitem-header">基本类型</h4>
+            <p>将下拉菜单触发器和下拉菜单都包裹在.dropdown里，或者另一个声明了position: relative;的元素。然后添加组成菜单的HTML代码。
+            </p>
+            <p>通过是否指定data-toggle='dropdown'来开关下拉菜单。</p>
+            <div class="bs-example">
+              <div style="postion:relative;">
+                <div class="dropdown">
+                  <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                    操作
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation" class="dropdown-header">Dropdown header</li>
+                    <li>
+                      <a href="#">编辑</a>
+                    </li>
+                    <li>
+                      <a href="#">删除</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li role="presentation" class="dropdown-header">Dropdown header</li>
+                    <li>
+                      <a href="#">修改</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;div class="example"&gt;
+  &lt;div class="dropdown"&gt;
+    &lt;button class="btn dropdown-toggle" type="button" data-toggle="dropdown"&gt;
+      操作
+      &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"&gt;
+      &lt;li role="presentation" class="dropdown-header"&gt;Dropdown header&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;编辑&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;删除&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="divider"&gt;&lt;/li&gt;
+      &lt;li role="presentation" class="dropdown-header"&gt;Dropdown header&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;修改&lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+              </pre>
+            </div>
+            <h4 class="subitem-header">导航条下拉菜单</h4>
+            <div class="bs-example">
+                <nav id="navbar-example" class="navbar navbar-default">
+                  <div class="container-fluid">
+                    <div class="collapse navbar-collapse bs-example-js-navbar-collapse">
+                      <ul class="nav navbar-nav">
+                        <li class="active">
+                          <a href="#">首页</a>
+                        </li>
+                        <li>
+                          <a href="#">演示</a>
+                        </li>
+                        <li>
+                          <a href="#">下载</a>
+                        </li>
+                        <li class="">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            团队
+                            <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a href="#">关于我们</a>
+                            </li>
+                            <li>
+                              <a href="#">开发计划</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                              <a href="#">开源代码</a>
+                            </li>
+                            <li>
+                              <a href="#">团队博客</a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div><!-- /.nav-collapse -->
+                  </div><!-- /.container-fluid -->
+                </nav> <!-- /navbar-example -->
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;nav id="navbar-example" class="navbar navbar-default"&gt;
+  &lt;div class="container-fluid"&gt;
+    &lt;div class="collapse navbar-collapse bs-example-js-navbar-collapse"&gt;
+      &lt;ul class="nav navbar-nav"&gt;
+        &lt;li class="active"&gt;
+          &lt;a href="#"&gt;首页&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;a href="#"&gt;演示&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;a href="#"&gt;下载&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class=""&gt;
+          &lt;a class="dropdown-toggle" data-toggle="dropdown" href="#"&gt;
+            团队
+            &lt;span class="caret"&gt;&lt;/span&gt;
+          &lt;/a&gt;
+          &lt;ul class="dropdown-menu"&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;关于我们&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;开发计划&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="divider"&gt;&lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;开源代码&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;团队博客&lt;/a&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.nav-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt; &lt;!-- /navbar-example --&gt;
+                </pre>
+              </div>
+              <h4 class="subitem-header">标签下拉菜单</h4>
+              <div class="bs-example">
+                <div style="position:relative;">
+                  <div class="dropdown">
+                    <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                      操作
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                      <li>
+                        <a href="#">编辑</a>
+                      </li>
+                      <li>
+                        <a href="#">删除</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                        <a href="#">修改</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div style="position:relative;"&gt;
+  &lt;div class="dropdown"&gt;
+    &lt;a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html"&gt;
+      操作
+      &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;编辑&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;删除&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="divider"&gt;&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;修改&lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <h4 class="subitem-header">按钮下拉菜单</h4>
+              <div class="bs-example">
+                <div class="btn-group">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                    操作
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li>
+                      <a href="#">编辑</a>
+                    </li>
+                    <li>
+                      <a href="#">删除</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                      <a href="#">修改</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default">操作</button>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a href="#">编辑</a>
+                    </li>
+                    <li>
+                      <a href="#">删除</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                      <a href="#">增加</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div class="btn-group"&gt;
+&lt;button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"&gt;
+  操作
+  &lt;span class="caret"&gt;&lt;/span&gt;
+&lt;/button&gt;
+&lt;ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;编辑&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;删除&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="divider"&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;修改&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="btn-group"&gt;
+&lt;button type="button" class="btn btn-default"&gt;操作&lt;/button&gt;
+&lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+  &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;span class="sr-only"&gt;Toggle Dropdown&lt;/span&gt;
+&lt;/button&gt;
+&lt;ul class="dropdown-menu" role="menu"&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;编辑&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;删除&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="divider"&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;增加&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <h3 class="item-header">变化</h3>
+              <h4 class="subitem-header">弹出方式</h4>
+              <div class="bs-example">
+                <div class="btn-group dropup">
+                  <button type="button" class="btn btn-default">向上</button>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a href="#">div.btn-group.dropup</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default">默认向下</button>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a href="#">div.btn-group</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default">下右</button>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                      <a href="#">div.btn-group &gt; ul.dropdown-menu.pull-right</a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="btn-group dropup">
+                  <button type="button" class="btn btn-default">向右</button>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                      <a href="#">div.btn-group.dropup &gt; ul.dropdown-menu.pull-right</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div class="btn-group dropup"&gt;
+  &lt;button type="button" class="btn btn-default"&gt;向上&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu" role="menu"&gt;
+    &lt;li&gt;
+      &lt;a href="#"&gt;div.btn-group.dropup&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="btn-group"&gt;
+  &lt;button type="button" class="btn btn-default"&gt;默认向下&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu" role="menu"&gt;
+    &lt;li&gt;
+      &lt;a href="#"&gt;div.btn-group&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="btn-group"&gt;
+  &lt;button type="button" class="btn btn-default"&gt;下右&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu pull-right" role="menu"&gt;
+    &lt;li&gt;
+      &lt;a href="#"&gt;div.btn-group &gt; ul.dropdown-menu.pull-right&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class="btn-group dropup"&gt;
+  &lt;button type="button" class="btn btn-default"&gt;向右&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu pull-right" role="menu"&gt;
+    &lt;li&gt;
+      &lt;a href="#"&gt;div.btn-group.dropup &gt; ul.dropdown-menu.pull-right&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <h4 class="subitem-header">小标题和禁用</h4>
+              <p>通过li.dropdown-header增加小标题，为li增加.disabled来禁用。</p>
+              <div class="bs-example">
+                <div style="position:relative">
+                  <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                      操作
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li class="dropdown-header">基本操作</li>
+                      <li>
+                        <a href="#">编辑</a>
+                      </li>
+                      <li class="disabled">
+                        <a role="menuitem" tabindex="-1" href="#">修改</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li class="dropdown-header">其他操作</li>
+                      <li>
+                        <a href="#">增加</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div style="position:relative"&gt;
+  &lt;div class="dropdown"&gt;
+    &lt;button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"&gt;
+      操作
+      &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;ul class="dropdown-menu" role="menu"&gt;
+      &lt;li class="dropdown-header"&gt;基本操作&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;编辑&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="disabled"&gt;
+        &lt;a role="menuitem" tabindex="-1" href="#"&gt;修改&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="divider"&gt;&lt;/li&gt;
+      &lt;li class="dropdown-header"&gt;其他操作&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;增加&lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <h3 class="item-header">如何使用</h3>
+              <p>通过data属性或者javascript调用，使得下拉菜单父亲节点增加<code>.open</code>显示下拉菜单里面的隐藏内容。</p>
+              <h4 class="subitem-header">使用data属性来调用</h4>
+              <p>在链接或者按钮上面增加<code>data-toggle="dropdown"</code>控制下拉菜单。</p>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div class="dropdown"&gt;
+  &lt;button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"&gt;
+    下拉触发按钮
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu" aria-labelledby="dLabel"&gt;
+    ...
+  &lt;/ul&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <p>为了保持链接按钮有效性，可以使用<code>data-target</code>代替<code>href="#"</code></p>
+              <div class="highlight">
+                <pre class="prettyprint">
+&lt;div class="dropdown"&gt;
+  &lt;a id="dLabel" data-target="#" href="http://example.com" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"&gt;
+   下拉触发链接
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/a&gt;
+
+  &lt;ul class="dropdown-menu" aria-labelledby="dLabel"&gt;
+    ...
+  &lt;/ul&gt;
+&lt;/div&gt;
+                </pre>
+              </div>
+              <h4 class="subitem-header">使用javascript来调用</h4>
+              <p>通过javascript调用</p>
+              <div class="highlight">
+                <pre class="prettyprint">
+$('.dropdown-toggle').dropdown()
+                </pre>
+              </div>
+              <div class="alert alert-warning" id="callout-dropdowns-data-required">
+                  <h4><code>data-toggle="dropdown"</code> 必须的</h4>
+                  <p>不管使用的是data属性还是javascript, <code>data-toggle="dropdown"</code> 总是需要在触发元素上面的.</p>
+                </div>
+                <h4 class="subitem-header">方法</h4>
+                <p><code>$().dropdown('toggle')</code></p>
+                <h4 class="subitem-header">事件</h4>
+                <p>所有事件触发都在<code>.dropdown-menu</code>父亲元素上面。</p>
+                <p>在事件触发源里面有属性<code>relatedTarget</code>指向触发源。</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped bs-events-table">
+                      <thead>
+                        <tr>
+                          <th>事件</th>
+                          <th>说明</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><code>show.bs.dropdown</code></td>
+                          <td>当下拉框的show方法被调用时立即发生.</td>
+                        </tr>
+                        <tr>
+                          <td><code>shown.bs.dropdown</code></td>
+                          <td>当下拉框完全显示后发生（执行完显示动画之后）.</td>
+                        </tr>
+                        <tr>
+                          <td><code>hide.bs.dropdown</code></td>
+                          <td>当下拉框的hide方法被调用时立即发生.</td>
+                        </tr>
+                        <tr>
+                          <td><code>hidden.bs.dropdown</code></td>
+                          <td>当下拉框完全隐藏后发生（执行完隐藏动画之后）.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+          </div>
         </div>
         <div class="col-md-3">
           <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
@@ -264,10 +1436,17 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="libs/jquery/jquery-1.11.1.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<script src="assets/js/docs.min.js"></script>
-
+  <script src="libs/jquery/jquery-1.11.1.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="mower/admin/js/mower.js"></script>
+  <script src="assets/plugins/google-code-prettify/prettify.js"></script>
+  <script src="assets/js/docs.min.js"></script>
+  <script>
+  $('#modalTriggerByFunc').remoteModal({custom: function()
+  {
+      return "当模态框显示时，时间是：" + (new Date).toString();
+  }});
+  </script>
 
   </body>
 </html>

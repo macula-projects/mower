@@ -276,6 +276,8 @@
                     <p>在Mower中并没用一个全局的开关来控制是否启用响应式布局。如果确实要禁用该功能，请参考下面的建议：</p>
                     <ul>
                         <li>移除 <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> 标签，禁用移动设备缩放可视窗口尺寸。</li>
+                        <li>通过为 <code>.container</code> 类设置一个 <code>width</code> 值从而覆盖框架的默认 width 设置，例如 <code>width: 970px !important;</code> 。请确保这些设置全部放在默认的 Bootstrap CSS 文件的后面。注意，如果你把它放到媒体查询中，也可以略去 <code>!important</code> 。</li>
+                        <li>如果使用了导航条，需要移除所有导航条的折叠和展开行为。</li>
                         <li>避免使用一些响应式工具类，例如<code>.visible-xs</code>、<code>.visible-sm</code>、<code>.visible-md</code>、<code>.visible-lg</code>等。</li>
                         <li>当使用栅格系统时避免使用 <code>.col-sm-*</code>、<code>.col-md-*</code>、<code>.col-lg-*</code>，统一使用 <code>.col-xs-*</code>。</li>
                     </ul>

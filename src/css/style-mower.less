@@ -2811,7 +2811,7 @@ Input icons
 
  .input-group.mu-dropdowntable .input-group-addon i,
  .input-group.mu-dropdowntree .input-group-addon i,
- .input-group.mu-amodal .input-group-addon i {
+ .input-group.mu-remotemodal .input-group-addon i {
   cursor: pointer;
   width: 16px;
   height: 16px;
@@ -2889,6 +2889,18 @@ Input icons
     width: 100%;
 }
 
+
+/* remote modal 
+ ========================================================================== */
+
+ .modal {
+   > .loader {display: none}
+   &.modal-loading
+   {
+     .modal-dialog {opacity: 0}
+     .loader{position: absolute; display: block; text-align: center; font-size: 56px; color: #fff; top: 35%; width: 80px; left: 50%; margin-left: -40px;}
+   }
+ }
 
 
 
