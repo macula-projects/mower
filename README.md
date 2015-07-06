@@ -1,4 +1,4 @@
-# Mower  - [v1.0.0]
+# Mower  - [v1.1.2]
 
 
 ## Help the project
@@ -22,8 +22,9 @@ __Install__
 
         node cli.js install npm -gf
 
-				在执行这段代码之前，请确保node.exe是跟通过node.msi的方式安装的，或者在PATH环境变量中。
-				
+
+                在执行这段代码之前，请确保node.exe是跟通过node.msi的方式安装的，或者在PATH环境变量中。
+                
         完成后，将D:\NodeJS\node_modules文件夹加入PATH系统变量，并删除D:\npm文件夹（没用了）即可。
 
         可以在dos下用 npm -v 命令测试。
@@ -49,7 +50,7 @@ __Install__
 
         1.作为管理员（对于Windows环境）,通过命令行进入项目工程根目录，执行以下命令:
 
-        grunt release
+        grunt admin OR grunt front
 
     六、运行项目
 
@@ -77,6 +78,8 @@ __Install__
 ## Release History
 7 August 2014 - Mower 1.0
 Initial release to public.
+6 July 2015 - Mower 1.1.2
+Mower document and update js.
 
     
 ## Copyright and license
