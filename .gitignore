@@ -31,3 +31,6 @@ node_modules
 dist
 /docs/mower
 *.zip
+/docs/examples/beyond
+# default ignore folder or files
+_*

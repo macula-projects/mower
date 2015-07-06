@@ -79,11 +79,11 @@
         <div class="row">
             <div class="col-md-9" role="main">
                 <div class="bs-docs-section">
-                    <h2 class="page-header">消息框 </h2>
+                    <h2 class="page-header" id="alert">消息框 </h2>
 
                     <p>消息框能够轻松展示一些需要引起用户注意的内容。</p>
 
-                    <h3 class="item-header">不同感情色彩的消息框</h3>
+                    <h3 class="item-header" id="alert-color">不同感情色彩的消息框</h3>
                     <p>这里提供了5中色彩的消息框用于不同场合。</p>
                     <div class="bs-example" contenteditable="true">
                       <div class="alert alert-default">
@@ -109,7 +109,7 @@
 &lt;div class="alert alert-warning"&gt;...&lt;/div&gt;
 &lt;div class="alert alert-info"&gt;...&lt;/div&gt;</pre>
                     </div>
-                    <h3 class="item-header">使用图标</h3>
+                    <h3 class="item-header" id="alert-icon">使用图标</h3>
                     <p>在消息框中使用醒目的合适的图标能更容易让用户接收。需要使<code>.alert</code>配合<code>.with-icon</code>参数一起使用。</p>
                     <div class="bs-example" contenteditable="true">
                       <div class="alert alert-default alert-icon">
@@ -141,7 +141,7 @@
 &lt;/div&gt;
 </pre>
                     </div>
-                    <h3 class="item-header">块级消息</h3>
+                    <h3 class="item-header" id="alert-block">块级消息</h3>
                     <p>块级消息框将没有外边距，适合用在页面顶部或者浮现在页面之上</p>
                     <div class="bs-example">
                       <div class="alert alert-success alert-block alert-icon">
@@ -150,7 +150,7 @@
                       </div>
                     </div>
 
-                    <h3 class="item-header">消息框中的链接</h3>
+                    <h3 class="item-header" id="alert-link">消息框中的链接</h3>
                     <p>当消息框中包含链接时，推荐使用工具栏<code>.alert-link</code>来使得链接的样式与消息框类型保持一致。</p>
                     <div class="bs-example">
                       <div class="alert alert-icon alert-default ">
@@ -175,7 +175,7 @@
                       </div>
                     </div>
 
-                    <h3 class="item-header">可以关闭的消息框</h3>
+                    <h3 class="item-header" id="alert-close">可以关闭的消息框</h3>
                     <p>可以用一个可选的<code>.alert-dismissable</code>和关闭按钮。</p>
                     <div class="bs-example" contenteditable="true">
                       <div class="alert alert-warning alert-dismissable">
@@ -186,18 +186,18 @@
                     </div>
                 </div>
                 <div class="bs-docs-section">
-                    <h2 class="page-header">代码 </h2>
-                    <h3 class="item-header">内联代码</h3>
+                    <h2 class="page-header" id="code">代码 </h2>
+                    <h3 class="item-header" id="code-inline">内联代码</h3>
                     <div class="bs-example" contenteditable="true">
                         <p>通过<code>&lt;code&gt;</code>标签内嵌一小段代码。</p>
                     </div>
-                    <h3 class="item-header">基本代码块</h3>
+                    <h3 class="item-header" id="code-block">基本代码块</h3>
                     <p>基本代码块包含在<code>&lt;pre&gt;</code>内。</p>
                     <div class="bs-example" contenteditable="true">
                         <pre><code>&lt;p&gt;Sample text here...&lt;/p&gt;</code></pre>
                     </div>
                     <p>还可以使用<code>.pre-scrollable</code> class，其作用是设置max-height为350px，并在垂直方向展示滚动条。</p>
-                    <h3 class="item-header">代码高亮</h3>
+                    <h3 class="item-header" id="code-highlight">代码高亮</h3>
                     <p>代码高亮是通过根据代码语言语法给代码中的单词、字符标记为不同颜色来显示的方法。代码高亮能大大提高代码的查阅体验。在web界面加上代码高亮非常容易，在产品中如需要向用户展现代码应该使用代码高亮。</p>
                     <p>这里推荐的方案是<a href="https://code.google.com/p/google-code-prettify/" target="_blank">Google Code Prettify</a>实现代码高亮。</p>
                     <p>下面是一个php文件的示例：</p>
@@ -207,9 +207,9 @@
                 </div>
 
                 <div class="bs-docs-section">
-                    <h2 class="page-header">输入框组 </h2>
+                    <h2 class="page-header" id="input-groups">输入框组 </h2>
                     <p>通过在文本输入框 <code>&lt;input&gt;</code> 前面、后面或是两边加上文字或按钮，可以实现对表单控件的扩展。为 <code>.input-group</code> 赋予 <code>.input-group-addon</code> 类，可以给 <code>.form-control</code> 的前面或后面添加额外的元素。</p>
-                    <h3 class="item-header">基本类型</h3>
+                    <h3 class="item-header" id="input-groups-type">基本类型</h3>
                     <p>在输入框的任意一侧添加额外元素或按钮。你还可以在输入框的两侧同时添加额外元素。</p>
                     <p><strong class="text-danger">我们不支持在输入框的单独一侧添加多个额外元素。</strong></p>
                     <p><strong class="text-danger">我们不支持在单个输入框组中添加多个表单控件。</strong></p>
@@ -286,7 +286,7 @@
 &lt;/div&gt;
 </pre>
                     </div>
-                    <h3 class="item-header" id="input-groups-checkboxes-radios">作为额外元素的图标<a class="anchorjs-link" href="#input-groups-checkboxes-radios"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="input-groups-icons">作为额外元素的图标<a class="anchorjs-link" href="#input-groups-checkboxes-radios"><span class="anchorjs-icon"></span></a></h3>
 
                     <div class="bs-example" contenteditable="true">
                         <div class="input-group">
@@ -360,7 +360,7 @@
 &lt;/div&gt;
 </pre>
                     </div>
-                    <h3 class="item-header">连续分段的文本框</h3>
+                    <h3 class="item-header" id="input-groups-partial">连续分段的文本框</h3>
                     <p>有时可能需要连续分段的文本框。这时需要在两个相邻的<code>.form-control</code>元素之间添加一个空的<code>.input-group-addon</code>，并同时添加工具栏</p>
                     <div class='alert alert-warning'>
                         <h4>兼容IE浏览器</h4>
@@ -391,7 +391,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="item-header">单选框和复选框</h3>
+                    <h3 class="item-header" id="input-groups-checkbox-radio">单选框和复选框</h3>
                     <div class="bs-example" contenteditable="true">
                         <div class="row">
                             <div class="col-md-6">
@@ -412,7 +412,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="item-header">带按钮</h3>
+                    <h3 class="item-header" id="input-groups-buttons">带按钮</h3>
                     <div class='alert alert-warning'>
                         <h4>消除双边框</h4>
                         <p>当按钮处于两个文本框中间时，需要在<code>.input-group-btn</code>上添加样式修复工具类<code>.border-less</code>。</p>
@@ -456,7 +456,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="item-header">带下拉菜单的按钮</h3>
+                    <h3 class="item-header" id="input-groups-dropdown-buttons">带下拉菜单的按钮</h3>
                     <div class="bs-example" contenteditable="true">
                         <div class="row">
                             <div class="col-md-6">
@@ -497,7 +497,7 @@
                             <!-- /.col-md-6 -->
                         </div>
                     </div>
-                    <h3 class="item-header">使用Select</h3>
+                    <h3 class="item-header" id="#input-groups-dropdown-select">使用Select</h3>
                     <div class='alert alert-danger'>
                         <h4>浏览器兼容性问题</h4>
                         <p>通常并不推荐在输入框组中使用select元素。这样可能会带来难以处理的兼容性问题。推荐使用 <strong>Dropdown</strong> 或者 <strong>Chosen</strong>来代替下拉列表。</p>
@@ -539,7 +539,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="item-header">分段按钮</h3>
+                    <h3 class="item-header" id="input-groups-buttons-dropdown-buttons">分段按钮</h3>
                     <div class="bs-example" contenteditable="true">
                         <div class="row">
                             <div class="col-md-6">
@@ -736,7 +736,7 @@
                     <h2 id="nav" class="page-header">导航<a class="anchorjs-link" href="#nav"><span class="anchorjs-icon"></span></a></h2>
                     <p >导航组件都依赖同一个 <code>.nav</code> 类，状态类也是共用的。改变修饰类可以改变样式。</p>
 
-                    <h3 class="item-header">标签页导航</h3>
+                    <h3 class="item-header" id="nav-tabs">标签页导航</h3>
                     <p>注意 <code>.nav-tabs</code> 类依赖 <code>.nav</code> 基类。</p>
                     <div spellcheck="false" class="bs-example" contenteditable="true">
                       <ul class="nav nav-tabs">
@@ -776,7 +776,7 @@
 &lt;/ul&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">胶囊式标签页导航</h3>
+                    <h3 class="item-header" id="nav-pills">胶囊式标签页导航</h3>
                     <p>HTML 标记相同，但使用 <code>.nav-pills</code> 类：</p>
                     <div spellcheck="false" class="bs-example" contenteditable="true">
                       <ul class="nav nav-pills">
@@ -816,7 +816,7 @@
 &lt;/ul&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">禁用的导航链接</h3>
+                    <h3 class="item-header" id="nav-disable-links">禁用的导航链接</h3>
                     <p>对任何导航组件（标签页、胶囊式标签页），都可以添加 <code>.disabled</code> 类，从而实现<strong>链接为灰色且没有鼠标悬停效果</strong>。</p>
                     <div spellcheck="false" class="bs-example" contenteditable="true">
                       <ul class="nav nav-tabs">
@@ -874,7 +874,7 @@
                       </pre>
                     </div>
 
-                    <h3 class="item-header">垂直排列</h3>
+                    <h3 class="item-header" id="nav-vertical">垂直排列</h3>
                     <p>胶囊是标签页也是可以垂直方向堆叠排列的。只需添加 <code>.nav-stacked</code> 类。</p>
                     <div spellcheck="false" class="bs-example" contenteditable="true">
                       <ul class="nav nav-stacked nav-pills">
@@ -914,7 +914,7 @@
 &lt;/ul&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">自适应宽度</h3>
+                    <h3 class="item-header" id="nav-justified">自适应宽度</h3>
                     <p>自适应宽度不能与垂直排列同时使用</p>
                     <p><code>.nav-justified</code></p>
                     <div spellcheck="false" class="bs-example" contenteditable="true">
@@ -1403,7 +1403,7 @@ body { padding-bottom: 70px; }
 &lt;/nav&gt;
                     </pre>
                   </div>
-                  <h3 class="item-header" id="禁用和激活状态">禁用和激活状态<a class="anchorjs-link" href="#禁用和激活状态"><span class="anchorjs-icon"></span></a></h3>
+                  <h3 class="item-header" id="pagination-disable-active">禁用和激活状态<a class="anchorjs-link" href="#禁用和激活状态"><span class="anchorjs-icon"></span></a></h3>
                   <p>链接在不同情况下可以定制。你可以给不能点击的链接添加 <code>.disabled</code> 类、给当前页添加 <code>.active</code> 类。</p>
                   <div class="bs-example" data-example-id="disabled-active-pagination">
                       <nav>
@@ -1429,8 +1429,8 @@ body { padding-bottom: 70px; }
 &lt;/nav&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">参数</h3>
-                    <h4  class="subitem-header">圆角</h4>
+                    <h3 class="item-header" id="pagination-options">参数</h3>
+                    <h4  class="subitem-header" id="pagination-round">圆角</h4>
                     <p><code>.pagination-pills</code></p>
                     <div class="bs-example" contenteditable="true">
                       <nav>
@@ -1476,7 +1476,7 @@ body { padding-bottom: 70px; }
 &lt;/nav&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">宽松的</h3>
+                    <h3 class="item-header" id="pagination-loose">宽松的</h3>
                     <p><code>.pagination-loose</code></p>
                     <div class="bs-example" contenteditable="true">
                       <ul class="pagination pagination-loose">
@@ -1547,7 +1547,7 @@ body { padding-bottom: 70px; }
 &lt;/nav&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header" id="尺寸">尺寸<a class="anchorjs-link" href="#尺寸"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="pagination-size">尺寸<a class="anchorjs-link" href="#尺寸"><span class="anchorjs-icon"></span></a></h3>
                     <p>想要更小或更大的分页？<code>.pagination-lg</code> 或 <code>.pagination-sm</code> 类提供了额外可供选择的尺寸。</p>
                     <div class="bs-example" data-example-id="pagination-sizing">
                         <nav>
@@ -1595,7 +1595,7 @@ body { padding-bottom: 70px; }
                 <div class="bs-docs-section">
                   <h2 id="pagination-pager">翻页<a class="anchorjs-link" href="#pagination-pager"><span class="anchorjs-icon"></span></a></h2>
                   <p>用简单的标记和样式，就能做个上一页和下一页的简单翻页。</p>
-                  <h3 class="item-header" id="默认实例">默认实例<a class="anchorjs-link" href="#默认实例"><span class="anchorjs-icon"></span></a></h3>
+                  <h3 class="item-header" id="pagination-pager-default">默认实例<a class="anchorjs-link" href="#默认实例"><span class="anchorjs-icon"></span></a></h3>
                   <p>在默认的翻页中，链接居中对齐。</p>
                   <div class="bs-example" data-example-id="simple-pager">
                       <nav>
@@ -1615,7 +1615,7 @@ body { padding-bottom: 70px; }
 &lt;/nav&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header" id="对齐链接">对齐链接<a class="anchorjs-link" href="#对齐链接"><span class="anchorjs-icon"></span></a></h3>
+                    <h3 class="item-header" id="pagination-pager-adjustment">对齐链接<a class="anchorjs-link" href="#对齐链接"><span class="anchorjs-icon"></span></a></h3>
                     <p>你还可以把链接向两端对齐：</p>
                     <div class="bs-example" data-example-id="aligned-pager-links">
                         <nav>
@@ -2109,7 +2109,7 @@ body { padding-bottom: 70px; }
   &lt;/div&gt;
                          </pre>
                        </div>
-                      <h4 id="buttons-active" class="subitem-header"> 额外颜色</h4>
+                      <h4 id="panels-other-color" class="subitem-header"> 额外颜色</h4>
                       
                      <div class="colorset">
                        <div class="panel-blue"></div>
@@ -2150,7 +2150,7 @@ body { padding-bottom: 70px; }
                        <div class="panel-grey-cararra"></div>
                        <div class="panel-grey-gallery"></div>
                      </div>
-                     <h3 class="item-header" id="buttons-active"> 无边框的面板</h3>
+                     <h3 class="item-header" id="panels-border-less"> 无边框的面板</h3>
                      <div class="bs-example">
                        <div class="panel panel-widget light">
                           <div class="panel-heading">
@@ -2245,7 +2245,7 @@ body { padding-bottom: 70px; }
 &lt;/table&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">隔行交替样式的表</h3>
+                    <h3 class="item-header" id="tables-alter">隔行交替样式的表</h3>
                     <p>通过 <code>.table-striped</code> 类可以给 <code>&lt;tbody&gt;</code> 之内的每一行增加斑马条纹样式。</p>
                     <div class="alert alert-danger" id="callout-tables-striped-ie8">
                         <h4 id="跨浏览器兼容性">跨浏览器兼容性<a class="anchorjs-link" href="#跨浏览器兼容性"><span class="anchorjs-icon"></span></a></h4>
@@ -2290,7 +2290,7 @@ body { padding-bottom: 70px; }
 &lt;/table&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">响应鼠标悬停</h3>
+                    <h3 class="item-header" id="tables-hover">响应鼠标悬停</h3>
                     <p>通过添加 <code>.table-hover</code> 类可以让 <code>&lt;tbody&gt;</code> 中的每一行对鼠标悬停状态作出响应。</p>
                     <div class="bs-example" data-example-id="hoverable-table">
                         <table class="table table-hover">
@@ -2331,7 +2331,7 @@ body { padding-bottom: 70px; }
 &lt;/table&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">带所有边框的表格</h3>
+                    <h3 class="item-header" id="table-bordered">带所有边框的表格</h3>
                     <p>添加 <code>.table-bordered</code> 类为表格和其中的每个单元格增加边框。</p>
                     <div class="bs-example" data-example-id="bordered-table">
                         <table class="table table-bordered">
@@ -2372,7 +2372,7 @@ body { padding-bottom: 70px; }
 &lt;/table&gt;
                       </pre>
                     </div>
-                    <h3 class="item-header">更为紧凑的表格</h3>
+                    <h3 class="item-header" id="table-condensed">更为紧凑的表格</h3>
                     <p>通过添加 <code>.table-condensed</code> 类可以让表格更加紧凑，单元格中的内补（padding）均会减半。</p>
                     <div class="bs-example" data-example-id="condensed-table">
                         <table class="table table-condensed">
@@ -2653,7 +2653,7 @@ body { padding-bottom: 70px; }
                 <div class="bs-docs-section">
                   <h2 id="btn-groups" class="page-header">按钮组<a class="anchorjs-link" href="#btn-groups"><span class="anchorjs-icon"></span></a></h2>
                   <p>通过按钮组容器把一组按钮放在同一行里。通过与<a href="../javascript/#buttons">按钮插件</a>联合使用，可以设置为单选框或多选框的样式和行为。</p>
-                  <h3 class="item-header">类型</h3>
+                  <h3 class="item-header" id="btn-groups-type">类型</h3>
                   <h4 class="subitem-header">一组按钮</h4>
                   <p>通过div.btn-group包含多个button</p>
                   <div class="bs-example" data-example-id="simple-button-group">
@@ -2672,7 +2672,7 @@ body { padding-bottom: 70px; }
 &lt;/div&gt;
                     </pre>
                   </div>
-                  <h4 class="subitem-header">多组按钮</h4>
+                  <h4 class="subitem-header" id="btn-groups-toolbar">多组按钮</h4>
                   <p>通过div.btn-toolbar包含.div.btn-group</p>
                   <div class="bs-example" data-example-id="simple-button-toolbar">
                       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -2792,7 +2792,7 @@ body { padding-bottom: 70px; }
                         </pre>
                       </div>
                       <h3 class="item-header">变化</h3>
-                      <h4 class="subitem-header">基本下拉按钮组</h4>
+                      <h4 class="subitem-header" id="btn-groups-select">基本下拉按钮组</h4>
                       <p>将<code>.input-group</code>放置于另一个<code>.input-group</code>中。</p>
                       <div class="bs-example" contenteditable="true">
                         <div class="btn-group">
@@ -2830,7 +2830,7 @@ body { padding-bottom: 70px; }
 &lt;/div&gt;
                         </pre>
                       </div>
-                      <h4 class="subitem-header">分裂式下拉按钮组</h4>
+                      <h4 class="subitem-header" id="btn-groups-segment">分裂式下拉按钮组</h4>
                       <p>基本按钮组的变形，将第二个按钮改成图标即可。</p>
                       <div class="bs-example" contenteditable="true">
                         <div class="btn-group">
@@ -2868,7 +2868,7 @@ body { padding-bottom: 70px; }
 &lt;/div&gt;
                         </pre>
                       </div>
-                      <h4 class="subitem-header">上拉按钮组</h4>
+                      <h4 class="subitem-header" id="btn-groups-dropup">上拉按钮组</h4>
                       <p>给父元素添加 <code>.dropup</code> 类就能使触发的下拉菜单朝上方打开。</p>
                       <div class="bs-example" contenteditable="true">
                         <div class="btn-group dropup">
@@ -2906,7 +2906,7 @@ body { padding-bottom: 70px; }
 &lt;/div&gt;
                         </pre>
                       </div>
-                      <h4 class="subitem-header">大小</h4>
+                      <h4 class="subitem-header" id="btn-groups-size">大小</h4>
                       <p>通过.btn-lg .btn-sm .btn-xs实现</p>
                       <div class="bs-example" contenteditable="true">
                         <div class="btn-toolbar" style="margin: 0;">
@@ -2988,226 +2988,203 @@ body { padding-bottom: 70px; }
                 <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
                     <ul class="nav bs-docs-sidenav">
                         <li>
-                            <a href="#glyphicons">Glyphicons</a>
+                            <a href="#alert">消息框</a>
                             <ul class="nav">
-                                <li><a href="#glyphicons-glyphs">Available glyphs</a>
+                                <li><a href="#alert-color">不同感情色彩的消息框</a>
                                 </li>
-                                <li><a href="#glyphicons-how-to-use">How to use</a>
+                                <li><a href="#alert-icon">使用图标</a>
                                 </li>
-                                <li><a href="#glyphicons-examples">Examples</a>
+                                <li><a href="#alert-block">块级消息</a>
+                                </li>
+                                <li><a href="#alert-link">消息框中的链接</a>
+                                </li>
+                                <li><a href="#alert-close">可以关闭的消息框</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#dropdowns">Dropdowns</a>
+                            <a href="#code">代码</a>
                             <ul class="nav">
-                                <li><a href="#dropdowns-example">Example</a>
+                                <li><a href="#code-inline">内联代码</a>
                                 </li>
-                                <li><a href="#dropdowns-alignment">Alignment options</a>
+                                <li><a href="#code-block">基本代码块</a>
                                 </li>
-                                <li><a href="#dropdowns-headers">Headers</a>
-                                </li>
-                                <li><a href="#dropdowns-disabled">Disabled menu items</a>
+                                <li><a href="#code-highlight">代码高亮</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#btn-groups">Button groups</a>
+                            <a href="#input-groups">输入框组</a>
                             <ul class="nav">
-                                <li><a href="#btn-groups-single">Basic example</a>
+                                <li><a href="#input-groups-type">基本类型</a>
                                 </li>
-                                <li><a href="#btn-groups-toolbar">Button toolbar</a>
+                                <li><a href="#input-groups-sizing">尺寸</a>
                                 </li>
-                                <li><a href="#btn-groups-sizing">Sizing</a>
+                                <li><a href="#input-groups-icons">作为额外元素的图标</a>
                                 </li>
-                                <li><a href="#btn-groups-nested">Nesting</a>
+                                <li><a href="#input-groups-partial">连续分段的文本框</a>
                                 </li>
-                                <li><a href="#btn-groups-vertical">Vertical variation</a>
+                                <li><a href="#input-groups-checkbox-radio">单选框和复选框</a>
                                 </li>
-                                <li><a href="#btn-groups-justified">Justified link variation</a>
+                                <li><a href="#input-groups-buttons">带按钮</a>
+                                </li>
+                                <li><a href="#input-groups-dropdown-buttons">带下拉菜单的按钮</a>
+                                </li>
+                                <li><a href="#input-groups-dropdown-select">使用Select</a>
+                                </li>
+                                <li><a href="#input-groups-buttons-dropdown-buttons">分段按钮</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#btn-dropdowns">Button dropdowns</a>
+                            <a href="#list-group">列表组</a>
                             <ul class="nav">
-                                <li><a href="#btn-dropdowns-single">Single button dropdowns</a>
+                                <li><a href="#list-group-basic">基本实例</a>
                                 </li>
-                                <li><a href="#btn-dropdowns-split">Split button dropdowns</a>
+                                <li><a href="#list-group-linked">链接</a>
                                 </li>
-                                <li><a href="#btn-dropdowns-sizing">Sizing</a>
+                                <li><a href="#list-group-disabled">被禁用的条目</a>
                                 </li>
-                                <li><a href="#btn-dropdowns-dropup">Dropup variation</a>
+                                <li><a href="#list-group-contextual-classes">情境类</a>
+                                </li>
+                                <li><a href="#list-group-custom-content">定制内容</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#input-groups">Input groups</a>
+                            <a href="#nav">导航</a>
                             <ul class="nav">
-                                <li><a href="#input-groups-basic">Basic example</a>
+                                <li><a href="#nav-tabs">标签页导航</a>
                                 </li>
-                                <li><a href="#input-groups-sizing">Sizing</a>
+                                <li><a href="#nav-pills">胶囊式标签页导航</a>
                                 </li>
-                                <li><a href="#input-groups-checkboxes-radios">Checkbox and radios addons</a>
+                                <li><a href="#nav-disable-links">禁用的导航链接</a>
                                 </li>
-                                <li><a href="#input-groups-buttons">Button addons</a>
+                                <li><a href="#nav-vertical">垂直排列</a>
                                 </li>
-                                <li><a href="#input-groups-buttons-dropdowns">Buttons with dropdowns</a>
-                                </li>
-                                <li><a href="#input-groups-buttons-segmented">Segmented buttons</a>
+                                <li><a href="#nav-justified">自适应宽度</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#nav">Navs</a>
+                            <a href="#navbar">导航条</a>
                             <ul class="nav">
-                                <li><a href="#nav-tabs">Tabs</a>
+                                <li><a href="#navbar-default">默认样式的导航条</a>
                                 </li>
-                                <li><a href="#nav-pills">Pills</a>
+                                <li><a href="#navbar-inverted">深色导航条</a>
                                 </li>
-                                <li><a href="#nav-justified">Justified nav</a>
+                                <li><a href="#navbar-forms">表单</a>
                                 </li>
-                                <li><a href="#nav-disabled-links">Disabled links</a>
+                                <li><a href="#navbar-buttons">按钮</a>
                                 </li>
-                                <li><a href="#nav-dropdowns">Using dropdowns</a>
+                                <li><a href="#navbar-text">文本</a>
+                                </li>
+                                <li><a href="#navbar-links">非导航的链接</a>
+                                </li>
+                                <li><a href="#navbar-component-alignment">组件排列</a>
+                                </li>
+                                 <li><a href="#navbar-fixed-top">固定在顶部</a>
+                                </li>
+                                <li><a href="#navbar-fixed-bottom">固定在底部</a>
+                                </li>
+                                <li><a href="#navbar-static-top">静止在顶部</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#navbar">Navbar</a>
+                            <a href="#pagination">分页</a>
                             <ul class="nav">
-                                <li><a href="#navbar-default">Default navbar</a>
+                                <li><a href="#pagination-default">默认分页</a>
                                 </li>
-                                <li><a href="#navbar-forms">Forms</a>
+                                <li><a href="#pagination-disable-active">禁用和激活状态</a>
                                 </li>
-                                <li><a href="#navbar-buttons">Buttons</a>
+                                <li><a href="#pagination-options">参数</a>
                                 </li>
-                                <li><a href="#navbar-text">Text</a>
+                                <li><a href="#pagination-round">圆角</a>
                                 </li>
-                                <li><a href="#navbar-links">Non-nav links</a>
+                                <li><a href="#pagination-loose">宽松的</a>
                                 </li>
-                                <li><a href="#navbar-component-alignment">Component alignment</a>
-                                </li>
-                                <li><a href="#navbar-fixed-top">Fixed to top</a>
-                                </li>
-                                <li><a href="#navbar-fixed-bottom">Fixed to bottom</a>
-                                </li>
-                                <li><a href="#navbar-static-top">Static top</a>
-                                </li>
-                                <li><a href="#navbar-inverted">Inverted navbar</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="#breadcrumbs">Breadcrumbs</a>
-                        </li>
-                        <li>
-                            <a href="#pagination">Pagination</a>
-                            <ul class="nav">
-                                <li><a href="#pagination-default">Default pagination</a>
-                                </li>
-                                <li><a href="#pagination-pager">Pager</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="#labels">Labels</a>
-                        </li>
-                        <li><a href="#badges">Badges</a>
-                        </li>
-                        <li><a href="#jumbotron">Jumbotron</a>
-                        </li>
-                        <li><a href="#page-header">Page header</a>
-                        </li>
-                        <li>
-                            <a href="#thumbnails">Thumbnails</a>
-                            <ul class="nav">
-                                <li><a href="#thumbnails-default">Default example</a>
-                                </li>
-                                <li><a href="#thumbnails-custom-content">Custom content</a>
+                                <li><a href="#pagination-size">尺寸</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#alerts">Alerts</a>
+                            <a href="#pagination-pager">翻页</a>
                             <ul class="nav">
-                                <li><a href="#alerts-examples">Examples</a>
+                                <li><a href="#pagination-pager-default">默认实例</a>
                                 </li>
-                                <li><a href="#alerts-dismissible">Dismissible alerts</a>
-                                </li>
-                                <li><a href="#alerts-links">Links in alerts</a>
+                                <li><a href="#pagination-pager-adjustment">对齐链接</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#progress">Progress bars</a>
+                            <a href="#panels">面板</a>
                             <ul class="nav">
-                                <li><a href="#progress-basic">Basic example</a>
+                                <li><a href="#panels-basic">基本实例</a>
                                 </li>
-                                <li><a href="#progress-label">With label</a>
+                                <li><a href="#panels-heading">带标题的面板</a>
                                 </li>
-                                <li><a href="#progress-low-percentages">Low percentages</a>
+                                <li><a href="#panels-footer">带脚注的面板</a>
                                 </li>
-                                <li><a href="#progress-alternatives">Contextual alternatives</a>
+                                <li><a href="#panels-alternatives">颜色状态效果</a>
                                 </li>
-                                <li><a href="#progress-striped">Striped</a>
+                                <li><a href="#panels-tables">带表格的面板</a>
                                 </li>
-                                <li><a href="#progress-animated">Animated</a>
+                                <li><a href="#panels-list-group">带列表组的面板</a>
                                 </li>
-                                <li><a href="#progress-stacked">Stacked</a>
+                                <li><a href="#panels-list-group">情境颜色的面板</a>
+                                </li>
+                                <li><a href="#panels-other-color">额外颜色的面板</a>
+                                </li>
+                                <li><a href="#panels-border-less">无边框的面板</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#media">Media object</a>
+                            <a href="#tables">表格</a>
                             <ul class="nav">
-                                <li><a href="#media-default">Default media</a>
+                                <li><a href="#tables-example">基本实例</a>
                                 </li>
-                                <li><a href="#media-list">Media list</a>
+                                <li><a href="#tables-alter">隔行交替样式的表</a>
+                                </li>
+                                <li><a href="#tables-hover">响应鼠标悬停</a>
+                                </li>
+                                <li><a href="#table-bordered">带所有边框的表格</a>
+                                </li>
+                                <li><a href="#table-condensed">更为紧凑的表格</a>
+                                </li>
+                                <li><a href="#tables-contextual-classes">状态类</a>
+                                </li>
+                                 <li><a href="#tables-responsive">响应式表格</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#list-group">List group</a>
+                            <a href="#btn-groups">按钮组</a>
                             <ul class="nav">
-                                <li><a href="#list-group-basic">Basic example</a>
+                                <li><a href="#btn-groups-type">类型</a>
                                 </li>
-                                <li><a href="#list-group-badges">Badges</a>
+                                <li><a href="#btn-groups-toolbar">多组按钮</a>
                                 </li>
-                                <li><a href="#list-group-linked">Linked items</a>
+                                <li><a href="#btn-groups-vertical">垂直排列</a>
                                 </li>
-                                <li><a href="#list-group-disabled">Disabled items</a>
+                                <li><a href="#btn-groups-justified">两端对齐排列的按钮组</a>
                                 </li>
-                                <li><a href="#list-group-contextual-classes">Contextual classes</a>
+                                <li><a href="#btn-groups-select">基本下拉按钮组</a>
                                 </li>
-                                <li><a href="#list-group-custom-content">Custom content</a>
+                                <li><a href="#btn-groups-segment">分裂式下拉按钮组</a>
+                                </li>
+                                <li><a href="#btn-groups-dropup">上拉按钮组</a>
+                                </li>
+                                <li><a href="#btn-groups-size">大小</a>
+                                </li>
+                                <li><a href="#btn-groups-color">颜色</a>
                                 </li>
                             </ul>
                         </li>
-                        <li>
-                            <a href="#panels">Panels</a>
-                            <ul class="nav">
-                                <li><a href="#panels-basic">Basic example</a>
-                                </li>
-                                <li><a href="#panels-heading">Panel with heading</a>
-                                </li>
-                                <li><a href="#panels-alternatives">Contextual alternatives</a>
-                                </li>
-                                <li><a href="#panels-tables">With tables</a>
-                                    <li><a href="#panels-list-group">With list groups</a>
-                            </ul>
-                            </li>
-                            <li><a href="#responsive-embed">Responsive embed</a>
-                            </li>
-                            <li><a href="#wells">Wells</a>
-                            </li>
-
-
                     </ul>
                     <a class="back-to-top" href="#top">
-              Back to top
-            </a>
-
-                    <a href="#" class="bs-docs-theme-toggle">
-              Preview theme
+              返回顶部
             </a>
 
                 </div>
