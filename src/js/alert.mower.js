@@ -120,7 +120,7 @@
 
             function getDefaults() {
                 return {
-                    defaultContainer: ".mu-breadcrumb", // default container
+                    defaultContainer: ".mu-breadcrumb-wrapper", // default container
                     container: "", // alerts parent container(by default placed after the page breadcrumbs)
                     place: "append", // append or prepent in container 
                     type: 'success', // alert's type
