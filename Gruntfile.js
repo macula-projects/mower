@@ -36,15 +36,16 @@ module.exports = function(grunt) {
                 options: {
                     open: true,
                     base: [
-                        'docs/' // This is the base file folder. we suppose our index.html is located in this folder
+                        'docs/_dist/' // This is the base file folder. we suppose our index.html is located in this folder
                     ]
                 }
             }
         },
         // Task configuration
         clean: { // clean all
-            build_admin: ['dist/admin/**', 'docs/<%= pkg.name %>/admin/**'],
-            build_front: ['dist/front/**', 'docs/<%= pkg.name %>/front/**']
+            build_admin: ['dist/admin/**', 'docs/_dist/<%= pkg.name %>/admin/**'],
+            build_front: ['dist/front/**', 'docs/_dist/<%= pkg.name %>/front/**'],
+            build_gh_pages: ['docs/_dist/**']
         },
         concat: { //files concat
             options: {
@@ -339,7 +340,15 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'dist/',
                     src: ['**'],
-                    dest: 'docs/<%= pkg.name %>/'
+                    dest: 'docs/_dist/<%= pkg.name %>/'
+                }]
+            },
+            build_gh_pages: {
+                files: [{
+                    expand: true,
+                    cwd: 'docs/',
+                    src: ['**','!_*/**'],
+                    dest: 'docs/_dist'
                 }]
             }
         },
@@ -412,6 +421,12 @@ module.exports = function(grunt) {
                     'jquery/jquery.js': 'jquery/dist/jquery.js'
                 }
             }
+        },
+        'gh-pages': {
+            options: {
+              base: 'docs/_dist'
+            },
+            src: '**/*'
         }
     });
 
@@ -430,7 +445,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-bowercopy');
     grunt.loadNpmTasks('grunt-focus');
-
+    grunt.loadNpmTasks('grunt-gh-pages');
 
     // Creates the 'server' task
     grunt.registerTask('svradmin', ['connect:all', 'focus:admin']);
@@ -452,7 +467,7 @@ module.exports = function(grunt) {
     // grunt
     grunt.registerTask('default', ['svradmin']);
 
-    grunt.registerTask('doc', ['uglify:minify_doc']);
+    grunt.registerTask('docs', ['clean:build_gh_pages','copy:build_docs','copy:build_gh_pages','gh-pages']);
 
     //copy bower files to libs or anywhere
     //grunt.registerTask('init', ['bowercopy']);

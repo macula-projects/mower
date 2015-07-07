@@ -29,8 +29,5 @@ node_modules
 
 #build
 dist
-/docs/mower
 *.zip
-/docs/examples/beyond
-# default ignore folder or files
-_*
+/docs/_*
