@@ -31,3 +31,4 @@ node_modules
 dist
 *.zip
 /docs/_*
+/docs/mower/*

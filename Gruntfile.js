@@ -36,15 +36,15 @@ module.exports = function(grunt) {
                 options: {
                     open: true,
                     base: [
-                        'docs/_dist/' // This is the base file folder. we suppose our index.html is located in this folder
+                        'docs/' // This is the base file folder. we suppose our index.html is located in this folder
                     ]
                 }
             }
         },
         // Task configuration
         clean: { // clean all
-            build_admin: ['dist/admin/**', 'docs/_dist/<%= pkg.name %>/admin/**'],
-            build_front: ['dist/front/**', 'docs/_dist/<%= pkg.name %>/front/**'],
+            build_admin: ['dist/admin/**', 'docs/<%= pkg.name %>/admin/**'],
+            build_front: ['dist/front/**', 'docs/<%= pkg.name %>/front/**'],
             build_gh_pages: ['docs/_dist/**']
         },
         concat: { //files concat
@@ -340,7 +340,7 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'dist/',
                     src: ['**'],
-                    dest: 'docs/_dist/<%= pkg.name %>/'
+                    dest: 'docs/<%= pkg.name %>/'
                 }]
             },
             build_gh_pages: {
@@ -468,7 +468,7 @@ module.exports = function(grunt) {
     // grunt
     grunt.registerTask('default', ['svradmin']);
 
-    grunt.registerTask('docs', ['clean:build_gh_pages','copy:build_docs','copy:build_gh_pages','gh-pages']);
+    grunt.registerTask('docs', ['clean:build_gh_pages','copy:build_gh_pages','gh-pages']);
 
     //copy bower files to libs or anywhere
     //grunt.registerTask('init', ['bowercopy']);

@@ -20,7 +20,7 @@
                 warning: 'warning'
             };
 
-            var alertmore = {
+            var alertbox = {
                 options: {},
                 error: error,
                 success: success,
@@ -28,7 +28,7 @@
                 info: info
             };
 
-            return alertmore;
+            return alertbox;
 
             //#region Accessible Methods
             function error(message, optionsOverride) {
@@ -76,21 +76,29 @@
                     type = map.optionsOverride.type || type;
                 }
 
-                var id = uuid("mower-alert");
+                var id = uuid("mower-alert"),html = [];
 
-                var html = '<div id="' + id + '" class="_mower-alerts alert alert-' + type + ' alert-dismissible fade in">' + (options.close === true ? '<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>' : '') + (options.iconable === true ? '<i class="fa-fw fa-lg fa ' + getDefaultIconByType(type) + '"></i>  ' : '') + map.message + '</div>';
-
-                if (!options.container) {
-                    $(options.defaultContainer).next('._mower-alerts').remove();
-                    $(options.defaultContainer).after(html);
+                html.push('<div id="' + id + '" class="_mower-alerts alert alert-' + type + (options.iconable === true ? ' alert-icon ' : '') + options.classes +  (options.closable === true ? ' alert-dismissable ' : '') + ' fade in">');
+                if (options.iconable === true && options.closable === true) {
+                    html.push('<i class="fa-fw fa-lg fa ' + getDefaultIconByType(type) + '"></i>');
+                    html.push( '<div class="content">' + map.message + '</div>');
+                    html.push('<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>');
+                    html.push('</div>');
                 } else {
-                    $(options.container).find('._mower-alerts').remove();
+                    html.push(options.closable === true ?  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>': '');
+                    html.push(options.iconable === true ? '<i class="fa-fw fa-lg fa ' + getDefaultIconByType(type) + '"></i>  ' : '');
+                    html.push( '<div class="content">' + map.message + '</div>');
+                    html.push('</div>');
+                }
 
-                    if (options.place == "append") {
-                        $(options.container).append(html);
-                    } else {
-                        $(options.container).prepend(html);
-                    }
+                var container = options.defaultContainer;
+                if (options.container) container =  options.container;
+
+                $(container).find('._mower-alerts').remove();
+                if (options.place === "append") {
+                    $(container).append(html.join(''));
+                } else {
+                    $(container).prepend(html.join(''));
                 }
 
                 return id;
@@ -100,16 +108,16 @@
                 var result;
                 switch (type) {
                     case alertType.error:
-                        result = 'fa-times';
+                        result = 'fa-times-circle';
                         break;
                     case alertType.info:
-                        result = 'fa-info';
+                        result = 'fa-info-circle';
                         break;
                     case alertType.warning:
                         result = 'fa-warning';
                         break;
                     case alertType.success:
-                        result = 'fa-check';
+                        result = 'fa-check-circle';
                         break;
                     default:
                         result = 'fa-check';
@@ -120,18 +128,18 @@
 
             function getDefaults() {
                 return {
-                    defaultContainer: ".mu-breadcrumb-wrapper", // default container
+                    defaultContainer: ".mu-content-body", // default container
                     container: "", // alerts parent container(by default placed after the page breadcrumbs)
-                    place: "append", // append or prepent in container 
+                    place: "prepend", // append or prepend in container 
                     type: 'success', // alert's type
                     iconable: true, // put icon before the message
                     reset: true, // close all previouse alerts first
-                    close: true // make alert closable
+                    closable: true // make alert closable
                 };
             }
 
             function getOptions() {
-                return $.extend({}, getDefaults(), alertmore.options);
+                return $.extend({}, getDefaults(), alertbox.options);
             }
 
             //#endregion
@@ -142,6 +150,6 @@
     if (typeof module !== 'undefined' && module.exports) { //Node
         module.exports = factory(require('jquery'), require('uniqueId'));
     } else {
-        window['alertmore'] = factory(window['jQuery'], window['UniqueId']);
+        window['alertbox'] = factory(window['jQuery'], window['UniqueId']);
     }
 }));

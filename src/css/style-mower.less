@@ -634,7 +634,7 @@ Input icons
  * Alerts
  */
 .alert {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   margin-top: 0px;
   padding: 5px 15px 5px 34px;
   color: #675100;
@@ -660,7 +660,7 @@ Input icons
   > [class*="icon-"]
   {
     float: left;
-    font-size: 42px;
+    font-size: 20px;
     opacity: 0.6;
     margin-top: -5px;
     .transition(opacity,@animation-speed-fast,@animation-type);
@@ -677,7 +677,6 @@ Input icons
   {
     width: 100%;
     display: table;
-    padding: 15px;
 
     >[class*="icon-"] , 
     > [class*="fa-"],  
@@ -694,7 +693,7 @@ Input icons
     >[class*="icon-"],
     > [class*="fa-"],
     {
-      width: 40px;
+      width: 20px;
     }
     
     >[class*="fa-"] + .content,
@@ -704,12 +703,18 @@ Input icons
     }
   }
 }
-.alert .close {
-  font-size: 16px;
-  top: 0px;
-  right: -5px;
-  line-height: 20px;
+
+.alert-dismissable {
+  padding-right: 35px;
 }
+
+.alert-dismissable .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  color: inherit;
+}
+
 .alert-heading {
   font-weight: 600;
 }
