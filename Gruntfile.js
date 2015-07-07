@@ -427,6 +427,7 @@ module.exports = function(grunt) {
               base: 'docs/_dist',
               repo:'https://github.com/macula-projects/mower.git'
             },
+            
             src: '**/*'
         }
     });
