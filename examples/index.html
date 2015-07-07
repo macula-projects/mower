@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            color:#666;
+            font-size: 12px;
+        }
+        div,
+        input,
+        span,
+        a {
+          -webkit-border-radius: 0 !important;
+          -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
+        }
+
+        .logo .container {
+            margin-top:10px;
+        }
+        .logo .welcome {
+            display: block;
+            width: 110px;
+            height: 40px;
+            position: absolute;
+            left: 150px;
+            top: 20px;
+            background: url(../assets/img/welcome.png) no-repeat;
+        }
+        .content .login-wrap {
+            position:relative;
+            height: 475px;
+            margin-top: 10px;
+        }
+
+        .content .login-banner {
+            position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 475px;
+              background: #5e8f36;
+        }
+
+        .login-panel {
+            position: relative;
+            z-index: 4;
+            margin-top:30px;
+            padding:0;
+            background-color: #fff;
+        }
+
+        .login-code {
+            padding: 50px 20px 52px 20px;
+        }
+
+        .login-code-title {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .login-code-tool {
+            margin-top:20px;
+        }
+
+        .login-form {
+            padding: 0 20px 10px 20px;
+        }
+
+        .remember-me {
+            margin:0 !important;
+        }
+        
+        .login-form .btn-lg {
+            font-size: 20px;
+            padding-top:8px;
+            padding-bottom: 6px;
+        }
+        .login-banner .advertise {
+            display:none;
+            background-color: #5e8f36;
+            height: 475px;
+        }
+
+        .nav-tabs > li >a {
+            font-size: 14px;
+            font-weight:700;
+            color:#999;
+            background-color: #f6f6f6;
+        }
+
+        .nav-tabs > li.active >a {
+            color:#666;
+        }
+
+        .input-group .input-group-addon {
+            color:#ccc;
+        }
+
+        .alert {
+            padding:10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #675100;
+            border-width: 0;
+            border-left-width: 5px;
+            font-size: 12px;
+        }
+
+        .alert-warning {
+          color: #826430;
+          background: #efe1b3;
+          border-color: #dfb56c;
+        }
+
+        .alert-danger {
+          color: #fff;
+          text-shadow: none;
+          background: #c26565;
+          border-color: #953b39;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- BEGIN LOGO -->
+    <div class="logo">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <a href="index.html">
+                    <img src="../assets/img/logo-fp.png" style="width: 123px;height: 81px;" alt="infinitus">
+                </a>
+                <b class="welcome"></b>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- END LOGO -->
+    <!-- BEGIN LOGIN -->
+    <div class="content">
+        <div class="login-wrap">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 pull-right">
+                    <div class="login-panel">
+                      <!-- Nav tabs -->
+                      <ul id="loginTab" class="nav nav-tabs nav-justified" role="tablist">
+                        <li role="presentation" class="active"><a href="#pwdlogin" aria-controls="profile" role="tab" data-toggle="tab">帐户密码登录</a></li>
+                        <li role="presentation" ><a href="#tdclogin" role="tab" data-toggle="tab">快速登录</a></li>
+                      </ul>
+                      <!-- Tab panes -->
+                      <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane " id="tdclogin">
+                            <div class="login-code">
+                                <div>
+                                    <div class="login-code-title text-center">
+                                        扫描二维码安全登录
+                                    </div>
+                                    <div class="text-center">
+                                        <img src="../assets/img/tdcode.png" style="width: 147px;height: 147px;" alt="infinitus">
+                                    </div>
+                                    <div class="text-center login-code-tool">
+                                            <a href="javascript:;" class="text-muted">刷新二维码</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:;" class="text-muted">使用帮助</a>
+                                    </div>
+                                </div>
+  
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane active" id="pwdlogin">
+                            <!-- BEGIN LOGIN FORM -->
+                            <form class="login-form" action="index.html" method="post">
+                                <div class="alert alert-warning">
+                                    <button class="close" data-close="alert"></button>
+                                    <span>公共场所不建议自动登录，以防账号丢失</span>
+                                </div>
+                                <div class="alert alert-danger hidden">
+                                    <button class="close" data-close="alert"></button>
+                                    <span></span>
+                                </div>
+                                <div class="input-group">
+                                  <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                  </span>
+                                  <input type="text" class="form-control" placeholder="用户名">
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                  <span class="input-group-addon text-muted">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                  </span>
+                                  <input type="password" autocomplete="off" class="form-control" placeholder="密码">
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-5">
+                                          <input type="text" class="form-control" placeholder="验证码">
+                                        </div>
+                                        <div class="col-sm-12 col-md-7">
+                                          <img id="loginCode" src="https://testuim.infinitus.com.cn/captcha?id=f11ad1ef-f5b5-a21d-3e0c-be3b5ed9c4cd&amp;_t=1434346657867" title="点击更换验证码" onfocus="this.blur();" style="cursor:pointer;width:70px;height:26px;">看不清?
+                                          <a href="javascript:;" class="text-muted">换一张</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix">
+                                    <div class="pull-left">
+                                        <a href="javascript:;" class="text-muted">忘记登录密码？</a>
+                                    </div>
+                                    <div class="pull-right">
+                                       <a href="javascript:;" class="text-muted">获取密码</a>
+                                    </div>
+                                </div>
+                                 <br>
+                                <button type="submit" class="btn btn-danger btn-block btn-lg">登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+                            </form>
+                            <!-- END LOGIN FORM -->
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="login-banner">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="advertise visible-md-block visible-lg-block"></div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div  class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <br>
+                <p class="text-center small">建议使用IE8.0或其以上版本的浏览器并设置1024X768分辨率</p>
+
+            </div>
+        </div>
+    </div>
+    <!-- END LOGIN -->
+
+    <script src="../libs/jquery/jquery-1.11.1.min.js"></script>
+    <!-- Mower Javascript组件 -->
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <!-- END BODY -->
+    <script>
+        $('#loginTab a').click(function (e) {
+          e.preventDefault()
+          $(this).tab('show')
+        })
+    </script>
+</body>
+
+</html>

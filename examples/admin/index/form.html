@@ -1,0 +1,434 @@
+<div id="panelForm" class="panel panel-default panel-widget">
+    <div class="panel-heading bordered-bottom-highlight bordered-themesecondary">
+        <div class="row mu-panel-toolbar">
+            <div class="col-xs-12 col-md-3 mu-panel-toolbar-action-cont">
+                <a class="btn" href="#" data-toggle="popBreadcrumb" data-process="Form.processFormSave">
+                    <i class="fa fa-check-circle fa-lg"></i> 保存
+                </a>
+                <a class="btn" href="#" data-toggle="popBreadcrumb">
+                    <i class="fa fa-reply fa-lg"></i> 取消
+                </a>
+            </div>
+            <div class="col-xs-12 col-md-9 mu-panel-toolbar-step-cont">
+                <div class="fuelux pull-right">
+                    <div id="MyWizard" class="wizard">
+                        <ul class="steps">
+                            <li data-target="#step1">
+                                <span class="badge badge-info">1</span> 提交订单
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-target="#step2">
+                                <span class="badge">2</span> 付款成功
+                                <span class="chevron"></span>
+                            </li>
+                            <li class="active" data-target="#step3">
+                                <span class="badge">3</span> 商品出库
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-target="#step4">
+                                <span class="badge">4</span> 等待收货
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-target="#step5">
+                                <span class="badge">5</span> 完成
+                                <span class="chevron"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_5_1" data-toggle="tab">常用属性</a>
+                </li>
+                <li><a href="#tab_5_2" data-toggle="tab">高级选项</a>
+                </li>
+                <li><a href="#tab_5_3" data-toggle="tab">验证</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_1">
+                    <!-- BEGIN FORM-->
+                    <form action="#" class="form-horizontal" id="form_sample_3">
+                        <div class="form-body">
+                            <fieldset>
+                                <legend>商品信息</legend>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">名称</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="col-xs-10 form-control" placeholder="Chee Kin">
+                                            </div>
+                                            <span class="help-button col-xs-12 col-md-1" title="" data-content="更多详细内容." data-trigger="hover" data-original-title="提示信息" data-toggle="popover" rel="popover"><i class="fa fa-question"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group has-error">
+                                            <label class="control-label col-md-3">价格</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" placeholder="Lim">
+                                                <span class="help-block">输入名字不正确</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">规格</label>
+                                            <div class="col-md-9">
+                                                <select class="form-control">
+                                                    <option value="">男</option>
+                                                    <option value="">女</option>
+                                                </select>
+                                                <span class="help-block">请选择您的性别</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">生产日期</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" placeholder="dd/mm/yyyy">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">有效期至</label>
+                                            <div class="col-md-9">
+                                                <select class="select2_category form-control" data-placeholder="Choose a Category" tabindex="1">
+                                                    <option value="Category 1">初级会员</option>
+                                                    <option value="Category 2">中级会员</option>
+                                                    <option value="Category 3">高级会员</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">是否过期</label>
+                                            <div class="col-md-9">
+                                                <div class="radio-list">
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="optionsRadios2" value="option1" />是
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="optionsRadios2" value="option2" checked />否
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>产家信息</legend>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">生产厂商</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">生产地址</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">服务热线</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">省份</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">邮政编码</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">联系人</label>
+                                            <div class="col-md-9">
+                                                <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-text-field="name" data-real-field="extn" data-url="../../../assets/ajax/data/objects.txt" rel="dropdowntable">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-addon"><i class="fa fa-table"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">国籍</label>
+                                            <div class="col-md-9">
+                                                <select class="form-control">
+                                                    <option>中国</option>
+                                                    <option>菲律宾</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">地区</label>
+                                            <div class="col-md-9">
+                                                <div class="input-group mu-dropdowntree" data-width="495" data-code-field="extn" data-text-field="name" data-real-field="extn" data-url="../../../assets/ajax/data/tree.txt" rel="dropdowntree">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-addon"><i class="fa fa-table"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">城市</label>
+                                            <div class="col-md-9">
+                                                <div class="dropdown mu-dropdownquery">
+                                                    <input id="tagsinput" class="form-control" type="text" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">街道</label>
+                                            <div class="col-md-9">
+                                                <div class="input-group mu-amodal" >
+                                                    <input id="tagsinput1" type="text" class="form-control">
+                                                    <span class="input-group-addon" data-toggle="amodal">
+                                                        <i class="fa fa-table"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+                <div class="tab-pane" id="tab_5_2">
+                    <!-- BEGIN FORM-->
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">输入框文字</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" disabled="disabled" placeholder="输入文字信息">
+                                    <span class="help-block">这是帮助信息.</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">邮件地址</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope"></i>
+                                        </span>
+                                        <input type="email" class="form-control" placeholder="邮件地址">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">密码</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" placeholder="密码">
+                                        <span class="input-group-addon"><i class="fa fa-key"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">左图标</label>
+                                <div class="col-md-4">
+                                    <div class="input-icon">
+                                        <i class="fa fa-bell"></i>
+                                        <input type="text" class="form-control" placeholder="左图标">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">右图标</label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <i class="fa fa-microphone"></i>
+                                        <input type="text" class="form-control" placeholder="右图标">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">带有进度输入框</label>
+                                <div class="col-md-4">
+                                    <input type="password" class="form-control spinner" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group last">
+                                <label class="col-md-3 control-label">文本文字</label>
+                                <div class="col-md-4">
+                                    <p class="form-control-static">email@example.com</p>
+                                </div>
+                            </div>
+                            <div class="form-group has-success has-feedback">
+                                <label class="control-label col-md-3" for="inputSuccess1">带有成功状态输入框</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="inputSuccess1">
+                                    <i class="fa fa-check form-control-feedback"></i>
+                                </div>
+                            </div>
+                            <div class="form-group has-warning has-feedback">
+                                <label class="control-label col-md-3" for="inputSuccess2">带有警告状态输入框</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="inputSuccess2">
+                                    <i class="fa fa-exclamation-triangle form-control-feedback"></i>
+
+                                </div>
+                            </div>
+                            <div class="form-group has-error has-feedback">
+                                <label class="control-label col-md-3" for="inputSuccess3">带有错误状态输入框</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="inputSuccess3">
+                                    <i class="fa fa-times form-control-feedback"></i>
+                                    <span class="help-inline">这是错误提示信息.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+                <div class="tab-pane " id="tab_5_3">
+                    <!-- BEGIN FORM-->
+                    <form action="#" id="form_sample_1" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">姓名
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="text" name="name" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">邮件
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="email" type="text" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">个人主页
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="url" type="text" class="form-control" data-bv-notempty="true" />
+                                    <span class="help-block">e.g: http://www.demo.com or http://demo.com</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">固定电话
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="number" type="text" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">移动电话
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="digits" type="text" class="form-control" data-bv-notempty="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">信用卡号码
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <input name="creditcard" type="text" class="form-control" data-bv-notempty="true" />
+                                    <span class="help-block">e.g: 5500 0000 0000 0004</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">职业&nbsp;&nbsp;</label>
+                                <div class="col-md-4">
+                                    <input name="occupation" type="text" class="form-control" />
+                                    <span class="help-block">可选</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">类别
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="category" data-bv-notempty="true">
+                                        <option value="">请选择...</option>
+                                        <option value="Category 1">类别 1</option>
+                                        <option value="Category 2">类别 2</option>
+                                        <option value="Category 3">类别 5</option>
+                                        <option value="Category 4">类别 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <script type="text/javascript" src="form.js"></script> 
+

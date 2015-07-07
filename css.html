@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, bootstrap, front-end, frontend, web development">
+    <title>
+        基础 &middot; Mower-前端开发框架
+    </title>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="mower/admin/css/mower.min.css" rel="stylesheet">
+    <!-- Documentation extras -->
+    <link href="assets/css/docs.css" rel="stylesheet">
+    <!--[if lt IE 9]><script src="assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="assets/js/ie-emulation-modes-warning.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Favicons -->
+    <link rel="icon" href="../favicon.ico">
+</head>
+
+<body>
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="../index.html" class="navbar-brand">Mower</a>
+            </div>
+            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="getting-started.html">开始</a>
+                    </li>
+                    <li class="active">
+                        <a href="index.html">基础</a>
+                    </li>
+                    <li>
+                        <a href="controls.html">控件</a>
+                    </li>
+                    <li>
+                        <a href="components.html">组件</a>
+                    </li>
+                    <li>
+                        <a href="javascript.html">Javascript插件</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- Docs page layout -->
+    <div class="bs-docs-header" id="content">
+        <div class="container">
+            <h1>基础</h1>
+            <p>设置全局 CSS 样式；基本的 HTML 元素均可以通过 class 设置样式并得到增强效果；还有先进的栅格系统.</p>
+        </div>
+    </div>
+    <div class="container bs-docs-container">
+        <div class="row">
+            <div class="col-md-9" role="main">
+                <div class="bs-docs-section">
+                    <h2 id="overview" class="page-header">Hello world</h2>
+                    <p>使用Mower进行构建现代应用非常简单。一般情况下，Mower仅依赖于jQuery，Mower中的Javascript组件构建于jQuery之上。</p>
+                    <p>下面给出一个非常简单的Hello world页面。</p>
+                    <div class="highlight">
+                        <pre class="prettyprint">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-cn&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+    &lt;!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --&gt;
+    &lt;title&gt;Hello world!&lt;/title&gt;
+
+    &lt;!-- bootstrap --&gt;
+    &lt;link href=&quot;css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;!-- mower --&gt;
+    &lt;link href=&quot;css/mower.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello, world!&lt;/h1&gt;
+
+    &lt;!-- jQuery (Mower中的Javascript组件依赖于jQuery) --&gt;
+    &lt;script src=&quot;//code.jquery.com/jquery-1.11.0.min.js&quot;&gt;&lt;/script&gt;
+    &lt;!-- Bootstrap Javascript组件 --&gt;
+    &lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;!-- Mower Javascript组件 --&gt;
+    &lt;script src=&quot;js/mower.min.js&quot;&gt;&lt;/script&gt;
+    &lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+    &lt;!-- WARNING: Respond.js doesn't work if you view the page via file:// --&gt;
+    &lt;!-- [if lt IE 9] &gt;
+    &lt;script src=&quot;https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]-- &gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                    </div>
+                    <p>如果你的网站需要兼容IE8，请参考“<a href="getting-started.html#support">兼容IE浏览器</a>”章节。</p>
+                </div>
+                <div class="bs-docs-section">
+                    <h2 id="grid" class="page-header">全局样式表</h2>
+                    <p>Mower使用 <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a> 来重置样式，这样尽可能保证在所有浏览器中有一致的体验。</p>
+                    <h3 class="item-header" id="grid-intro">为何使用 Normalize.css</h3>
+                    <p>如果一份没有任何样式设置的html文档在浏览器打开时，浏览器会使用默认的样式来呈现文档，确保更易于阅读文本和区分文档中不同的内容。</p>
+                    <p>但是当我们需要应用自己的样式时，浏览器默认的样式会造成干扰，更重要的是不同的浏览器的默认样式并不相同，这使得我们希望的样式最终呈现效果变得不可控。<code>Normalize.css</code> 正是为了解决此问题而生，而且做的更好。</p>
+                </div>
+                <div class="bs-docs-section">
+                    <h2 id="type" class="page-header">响应式布局</h2>
+                    <p>为了加快对移动设备友好的页面开发工作，利用媒体查询功能并使用这些工具类可以方便的针对不同设备展示或隐藏页面内容。另外还包含了针对打印机显示或隐藏内容的工具类。</p>
+                    <p>有针对性的使用这类工具类，从而避免为同一个网站创建完全不同的版本。相反，通过使用这些工具类可以在不同设备上提供不同的展现形式。</p>
+                    <h3 class="item-header" id="type-headings">可用的类<a class="anchorjs-link" href="#responsive-utilities-classes"><span class="anchorjs-icon"></span></a></h3>
+                    <p>通过单独或联合使用以下列出的类，可以针对不同屏幕尺寸隐藏或显示页面内容。</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped responsive-utilities">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        超小屏幕
+                                        <small>手机 (&lt;768px)</small>
+                                    </th>
+                                    <th>
+                                        小屏幕
+                                        <small>平板 (≥768px)</small>
+                                    </th>
+                                    <th>
+                                        中等屏幕
+                                        <small>桌面 (≥992px)</small>
+                                    </th>
+                                    <th>
+                                        大屏幕
+                                        <small>桌面 (≥1200px)</small>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><code>.visible-xs-*</code></th>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-hidden">隐藏</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.visible-sm-*</code></th>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-hidden">隐藏</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.visible-md-*</code></th>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.visible-lg-*</code></th>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><code>.hidden-xs</code></th>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-visible">可见</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.hidden-sm</code></th>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-visible">可见</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.hidden-md</code></th>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.hidden-lg</code></th>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>从 v3.2.0 版本起，形如 <code>.visible-*-*</code> 的类针对每种屏幕大小都有了三种变体，每个针对 CSS 中不同的 <code>display</code> 属性，列表如下：</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>类组</th>
+                                    <th>CSS <code>display</code></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><code>.visible-*-block</code></th>
+                                    <td><code>display: block;</code></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.visible-*-inline</code></th>
+                                    <td><code>display: inline;</code></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.visible-*-inline-block</code></th>
+                                    <td><code>display: inline-block;</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>因此，以超小屏幕（<code>xs</code>）为例，可用的 <code>.visible-*-*</code> 类是：<code>.visible-xs-block</code>、<code>.visible-xs-inline</code> 和 <code>.visible-xs-inline-block</code>。</p>
+                    <p><code>.visible-xs</code>、<code>.visible-sm</code>、<code>.visible-md</code> 和 <code>.visible-lg</code> 类也同时存在。但是<strong>从 v3.2.0 版本开始不再建议使用</strong>。除了 <code>&lt;table&gt;</code> 相关的元素的特殊情况外，它们与 <code>.visible-*-block</code> 大体相同。</p>
+                    <h3 class="item-header" id="type-body-copy">打印类<a class="anchorjs-link" href="#responsive-utilities-print"><span class="anchorjs-icon"></span></a></h3>
+                    <p>和常规的响应式类一样，使用下面的类可以针对打印机隐藏或显示某些内容。</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped responsive-utilities">
+                            <thead>
+                                <tr>
+                                    <th>class</th>
+                                    <th>浏览器</th>
+                                    <th>打印机</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        <code>.visible-print-block</code>
+                                        <br>
+                                        <code>.visible-print-inline</code>
+                                        <br>
+                                        <code>.visible-print-inline-block</code>
+                                    </th>
+                                    <td class="is-hidden">隐藏</td>
+                                    <td class="is-visible">可见</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><code>.hidden-print</code></th>
+                                    <td class="is-visible">可见</td>
+                                    <td class="is-hidden">隐藏</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><code>.visible-print</code> 类也是存在的，但是从 v3.2.0 版本开始<strong>不建议使用</strong>。它与 <code>.visible-print-block</code> 类大致相同，除了 <code>&lt;table&gt;</code> 相关元素的特殊情况外。</p>
+                    <h3 class="item-header" id="type-inline-text">禁用响应式布局</h3>
+                    <p>有时你所开发应用仅针对一个设备或平台，并不需要响应式布局。即使这样，也建议你使用响应式布局，因为不需要额外的代码，而且为跨屏提供了可能性。</p>
+                    <p>在Mower中并没用一个全局的开关来控制是否启用响应式布局。如果确实要禁用该功能，请参考下面的建议：</p>
+                    <ul>
+                        <li>移除 <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> 标签，禁用移动设备缩放可视窗口尺寸。</li>
+                        <li>通过为 <code>.container</code> 类设置一个 <code>width</code> 值从而覆盖框架的默认 width 设置，例如 <code>width: 970px !important;</code> 。请确保这些设置全部放在默认的 Bootstrap CSS 文件的后面。注意，如果你把它放到媒体查询中，也可以略去 <code>!important</code> 。</li>
+                        <li>如果使用了导航条，需要移除所有导航条的折叠和展开行为。</li>
+                        <li>避免使用一些响应式工具类，例如<code>.visible-xs</code>、<code>.visible-sm</code>、<code>.visible-md</code>、<code>.visible-lg</code>等。</li>
+                        <li>当使用栅格系统时避免使用 <code>.col-sm-*</code>、<code>.col-md-*</code>、<code>.col-lg-*</code>，统一使用 <code>.col-xs-*</code>。</li>
+                    </ul>
+                </div>
+                <div class="bs-docs-section">
+                    <h2 id="code" class="page-header">栅格系统</h2>
+                    <p>采用Bootstrap3的栅格设计。具体使用参考<a href="http://v3.bootcss.com/css/#grid" target="_blank">bootstrap3-grid</a>。</p>
+                    <p>以下列出常用参数：</p>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    超小屏幕
+                                    <small>手机 (&lt;768px)</small>
+                                </th>
+                                <th>
+                                    小屏幕
+                                    <small>平板 (≥768px)</small>
+                                </th>
+                                <th>
+                                    中等屏幕
+                                    <small>桌面显示器 (≥992px)</small>
+                                </th>
+                                <th>
+                                    大屏幕
+                                    <small>大桌面显示器 (≥1200px)</small>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="text-nowrap">栅格系统行为</th>
+                                <td>总是水平排列</td>
+                                <td colspan="3">开始是堆叠在一起的，当大于这些阈值时将变为水平排列C</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap"><code>.container</code> 最大宽度</th>
+                                <td>None （自动）</td>
+                                <td>750px</td>
+                                <td>970px</td>
+                                <td>1170px</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">类前缀</th>
+                                <td><code>.col-xs-</code></td>
+                                <td><code>.col-sm-</code></td>
+                                <td><code>.col-md-</code></td>
+                                <td><code>.col-lg-</code></td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">列（column）数</th>
+                                <td colspan="4">12</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">最大列（column）宽</th>
+                                <td class="text-muted">自动</td>
+                                <td>~62px</td>
+                                <td>~81px</td>
+                                <td>~97px</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">槽（gutter）宽</th>
+                                <td colspan="4">30px （每列左右均有 15px）</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">可嵌套</th>
+                                <td colspan="4">是</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">偏移（Offsets）</th>
+                                <td colspan="4">是</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap">列排序</th>
+                                <td colspan="4">是</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bs-docs-section">
+                    <h2 id="tables" class="page-header">排版</h2>
+                    <h3 class="item-header" id="tables-example">字体</h3>
+                    <p>Mower中使用字体集：<code> "Helvetica Neue", Helvetica, "宋体", Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;</code></p>
+                    <p>默认的字体大小为 <strong>13px</strong>，以保证在所有屏幕上都能有最佳效果。Mower中也允许使用更小号的字体，不过不要小于 <strong>12px</strong>。默认行高为字体大小的1.53倍，一般为20px。</p>
+                    <h3 class="item-header" id="tables-striped">文字排版</h3>
+                    <p>字是组成页面的重要内容，一个好的排版是构建好的用户界面的基石。应根据我们的设计原则来进行文字排版。下表中列举了web设计时会用到的文字排版方式。</p>
+                    <table class="table typography">
+                        <tbody>
+                            <tr>
+                                <th style="width:30%">元素</th>
+                                <th>标签</th>
+                                <th>字体大小</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h1>页面标题</h1>
+                                </td>
+                                <td><code>&lt;h1&gt;</code></td>
+                                <td>36px</td>
+                                <td>在一个页面只有一个页面标题。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h2>标题</h2></td>
+                                <td><code>&lt;h2&gt;</code></td>
+                                <td>30px</td>
+                                <td>作为页面第二级标题，可能在一个页面中使用到多个二级标题。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3>三级标题</h3></td>
+                                <td><code>&lt;h3&gt;</code></td>
+                                <td>24px</td>
+                                <td>页面第三级标题，嵌套在二级标题下使用。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>四级标题</h4></td>
+                                <td><code>&lt;h4&gt;</code></td>
+                                <td>18px</td>
+                                <td>页面第四级标题，嵌套在三级标题下使用。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5>五级标题</h5></td>
+                                <td><code>&lt;h5&gt;</code></td>
+                                <td>14px</td>
+                                <td>页面第五级标题，嵌套在四级标题下使用。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h6>六级标题</h6></td>
+                                <td><code>&lt;h6&gt;</code></td>
+                                <td>12px</td>
+                                <td>页面第六级标题，嵌套在五级标题下使用。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>这是一个段落</p>
+                                </td>
+                                <td><code>&lt;p&gt;</code></td>
+                                <td>13px</td>
+                                <td>正文中大部分由段落组成。段落的行高为20px。段落间在垂直方向上有10px边距。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="lead">这是一个突出的段落</p>
+                                </td>
+                                <td><code>&lt;p class="lead"&gt;</code></td>
+                                <td>20px</td>
+                                <td>突出的段落具有更大的字体，在一个段落上加<code>.lead</code>类。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>粗体文本</strong></td>
+                                <td><code>&lt;strong&gt;</code></td>
+                                <td>13px</td>
+                                <td>通常粗体文本用来强调内容。</td>
+                            </tr>
+                            <tr>
+                                <td><em>斜体文本</em></td>
+                                <td><code>&lt;em&gt;</code></td>
+                                <td>13px</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><small>小的文本</small></td>
+                                <td><code>&lt;small&gt;</code></td>
+                                <td>12px 颜色灰色</td>
+                                <td>small文本字体只有正常字体大小的85%，通常为11.9px。</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">超链接</a></td>
+                                <td><code>&lt;a&gt;</code></td>
+                                <td>13px</td>
+                                <td>超链接具有不同的颜色以区别其他文本，超链接仅当鼠标悬停时会增加下划线。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ol>
+                                        <li>这是一个有序列表</li>
+                                        <li>包含三个列表项</li>
+                                        <li>作为示例</li>
+                                    </ol>
+                                </td>
+                                <td><code>&lt;ol&gt;&lt;li&gt;...&lt;/ol&gt;</code></td>
+                                <td>13px</td>
+                                <td>当组织一些并列项目且关注项目之间顺序时可以使用有序列表。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul>
+                                        <li>这是一个无序列表</li>
+                                        <li>包含三个列表项</li>
+                                        <li>作为示例</li>
+                                    </ul>
+                                </td>
+                                <td><code>&lt;ul&gt;&lt;li&gt;...&lt;/ul&gt;</code></td>
+                                <td>13px</td>
+                                <td>当组织一些并列项目但不关注项目之间顺序时可以使用无序列表。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <blockquote>这是一大段引用内容</blockquote>
+                                </td>
+                                <td><code>&lt;blockquote&gt;</code></td>
+                                <td>13px</td>
+                                <td>用于显示一大段引用的内容。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <q>这是内嵌的引用</q>
+                                </td>
+                                <td><code>&lt;q&gt;</code></td>
+                                <td>13px</td>
+                                <td>用于在正文行内显示引用的术语。</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <pre><code>&lt;div&gt;
+                            &lt;p&gt;代码区域&lt;/p&gt;
+                            &lt;/div&gt;</code></pre>
+                                </td>
+                                <td><code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;</code></td>
+                                <td>13px 等宽字体</td>
+                                <td>代码区域会加上方框，并使用等宽字体显示，详细代码显示规定请参见节<a href="#prettify">代码高亮</a>。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bs-docs-section">
+                    <h2 id="forms" class="page-header">辅助类</h2>
+                    <p>在Mower中提供了众多实用的辅助类。任何时候只需要加入对应的CSS类名即可。虽然辅助类使用起来非常方便，但也要避免滥用。使用之前应该了解以下要点。</p>
+                    <ul>
+                        <li>尽量少用或不用辅助类，如果有对应的控件或组件使用。</li>
+                        <li>当相同的场景需要大量使用辅助类时，这时应该考虑是否单独定义一个新的控件或组件。</li>
+                    </ul>
+                    <h3 class="item-header" id="forms-example">小字号文本</h3>
+                    <p>使用标签<code>&lt;small&gt;</code>或者CSS类名<code>.small</code>来使得文本字号比正常情况小一号。</p>
+                    <div class="bs-example">
+                        <small>小字号文本，small text.</small>
+                    </div>
+                    <div class="highlight">
+                        <pre><code>&lt;small&gt;...&lt;/small&gt;</code></pre>
+                    </div>
+                    <h3 class="item-header" id="forms-inline">情境文本颜色<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <p>通过颜色来展示意图 提供了一组工具类。这些类可以应用于链接，并且在鼠标经过时颜色可以还可以加深，就像默认的链接一样。</p>
+                    <div class="bs-example" data-example-id="contextual-colors-helpers">
+                        <p class="text-muted">haha,this text color is text-muted.</p>
+                        <p class="text-primary">haha,this text color is text-primary.</p>
+                        <p class="text-success">haha,this text color is text-success.</p>
+                        <p class="text-info">haha,this text color is text-info.</p>
+                        <p class="text-warning">haha,this text color is text-warning.</p>
+                        <p class="text-danger">haha,this text color is text-danger.</p>
+                        <p class="text-white">haha,this text color is text-white.</p>
+                        <p class="text-snow">haha,this text color is text-snow.</p>
+                        <p class="text-whitesmoke">haha,this text color is text-whitesmoke.</p>
+                        <p class="text-seashell">haha,this text color is text-seashell.</p>
+                        <p class="text-ivory">haha,this text color is text-ivory.</p>
+                        <p class="text-platinum">haha,this text color is text-platinum.</p>
+                        <p class="text-lightgray">haha,this text color is text-lightgray.</p>
+                        <p class="text-gray">haha,this text color is text-gray.</p>
+                        <p class="text-darkgray">haha,this text color is text-darkgray.</p>
+                        <p class="text-silver">haha,this text color is text-silver.</p>
+                        <p class="text-sonic-silver">haha,this text color is text-sonic-silver.</p>
+                        <p class="text-storm-cloud">haha,this text color is text-storm-cloud.</p>
+                        <p class="text-lightcarbon">haha,this text color is text-lightcarbon.</p>
+                        <p class="text-carbon">haha,this text color is text-carbon.</p>
+                        <p class="text-slate-gray">haha,this text color is text-slate-gray.</p>
+                        <p class="text-darkcarbon">haha,this text color is text-darkcarbon.</p>
+                        <p class="text-blue">haha,this text color is text-blue.</p>
+                        <p class="text-sky">haha,this text color is text-sky.</p>
+                        <p class="text-azure">haha,this text color is text-azure.</p>
+                        <p class="text-blueberry">haha,this text color is text-blueberry.</p>
+                        <p class="text-palegreen">haha,this text color is text-palegreen.</p>
+                        <p class="text-green">haha,this text color is text-green.</p>
+                        <p class="text-lightyellow">haha,this text color is text-lightyellow.</p>
+                        <p class="text-yellow">haha,this text color is text-yellow.</p>
+                        <p class="text-gold">haha,this text color is text-gold.</p>
+                        <p class="text-orange">haha,this text color is text-orange.</p>
+                        <p class="text-lightred">haha,this text color is text-lightred.</p>
+                        <p class="text-darkorange">haha,this text color is text-darkorange.</p>
+                        <p class="text-red">haha,this text color is text-red.</p>
+                        <p class="text-pink">haha,this text color is text-pink.</p>
+                        <p class="text-darkpink">haha,this text color is text-darkpink.</p>
+                        <p class="text-magenta">haha,this text color is text-magenta.</p>
+                        <p class="text-purple">haha,this text color is text-purple.</p>
+                        <p class="text-maroon">haha,this text color is text-maroon.</p>
+                    </div>
+                    <div class="highlight">
+                        <pre class="prettyprint">
+&lt;p class="text-muted"&gt;...&lt;/p&gt;
+&lt;p class="text-primary"&gt;...&lt;/p&gt;
+&lt;p class="text-success"&gt;...&lt;/p&gt;
+&lt;p class="text-info"&gt;...&lt;/p&gt;
+&lt;p class="text-warning"&gt;...&lt;/p&gt;
+&lt;p class="text-danger"&gt;...&lt;/p&gt;
+&lt;p class="text-white"&gt;...&lt;/p&gt;
+&lt;p class="text-snow"&gt;...&lt;/p&gt;
+&lt;p class="text-whitesmoke"&gt;...&lt;/p&gt;
+&lt;p class="text-seashell"&gt;...&lt;/p&gt;
+&lt;p class="text-ivory"&gt;...&lt;/p&gt;
+&lt;p class="text-platinum"&gt;...&lt;/p&gt;
+&lt;p class="text-lightgray"&gt;...&lt;/p&gt;
+&lt;p class="text-gray"&gt;...&lt;/p&gt;
+&lt;p class="text-darkgray"&gt;...&lt;/p&gt;
+&lt;p class="text-silver"&gt;...&lt;/p&gt;
+&lt;p class="text-sonic-silver"&gt;...&lt;/p&gt;
+&lt;p class="text-storm-cloud"&gt;...&lt;/p&gt;
+&lt;p class="text-lightcarbon"&gt;...&lt;/p&gt;
+&lt;p class="text-carbon"&gt;...&lt;/p&gt;
+&lt;p class="text-slate-gray"&gt;...&lt;/p&gt;
+&lt;p class="text-darkcarbon"&gt;...&lt;/p&gt;
+&lt;p class="text-blue"&gt;...&lt;/p&gt;
+&lt;p class="text-sky"&gt;...&lt;/p&gt;
+&lt;p class="text-azure"&gt;...&lt;/p&gt;
+&lt;p class="text-blueberry"&gt;...&lt;/p&gt;
+&lt;p class="text-palegreen"&gt;...&lt;/p&gt;
+&lt;p class="text-green"&gt;...&lt;/p&gt;
+&lt;p class="text-lightyellow"&gt;...&lt;/p&gt;
+&lt;p class="text-yellow"&gt;...&lt;/p&gt;
+&lt;p class="text-gold"&gt;...&lt;/p&gt;
+&lt;p class="text-orange"&gt;...&lt;/p&gt;
+&lt;p class="text-darkred"&gt;...&lt;/p&gt;
+&lt;p class="text-darkorange"&gt;...&lt;/p&gt;
+&lt;p class="text-red"&gt;...&lt;/p&gt;
+&lt;p class="text-pink"&gt;...&lt;/p&gt;
+&lt;p class="text-darkpink"&gt;...&lt;/p&gt;
+&lt;p class="text-magenta"&gt;...&lt;/p&gt;
+&lt;p class="text-purple"&gt;...&lt;/p&gt;
+&lt;p class="text-maroon"&gt;...&lt;/p&gt;
+</pre>
+                    </div>
+                    <h3 class="item-header" id="forms-horizontal">情境背景色<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <p>和情境文本颜色类一样，使用任意情境背景色类就可以设置元素的背景。</p>
+                    <div class="bs-example bs-example-bg-classes" data-example-id="contextual-backgrounds-helpers">
+                                              <p class="bg-primary">haha,this text background color is bg-primary.</p>
+                        <p class="bg-success">haha,this text background color is bg-success.</p>
+                        <p class="bg-info">haha,this text background color is bg-info.</p>
+                        <p class="bg-warning">haha,this text background color is bg-warning.</p>
+                        <p class="bg-danger">haha,this text background color is bg-danger.</p>
+                        <p class="bg-blue">haha,this text background color is bg-blue.</p>
+                        <p class="bg-light-blue">haha,this text background color is bg-light-blue.</p>
+                        <p class="bg-dark-blue">haha,this text background color is bg-dark-blue.</p>
+                        <p class="bg-red">haha,this text background color is bg-red.</p>
+                        <p class="bg-dark-red">haha,this text background color is bg-dark-red.</p>
+                        <p class="bg-yellow">haha,this text background color is bg-yellow.</p>
+                        <p class="bg-green">haha,this text background color is bg-green.</p>
+                        <p class="bg-pale-green">haha,this text background color is bg-pale-green.</p>
+                        <p class="bg-dark-green">haha,this text background color is bg-dark-green.</p>
+                        <p class="bg-purple">haha,this text background color is bg-purple.</p>
+                        <p class="bg-grey">haha,this text background color is bg-grey.</p>
+                        <p class="bg-light-gray">haha,this text background color is bg-light-gray.</p>
+                        <p class="bg-dark-gray">haha,this text background color is bg-dark-gray.</p>
+                        <p class="bg-slate-gray">haha,this text background color is bg-slate-gray.</p>
+                        <p class="bg-lighten">haha,this text background color is bg-lighten.</p>
+                        <p class="bg-white">haha,this text background color is bg-white.</p>
+                        <p class="bg-orange">haha,this text background color is bg-orange.</p>
+                        <p class="bg-dark-orange">haha,this text background color is bg-dark-orange.</p>
+                        <p class="bg-pink">haha,this text background color is bg-pink.</p>
+                        <p class="bg-dark-pink">haha,this text background color is bg-dark-pink.</p>
+                        <p class="bg-magenta">haha,this text background color is bg-magenta.</p>
+                        <p class="bg-teal">haha,this text background color is bg-teal.</p>
+                        <p class="bg-snow">haha,this text background color is bg-snow.</p>
+                        <p class="bg-whitesmoke">haha,this text background color is bg-whitesmoke.</p>
+                        <p class="bg-seashell">haha,this text background color is bg-seashell.</p>
+                        <p class="bg-ivory">haha,this text background color is bg-ivory.</p>
+                        <p class="bg-platinum">haha,this text background color is bg-platinum.</p>
+                        <p class="bg-silver">haha,this text background color is bg-silver.</p>
+                        <p class="bg-sonic-silver">haha,this text background color is bg-sonic-silver.</p>
+                        <p class="bg-lightcarbon">haha,this text background color is bg-lightcarbon.</p>
+                        <p class="bg-carbon">haha,this text background color is bg-carbon.</p>
+                        <p class="bg-darkcarbon">haha,this text background color is bg-darkcarbon.</p>
+                        <p class="bg-sky">haha,this text background color is bg-sky.</p>
+                        <p class="bg-azure">haha,this text background color is bg-azure.</p>
+                        <p class="bg-blueberry">haha,this text background color is bg-blueberry.</p>
+                        <p class="bg-gold">haha,this text background color is bg-gold.</p>
+                        <p class="bg-maroon">haha,this text background color is bg-maroon.</p>
+                    </div>
+                    <div class="highlight">
+                        <pre class="prettyprint">
+&lt;p class="bg-primary"&gt;...&lt;/p&gt;
+&lt;p class="bg-success"&gt;...&lt;/p&gt;
+&lt;p class="bg-info"&gt;...&lt;/p&gt;
+&lt;p class="bg-warning"&gt...&lt;/p&gt;
+&lt;p class="bg-danger"&gt;...&lt;/p&gt;
+&lt;p class="bg-blue"&gt;...&lt;/p&gt;
+&lt;p class="bg-light-blue"&gt;...&lt;/p&gt;
+&lt;p class="bg-dark-blue"&gt;...&lt;/p&gt;
+&lt;p class="bg-red"&gt;...&lt;/p&gt;
+&lt;p class="bg-dark-red"&gt...&lt;/p&gt;
+&lt;p class="bg-yellow"&gt;...&lt;/p&gt;
+&lt;p class="bg-green"&gt;...&lt;/p&gt;
+&lt;p class="bg-pale-green"&gt;...&lt;/p&gt;
+&lt;p class="bg-dark-green"&gt;...&lt;/p&gt;
+&lt;p class="bg-purple"&gt...&lt;/p&gt;
+&lt;p class="bg-grey"&gt;...&lt;/p&gt;
+&lt;p class="bg-light-grey"&gt;...&lt;/p&gt;
+&lt;p class="bg-dark-gray"&gt;...&lt;/p&gt;
+&lt;p class="bg-slate-gray"&gt;...&lt;/p&gt;
+&lt;p class="bg-lighten"&gt;...&lt;/p&gt;
+&lt;p class="bg-white"&gt;...&lt;/p&gt;
+&lt;p class="bg-orange"&gt...&lt;/p&gt;
+&lt;p class="bg-dark-orange"&gt;...&lt;/p&gt;
+&lt;p class="bg-pink"&gt;...&lt;/p&gt;
+&lt;p class="bg-dark-pink"&gt;...&lt;/p&gt;
+&lt;p class="bg-magenta"&gt;...&lt;/p&gt;
+&lt;p class="bg-teal"&gt...&lt;/p&gt;
+&lt;p class="bg-snow"&gt...&lt;/p&gt;
+&lt;p class="bg-whitesmoke"&gt;...&lt;/p&gt;
+&lt;p class="bg-seashell"&gt;...&lt;/p&gt;
+&lt;p class="bg-ivory"&gt;...&lt;/p&gt;
+&lt;p class="bg-platinum"&gt;...&lt;/p&gt;
+&lt;p class="bg-silver"&gt...&lt;/p&gt;
+&lt;p class="bg-sonic-silver"&gt...&lt;/p&gt;
+&lt;p class="bg-storm-cloud"&gt;...&lt;/p&gt;
+&lt;p class="bg-lightcarbon"&gt;...&lt;/p&gt;
+&lt;p class="bg-carbon"&gt;...&lt;/p&gt;
+&lt;p class="bg-darkcarbon"&gt...&lt;/p&gt;
+&lt;p class="bg-sky"&gt...&lt;/p&gt;
+&lt;p class="bg-azure"&gt;...&lt;/p&gt;
+&lt;p class="bg-blueberry"&gt;...&lt;/p&gt;
+&lt;p class="bg-gold"&gt;...&lt;/p&gt;
+&lt;p class="bg-maroon"&gt...&lt;/p&gt;
+</pre>
+                    </div>
+                    <h3 class="item-header" id="forms-controls">禁用文本换行<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <p>使所有文本在一行显示。超出的部分将会被隐藏。只需要使用<code>.text-nowrap</code>或者<code>.nobr</code>。</p>
+                    <div class="highlight">
+                        <pre class='prettyprint'>&lt;h2 class="text-nowrap"&gt;...&lt;/h2&gt;</pre>
+                    </div>
+                    <h3 class="item-header" id="forms-controls-static">文本超出省略<a class="anchorjs-link" href="#helper-classes-colors"><span class="anchorjs-icon"></span></a></h3>
+                    <p>使所有文本在一行显示。超出的部分会被截断，并且在文本末尾添加省略号。使用<code>.text-ellipsis</code>。</p>
+                    <div class="highlight">
+                        <pre class='prettyprint'>&lt;h2 class="text-ellipsis"&gt;...&lt;/h2&gt;</pre>
+                    </div>
+                    <div class="alert alert-warning">
+                        <p>并不是所有浏览器都支持此选项。</p>
+                    </div>
+                    <h3 class="item-header" id="forms-control-focus">关闭按钮</h3>
+                    <p>通常用来关闭消息框或者模态框。</p>
+                    <div class="bs-example">
+                        <button type="button" class="close" style="float:none"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                    <div class="highlight">
+                    <pre class="prettyprint"><code>&lt;button type="button" class="close"&gt;&lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;&lt;span class="sr-only"&gt;Close&lt;/span&gt;&lt;/button&gt;</code></pre></div>
+                    <h3 class="item-header" id="forms-control-disabled">三角符号</h3>
+                    <div class="bs-example"><span class="caret"></span></div>
+                    <div class="highlight"><pre class="prettyprint"><code>&lt;span class="caret"&gt;&lt;/span&gt;</code></pre></div>
+                    <h3 class="item-header" id="forms-control-readonly">浮动</h3>
+                    <p>强制使得一个元素向左或者向右浮动。</p>
+                    <div class="highlight">
+<pre class="prettyprint">
+&lt;div class="pull-left"&gt;&lt;/div&gt;
+&lt;div class="pull-right"&gt;&lt;/div&gt;
+</pre>
+                    </div>
+
+                            <p>对应的CSS代码：</p>
+                            <div class="highlight">
+                            <pre class="prettyprint">
+.pull-right
+{
+  float: right !important;
+}
+.pull-left
+{
+  float: left !important;
+}
+</div>
+</pre>
+                <h3 class="item-header" id="forms-control-validation">清除浮动</h3>
+                <p>只需要一个CSS类名即可使得内部浮动元素也具备高度等特性。</p>
+                <div class="highlight"><pre class="prettyprint">&lt;div class="clearfix"&gt;...&lt;/div&gt;</pre></div>
+
+                <h3 class="item-header" id="forms-control-sizes">块居中</h3>
+                <p>使得一个具备固定宽度的能够在父级容器中居中显示。</p>
+                <div class="highlight"><pre class="prettyprint">&lt;div class="center-block"&gt;...&lt;/div&gt;</pre></div>
+                <p>对应的CSS代码：</p>
+                <div class="highlight"><pre class="prettyprint">.center-block
+{
+display: block;
+margin-left: auto;
+margin-right: auto;
+}</pre>
+                </div>
+                <h3 class="item-header" id="forms-help-text">显示或隐藏元素</h3>
+                <p><code>.show</code> 和 <code>.hidden</code> 类可以强制任意元素显示或隐藏(<strong>对于屏幕阅读器也能起效</strong>)。这些类通过 <code>!important</code> 来避免 CSS 样式优先级问题，就像 <a href="#helper-classes-floats">quick floats</a> 一样的做法。注意，这些类只对块级元素起作用，另外，还可以作为 mixin 使用。</p>
+                <p><code>.hide</code> 类仍然可用，但是它不能对屏幕阅读器起作用，并且从 Bootstrap v3.0.1 版本开始就<strong>不建议使用</strong>了。请使用 <code>.hidden</code> 或 <code>.sr-only</code> 。</p>
+                <p>另外，<code>.invisible</code> 类可以被用来仅仅影响元素的可见性，也就是所，元素的 <code>display</code> 属性不被改变，并且这个元素仍然能够影响文档流的排布。</p>
+                <div class="highlight"><pre class="prettyprint">
+&lt;div class="show"&gt;...&lt;/div&gt;
+&lt;div class="hidden"&gt;...&lt;/div&gt;
+                    </pre>
+                </div>
+                <div class="highlight"><pre class="prettyprint">.hide
+{
+  display: none;
+}
+.hidden
+{
+  display: none!important;
+}
+.show
+{
+  display: block;
+}
+.invisible
+{
+  visibility: hidden;
+}</pre>
+                </div>
+                </div> 
+                <div class="bs-docs-section">
+                    <h2 id="buttons" class="page-header">配色</h2> 
+                    <p>Mower的界面应该简洁，易于识别，让人感觉舒适而不失严谨。所使用的配色应该尽可能达到该目的。</p>
+                    <p>Mower的配色表包含三部分：主要颜色，灰度颜色及其他颜色。</p>  
+                    <h3 class="item-header" id="buttons-options">主要颜色</h3>
+                    <p>在Mower默认配色方案中含3～5种颜色，决定了界面整体色调。主要颜色会用在菜单、导航、链接、高亮选项等。</p>
+                    <div class="colorset">
+                      <div class="color-primarycolor"></div>
+                      <div class="color-secondary"></div>
+                      <div class="color-thirdcolor"></div>
+                      <div class="color-fourthcolor"></div>
+                      <div class="color-fifthcolor"></div>
+                    </div>
+                    <h3 class="item-header" id="buttons-sizes">灰度颜色</h3>
+                    <p>灰度颜色强制使用同一色调不同亮度的一组颜色。在无特别需求的情况下，一般使用黑色灰度。灰度颜色会用在块的背景，边框，次要的文本上。灰度颜色为界面创建了层次感，加深了内容与内容间的边界，更易于体现内容的重要程度。</p>
+                    <div class="colorset">
+                      <div class="color-gray-darker"></div>
+                      <div class="color-gray-dark"></div>
+                      <div class="color-gray"></div>
+                      <div class="color-gray-light"></div>
+                      <div class="color-gray-lighter"></div>
+                      <div class="color-gray-pale"></div>
+                    </div>
+                    <div class="colorset">
+                      <div class="color-white"></div>
+                      <div class="color-black"></div>
+                    </div>
+                    <div class="colorset">
+                      <div class="color-light"></div>
+                      <div class="color-dark"></div>
+                    </div>
+                    <h3 class="item-header" id="buttons-active">额外颜色</h3>
+                    <p>其他的颜色为特殊控件提供的更多的色彩选择。例如各种级别的消息框，特殊作用的按钮，特殊文本等。</p>
+                    <div class="colorset">
+                      <div class="color-blue"></div>
+                      <div class="color-sky"></div>
+                      <div class="color-azure"></div>
+                      <div class="color-palegreen"></div>
+                      <div class="color-yellow"></div>
+                      <div class="color-darkorange"></div>
+                      <div class="color-magenta"></div>
+                      <div class="color-purple"></div>
+                      <div class="color-maroon"></div>
+                      <div class="color-gold"></div>
+                      <div class="color-red"></div>
+                    </div>
+                    <div class="colorset">
+                      <div class="color-primary"></div>
+                      <div class="color-danger"></div>
+                      <div class="color-warning"></div>
+                      <div class="color-success"></div>
+                      <div class="color-info"></div>
+                    </div>
+                    <div class="colorset">
+                      <div class="color-lighten"></div>
+                      <div class="color-lightyellow"></div>
+                      <div class="color-lightblue"></div>
+                      <div class="color-lightcarbon"></div>
+                    </div>
+                    <h3 class="item-header" id="buttons-disabled">配色设计要点</h3>
+                    <ul>
+                      <li>配色表中的每种颜色都可以在亮度上上下浮动10%左右来生成一个相近但又有些许不同的颜色作为边框及悬停渐变使用。</li>
+                      <li>在界面中运用的所有配色尽量使用配色表中已列明的颜色；</li>
+                      <li>优先使用主要颜色和灰度颜色，仅在特殊的按钮或消息时才使用额外颜色；</li>
+                    </ul>           
+                </div>
+                <div class="bs-docs-section">
+                    <h2 id="theme" class="page-header">主题</h2>
+                    <p>Mower中力求界面元素令人赏心悦目,所以Admin 模板中提供众多的主题样式表来个大换装。你只需要修改dist目录下的<code>theme.css</code>文件，并增加到你的项目引用中即可，不需要对原有文件做出修改。</p>
+
+                    <p>如果你追求更深度的定制，可能需要了解<code>src/css/themes</code>目录下的<code>theme-mixins.less</code>文件。你只需要增加新的主题文件，变量设置一个新的值然后重新编译即可。</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
+                    <ul class="nav bs-docs-sidenav">
+                        <li>
+                            <a href="#overview">Hello World</a>
+                           
+                        </li>
+                        <li>
+                            <a href="#grid">全局样式表</a>
+                            <ul class="nav">
+                                <li><a href="#grid-intro">为何使用 Normalize.css</a>
+                                </li>
+                    
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#type">响应式布局</a>
+                            <ul class="nav">
+                                <li><a href="#type-headings">可用的类</a>
+                                </li>
+                                <li><a href="#type-body-copy">打印类</a>
+                                </li>
+                                <li><a href="#type-inline-text">禁用响应式布局</a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#code">格栅系统</a>
+                       
+                        </li>
+                        <li>
+                            <a href="#tables">排版</a>
+                            <ul class="nav">
+                                <li><a href="#tables-example">字体</a>
+                                </li>
+                                <li><a href="#tables-striped">文字排版</a>
+                                </li>
+                              
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#forms">辅助类</a>
+                            <ul class="nav">
+                                <li><a href="#forms-example">小字号文本</a>
+                                </li>
+                                <li><a href="#forms-inline">情境文本颜色</a>
+                                </li>
+                                <li><a href="#forms-horizontal">情境背景颜色</a>
+                                </li>
+                                <li><a href="#forms-controls">禁用文本换行</a>
+                                </li>
+                                <li><a href="#forms-controls-static">文本超出省略</a>
+                                </li>
+                                <li><a href="#forms-control-focus">关闭按钮</a>
+                                </li>
+                                <li><a href="#forms-control-disabled">三角符号</a>
+                                </li>
+                                <li><a href="#forms-control-readonly">浮动</a>
+                                </li>
+                                <li><a href="#forms-control-validation">清除浮动</a>
+                                </li>
+                                <li><a href="#forms-control-sizes">块居中</a>
+                                </li>
+                                <li><a href="#forms-help-text">显示或者隐藏元素</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#buttons">配色</a>
+                            <ul class="nav">
+                                <li><a href="#buttons-options">主要颜色</a>
+                                </li>
+                                <li><a href="#buttons-sizes">灰度颜色</a>
+                                </li>
+                                <li><a href="#buttons-active">额外颜色</a>
+                                </li>
+                                <li><a href="#buttons-disabled">配色设计要点</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#theme">主题</a>
+                         
+                        </li>
+                       
+                    </ul>
+                    <a class="back-to-top" href="#top">
+              返回顶部
+            </a>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="libs/jquery/jquery-1.11.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/plugins/google-code-prettify/prettify.js"></script>
+    <script src="assets/js/docs.min.js"></script>
+</body>
+
+</html>

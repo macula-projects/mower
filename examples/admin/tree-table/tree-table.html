@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>05_Infinitus Admin_tree_table</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+
+    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../../../mower/admin/css/mower.css">
+
+    <script src="../../../assets/js/themes.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <!-- BEGIN HEADER -->
+    <div id="header" class="mu-header-container">
+        <!-- BEGIN MAIN MENU -->
+        <div class="navbar" role="navigation">
+            <div class="navbar-inner">
+                <div class="navbar-container">
+                    <!-- Navbar Barnd -->
+                    <div class="navbar-header pull-left">
+                        <a href="#" class="navbar-brand">
+                            Infinitus Admin
+                        </a>
+                    </div>
+                    <!-- /Navbar Barnd -->
+                    <!-- Sidebar Collapse -->
+                    <div class="sidebar-collapse" id="sidebar-collapse">
+                        <i class="collapse-icon fa fa-bars"></i>
+                    </div>
+                    <!-- /Sidebar Collapse -->
+
+                    <div class="header-menu">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" mcode="ADMIN-MENU-1">系统管理</a>
+                            </li>
+                            <li><a href="#" mcode="ADMIN-MENU-2">运维管理</a>
+                            </li>
+                            <li><a href="#" mcode="ADMIN-MENU-3">支付管理</a>
+                            </li>
+                            <li><a href="#" mcode="ADMIN-MENU-4">交易管理</a>
+                            </li>
+                            <li><a href="#" mcode="ADMIN-MENU-5">促销管理</a>
+                            </li>
+                            <li><a href="#" mcode="ADMIN-MENU-6">运营管理</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">顾客管理<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" mcode="ADMIN-MENU-7">顾客管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-8">综合查询</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-9">配送地址管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-20">海外培训管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-13">财务管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-14">移动平台管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-15">数据信息</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-21">销售报备平台</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-22">购物积分奖励计划</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-24">第三方管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="1234">KIOSK</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-10">平台管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-11">服务中心管理</a>
+                                    </li>
+                                    <li><a href="#" mcode="ADMIN-MENU-12">售后服务</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Account Area and Settings -->
+                    <div class="navbar-header pull-right">
+                        <div class="navbar-account">
+                            <ul class="account-area">
+                                <li>
+                                    <a class="login-area dropdown-toggle" data-toggle="dropdown">
+                                        <section>
+                                            <h2><span class="profile">测试用户</span></h2>
+                                        </section>
+                                        <div class="avatar" title="View your public profile">
+                                            <img src="../../../assets/img/bing.png">
+                                        </div>
+                                    </a>
+                                    <!--Login Area Dropdown-->
+                                    <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+                                        <li class="username"><a>测试用户</a>
+                                        </li>
+                                        <li class="email"><a>test@infinitus-int.com</a>
+                                        </li>
+                                        <!--Avatar Area-->
+                                        <li>
+                                            <div class="avatar-area">
+                                                <img src="../../../assets/img/bing.png" class="avatar">
+                                            </div>
+                                        </li>
+                                        <!--Avatar Area-->
+                                        <li class="edit">
+                                            <a href="profile.html" class="pull-left">基本信息</a>
+                                            <a href="#" class="pull-right">设置</a>
+                                        </li>
+                                        <!--Theme Selector Area-->
+                                        <li class="theme-area">
+                                            <ul class="colorpicker" id="skin-changer">
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#d40b07;" rel="../../../mower/admin/css/red.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#AC193D;" rel="../../../mower/admin/css/darkred.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#cc324b;" rel="../../../mower/admin/css/pink.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#5DB2FF;" rel="../../../mower/admin/css/blue.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#2dc3e8;" rel="../../../mower/admin/css/azure.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#03B3B2;" rel="../../../mower/admin/css/teal.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#53a93f;" rel="../../../mower/admin/css/green.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#FF8F32;" rel="../../../mower/admin/css/orange.min.css"></a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#8C0095;" rel="../../../mower/admin/css/purple.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#0072C6;" rel="../../../mower/admin/css/darkblue.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#585858;" rel="../../../mower/admin/css/gray.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#474544;" rel="../../../mower/admin/css/black.min.css"></a>
+                                                </li>
+                                                <li>
+                                                    <a class="colorpick-btn" href="#" style="background-color:#001940;" rel="../../../mower/admin/css/deepblue.min.css"></a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!--/Theme Selector Area-->
+                                        <li class="dropdown-footer">
+                                            <a href="login.html">退出</a>
+                                        </li>
+                                    </ul>
+                                    <!--/Login Area Dropdown-->
+                                </li>
+                                <!-- /Account Area -->
+                                <!--Note: notice that setting div must start right after account area list.
+                                        no space must be between these elements-->
+                                <!-- Settings -->
+                            </ul>
+                            <!-- Settings -->
+                        </div>
+                    </div>
+                    <!-- /Account Area and Settings -->
+                </div>
+            </div>
+        </div>
+        <!-- END MAIN MENU -->
+    </div>
+    <!-- END HEADER -->
+
+    <!-- BEGIN CONTAINER -->
+    <div class="mu-main-container container-fluid">
+        <!-- BEGIN SIDEBAR -->
+        <div class="mu-sidebar-wrapper">
+            <div class="mu-sidebar" id="sidebar">
+                <!-- Page Sidebar Header-->
+                <div class="sidebar-header-wrapper">
+                    <input type="text" class="searchinput">
+                    <i class="searchicon fa fa-search"></i>
+                    <div class="searchhelper">Search Reports, Charts, Emails or Notifications</div>
+                </div>
+                <!-- /Page Sidebar Header -->
+                <!-- Sidebar Menu -->
+                <ul class="nav sidebar-menu" style="">
+                </ul>
+                <!-- /Sidebar Menu -->
+            </div>
+        </div>
+        <!-- END SIDEBAR -->
+        <!-- BEGIN CONTENT -->
+        <div class="mu-content-wrapper">
+            <div class="mu-content">
+                <!-- BEGIN BREADCRUMB -->
+                <div class="mu-content-header">
+                    <div class="mu-breadcrumb-wrapper">
+                        <ul class="breadcrumb" data-target="#mainContent">
+                            <li data-target="breadcrumb0" class="active"></li>
+                        </ul>
+                    </div>
+                    <div class="header-buttons">
+                        <a class="sidebar-toggler" href="#">
+                            <i class="fa fa-arrows-h"></i>
+                        </a>
+                        <a class="refresh" id="refresh-toggler" href="">
+                            <i class="glyphicon glyphicon-refresh"></i>
+                        </a>
+                        <a class="favorite" id="favorite-toggler" href="#">
+                            <i class="fa fa-star fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- END BREADCRUMB-->
+                <!-- BEGIN CONTENT INNER -->
+                <div class="mu-content-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="mainContent">
+                                <div data-panel="breadcrumb0">
+                                    <div id="panelList" class="panel panel-widget panel-default">
+                                        <div class="panel-heading bordered-bottom-highlight bordered-themesecondary">
+                                            <div class="row mu-panel-toolbar">
+                                                <div class="col-xs-12 col-md-offset-8 col-md-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
+                                                            <a class="btn" href="#"><i class="fa fa-search"></i>&nbsp;查询</a>
+                                                    </span>
+                                                        <input class="form-control" type="text">
+                                                        <span class="input-group-btn advanced-query">
+                                                            <a class="btn"  href="#" data-toggle="dropdown"> 高级查询&nbsp;<i class="fa fa-caret-down"></i> </a>
+                                                            <div class="dropdown-menu advanced-query-container" role="dropdown-menu" data-options="closeOnBodyClick:false" id="advancedQuery">
+                                                                <div class="advanced-query-content">
+                                                                    <form>
+                                                                        <div style="width: 150px;height: 100px;">
+                                                                            高级查询条件内容
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body" style="background-color: #fff;padding: 10px ">
+                                            <table id="dt_basic" class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th>名称</th>
+                                                        <th>职位</th>
+                                                        <th>办公室</th>
+                                                        <th>分机号</th>
+                                                        <th>入职时间</th>
+                                                        <th>薪资</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END CONTENT -->
+
+    </div>
+    <!-- END CONTAINER -->
+    <!-- BEGIN FOOTER -->
+    <!-- END CONTENT INNER -->
+    <div id="footer" class="mu-footer-container">
+        <div class="container-fluid">
+            <p>Infinitus Admin Template</p>
+            <p>&copy; 2014 <a href="http://www.infinitus.com.cn" target="_blank">INFINITUS</a>
+            </p>
+        </div>
+    </div>
+    <!-- END FOOTER -->
+
+    <!-- BEGIN CORE PLUGINS -->
+    <script src="../../../libs/jquery/jquery-1.11.1.js" type="text/javascript"></script>
+    <script src="../../../libs/jquery/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="../../../libs/json/json2.js" type="text/javascript"></script>
+
+    <script src="../../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../../libs/knockout/knockout-3.1.0-min.js" type="text/javascript"></script>
+    <script src="../../../libs/jquery-tmpl/jquery.tmpl.min.js" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="../../../mower/admin/js/mower.js" type="text/javascript"></script>
+    <script src="../../../assets/js/app.js" type="text/javascript"></script>
+    <script src="../../../assets/js/query.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+    <script src="treeTable.js" type="text/javascript"></script>
+</body>
+
+</html>
