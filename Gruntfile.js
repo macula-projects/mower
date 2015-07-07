@@ -424,7 +424,8 @@ module.exports = function(grunt) {
         },
         'gh-pages': {
             options: {
-              base: 'docs/_dist'
+              base: 'docs/_dist',
+              repo:'https://github.com/macula-projects/mower.git'
             },
             src: '**/*'
         }
