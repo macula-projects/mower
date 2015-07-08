@@ -62,6 +62,8 @@ module.exports = function(grunt) {
                         'src/js/base.<%= pkg.name %>.js',
                         'src/js/alert.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
+                        'src/js/chosen.<%= pkg.name %>.js',
+                        'src/js/chosen.remote.<%= pkg.name %>.js',
                         'src/js/datatables.selectrows.<%= pkg.name %>.js',
                         'src/js/datatables.<%= pkg.name %>.js',
                         'src/js/knockout.<%= pkg.name %>.js',
@@ -74,7 +76,7 @@ module.exports = function(grunt) {
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertical.menu.<%= pkg.name %>.js',
                         'src/js/sidebar.menu.<%= pkg.name %>.js',
-                        'src/js/remotemodal.<%= pkg.name %>.js',
+                        'src/js/modal.remote.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
@@ -114,6 +116,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/admin/js/<%= pkg.name %>.js': [
+                        'plugins/chosen/js/chosen.jquery.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
                         'plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js',
@@ -126,6 +129,7 @@ module.exports = function(grunt) {
                         'dist/admin/js/<%= pkg.name %>.js'
                     ],
                     'dist/admin/js/<%= pkg.name %>.min.js': [
+                        'plugins/chosen/js/chosen.jquery.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
                         'plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js',
@@ -153,7 +157,7 @@ module.exports = function(grunt) {
                         'src/js/magnifier.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertival.menu.<%= pkg.name %>.js',
-                        'src/js/remotemodal.<%= pkg.name %>.js',
+                        'src/js/modal.remote.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js'

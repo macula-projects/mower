@@ -1,6 +1,29 @@
-//
 // Mixins
-// --------------------------------------------------
+// =================================================
+
+
+// Utilities
+// =================================================
+
+.text-shadow (@string: 0 1px 3px rgba(0, 0, 0, 0.25)) {
+    -webkit-text-shadow: @string;
+    text-shadow: @string;
+}
+
+.clearfix() {
+  &:before,
+  &:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+
+// Panel
+// =================================================
 .panel-box-variant( @box-border-color;
 @heading-bg-color;
 @heading-actions-btn-border-color;
@@ -66,6 +89,8 @@
     }
 }
 
+// theme
+// =================================================
 .mower-skin(@themeprimary; @themesecondary; @themethirdcolor; @themefourthcolor; @themefifthcolor; @btn-primary-hover; @btn-primary-border; @btn-primary-active; @btn-primary-activeborder; @btn-primary-dropdown-border ) {
     /*Navbar*/
     .navbar {
