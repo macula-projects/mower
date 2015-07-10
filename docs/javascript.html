@@ -1331,44 +1331,16 @@ $('.dropdown-toggle').dropdown()
 
                  <div class="bs-example">
                    <div class="row">
-                     <div class="col-md-6">
-                       <select  rel="chosen" data-placeholder="选择一个宠物..." class="chosen-select form-control" tabindex="2">
-                         <option value=""></option>
-                         <option value="cat">小猫</option>
-                         <option value="dog">小狗</option>
-                         <option value="fish">金鱼</option>
-                         <option value="dragon">龙</option>
-                       </select>
-                     </div>
-                     <div class="col-md-6">
-                       <select rel="chosen"  data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="2" multiple >
-                         <option value="strawberries">草莓</option>
-                         <option value="apple">苹果</option>
-                         <option value="orange">橙子</option>
-                         <option value="cherry">樱桃</option>
-                         <option value="banana">香蕉</option>
-                         <option value="figs">无花果</option>
-                       </select>
-                     </div>
+
                    </div>
                     </br>
                    <div class="row">
                       <div class="col-md-6">
-                        <select rel="chosen" data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="-1">
-                          <option value=""></option>
-                          <optgroup label="列表组1">
-                            <option value="strawberries">草莓</option>
-                            <option value="apple">苹果</option>
-                          </optgroup>
-                          <optgroup label="列表组2">
-                            <option value="cherry">樱桃</option>
-                            <option value="banana">香蕉</option>
-                            <option value="figs">无花果</option>
-                          </optgroup>
-                          
-                        </select>
                       </div>
-                       <div class="col-md-6"></div>
+                       <div class="col-md-6">
+                         <select rel="dynaChosen" data-server = "true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="-1">
+                         </select>
+                       </div>
                    </div>
 
                  </div>
