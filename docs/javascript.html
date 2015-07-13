@@ -1325,20 +1325,54 @@ $('.dropdown-toggle').dropdown()
           </div>
           <div class="bs-docs-section">
                  <h2 class="page-header" id="chosen">下拉列表</h2>
-                 <p class="lead">Mower为了增强单选列表和多选列表，引入第三方插件<a target="_blank" href="https://github.com/harvesthq/chosen" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i> Chosen</a></p>
+                 <p>Mower为了增强单选列表和多选列表，引入第三方插件<a target="_blank" href="https://github.com/harvesthq/chosen" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i> Chosen</a>。</p>
 
                  <h3 class="item-header">多项选择和单项选择</h3>
 
                  <div class="bs-example">
                    <div class="row">
-
+                    <div class="col-md-6">
+                      <select  rel="remoteChosen" data-placeholder="选择一个宠物..." class="chosen-select form-control" tabindex="2">
+                        <option value=""></option>
+                        <option value="cat">小猫</option>
+                        <option value="dog">小狗</option>
+                        <option value="fish">金鱼</option>
+                        <option value="dragon">龙</option>
+                      </select>
+                    </div>
+                     <div class="col-md-6">
+                      <select rel="remoteChosen"  data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="2" multiple>
+                        <option value="strawberries">草莓</option>
+                        <option value="apple">苹果</option>
+                        <option value="orange">橙子</option>
+                        <option value="cherry">樱桃</option>
+                        <option value="banana">香蕉</option>
+                        <option value="figs">无花果</option>
+                      </select>
+                     </div>
                    </div>
                     </br>
                    <div class="row">
                       <div class="col-md-6">
+                        <select rel="remoteChosen"  data-placeholder="选择您喜欢球队..." class="chosen-select form-control" tabindex="5">
+                              <option value=""></option>
+                              <optgroup label="NFC EAST">
+                                <option>Dallas Cowboys</option>
+                                <option>New York Giants</option>
+                                <option>Philadelphia Eagles</option>
+                                <option>Washington Redskins</option>
+                              </optgroup>
+                              <optgroup label="NFC NORTH">
+                                <option>Chicago Bears</option>
+                                <option>Detroit Lions</option>
+                                <option>Green Bay Packers</option>
+                                <option>Minnesota Vikings</option>
+                              </optgroup>
+                            </select>
                       </div>
                        <div class="col-md-6">
-                         <select rel="dynaChosen" data-server = "true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="-1">
+                         <select rel="remoteChosen" data-server = "true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" tabindex="-1">
+                          <option value=""></option>
                          </select>
                        </div>
                    </div>
@@ -1433,6 +1467,120 @@ $(select).chosen(options);
                   </table>
                   <h4 class="subitem-header">事件</h4>
           </div>
+          <div class="bs-docs-section">
+            <h2 class="page-header">日期选择 </h2>
+            <p>日期选择插件可以帮助用户更方便准确的选择日期和时间。</p>
+            <p>在Mower中包含的日期选择控件基于开源项目 <a href="http://eonasdan.github.io/bootstrap-datetimepicker/" target="_blank">Bootstrap 3 Datepicker</a> 定制开发。</p>
+            <h3 class="item-header">类型</h3>
+            <h4 class="subitem-header">日期选择</h4>
+            <div class="bs-example">
+              <div class="form-group">
+                  <div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD">
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="fa fa-calendar">
+                        </span>
+                    </span>
+                  </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;div class="form-group"&gt;
+    &lt;div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD"&gt;
+      &lt;input type='text' class="form-control" /&gt;
+      &lt;span class="input-group-addon"&gt;
+          &lt;span class="fa fa-calendar"&gt;
+          &lt;/span&gt;
+      &lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+              </pre>
+            </div>
+            <h4 class="subitem-header">时间选择</h4>
+            <div class="bs-example">
+              <div class="form-group">
+                  <div class='input-group date'  rel="datetimepicker" data-format="HH:mm:ss">
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                  </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;div class="form-group"&gt;
+  &lt;div class='input-group date'  rel="datetimepicker" data-format="HH:mm:ss"&gt;
+      &lt;input type='text' class="form-control" /&gt;
+      &lt;span class="input-group-addon"&gt;
+          &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
+      &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+              </pre>
+            </div>
+            <h4 class="subitem-header">日期+时间选择</h4>
+            <div class="bs-example">
+              <div class="form-group">
+                  <div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD HH:mm:ss">
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                  </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;div class="form-group"&gt;
+    &lt;div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD HH:mm:ss"&gt;
+        &lt;input type='text' class="form-control" /&gt;
+        &lt;span class="input-group-addon"&gt;
+            &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+              </pre>
+            </div>
+            <h3 class="item-header">变化</h3>
+            
+            <h4 class="subitem-header">不带图标</h4>
+            <div class="bs-example">
+              <div class="row">
+                <div class="col-md-4"><input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  data-format="YYYY-MM-DD"   rel="datetimepicker"></div>
+                <div class="col-md-4"><input type="text" class="form-control" placeholder="选择或者输入一个时间：HH:mm:ss"  data-format="HH:mm:ss" rel="datetimepicker"></div>
+                <div class="col-md-4"><input type="text" class="form-control" placeholder="选择或者输入一个日期+时间：YYYY-MM-DD HH:mm:ss" data-format="YYYY-MM-DD HH:mm:ss" rel="datetimepicker"></div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+  &lt;input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  data-format="YYYY-MM-DD" rel="datetimepicker"&gt;
+              </pre>
+            </div>
+            <h4 class="subitem-header">清空图标</h4>
+            <div class="bs-example">
+              <div class="form-group">
+                  <div class='input-group date'  rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                  </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;div class='input-group date'  rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss"&gt;
+    &lt;input type='text' class="form-control" /&gt;
+    &lt;span class="input-group-addon"&gt;
+        &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+&lt;/div&gt;
+              </pre>
+            </div>
+          </div>
+          
         </div>
         <div class="col-md-3">
           <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">

@@ -15,7 +15,7 @@ var UniqueId = (function() {
     };
 })();
 
-//è¿”å›ä¸€ä¸ªæ ‘å½¢çš„æ ¹é›†åˆï¼Œå¯¹åŸæœ‰çš„æ•°ç»„é¡ºåºä¸æ”¹å˜ï¼Œä½†ä¼šå¢åŠ parentå’Œchildrenä¸¤ä¸ªå±æ€§
+//·µ»ØÒ»¸öÊ÷ĞÎµÄ¸ù¼¯ºÏ£¬¶ÔÔ­ÓĞµÄÊı×éË³Ğò²»¸Ä±ä£¬µ«»áÔö¼ÓparentºÍchildrenÁ½¸öÊôĞÔ
 Array.prototype.makeLevelTree = function(option) {
     var o = option || {},
         id = o.id || 'id',
@@ -161,12 +161,12 @@ Date.prototype.setISO8601 = function(string) {
     this.setTime(Number(time));
 };
 
-/** è·å–ä»‹äºä¹‹é—´çš„æ•°å€¼ */
+/** »ñÈ¡½éÓÚÖ®¼äµÄÊıÖµ */
 Number.prototype.limit = function(min, max) {
     return (this < min) ? min : (this > max ? max : this);
 };
 
-/** åŒ¹é…ä¸å­—ç¬¦ä¸²ç›¸åŒçš„splitæ–¹æ³• */
+/** Æ¥ÅäÓë×Ö·û´®ÏàÍ¬µÄsplit·½·¨ */
 Number.prototype.split = function() {
     return [this];
 };
@@ -242,7 +242,7 @@ Number.prototype.split = function() {
     };
 
     $.fn.extend({
-        /** è·å–è¯¥å…ƒç´ æ‰€éš¶å±çš„åº”ç”¨ä¸Šä¸‹æ–‡ä¿¡æ¯ */
+        /** »ñÈ¡¸ÃÔªËØËùÁ¥ÊôµÄÓ¦ÓÃÉÏÏÂÎÄĞÅÏ¢ */
         getContextPath: function() {
             if (typeof base == "undefined") {
                 var base = '/';
@@ -258,19 +258,19 @@ Number.prototype.split = function() {
                 return base;
             }
         },
-        /** æ£€æµ‹æ˜¯å¦å­˜åœ¨ */
+        /** ¼ì²âÊÇ·ñ´æÔÚ */
         exists: function() {
             return $(this) && $(this).size() > 0;
         },
-        /** è·å–(padding+border+margin)é«˜åº¦ */
+        /** »ñÈ¡(padding+border+margin)¸ß¶È */
         patchHeight: function() {
             return $(this).outerHeight(true) - $(this).height();
         },
-        /** è·å–(padding+border+margin)å®½åº¦ */
+        /** »ñÈ¡(padding+border+margin)¿í¶È */
         patchWidth: function() {
             return $(this).outerWidth(true) - $(this).width();
         },
-        /** è·å–å…ƒç´ çš„scrollHeight */
+        /** »ñÈ¡ÔªËØµÄscrollHeight */
         scrollHeight: function() {
             return $(this)[0].scrollHeight;
         },
@@ -287,21 +287,21 @@ Number.prototype.split = function() {
                 'left': (calWidth > 20 ? calWidth : 0)
             });
         },
-        /** æ˜¾ç¤ºå…ƒç´  */
+        /** ÏÔÊ¾ÔªËØ */
         showme: function() {
             return $(this).css({
                 'display': 'block',
                 'visibility': 'visible'
             });
         },
-        /** éšè—å…ƒç´  */
+        /** Òş²ØÔªËØ */
         hideme: function() {
             return $(this).css({
                 'display': 'none',
                 'visibility': 'hidden'
             });
         },
-        /** è®¾ç½®å…ƒç´ ä¸ºç›¸åŒé«˜åº¦ï¼Œé«˜åº¦æŒ‰æŒ‡å®šæˆ–å…ƒç´ ä¸­æœ€å¤§é«˜åº¦ä¸ºå‡† */
+        /** ÉèÖÃÔªËØÎªÏàÍ¬¸ß¶È£¬¸ß¶È°´Ö¸¶¨»òÔªËØÖĞ×î´ó¸ß¶ÈÎª×¼ */
         sameHeight: function(height) {
             var max = height || -1;
             if (max < 0) {
@@ -311,7 +311,7 @@ Number.prototype.split = function() {
             }
             return $(this).css('min-height', max);
         },
-        /** è®¾ç½®å…ƒç´ ä¸ºç›¸åŒå®½åº¦ï¼Œå®½åº¦æŒ‰æŒ‡å®šæˆ–å…ƒç´ ä¸­æœ€å¤§å®½åº¦ä¸ºå‡† */
+        /** ÉèÖÃÔªËØÎªÏàÍ¬¿í¶È£¬¿í¶È°´Ö¸¶¨»òÔªËØÖĞ×î´ó¿í¶ÈÎª×¼ */
         sameWidth: function(width) {
             var max = width || -1;
             if (max < 0) {
@@ -479,19 +479,30 @@ Number.prototype.split = function() {
 
             //process call back
             if (callback && $.isFunction(callback)) {
-                callback.apply(self, [data]);
+                callback.apply(self, [true,data]);
             }
 
             return self; //keep chain
         },
         _privateProcessContents: function(url, ajaxOptions, action, callback, isScrollTop) {
             var self = $(this),
-                s = {};
+                s = {},
+                current,
+                handleError = function(){
+                    if(current){
+                        self.children().filter('[data-panel="'+ current +'""]').show();
+                        if (callback && $.isFunction(callback)) {
+                            callback.apply(self, [false]);
+                        }
+                    }
+                };
 
             s = $.extend({
                 url: url,
                 dataType: 'html',
                 beforeSend: function() {
+                    current = self.children().filter(':visible').data('panel');//save current work panel
+
                     self.children().addClass('hidden');
                     self.append('<h3 class="_loadmask"><i class="fa fa-cog fa-spin"></i> Loading...</h3>');
                     if (isScrollTop === true) {
@@ -504,23 +515,26 @@ Number.prototype.split = function() {
                 success: function(data, status, xhr) {
                     var ct = xhr.getResponseHeader('content-type') || '';
                     if (ct.indexOf('json') > -1) {
-                        self.html('<h4 style="margin-top:10px; display:block; text-align:left"><i class="fa fa-warning txt-color-orangeDark"></i> Error! Content type not match.</h4>');
+                        handleError();
                         self.trigger('ajaxError', [xhr, s]);
                         return;
                     }
+                    try{
+                        self.find('h3._loadmask').remove();
+                        self.children().removeClass('hidden');
+                        self.css({
+                            opacity: '0.0'
+                        }).updateHtml(data, action, callback).delay(50).animate({
+                            opacity: '1.0'
+                        }, 300);
 
-                    self.find('h3._loadmask').remove();
-                    self.children().removeClass('hidden');
-                    self.css({
-                        opacity: '0.0'
-                    }).updateHtml(data, action, callback).delay(50).animate({
-                        opacity: '1.0'
-                    }, 300);
-
-                    $(window).trigger('resize');
+                        $(window).trigger('resize');
+                    }catch(e){
+                        handleError();
+                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    self.html('<h4 style="margin-top:10px; display:block; text-align:left"><i class="fa fa-warning txt-color-orangeDark"></i> Error 404! Page not found.</h4>');
+                    handleError();
                 }
             }, ajaxOptions || {});
             $.ajax(s);
@@ -930,3 +944,4 @@ var Utils = (function($, window, document, undefined) {
 $(function() {
     Utils.init();
 });
+

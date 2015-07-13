@@ -63,7 +63,8 @@ module.exports = function(grunt) {
                         'src/js/alert.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
                         'src/js/chosen.<%= pkg.name %>.js',
-                        'src/js/chosen.dynamic.<%= pkg.name %>.js',
+                        'src/js/chosen.remote.<%= pkg.name %>.js',
+                        'src/js/datetimepicker.<%= pkg.name %>.js',
                         'src/js/datatables.selectrows.<%= pkg.name %>.js',
                         'src/js/datatables.<%= pkg.name %>.js',
                         'src/js/knockout.<%= pkg.name %>.js',
@@ -97,6 +98,7 @@ module.exports = function(grunt) {
                         'plugins/toastr/css/toastr.css',
                         'plugins/jquery-treetable/css/jquery.treetable.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css',
+                        'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
                         'plugins/jstree/css/style.css'
                     ],
                     'dist/admin/css/<%= pkg.name %>.min.css': [
@@ -106,6 +108,7 @@ module.exports = function(grunt) {
                         'plugins/toastr/css/toastr.min.css',
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css',
+                        'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css',
                         'plugins/jstree/css/style.min.css'
                     ]
                 }
@@ -116,6 +119,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/admin/js/<%= pkg.name %>.js': [
+                        'plugins/moment/js/moment-with-locales.js',
+                        'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
                         'plugins/chosen/js/chosen.jquery.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
@@ -129,6 +134,8 @@ module.exports = function(grunt) {
                         'dist/admin/js/<%= pkg.name %>.js'
                     ],
                     'dist/admin/js/<%= pkg.name %>.min.js': [
+                        'plugins/moment/js/moment-with-locales.min.js',
+                        'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js',
                         'plugins/chosen/js/chosen.jquery.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
@@ -213,7 +220,9 @@ module.exports = function(grunt) {
                     'plugins/bootstrapvalidator/js/bootstrapValidator.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.js'],
                     'plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.min.js': ['plugins/bootstrapvalidator/js/bootstrapValidator.zh_cn.js'],
                     'plugins/bootbox/js/bootbox.min.js': ['plugins/bootbox/js/bootbox.js'],
-                    'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js']
+                    'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js'],
+                    'plugins/moment/js/moment-with-locales.min.js': ['plugins/moment/js/moment-with-locales.js'],
+                    'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js': ['plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js']
                 }
             },
             minify_doc:{

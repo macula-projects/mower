@@ -1,5 +1,5 @@
 /** ========================================================================
- * Mower: chosen.dynamic.mower.js - v0.1.0
+ * Mower: chosen.remote.mower.js - v0.1.0
  *
  * add ajax load remote data base on chosen.
  *
@@ -12,22 +12,22 @@
   "use strict";
 
 
- /* DynaChosen CLASS DEFINITION
+ /* RemoteChosen CLASS DEFINITION
   * ====================== */
 
-  var DynaChosen = function (element, options) {
+  var RemoteChosen = function (element, options) {
     this.options = options;
     this.element = element;
     this.$element = $(element);
   };
 
-  var DynaChosen_Name = 'mu.dynaChosen';
+  var RemoteChosen_Name = 'mu.remoteChosen';
   var Chosen_Name = 'chosen'; //sync with chosen.jquery.js
 
-  if (!$.fn.chosen) throw new Error('DynaChosen requires chosen.jquery.js');
+  if (!$.fn.chosen) throw new Error('RemoteChosen requires chosen.jquery.js');
 
   //you can put your plugin defaults in here.
-  DynaChosen.DEFAULTS = {
+  RemoteChosen.DEFAULTS = {
     server :false,
     url        :'',
     datasource :false,
@@ -36,22 +36,21 @@
     valueField :'value'
   };
 
-  DynaChosen.prototype = {
+  RemoteChosen.prototype = {
 
-    constructor: DynaChosen ,  
+    constructor: RemoteChosen ,  
 
     _init: function(element, options){
       var $element = $(element);
-      this.options = $.extend({}, DynaChosen.DEFAULTS, $element.data(), typeof options === 'object' && options);
+      this.options = $.extend({}, RemoteChosen.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
+      this._initChosen();
       this._loadData();
-
-
     },
 
     _initChosen: function(){
       //instance chosen plugin
-      return this.$element.chosen();
+      return this.$element.chosen(this.options || {});
     },
 
     _construct : function(data) {
@@ -110,7 +109,7 @@
         }
       });
       if (nbItems) {
-        $select.trigger("DynaChosen:updated");
+        $select.trigger("chosen:updated");//notify chosen update field.
       } else {
         $select.data().chosen.no_results_clear();
         $select.data().chosen.no_results($select.val());
@@ -131,15 +130,15 @@
           });
           ajaxOption.success = function(data) {
               that._construct(data);
-              that._initChosen();
-              return;
           };
           $.ajax(ajaxOption); 
-
-
-
-      } else {
-          this._construct(this.options.datasource);
+      } else{
+          var data = this.options.datasource;
+          if ($.isFunction(window[data])){
+               data = data(that);
+           }
+           
+           this._construct(data);
       }
     },
     reload: function(options) {
@@ -159,34 +158,34 @@
     }
   };
 
- /* DynaChosen PLUGIN DEFINITION
+ /* RemoteChosen PLUGIN DEFINITION
   * ======================= */
 
-  var old = $.fn.dynaChosen;
+  var old = $.fn.remoteChosen;
 
-  $.fn.dynaChosen = function (options) {
+  $.fn.remoteChosen = function (options) {
       var args = Array.prototype.slice.call(arguments, 1);
 
       var results;
       this.each(function() {
           var element = this
               ,$element = $(element)
-              ,pluginKey = DynaChosen_Name
+              ,pluginKey = RemoteChosen_Name
               ,instance = $.data(element, pluginKey);
 
           // if there's no plugin instance for this element, create a new one, calling its "init" method, if it exists.
           if (!instance) {
-              instance = $.data(element, pluginKey, new DynaChosen(element,options));
-              if (instance && typeof DynaChosen.prototype['_init'] === 'function')
-                  DynaChosen.prototype['_init'].apply(instance, [element, options]);
+              instance = $.data(element, pluginKey, new RemoteChosen(element,options));
+              if (instance && typeof RemoteChosen.prototype['_init'] === 'function')
+                  RemoteChosen.prototype['_init'].apply(instance, [element, options]);
           }
 
           // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
           if (instance && typeof options === 'string' && options[0] !== '_' && options !== 'init') {
 
               var methodName = (options == 'destroy' ? '_destroy' : options);
-              if (typeof DynaChosen.prototype[methodName] === 'function')
-                  results = DynaChosen.prototype[methodName].apply(instance, args);
+              if (typeof RemoteChosen.prototype[methodName] === 'function')
+                  results = RemoteChosen.prototype[methodName].apply(instance, args);
 
               // Allow instances to be destroyed via the 'destroy' method
               if (options === 'destroy')
@@ -198,30 +197,30 @@
       return results !== undefined ? results : this;
   };
 
-  $.fn.dynaChosen.Constructor = DynaChosen;
+  $.fn.remoteChosen.Constructor = RemoteChosen;
 
 
- /* DynaChosen NO CONFLICT
+ /* RemoteChosen NO CONFLICT
   * ================= */
 
-  $.fn.dynaChosen.noConflict = function () {
-    $.fn.dynaChosen = old;
+  $.fn.remoteChosen.noConflict = function () {
+    $.fn.remoteChosen = old;
     return this;
   };
 
 
- /* DynaChosen DATA-API
+ /* RemoteChosen DATA-API
   * ============== */
 
   $(document).on('ready update', function(event, updatedFragment) {
       /* Act on the event */
       var $root = $(updatedFragment || 'html');
 
-      $root.find('[rel=dynaChosen]').each(function(index, el) {
+      $root.find('[rel=remoteChosen]').each(function(index, el) {
           var $this = $(this);
 
-          if (!$this.data(DynaChosen_Name)) {
-              $(this).dynaChosen();
+          if (!$this.data(RemoteChosen_Name)) {
+              $(this).remoteChosen();
           }
       });
   });

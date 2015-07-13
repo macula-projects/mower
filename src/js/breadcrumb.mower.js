@@ -77,7 +77,7 @@
 
             return $content.attr('data-target');
         },
-        _pushHeader: function(label, url) {
+        _pushHeader: function(targetId, label, url) {
             var path = this._getXPath(this.$element.children('li'));
 
             if (path.length > 0) {
@@ -101,23 +101,21 @@
 
                 var that = this;
                 this.$element.children('li').filter(':last')
-                    .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
-                        event.preventDefault();
-                        /* Act on the event */
-                        var index = path.length - 1;
-                        var popCount = that.$element.children('li').length - index;
-                        that.pop(popCount);
-                    });
+                .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
+                    event.preventDefault();
+                    /* Act on the event */
+                    var index = path.length - 1;
+                    var popCount = that.$element.children('li').length - index;
+                    that.pop(popCount);
+                });
             }
 
             path.push(label);
 
-            var target = this.options.prefix + this.panelSeq++;
-
             var li = [
                 '<li ',
                 'data-target="',
-                target,
+                targetId,
                 '" class="active">',
                 path.length === 1 ? this.options.home : this.options.divider,
                 label,
@@ -125,7 +123,7 @@
             ].join('');
 
             this.$element.append(li);
-            return target;
+            return ;
         },
         _pushContent: function(panelId, url, _callback) {
             var $li = this.$element.find('[data-target="' + panelId + '"]'); //header
@@ -159,31 +157,41 @@
         push: function(label, url, relatedTarget) {
             if (!label || !url) return;
 
-            //update header in breadcrumb
-            var panelId = this._pushHeader(label, url);
+            var targetId = this.options.prefix + this.panelSeq++;
 
             var that = this;
-            var callback = function(data) {
-                //move forward
-                that.current++;
+            var callback = function(isSuccessLoaded,data) {
 
-                //trigger populdate success event 
-                var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
-                    "data": data
-                });
+                if(isSuccessLoaded){
+                    //move forward
+                    that.current++;
 
-                that.$element.trigger(e);
+                    //trigger populdate success event 
+                    var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
+                        "data": data
+                    });
+                    that.$element.trigger(e);
+
+
+                    //update header in breadcrumb
+                    that._pushHeader(targetId, label, url);
+                    var trigger = relatedTarget || that.element;
+                    $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
+                        "path": that._getXPath(that.$element.children('li'))
+                    });
+
+                } else {
+                    //trigger populdate success event 
+                    var e = $.Event(BreadCrumb.DEFAULTS.events.populateError, {
+                        "data": data
+                    });
+
+                    that.$element.trigger(e);
+                }
             };
 
             //update breadcrumb's target content
-            this._pushContent(panelId, url, callback);
-
-            this.cleanup(); //may be old state
-
-            var trigger = relatedTarget || this.element;
-            $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
-                "path": this._getXPath(this.$element.children('li'))
-            });
+            this._pushContent(targetId, url, callback);
         },
         _popHeader: function(popCount) {
             var popArray = new Array();
@@ -248,8 +256,6 @@
             //move backward
             this.current -= popArray.length;
 
-            this.cleanup(); //may be old state
-
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.poped, {
                 "path": this._getXPath(this.$element.children('li'))
@@ -263,9 +269,6 @@
             this.$element.data("target").children().remove();
 
             this.$element.trigger(BreadCrumb.DEFAULTS.events.reset);
-        },
-        cleanup: function() {
-            this.$element.closest('.mu-breadcrumb').next('._mower-alerts').remove();
         },
         _destory: function() {}
     };
