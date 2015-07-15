@@ -1544,7 +1544,7 @@ $(select).chosen(options);
               </pre>
             </div>
             <h3 class="item-header">变化</h3>
-            
+            <p>日期选择插件中可以设置某些参数达到需要显示效果。下面罗列常用参数,更多选项参数请参考<a href="http://eonasdan.github.io/bootstrap-datetimepicker/Options/#usecurrent" target="_blank">Bootstrap 3 Datepicker Options。</a> </p>
             <h4 class="subitem-header">不带图标</h4>
             <div class="bs-example">
               <div class="row">
@@ -1558,7 +1558,8 @@ $(select).chosen(options);
   &lt;input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  data-format="YYYY-MM-DD" rel="datetimepicker"&gt;
               </pre>
             </div>
-            <h4 class="subitem-header">清空图标</h4>
+            <h4 class="subitem-header">清空数值</h4>
+            <p>日期选择框中增加清空按钮，可以快速删除输入框原有的日期。</p>
             <div class="bs-example">
               <div class="form-group">
                   <div class='input-group date'  rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
@@ -1579,8 +1580,30 @@ $(select).chosen(options);
 &lt;/div&gt;
               </pre>
             </div>
-          </div>
-          
+            <h4 class="subitem-header">显示当前日期值</h4>
+            <p>日期选择框显示时候，自动填充当前日期或者时间值。参数<code>useCurrent</code>默认值为<code>true</code></p>
+            <div class="bs-example">
+              <div class="form-group">
+                  <div class='input-group date'  rel="datetimepicker" data-use-current="false" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                  </div>
+              </div>
+            </div>
+            <div class="highlight">
+              <pre class="prettyprint">
+  &lt;div class='input-group date'  rel="datetimepicker" data-use-current="false" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss"&gt;
+      &lt;input type='text' class="form-control" /&gt;
+      &lt;span class="input-group-addon"&gt;
+          &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
+      &lt;/span&gt;
+  &lt;/div&gt;
+              </pre>
+            </div>
+            </div>
+
         </div>
         <div class="col-md-3">
           <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">

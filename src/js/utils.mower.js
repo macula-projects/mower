@@ -487,13 +487,9 @@ Number.prototype.split = function() {
         _privateProcessContents: function(url, ajaxOptions, action, callback, isScrollTop) {
             var self = $(this),
                 s = {},
-                current,
                 handleError = function(){
-                    if(current){
-                        self.children().filter('[data-panel="'+ current +'""]').show();
-                        if (callback && $.isFunction(callback)) {
-                            callback.apply(self, [false]);
-                        }
+                    if (callback && $.isFunction(callback)) {
+                        callback.apply(self, [false]);
                     }
                 };
 
@@ -501,8 +497,6 @@ Number.prototype.split = function() {
                 url: url,
                 dataType: 'html',
                 beforeSend: function() {
-                    current = self.children().filter(':visible').data('panel');//save current work panel
-
                     self.children().addClass('hidden');
                     self.append('<h3 class="_loadmask"><i class="fa fa-cog fa-spin"></i> Loading...</h3>');
                     if (isScrollTop === true) {
@@ -520,8 +514,6 @@ Number.prototype.split = function() {
                         return;
                     }
                     try{
-                        self.find('h3._loadmask').remove();
-                        self.children().removeClass('hidden');
                         self.css({
                             opacity: '0.0'
                         }).updateHtml(data, action, callback).delay(50).animate({
@@ -535,6 +527,10 @@ Number.prototype.split = function() {
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     handleError();
+                },
+                complete:function( xhr, status){
+                    self.find('h3._loadmask').remove();
+                    self.children().removeClass('hidden');
                 }
             }, ajaxOptions || {});
             $.ajax(s);

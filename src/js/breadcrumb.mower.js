@@ -126,8 +126,6 @@
             return ;
         },
         _pushContent: function(panelId, url, _callback) {
-            var $li = this.$element.find('[data-target="' + panelId + '"]'); //header
-
             if (url) {
 
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
@@ -172,7 +170,6 @@
                     });
                     that.$element.trigger(e);
 
-
                     //update header in breadcrumb
                     that._pushHeader(targetId, label, url);
                     var trigger = relatedTarget || that.element;
@@ -187,6 +184,13 @@
                     });
 
                     that.$element.trigger(e);
+
+                    var target = that.$element.data('target');
+                    var $panel = $(target).find('[data-panel="' + targetId + '"]');
+                    $panel.prev().removeClass('hidden');
+                    $panel.remove();
+                    //hide siblings
+                    
                 }
             };
 
@@ -420,15 +424,17 @@
                 var href = $this.attr('data-href') || $this.attr('href');
                 href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
 
-                $.ajax({
-                    url: utils.getAbsoluteUrl(href, $this.getContextPath()),
-                    type: 'post',
-                    dataType: 'json',
-                    success: function(data) {
-                        var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
-                        $this.trigger(e, data);
-                    }
-                });
+                if(href){
+                    $.ajax({
+                        url: utils.getAbsoluteUrl(href, $this.getContextPath()),
+                        type: 'post',
+                        dataType: 'json',
+                        success: function(data) {
+                            var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
+                            $this.trigger(e, data);
+                        }
+                    });
+                }
             };
 
             if ($this.attr('data-process')) {

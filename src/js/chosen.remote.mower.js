@@ -132,7 +132,7 @@
               that._construct(data);
           };
           $.ajax(ajaxOption); 
-      } else{
+      } else {
           var data = this.options.datasource;
           if ($.isFunction(window[data])){
                data = data(that);
