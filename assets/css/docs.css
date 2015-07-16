@@ -579,7 +579,7 @@ a {
     font-family: FontAwesome;
     content:"\f0a4";
     color:#666;
-    padding-right: 5px;
+    margin-right:8px;
 }
 
 
@@ -587,6 +587,7 @@ a {
     font-family: FontAwesome;
     content:"\f046";
     color:#888;
+    margin-right:8px;
 }
 
 

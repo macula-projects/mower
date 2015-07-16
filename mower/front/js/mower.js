@@ -1,5 +1,5 @@
 /*!
- * mower - v1.1.1 - 2015-07-06
+ * mower - v1.1.1 - 2015-07-13
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -475,22 +475,15 @@ Number.prototype.split = function() {
             $(document).triggerHandler('update', self);
 
             //update javascript 
-            var scripts = [];
             $html.filter('script').each(function() {
-                if (this.src) {
-                    scripts.push($(this));
-                } else {
-                    scripts.unshift($(this));
-                }
-            });
-
-            for (var i = 0; i < scripts.length; i++) {
-                var id = scripts[i].attr('id');
+                var $script = $(this);
+                var id = $script.attr('id');
                 if (id) {
                     self.find('#' + id).remove();
-                }!scripts[i].attr('data-ref-target') && scripts[i].attr('data-ref-target', ajaxId);
-                self.append(scripts[i]);
-            }
+                }
+                if(!$script.attr('data-ref-target')) $script.attr('data-ref-target', ajaxId);
+                self.append($script);
+            });
 
             //process call back
             if (callback && $.isFunction(callback)) {

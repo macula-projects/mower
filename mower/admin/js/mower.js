@@ -1,15 +1,7074 @@
-/*!
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    global.moment = factory()
+}(this, function () { 'use strict';
+
+    var hookCallback;
+
+    function utils_hooks__hooks () {
+        return hookCallback.apply(null, arguments);
+    }
+
+    // This is done to register the method called with moment()
+    // without creating circular dependencies.
+    function setHookCallback (callback) {
+        hookCallback = callback;
+    }
+
+    function isArray(input) {
+        return Object.prototype.toString.call(input) === '[object Array]';
+    }
+
+    function isDate(input) {
+        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+    }
+
+    function map(arr, fn) {
+        var res = [], i;
+        for (i = 0; i < arr.length; ++i) {
+            res.push(fn(arr[i], i));
+        }
+        return res;
+    }
+
+    function hasOwnProp(a, b) {
+        return Object.prototype.hasOwnProperty.call(a, b);
+    }
+
+    function extend(a, b) {
+        for (var i in b) {
+            if (hasOwnProp(b, i)) {
+                a[i] = b[i];
+            }
+        }
+
+        if (hasOwnProp(b, 'toString')) {
+            a.toString = b.toString;
+        }
+
+        if (hasOwnProp(b, 'valueOf')) {
+            a.valueOf = b.valueOf;
+        }
+
+        return a;
+    }
+
+    function create_utc__createUTC (input, format, locale, strict) {
+        return createLocalOrUTC(input, format, locale, strict, true).utc();
+    }
+
+    function defaultParsingFlags() {
+        // We need to deep clone this object.
+        return {
+            empty           : false,
+            unusedTokens    : [],
+            unusedInput     : [],
+            overflow        : -2,
+            charsLeftOver   : 0,
+            nullInput       : false,
+            invalidMonth    : null,
+            invalidFormat   : false,
+            userInvalidated : false,
+            iso             : false
+        };
+    }
+
+    function getParsingFlags(m) {
+        if (m._pf == null) {
+            m._pf = defaultParsingFlags();
+        }
+        return m._pf;
+    }
+
+    function valid__isValid(m) {
+        if (m._isValid == null) {
+            var flags = getParsingFlags(m);
+            m._isValid = !isNaN(m._d.getTime()) &&
+                flags.overflow < 0 &&
+                !flags.empty &&
+                !flags.invalidMonth &&
+                !flags.nullInput &&
+                !flags.invalidFormat &&
+                !flags.userInvalidated;
+
+            if (m._strict) {
+                m._isValid = m._isValid &&
+                    flags.charsLeftOver === 0 &&
+                    flags.unusedTokens.length === 0 &&
+                    flags.bigHour === undefined;
+            }
+        }
+        return m._isValid;
+    }
+
+    function valid__createInvalid (flags) {
+        var m = create_utc__createUTC(NaN);
+        if (flags != null) {
+            extend(getParsingFlags(m), flags);
+        }
+        else {
+            getParsingFlags(m).userInvalidated = true;
+        }
+
+        return m;
+    }
+
+    var momentProperties = utils_hooks__hooks.momentProperties = [];
+
+    function copyConfig(to, from) {
+        var i, prop, val;
+
+        if (typeof from._isAMomentObject !== 'undefined') {
+            to._isAMomentObject = from._isAMomentObject;
+        }
+        if (typeof from._i !== 'undefined') {
+            to._i = from._i;
+        }
+        if (typeof from._f !== 'undefined') {
+            to._f = from._f;
+        }
+        if (typeof from._l !== 'undefined') {
+            to._l = from._l;
+        }
+        if (typeof from._strict !== 'undefined') {
+            to._strict = from._strict;
+        }
+        if (typeof from._tzm !== 'undefined') {
+            to._tzm = from._tzm;
+        }
+        if (typeof from._isUTC !== 'undefined') {
+            to._isUTC = from._isUTC;
+        }
+        if (typeof from._offset !== 'undefined') {
+            to._offset = from._offset;
+        }
+        if (typeof from._pf !== 'undefined') {
+            to._pf = getParsingFlags(from);
+        }
+        if (typeof from._locale !== 'undefined') {
+            to._locale = from._locale;
+        }
+
+        if (momentProperties.length > 0) {
+            for (i in momentProperties) {
+                prop = momentProperties[i];
+                val = from[prop];
+                if (typeof val !== 'undefined') {
+                    to[prop] = val;
+                }
+            }
+        }
+
+        return to;
+    }
+
+    var updateInProgress = false;
+
+    // Moment prototype object
+    function Moment(config) {
+        copyConfig(this, config);
+        this._d = new Date(+config._d);
+        // Prevent infinite loop in case updateOffset creates new moment
+        // objects.
+        if (updateInProgress === false) {
+            updateInProgress = true;
+            utils_hooks__hooks.updateOffset(this);
+            updateInProgress = false;
+        }
+    }
+
+    function isMoment (obj) {
+        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+    }
+
+    function toInt(argumentForCoercion) {
+        var coercedNumber = +argumentForCoercion,
+            value = 0;
+
+        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+            if (coercedNumber >= 0) {
+                value = Math.floor(coercedNumber);
+            } else {
+                value = Math.ceil(coercedNumber);
+            }
+        }
+
+        return value;
+    }
+
+    function compareArrays(array1, array2, dontConvert) {
+        var len = Math.min(array1.length, array2.length),
+            lengthDiff = Math.abs(array1.length - array2.length),
+            diffs = 0,
+            i;
+        for (i = 0; i < len; i++) {
+            if ((dontConvert && array1[i] !== array2[i]) ||
+                (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
+                diffs++;
+            }
+        }
+        return diffs + lengthDiff;
+    }
+
+    function Locale() {
+    }
+
+    var locales = {};
+    var globalLocale;
+
+    function normalizeLocale(key) {
+        return key ? key.toLowerCase().replace('_', '-') : key;
+    }
+
+    // pick the locale from the array
+    // try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+    // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
+    function chooseLocale(names) {
+        var i = 0, j, next, locale, split;
+
+        while (i < names.length) {
+            split = normalizeLocale(names[i]).split('-');
+            j = split.length;
+            next = normalizeLocale(names[i + 1]);
+            next = next ? next.split('-') : null;
+            while (j > 0) {
+                locale = loadLocale(split.slice(0, j).join('-'));
+                if (locale) {
+                    return locale;
+                }
+                if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
+                    //the next array item is better than a shallower substring of this one
+                    break;
+                }
+                j--;
+            }
+            i++;
+        }
+        return null;
+    }
+
+    function loadLocale(name) {
+        var oldLocale = null;
+        // TODO: Find a better way to register and load all the locales in Node
+        if (!locales[name] && typeof module !== 'undefined' &&
+                module && module.exports) {
+            try {
+                oldLocale = globalLocale._abbr;
+                require('./locale/' + name);
+                // because defineLocale currently also sets the global locale, we
+                // want to undo that for lazy loaded locales
+                locale_locales__getSetGlobalLocale(oldLocale);
+            } catch (e) { }
+        }
+        return locales[name];
+    }
+
+    // This function will load locale and then set the global locale.  If
+    // no arguments are passed in, it will simply return the current global
+    // locale key.
+    function locale_locales__getSetGlobalLocale (key, values) {
+        var data;
+        if (key) {
+            if (typeof values === 'undefined') {
+                data = locale_locales__getLocale(key);
+            }
+            else {
+                data = defineLocale(key, values);
+            }
+
+            if (data) {
+                // moment.duration._locale = moment._locale = data;
+                globalLocale = data;
+            }
+        }
+
+        return globalLocale._abbr;
+    }
+
+    function defineLocale (name, values) {
+        if (values !== null) {
+            values.abbr = name;
+            if (!locales[name]) {
+                locales[name] = new Locale();
+            }
+            locales[name].set(values);
+
+            // backwards compat for now: also set the locale
+            locale_locales__getSetGlobalLocale(name);
+
+            return locales[name];
+        } else {
+            // useful for testing
+            delete locales[name];
+            return null;
+        }
+    }
+
+    // returns locale data
+    function locale_locales__getLocale (key) {
+        var locale;
+
+        if (key && key._locale && key._locale._abbr) {
+            key = key._locale._abbr;
+        }
+
+        if (!key) {
+            return globalLocale;
+        }
+
+        if (!isArray(key)) {
+            //short-circuit everything else
+            locale = loadLocale(key);
+            if (locale) {
+                return locale;
+            }
+            key = [key];
+        }
+
+        return chooseLocale(key);
+    }
+
+    var aliases = {};
+
+    function addUnitAlias (unit, shorthand) {
+        var lowerCase = unit.toLowerCase();
+        aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
+    }
+
+    function normalizeUnits(units) {
+        return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+    }
+
+    function normalizeObjectUnits(inputObject) {
+        var normalizedInput = {},
+            normalizedProp,
+            prop;
+
+        for (prop in inputObject) {
+            if (hasOwnProp(inputObject, prop)) {
+                normalizedProp = normalizeUnits(prop);
+                if (normalizedProp) {
+                    normalizedInput[normalizedProp] = inputObject[prop];
+                }
+            }
+        }
+
+        return normalizedInput;
+    }
+
+    function makeGetSet (unit, keepTime) {
+        return function (value) {
+            if (value != null) {
+                get_set__set(this, unit, value);
+                utils_hooks__hooks.updateOffset(this, keepTime);
+                return this;
+            } else {
+                return get_set__get(this, unit);
+            }
+        };
+    }
+
+    function get_set__get (mom, unit) {
+        return mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]();
+    }
+
+    function get_set__set (mom, unit, value) {
+        return mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+    }
+
+    // MOMENTS
+
+    function getSet (units, value) {
+        var unit;
+        if (typeof units === 'object') {
+            for (unit in units) {
+                this.set(unit, units[unit]);
+            }
+        } else {
+            units = normalizeUnits(units);
+            if (typeof this[units] === 'function') {
+                return this[units](value);
+            }
+        }
+        return this;
+    }
+
+    function zeroFill(number, targetLength, forceSign) {
+        var output = '' + Math.abs(number),
+            sign = number >= 0;
+
+        while (output.length < targetLength) {
+            output = '0' + output;
+        }
+        return (sign ? (forceSign ? '+' : '') : '-') + output;
+    }
+
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g;
+
+    var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+
+    var formatFunctions = {};
+
+    var formatTokenFunctions = {};
+
+    // token:    'M'
+    // padded:   ['MM', 2]
+    // ordinal:  'Mo'
+    // callback: function () { this.month() + 1 }
+    function addFormatToken (token, padded, ordinal, callback) {
+        var func = callback;
+        if (typeof callback === 'string') {
+            func = function () {
+                return this[callback]();
+            };
+        }
+        if (token) {
+            formatTokenFunctions[token] = func;
+        }
+        if (padded) {
+            formatTokenFunctions[padded[0]] = function () {
+                return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
+            };
+        }
+        if (ordinal) {
+            formatTokenFunctions[ordinal] = function () {
+                return this.localeData().ordinal(func.apply(this, arguments), token);
+            };
+        }
+    }
+
+    function removeFormattingTokens(input) {
+        if (input.match(/\[[\s\S]/)) {
+            return input.replace(/^\[|\]$/g, '');
+        }
+        return input.replace(/\\/g, '');
+    }
+
+    function makeFormatFunction(format) {
+        var array = format.match(formattingTokens), i, length;
+
+        for (i = 0, length = array.length; i < length; i++) {
+            if (formatTokenFunctions[array[i]]) {
+                array[i] = formatTokenFunctions[array[i]];
+            } else {
+                array[i] = removeFormattingTokens(array[i]);
+            }
+        }
+
+        return function (mom) {
+            var output = '';
+            for (i = 0; i < length; i++) {
+                output += array[i] instanceof Function ? array[i].call(mom, format) : array[i];
+            }
+            return output;
+        };
+    }
+
+    // format date using native date object
+    function formatMoment(m, format) {
+        if (!m.isValid()) {
+            return m.localeData().invalidDate();
+        }
+
+        format = expandFormat(format, m.localeData());
+
+        if (!formatFunctions[format]) {
+            formatFunctions[format] = makeFormatFunction(format);
+        }
+
+        return formatFunctions[format](m);
+    }
+
+    function expandFormat(format, locale) {
+        var i = 5;
+
+        function replaceLongDateFormatTokens(input) {
+            return locale.longDateFormat(input) || input;
+        }
+
+        localFormattingTokens.lastIndex = 0;
+        while (i >= 0 && localFormattingTokens.test(format)) {
+            format = format.replace(localFormattingTokens, replaceLongDateFormatTokens);
+            localFormattingTokens.lastIndex = 0;
+            i -= 1;
+        }
+
+        return format;
+    }
+
+    var match1         = /\d/;            //       0 - 9
+    var match2         = /\d\d/;          //      00 - 99
+    var match3         = /\d{3}/;         //     000 - 999
+    var match4         = /\d{4}/;         //    0000 - 9999
+    var match6         = /[+-]?\d{6}/;    // -999999 - 999999
+    var match1to2      = /\d\d?/;         //       0 - 99
+    var match1to3      = /\d{1,3}/;       //       0 - 999
+    var match1to4      = /\d{1,4}/;       //       0 - 9999
+    var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
+
+    var matchUnsigned  = /\d+/;           //       0 - inf
+    var matchSigned    = /[+-]?\d+/;      //    -inf - inf
+
+    var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
+
+    var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
+
+    // any word (or two) characters or numbers including two/three word month in arabic.
+    var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+
+    var regexes = {};
+
+    function addRegexToken (token, regex, strictRegex) {
+        regexes[token] = typeof regex === 'function' ? regex : function (isStrict) {
+            return (isStrict && strictRegex) ? strictRegex : regex;
+        };
+    }
+
+    function getParseRegexForToken (token, config) {
+        if (!hasOwnProp(regexes, token)) {
+            return new RegExp(unescapeFormat(token));
+        }
+
+        return regexes[token](config._strict, config._locale);
+    }
+
+    // Code from http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+    function unescapeFormat(s) {
+        return s.replace('\\', '').replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (matched, p1, p2, p3, p4) {
+            return p1 || p2 || p3 || p4;
+        }).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+
+    var tokens = {};
+
+    function addParseToken (token, callback) {
+        var i, func = callback;
+        if (typeof token === 'string') {
+            token = [token];
+        }
+        if (typeof callback === 'number') {
+            func = function (input, array) {
+                array[callback] = toInt(input);
+            };
+        }
+        for (i = 0; i < token.length; i++) {
+            tokens[token[i]] = func;
+        }
+    }
+
+    function addWeekParseToken (token, callback) {
+        addParseToken(token, function (input, array, config, token) {
+            config._w = config._w || {};
+            callback(input, config._w, config, token);
+        });
+    }
+
+    function addTimeToArrayFromToken(token, input, config) {
+        if (input != null && hasOwnProp(tokens, token)) {
+            tokens[token](input, config._a, config, token);
+        }
+    }
+
+    var YEAR = 0;
+    var MONTH = 1;
+    var DATE = 2;
+    var HOUR = 3;
+    var MINUTE = 4;
+    var SECOND = 5;
+    var MILLISECOND = 6;
+
+    function daysInMonth(year, month) {
+        return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    }
+
+    // FORMATTING
+
+    addFormatToken('M', ['MM', 2], 'Mo', function () {
+        return this.month() + 1;
+    });
+
+    addFormatToken('MMM', 0, 0, function (format) {
+        return this.localeData().monthsShort(this, format);
+    });
+
+    addFormatToken('MMMM', 0, 0, function (format) {
+        return this.localeData().months(this, format);
+    });
+
+    // ALIASES
+
+    addUnitAlias('month', 'M');
+
+    // PARSING
+
+    addRegexToken('M',    match1to2);
+    addRegexToken('MM',   match1to2, match2);
+    addRegexToken('MMM',  matchWord);
+    addRegexToken('MMMM', matchWord);
+
+    addParseToken(['M', 'MM'], function (input, array) {
+        array[MONTH] = toInt(input) - 1;
+    });
+
+    addParseToken(['MMM', 'MMMM'], function (input, array, config, token) {
+        var month = config._locale.monthsParse(input, token, config._strict);
+        // if we didn't find a month name, mark the date as invalid.
+        if (month != null) {
+            array[MONTH] = month;
+        } else {
+            getParsingFlags(config).invalidMonth = input;
+        }
+    });
+
+    // LOCALES
+
+    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
+    function localeMonths (m) {
+        return this._months[m.month()];
+    }
+
+    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+    function localeMonthsShort (m) {
+        return this._monthsShort[m.month()];
+    }
+
+    function localeMonthsParse (monthName, format, strict) {
+        var i, mom, regex;
+
+        if (!this._monthsParse) {
+            this._monthsParse = [];
+            this._longMonthsParse = [];
+            this._shortMonthsParse = [];
+        }
+
+        for (i = 0; i < 12; i++) {
+            // make the regex if we don't have it already
+            mom = create_utc__createUTC([2000, i]);
+            if (strict && !this._longMonthsParse[i]) {
+                this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
+                this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
+            }
+            if (!strict && !this._monthsParse[i]) {
+                regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
+                this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
+            }
+            // test the regex
+            if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
+                return i;
+            } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
+                return i;
+            } else if (!strict && this._monthsParse[i].test(monthName)) {
+                return i;
+            }
+        }
+    }
+
+    // MOMENTS
+
+    function setMonth (mom, value) {
+        var dayOfMonth;
+
+        // TODO: Move this out of here!
+        if (typeof value === 'string') {
+            value = mom.localeData().monthsParse(value);
+            // TODO: Another silent failure?
+            if (typeof value !== 'number') {
+                return mom;
+            }
+        }
+
+        dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
+        mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+        return mom;
+    }
+
+    function getSetMonth (value) {
+        if (value != null) {
+            setMonth(this, value);
+            utils_hooks__hooks.updateOffset(this, true);
+            return this;
+        } else {
+            return get_set__get(this, 'Month');
+        }
+    }
+
+    function getDaysInMonth () {
+        return daysInMonth(this.year(), this.month());
+    }
+
+    function checkOverflow (m) {
+        var overflow;
+        var a = m._a;
+
+        if (a && getParsingFlags(m).overflow === -2) {
+            overflow =
+                a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
+                a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
+                a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR :
+                a[MINUTE]      < 0 || a[MINUTE]      > 59  ? MINUTE :
+                a[SECOND]      < 0 || a[SECOND]      > 59  ? SECOND :
+                a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
+                -1;
+
+            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+                overflow = DATE;
+            }
+
+            getParsingFlags(m).overflow = overflow;
+        }
+
+        return m;
+    }
+
+    function warn(msg) {
+        if (utils_hooks__hooks.suppressDeprecationWarnings === false && typeof console !== 'undefined' && console.warn) {
+            console.warn('Deprecation warning: ' + msg);
+        }
+    }
+
+    function deprecate(msg, fn) {
+        var firstTime = true,
+            msgWithStack = msg + '\n' + (new Error()).stack;
+
+        return extend(function () {
+            if (firstTime) {
+                warn(msgWithStack);
+                firstTime = false;
+            }
+            return fn.apply(this, arguments);
+        }, fn);
+    }
+
+    var deprecations = {};
+
+    function deprecateSimple(name, msg) {
+        if (!deprecations[name]) {
+            warn(msg);
+            deprecations[name] = true;
+        }
+    }
+
+    utils_hooks__hooks.suppressDeprecationWarnings = false;
+
+    var from_string__isoRegex = /^\s*(?:[+-]\d{6}|\d{4})-(?:(\d\d-\d\d)|(W\d\d$)|(W\d\d-\d)|(\d\d\d))((T| )(\d\d(:\d\d(:\d\d(\.\d+)?)?)?)?([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+
+    var isoDates = [
+        ['YYYYYY-MM-DD', /[+-]\d{6}-\d{2}-\d{2}/],
+        ['YYYY-MM-DD', /\d{4}-\d{2}-\d{2}/],
+        ['GGGG-[W]WW-E', /\d{4}-W\d{2}-\d/],
+        ['GGGG-[W]WW', /\d{4}-W\d{2}/],
+        ['YYYY-DDD', /\d{4}-\d{3}/]
+    ];
+
+    // iso time formats and regexes
+    var isoTimes = [
+        ['HH:mm:ss.SSSS', /(T| )\d\d:\d\d:\d\d\.\d+/],
+        ['HH:mm:ss', /(T| )\d\d:\d\d:\d\d/],
+        ['HH:mm', /(T| )\d\d:\d\d/],
+        ['HH', /(T| )\d\d/]
+    ];
+
+    var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+
+    // date from iso format
+    function configFromISO(config) {
+        var i, l,
+            string = config._i,
+            match = from_string__isoRegex.exec(string);
+
+        if (match) {
+            getParsingFlags(config).iso = true;
+            for (i = 0, l = isoDates.length; i < l; i++) {
+                if (isoDates[i][1].exec(string)) {
+                    // match[5] should be 'T' or undefined
+                    config._f = isoDates[i][0] + (match[6] || ' ');
+                    break;
+                }
+            }
+            for (i = 0, l = isoTimes.length; i < l; i++) {
+                if (isoTimes[i][1].exec(string)) {
+                    config._f += isoTimes[i][0];
+                    break;
+                }
+            }
+            if (string.match(matchOffset)) {
+                config._f += 'Z';
+            }
+            configFromStringAndFormat(config);
+        } else {
+            config._isValid = false;
+        }
+    }
+
+    // date from iso format or fallback
+    function configFromString(config) {
+        var matched = aspNetJsonRegex.exec(config._i);
+
+        if (matched !== null) {
+            config._d = new Date(+matched[1]);
+            return;
+        }
+
+        configFromISO(config);
+        if (config._isValid === false) {
+            delete config._isValid;
+            utils_hooks__hooks.createFromInputFallback(config);
+        }
+    }
+
+    utils_hooks__hooks.createFromInputFallback = deprecate(
+        'moment construction falls back to js Date. This is ' +
+        'discouraged and will be removed in upcoming major ' +
+        'release. Please refer to ' +
+        'https://github.com/moment/moment/issues/1407 for more info.',
+        function (config) {
+            config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+        }
+    );
+
+    function createDate (y, m, d, h, M, s, ms) {
+        //can't just apply() to create a date:
+        //http://stackoverflow.com/questions/181348/instantiating-a-javascript-object-by-calling-prototype-constructor-apply
+        var date = new Date(y, m, d, h, M, s, ms);
+
+        //the date constructor doesn't accept years < 1970
+        if (y < 1970) {
+            date.setFullYear(y);
+        }
+        return date;
+    }
+
+    function createUTCDate (y) {
+        var date = new Date(Date.UTC.apply(null, arguments));
+        if (y < 1970) {
+            date.setUTCFullYear(y);
+        }
+        return date;
+    }
+
+    addFormatToken(0, ['YY', 2], 0, function () {
+        return this.year() % 100;
+    });
+
+    addFormatToken(0, ['YYYY',   4],       0, 'year');
+    addFormatToken(0, ['YYYYY',  5],       0, 'year');
+    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+    // ALIASES
+
+    addUnitAlias('year', 'y');
+
+    // PARSING
+
+    addRegexToken('Y',      matchSigned);
+    addRegexToken('YY',     match1to2, match2);
+    addRegexToken('YYYY',   match1to4, match4);
+    addRegexToken('YYYYY',  match1to6, match6);
+    addRegexToken('YYYYYY', match1to6, match6);
+
+    addParseToken(['YYYY', 'YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YY', function (input, array) {
+        array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+
+    // HELPERS
+
+    function daysInYear(year) {
+        return isLeapYear(year) ? 366 : 365;
+    }
+
+    function isLeapYear(year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    // HOOKS
+
+    utils_hooks__hooks.parseTwoDigitYear = function (input) {
+        return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+    };
+
+    // MOMENTS
+
+    var getSetYear = makeGetSet('FullYear', false);
+
+    function getIsLeapYear () {
+        return isLeapYear(this.year());
+    }
+
+    addFormatToken('w', ['ww', 2], 'wo', 'week');
+    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
+
+    // ALIASES
+
+    addUnitAlias('week', 'w');
+    addUnitAlias('isoWeek', 'W');
+
+    // PARSING
+
+    addRegexToken('w',  match1to2);
+    addRegexToken('ww', match1to2, match2);
+    addRegexToken('W',  match1to2);
+    addRegexToken('WW', match1to2, match2);
+
+    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
+        week[token.substr(0, 1)] = toInt(input);
+    });
+
+    // HELPERS
+
+    // firstDayOfWeek       0 = sun, 6 = sat
+    //                      the day of the week that starts the week
+    //                      (usually sunday or monday)
+    // firstDayOfWeekOfYear 0 = sun, 6 = sat
+    //                      the first week is the week that contains the first
+    //                      of this day of the week
+    //                      (eg. ISO weeks use thursday (4))
+    function weekOfYear(mom, firstDayOfWeek, firstDayOfWeekOfYear) {
+        var end = firstDayOfWeekOfYear - firstDayOfWeek,
+            daysToDayOfWeek = firstDayOfWeekOfYear - mom.day(),
+            adjustedMoment;
+
+
+        if (daysToDayOfWeek > end) {
+            daysToDayOfWeek -= 7;
+        }
+
+        if (daysToDayOfWeek < end - 7) {
+            daysToDayOfWeek += 7;
+        }
+
+        adjustedMoment = local__createLocal(mom).add(daysToDayOfWeek, 'd');
+        return {
+            week: Math.ceil(adjustedMoment.dayOfYear() / 7),
+            year: adjustedMoment.year()
+        };
+    }
+
+    // LOCALES
+
+    function localeWeek (mom) {
+        return weekOfYear(mom, this._week.dow, this._week.doy).week;
+    }
+
+    var defaultLocaleWeek = {
+        dow : 0, // Sunday is the first day of the week.
+        doy : 6  // The week that contains Jan 1st is the first week of the year.
+    };
+
+    function localeFirstDayOfWeek () {
+        return this._week.dow;
+    }
+
+    function localeFirstDayOfYear () {
+        return this._week.doy;
+    }
+
+    // MOMENTS
+
+    function getSetWeek (input) {
+        var week = this.localeData().week(this);
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    function getSetISOWeek (input) {
+        var week = weekOfYear(this, 1, 4).week;
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+
+    // ALIASES
+
+    addUnitAlias('dayOfYear', 'DDD');
+
+    // PARSING
+
+    addRegexToken('DDD',  match1to3);
+    addRegexToken('DDDD', match3);
+    addParseToken(['DDD', 'DDDD'], function (input, array, config) {
+        config._dayOfYear = toInt(input);
+    });
+
+    // HELPERS
+
+    //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
+    function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
+        var d = createUTCDate(year, 0, 1).getUTCDay();
+        var daysToAdd;
+        var dayOfYear;
+
+        d = d === 0 ? 7 : d;
+        weekday = weekday != null ? weekday : firstDayOfWeek;
+        daysToAdd = firstDayOfWeek - d + (d > firstDayOfWeekOfYear ? 7 : 0) - (d < firstDayOfWeek ? 7 : 0);
+        dayOfYear = 7 * (week - 1) + (weekday - firstDayOfWeek) + daysToAdd + 1;
+
+        return {
+            year      : dayOfYear > 0 ? year      : year - 1,
+            dayOfYear : dayOfYear > 0 ? dayOfYear : daysInYear(year - 1) + dayOfYear
+        };
+    }
+
+    // MOMENTS
+
+    function getSetDayOfYear (input) {
+        var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+        return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+    }
+
+    // Pick the first defined of two or three arguments.
+    function defaults(a, b, c) {
+        if (a != null) {
+            return a;
+        }
+        if (b != null) {
+            return b;
+        }
+        return c;
+    }
+
+    function currentDateArray(config) {
+        var now = new Date();
+        if (config._useUTC) {
+            return [now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()];
+        }
+        return [now.getFullYear(), now.getMonth(), now.getDate()];
+    }
+
+    // convert an array to a date.
+    // the array should mirror the parameters below
+    // note: all values past the year are optional and will default to the lowest possible value.
+    // [year, month, day , hour, minute, second, millisecond]
+    function configFromArray (config) {
+        var i, date, input = [], currentDate, yearToUse;
+
+        if (config._d) {
+            return;
+        }
+
+        currentDate = currentDateArray(config);
+
+        //compute day of the year from weeks and weekdays
+        if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+            dayOfYearFromWeekInfo(config);
+        }
+
+        //if the day of the year is set, figure out what it is
+        if (config._dayOfYear) {
+            yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+
+            if (config._dayOfYear > daysInYear(yearToUse)) {
+                getParsingFlags(config)._overflowDayOfYear = true;
+            }
+
+            date = createUTCDate(yearToUse, 0, config._dayOfYear);
+            config._a[MONTH] = date.getUTCMonth();
+            config._a[DATE] = date.getUTCDate();
+        }
+
+        // Default to current date.
+        // * if no year, month, day of month are given, default to today
+        // * if day of month is given, default month and year
+        // * if month is given, default only year
+        // * if year is given, don't default anything
+        for (i = 0; i < 3 && config._a[i] == null; ++i) {
+            config._a[i] = input[i] = currentDate[i];
+        }
+
+        // Zero out whatever was not defaulted, including time
+        for (; i < 7; i++) {
+            config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+        }
+
+        // Check for 24:00:00.000
+        if (config._a[HOUR] === 24 &&
+                config._a[MINUTE] === 0 &&
+                config._a[SECOND] === 0 &&
+                config._a[MILLISECOND] === 0) {
+            config._nextDay = true;
+            config._a[HOUR] = 0;
+        }
+
+        config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+        // Apply timezone offset from input. The actual utcOffset can be changed
+        // with parseZone.
+        if (config._tzm != null) {
+            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+        }
+
+        if (config._nextDay) {
+            config._a[HOUR] = 24;
+        }
+    }
+
+    function dayOfYearFromWeekInfo(config) {
+        var w, weekYear, week, weekday, dow, doy, temp;
+
+        w = config._w;
+        if (w.GG != null || w.W != null || w.E != null) {
+            dow = 1;
+            doy = 4;
+
+            // TODO: We need to take the current isoWeekYear, but that depends on
+            // how we interpret now (local, utc, fixed offset). So create
+            // a now version of current config (take local/utc/offset flags, and
+            // create now).
+            weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(local__createLocal(), 1, 4).year);
+            week = defaults(w.W, 1);
+            weekday = defaults(w.E, 1);
+        } else {
+            dow = config._locale._week.dow;
+            doy = config._locale._week.doy;
+
+            weekYear = defaults(w.gg, config._a[YEAR], weekOfYear(local__createLocal(), dow, doy).year);
+            week = defaults(w.w, 1);
+
+            if (w.d != null) {
+                // weekday -- low day numbers are considered next week
+                weekday = w.d;
+                if (weekday < dow) {
+                    ++week;
+                }
+            } else if (w.e != null) {
+                // local weekday -- counting starts from begining of week
+                weekday = w.e + dow;
+            } else {
+                // default to begining of week
+                weekday = dow;
+            }
+        }
+        temp = dayOfYearFromWeeks(weekYear, week, weekday, doy, dow);
+
+        config._a[YEAR] = temp.year;
+        config._dayOfYear = temp.dayOfYear;
+    }
+
+    utils_hooks__hooks.ISO_8601 = function () {};
+
+    // date from string and format string
+    function configFromStringAndFormat(config) {
+        // TODO: Move this to another part of the creation flow to prevent circular deps
+        if (config._f === utils_hooks__hooks.ISO_8601) {
+            configFromISO(config);
+            return;
+        }
+
+        config._a = [];
+        getParsingFlags(config).empty = true;
+
+        // This array is used to make a Date, either with `new Date` or `Date.UTC`
+        var string = '' + config._i,
+            i, parsedInput, tokens, token, skipped,
+            stringLength = string.length,
+            totalParsedInputLength = 0;
+
+        tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+
+        for (i = 0; i < tokens.length; i++) {
+            token = tokens[i];
+            parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
+            if (parsedInput) {
+                skipped = string.substr(0, string.indexOf(parsedInput));
+                if (skipped.length > 0) {
+                    getParsingFlags(config).unusedInput.push(skipped);
+                }
+                string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
+                totalParsedInputLength += parsedInput.length;
+            }
+            // don't parse if it's not a known token
+            if (formatTokenFunctions[token]) {
+                if (parsedInput) {
+                    getParsingFlags(config).empty = false;
+                }
+                else {
+                    getParsingFlags(config).unusedTokens.push(token);
+                }
+                addTimeToArrayFromToken(token, parsedInput, config);
+            }
+            else if (config._strict && !parsedInput) {
+                getParsingFlags(config).unusedTokens.push(token);
+            }
+        }
+
+        // add remaining unparsed input length to the string
+        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+        if (string.length > 0) {
+            getParsingFlags(config).unusedInput.push(string);
+        }
+
+        // clear _12h flag if hour is <= 12
+        if (getParsingFlags(config).bigHour === true &&
+                config._a[HOUR] <= 12 &&
+                config._a[HOUR] > 0) {
+            getParsingFlags(config).bigHour = undefined;
+        }
+        // handle meridiem
+        config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
+
+        configFromArray(config);
+        checkOverflow(config);
+    }
+
+
+    function meridiemFixWrap (locale, hour, meridiem) {
+        var isPm;
+
+        if (meridiem == null) {
+            // nothing to do
+            return hour;
+        }
+        if (locale.meridiemHour != null) {
+            return locale.meridiemHour(hour, meridiem);
+        } else if (locale.isPM != null) {
+            // Fallback
+            isPm = locale.isPM(meridiem);
+            if (isPm && hour < 12) {
+                hour += 12;
+            }
+            if (!isPm && hour === 12) {
+                hour = 0;
+            }
+            return hour;
+        } else {
+            // this is not supposed to happen
+            return hour;
+        }
+    }
+
+    function configFromStringAndArray(config) {
+        var tempConfig,
+            bestMoment,
+
+            scoreToBeat,
+            i,
+            currentScore;
+
+        if (config._f.length === 0) {
+            getParsingFlags(config).invalidFormat = true;
+            config._d = new Date(NaN);
+            return;
+        }
+
+        for (i = 0; i < config._f.length; i++) {
+            currentScore = 0;
+            tempConfig = copyConfig({}, config);
+            if (config._useUTC != null) {
+                tempConfig._useUTC = config._useUTC;
+            }
+            tempConfig._f = config._f[i];
+            configFromStringAndFormat(tempConfig);
+
+            if (!valid__isValid(tempConfig)) {
+                continue;
+            }
+
+            // if there is any input that was not parsed add a penalty for that format
+            currentScore += getParsingFlags(tempConfig).charsLeftOver;
+
+            //or tokens
+            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+
+            getParsingFlags(tempConfig).score = currentScore;
+
+            if (scoreToBeat == null || currentScore < scoreToBeat) {
+                scoreToBeat = currentScore;
+                bestMoment = tempConfig;
+            }
+        }
+
+        extend(config, bestMoment || tempConfig);
+    }
+
+    function configFromObject(config) {
+        if (config._d) {
+            return;
+        }
+
+        var i = normalizeObjectUnits(config._i);
+        config._a = [i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond];
+
+        configFromArray(config);
+    }
+
+    function createFromConfig (config) {
+        var input = config._i,
+            format = config._f,
+            res;
+
+        config._locale = config._locale || locale_locales__getLocale(config._l);
+
+        if (input === null || (format === undefined && input === '')) {
+            return valid__createInvalid({nullInput: true});
+        }
+
+        if (typeof input === 'string') {
+            config._i = input = config._locale.preparse(input);
+        }
+
+        if (isMoment(input)) {
+            return new Moment(checkOverflow(input));
+        } else if (isArray(format)) {
+            configFromStringAndArray(config);
+        } else if (format) {
+            configFromStringAndFormat(config);
+        } else if (isDate(input)) {
+            config._d = input;
+        } else {
+            configFromInput(config);
+        }
+
+        res = new Moment(checkOverflow(config));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
+    }
+
+    function configFromInput(config) {
+        var input = config._i;
+        if (input === undefined) {
+            config._d = new Date();
+        } else if (isDate(input)) {
+            config._d = new Date(+input);
+        } else if (typeof input === 'string') {
+            configFromString(config);
+        } else if (isArray(input)) {
+            config._a = map(input.slice(0), function (obj) {
+                return parseInt(obj, 10);
+            });
+            configFromArray(config);
+        } else if (typeof(input) === 'object') {
+            configFromObject(config);
+        } else if (typeof(input) === 'number') {
+            // from milliseconds
+            config._d = new Date(input);
+        } else {
+            utils_hooks__hooks.createFromInputFallback(config);
+        }
+    }
+
+    function createLocalOrUTC (input, format, locale, strict, isUTC) {
+        var c = {};
+
+        if (typeof(locale) === 'boolean') {
+            strict = locale;
+            locale = undefined;
+        }
+        // object construction must be done this way.
+        // https://github.com/moment/moment/issues/1423
+        c._isAMomentObject = true;
+        c._useUTC = c._isUTC = isUTC;
+        c._l = locale;
+        c._i = input;
+        c._f = format;
+        c._strict = strict;
+
+        return createFromConfig(c);
+    }
+
+    function local__createLocal (input, format, locale, strict) {
+        return createLocalOrUTC(input, format, locale, strict, false);
+    }
+
+    var prototypeMin = deprecate(
+         'moment().min is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548',
+         function () {
+             var other = local__createLocal.apply(null, arguments);
+             return other < this ? this : other;
+         }
+     );
+
+    var prototypeMax = deprecate(
+        'moment().max is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548',
+        function () {
+            var other = local__createLocal.apply(null, arguments);
+            return other > this ? this : other;
+        }
+    );
+
+    // Pick a moment m from moments so that m[fn](other) is true for all
+    // other. This relies on the function fn to be transitive.
+    //
+    // moments should either be an array of moment objects or an array, whose
+    // first element is an array of moment objects.
+    function pickBy(fn, moments) {
+        var res, i;
+        if (moments.length === 1 && isArray(moments[0])) {
+            moments = moments[0];
+        }
+        if (!moments.length) {
+            return local__createLocal();
+        }
+        res = moments[0];
+        for (i = 1; i < moments.length; ++i) {
+            if (moments[i][fn](res)) {
+                res = moments[i];
+            }
+        }
+        return res;
+    }
+
+    // TODO: Use [].sort instead?
+    function min () {
+        var args = [].slice.call(arguments, 0);
+
+        return pickBy('isBefore', args);
+    }
+
+    function max () {
+        var args = [].slice.call(arguments, 0);
+
+        return pickBy('isAfter', args);
+    }
+
+    function Duration (duration) {
+        var normalizedInput = normalizeObjectUnits(duration),
+            years = normalizedInput.year || 0,
+            quarters = normalizedInput.quarter || 0,
+            months = normalizedInput.month || 0,
+            weeks = normalizedInput.week || 0,
+            days = normalizedInput.day || 0,
+            hours = normalizedInput.hour || 0,
+            minutes = normalizedInput.minute || 0,
+            seconds = normalizedInput.second || 0,
+            milliseconds = normalizedInput.millisecond || 0;
+
+        // representation for dateAddRemove
+        this._milliseconds = +milliseconds +
+            seconds * 1e3 + // 1000
+            minutes * 6e4 + // 1000 * 60
+            hours * 36e5; // 1000 * 60 * 60
+        // Because of dateAddRemove treats 24 hours as different from a
+        // day when working around DST, we need to store them separately
+        this._days = +days +
+            weeks * 7;
+        // It is impossible translate months into days without knowing
+        // which months you are are talking about, so we have to store
+        // it separately.
+        this._months = +months +
+            quarters * 3 +
+            years * 12;
+
+        this._data = {};
+
+        this._locale = locale_locales__getLocale();
+
+        this._bubble();
+    }
+
+    function isDuration (obj) {
+        return obj instanceof Duration;
+    }
+
+    function offset (token, separator) {
+        addFormatToken(token, 0, 0, function () {
+            var offset = this.utcOffset();
+            var sign = '+';
+            if (offset < 0) {
+                offset = -offset;
+                sign = '-';
+            }
+            return sign + zeroFill(~~(offset / 60), 2) + separator + zeroFill(~~(offset) % 60, 2);
+        });
+    }
+
+    offset('Z', ':');
+    offset('ZZ', '');
+
+    // PARSING
+
+    addRegexToken('Z',  matchOffset);
+    addRegexToken('ZZ', matchOffset);
+    addParseToken(['Z', 'ZZ'], function (input, array, config) {
+        config._useUTC = true;
+        config._tzm = offsetFromString(input);
+    });
+
+    // HELPERS
+
+    // timezone chunker
+    // '+10:00' > ['10',  '00']
+    // '-1530'  > ['-15', '30']
+    var chunkOffset = /([\+\-]|\d\d)/gi;
+
+    function offsetFromString(string) {
+        var matches = ((string || '').match(matchOffset) || []);
+        var chunk   = matches[matches.length - 1] || [];
+        var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
+        var minutes = +(parts[1] * 60) + toInt(parts[2]);
+
+        return parts[0] === '+' ? minutes : -minutes;
+    }
+
+    // Return a moment from input, that is local/utc/zone equivalent to model.
+    function cloneWithOffset(input, model) {
+        var res, diff;
+        if (model._isUTC) {
+            res = model.clone();
+            diff = (isMoment(input) || isDate(input) ? +input : +local__createLocal(input)) - (+res);
+            // Use low-level api, because this fn is low-level api.
+            res._d.setTime(+res._d + diff);
+            utils_hooks__hooks.updateOffset(res, false);
+            return res;
+        } else {
+            return local__createLocal(input).local();
+        }
+        return model._isUTC ? local__createLocal(input).zone(model._offset || 0) : local__createLocal(input).local();
+    }
+
+    function getDateOffset (m) {
+        // On Firefox.24 Date#getTimezoneOffset returns a floating point.
+        // https://github.com/moment/moment/pull/1871
+        return -Math.round(m._d.getTimezoneOffset() / 15) * 15;
+    }
+
+    // HOOKS
+
+    // This function will be called whenever a moment is mutated.
+    // It is intended to keep the offset in sync with the timezone.
+    utils_hooks__hooks.updateOffset = function () {};
+
+    // MOMENTS
+
+    // keepLocalTime = true means only change the timezone, without
+    // affecting the local hour. So 5:31:26 +0300 --[utcOffset(2, true)]-->
+    // 5:31:26 +0200 It is possible that 5:31:26 doesn't exist with offset
+    // +0200, so we adjust the time as needed, to be valid.
+    //
+    // Keeping the time actually adds/subtracts (one hour)
+    // from the actual represented time. That is why we call updateOffset
+    // a second time. In case it wants us to change the offset again
+    // _changeInProgress == true case, then we have to adjust, because
+    // there is no such time in the given timezone.
+    function getSetOffset (input, keepLocalTime) {
+        var offset = this._offset || 0,
+            localAdjust;
+        if (input != null) {
+            if (typeof input === 'string') {
+                input = offsetFromString(input);
+            }
+            if (Math.abs(input) < 16) {
+                input = input * 60;
+            }
+            if (!this._isUTC && keepLocalTime) {
+                localAdjust = getDateOffset(this);
+            }
+            this._offset = input;
+            this._isUTC = true;
+            if (localAdjust != null) {
+                this.add(localAdjust, 'm');
+            }
+            if (offset !== input) {
+                if (!keepLocalTime || this._changeInProgress) {
+                    add_subtract__addSubtract(this, create__createDuration(input - offset, 'm'), 1, false);
+                } else if (!this._changeInProgress) {
+                    this._changeInProgress = true;
+                    utils_hooks__hooks.updateOffset(this, true);
+                    this._changeInProgress = null;
+                }
+            }
+            return this;
+        } else {
+            return this._isUTC ? offset : getDateOffset(this);
+        }
+    }
+
+    function getSetZone (input, keepLocalTime) {
+        if (input != null) {
+            if (typeof input !== 'string') {
+                input = -input;
+            }
+
+            this.utcOffset(input, keepLocalTime);
+
+            return this;
+        } else {
+            return -this.utcOffset();
+        }
+    }
+
+    function setOffsetToUTC (keepLocalTime) {
+        return this.utcOffset(0, keepLocalTime);
+    }
+
+    function setOffsetToLocal (keepLocalTime) {
+        if (this._isUTC) {
+            this.utcOffset(0, keepLocalTime);
+            this._isUTC = false;
+
+            if (keepLocalTime) {
+                this.subtract(getDateOffset(this), 'm');
+            }
+        }
+        return this;
+    }
+
+    function setOffsetToParsedOffset () {
+        if (this._tzm) {
+            this.utcOffset(this._tzm);
+        } else if (typeof this._i === 'string') {
+            this.utcOffset(offsetFromString(this._i));
+        }
+        return this;
+    }
+
+    function hasAlignedHourOffset (input) {
+        if (!input) {
+            input = 0;
+        }
+        else {
+            input = local__createLocal(input).utcOffset();
+        }
+
+        return (this.utcOffset() - input) % 60 === 0;
+    }
+
+    function isDaylightSavingTime () {
+        return (
+            this.utcOffset() > this.clone().month(0).utcOffset() ||
+            this.utcOffset() > this.clone().month(5).utcOffset()
+        );
+    }
+
+    function isDaylightSavingTimeShifted () {
+        if (this._a) {
+            var other = this._isUTC ? create_utc__createUTC(this._a) : local__createLocal(this._a);
+            return this.isValid() && compareArrays(this._a, other.toArray()) > 0;
+        }
+
+        return false;
+    }
+
+    function isLocal () {
+        return !this._isUTC;
+    }
+
+    function isUtcOffset () {
+        return this._isUTC;
+    }
+
+    function isUtc () {
+        return this._isUTC && this._offset === 0;
+    }
+
+    var aspNetRegex = /(\-)?(?:(\d*)\.)?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?)?/;
+
+    // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
+    // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
+    var create__isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
+
+    function create__createDuration (input, key) {
+        var duration = input,
+            // matching against regexp is expensive, do it on demand
+            match = null,
+            sign,
+            ret,
+            diffRes;
+
+        if (isDuration(input)) {
+            duration = {
+                ms : input._milliseconds,
+                d  : input._days,
+                M  : input._months
+            };
+        } else if (typeof input === 'number') {
+            duration = {};
+            if (key) {
+                duration[key] = input;
+            } else {
+                duration.milliseconds = input;
+            }
+        } else if (!!(match = aspNetRegex.exec(input))) {
+            sign = (match[1] === '-') ? -1 : 1;
+            duration = {
+                y  : 0,
+                d  : toInt(match[DATE])        * sign,
+                h  : toInt(match[HOUR])        * sign,
+                m  : toInt(match[MINUTE])      * sign,
+                s  : toInt(match[SECOND])      * sign,
+                ms : toInt(match[MILLISECOND]) * sign
+            };
+        } else if (!!(match = create__isoRegex.exec(input))) {
+            sign = (match[1] === '-') ? -1 : 1;
+            duration = {
+                y : parseIso(match[2], sign),
+                M : parseIso(match[3], sign),
+                d : parseIso(match[4], sign),
+                h : parseIso(match[5], sign),
+                m : parseIso(match[6], sign),
+                s : parseIso(match[7], sign),
+                w : parseIso(match[8], sign)
+            };
+        } else if (duration == null) {// checks for null or undefined
+            duration = {};
+        } else if (typeof duration === 'object' && ('from' in duration || 'to' in duration)) {
+            diffRes = momentsDifference(local__createLocal(duration.from), local__createLocal(duration.to));
+
+            duration = {};
+            duration.ms = diffRes.milliseconds;
+            duration.M = diffRes.months;
+        }
+
+        ret = new Duration(duration);
+
+        if (isDuration(input) && hasOwnProp(input, '_locale')) {
+            ret._locale = input._locale;
+        }
+
+        return ret;
+    }
+
+    create__createDuration.fn = Duration.prototype;
+
+    function parseIso (inp, sign) {
+        // We'd normally use ~~inp for this, but unfortunately it also
+        // converts floats to ints.
+        // inp may be undefined, so careful calling replace on it.
+        var res = inp && parseFloat(inp.replace(',', '.'));
+        // apply sign while we're at it
+        return (isNaN(res) ? 0 : res) * sign;
+    }
+
+    function positiveMomentsDifference(base, other) {
+        var res = {milliseconds: 0, months: 0};
+
+        res.months = other.month() - base.month() +
+            (other.year() - base.year()) * 12;
+        if (base.clone().add(res.months, 'M').isAfter(other)) {
+            --res.months;
+        }
+
+        res.milliseconds = +other - +(base.clone().add(res.months, 'M'));
+
+        return res;
+    }
+
+    function momentsDifference(base, other) {
+        var res;
+        other = cloneWithOffset(other, base);
+        if (base.isBefore(other)) {
+            res = positiveMomentsDifference(base, other);
+        } else {
+            res = positiveMomentsDifference(other, base);
+            res.milliseconds = -res.milliseconds;
+            res.months = -res.months;
+        }
+
+        return res;
+    }
+
+    function createAdder(direction, name) {
+        return function (val, period) {
+            var dur, tmp;
+            //invert the arguments, but complain about it
+            if (period !== null && !isNaN(+period)) {
+                deprecateSimple(name, 'moment().' + name  + '(period, number) is deprecated. Please use moment().' + name + '(number, period).');
+                tmp = val; val = period; period = tmp;
+            }
+
+            val = typeof val === 'string' ? +val : val;
+            dur = create__createDuration(val, period);
+            add_subtract__addSubtract(this, dur, direction);
+            return this;
+        };
+    }
+
+    function add_subtract__addSubtract (mom, duration, isAdding, updateOffset) {
+        var milliseconds = duration._milliseconds,
+            days = duration._days,
+            months = duration._months;
+        updateOffset = updateOffset == null ? true : updateOffset;
+
+        if (milliseconds) {
+            mom._d.setTime(+mom._d + milliseconds * isAdding);
+        }
+        if (days) {
+            get_set__set(mom, 'Date', get_set__get(mom, 'Date') + days * isAdding);
+        }
+        if (months) {
+            setMonth(mom, get_set__get(mom, 'Month') + months * isAdding);
+        }
+        if (updateOffset) {
+            utils_hooks__hooks.updateOffset(mom, days || months);
+        }
+    }
+
+    var add_subtract__add      = createAdder(1, 'add');
+    var add_subtract__subtract = createAdder(-1, 'subtract');
+
+    function moment_calendar__calendar (time) {
+        // We want to compare the start of today, vs this.
+        // Getting start-of-today depends on whether we're local/utc/offset or not.
+        var now = time || local__createLocal(),
+            sod = cloneWithOffset(now, this).startOf('day'),
+            diff = this.diff(sod, 'days', true),
+            format = diff < -6 ? 'sameElse' :
+                diff < -1 ? 'lastWeek' :
+                diff < 0 ? 'lastDay' :
+                diff < 1 ? 'sameDay' :
+                diff < 2 ? 'nextDay' :
+                diff < 7 ? 'nextWeek' : 'sameElse';
+        return this.format(this.localeData().calendar(format, this, local__createLocal(now)));
+    }
+
+    function clone () {
+        return new Moment(this);
+    }
+
+    function isAfter (input, units) {
+        var inputMs;
+        units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
+        if (units === 'millisecond') {
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this > +input;
+        } else {
+            inputMs = isMoment(input) ? +input : +local__createLocal(input);
+            return inputMs < +this.clone().startOf(units);
+        }
+    }
+
+    function isBefore (input, units) {
+        var inputMs;
+        units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
+        if (units === 'millisecond') {
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this < +input;
+        } else {
+            inputMs = isMoment(input) ? +input : +local__createLocal(input);
+            return +this.clone().endOf(units) < inputMs;
+        }
+    }
+
+    function isBetween (from, to, units) {
+        return this.isAfter(from, units) && this.isBefore(to, units);
+    }
+
+    function isSame (input, units) {
+        var inputMs;
+        units = normalizeUnits(units || 'millisecond');
+        if (units === 'millisecond') {
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this === +input;
+        } else {
+            inputMs = +local__createLocal(input);
+            return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
+        }
+    }
+
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
+        }
+    }
+
+    function diff (input, units, asFloat) {
+        var that = cloneWithOffset(input, this),
+            zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4,
+            delta, output;
+
+        units = normalizeUnits(units);
+
+        if (units === 'year' || units === 'month' || units === 'quarter') {
+            output = monthDiff(this, that);
+            if (units === 'quarter') {
+                output = output / 3;
+            } else if (units === 'year') {
+                output = output / 12;
+            }
+        } else {
+            delta = this - that;
+            output = units === 'second' ? delta / 1e3 : // 1000
+                units === 'minute' ? delta / 6e4 : // 1000 * 60
+                units === 'hour' ? delta / 36e5 : // 1000 * 60 * 60
+                units === 'day' ? (delta - zoneDelta) / 864e5 : // 1000 * 60 * 60 * 24, negate dst
+                units === 'week' ? (delta - zoneDelta) / 6048e5 : // 1000 * 60 * 60 * 24 * 7, negate dst
+                delta;
+        }
+        return asFloat ? output : absFloor(output);
+    }
+
+    function monthDiff (a, b) {
+        // difference in months
+        var wholeMonthDiff = ((b.year() - a.year()) * 12) + (b.month() - a.month()),
+            // b is in (anchor - 1 month, anchor + 1 month)
+            anchor = a.clone().add(wholeMonthDiff, 'months'),
+            anchor2, adjust;
+
+        if (b - anchor < 0) {
+            anchor2 = a.clone().add(wholeMonthDiff - 1, 'months');
+            // linear across the month
+            adjust = (b - anchor) / (anchor - anchor2);
+        } else {
+            anchor2 = a.clone().add(wholeMonthDiff + 1, 'months');
+            // linear across the month
+            adjust = (b - anchor) / (anchor2 - anchor);
+        }
+
+        return -(wholeMonthDiff + adjust);
+    }
+
+    utils_hooks__hooks.defaultFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+
+    function toString () {
+        return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+    }
+
+    function moment_format__toISOString () {
+        var m = this.clone().utc();
+        if (0 < m.year() && m.year() <= 9999) {
+            if ('function' === typeof Date.prototype.toISOString) {
+                // native implementation is ~50x faster, use it when we can
+                return this.toDate().toISOString();
+            } else {
+                return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+            }
+        } else {
+            return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+        }
+    }
+
+    function moment_format__format (inputString) {
+        var output = formatMoment(this, inputString || utils_hooks__hooks.defaultFormat);
+        return this.localeData().postformat(output);
+    }
+
+    function from (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
+        return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
+    }
+
+    function fromNow (withoutSuffix) {
+        return this.from(local__createLocal(), withoutSuffix);
+    }
+
+    function to (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
+        return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+    }
+
+    function toNow (withoutSuffix) {
+        return this.to(local__createLocal(), withoutSuffix);
+    }
+
+    function locale (key) {
+        var newLocaleData;
+
+        if (key === undefined) {
+            return this._locale._abbr;
+        } else {
+            newLocaleData = locale_locales__getLocale(key);
+            if (newLocaleData != null) {
+                this._locale = newLocaleData;
+            }
+            return this;
+        }
+    }
+
+    var lang = deprecate(
+        'moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',
+        function (key) {
+            if (key === undefined) {
+                return this.localeData();
+            } else {
+                return this.locale(key);
+            }
+        }
+    );
+
+    function localeData () {
+        return this._locale;
+    }
+
+    function startOf (units) {
+        units = normalizeUnits(units);
+        // the following switch intentionally omits break keywords
+        // to utilize falling through the cases.
+        switch (units) {
+        case 'year':
+            this.month(0);
+            /* falls through */
+        case 'quarter':
+        case 'month':
+            this.date(1);
+            /* falls through */
+        case 'week':
+        case 'isoWeek':
+        case 'day':
+            this.hours(0);
+            /* falls through */
+        case 'hour':
+            this.minutes(0);
+            /* falls through */
+        case 'minute':
+            this.seconds(0);
+            /* falls through */
+        case 'second':
+            this.milliseconds(0);
+        }
+
+        // weeks are a special case
+        if (units === 'week') {
+            this.weekday(0);
+        }
+        if (units === 'isoWeek') {
+            this.isoWeekday(1);
+        }
+
+        // quarters are also special
+        if (units === 'quarter') {
+            this.month(Math.floor(this.month() / 3) * 3);
+        }
+
+        return this;
+    }
+
+    function endOf (units) {
+        units = normalizeUnits(units);
+        if (units === undefined || units === 'millisecond') {
+            return this;
+        }
+        return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+    }
+
+    function to_type__valueOf () {
+        return +this._d - ((this._offset || 0) * 60000);
+    }
+
+    function unix () {
+        return Math.floor(+this / 1000);
+    }
+
+    function toDate () {
+        return this._offset ? new Date(+this) : this._d;
+    }
+
+    function toArray () {
+        var m = this;
+        return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
+    }
+
+    function moment_valid__isValid () {
+        return valid__isValid(this);
+    }
+
+    function parsingFlags () {
+        return extend({}, getParsingFlags(this));
+    }
+
+    function invalidAt () {
+        return getParsingFlags(this).overflow;
+    }
+
+    addFormatToken(0, ['gg', 2], 0, function () {
+        return this.weekYear() % 100;
+    });
+
+    addFormatToken(0, ['GG', 2], 0, function () {
+        return this.isoWeekYear() % 100;
+    });
+
+    function addWeekYearFormatToken (token, getter) {
+        addFormatToken(0, [token, token.length], 0, getter);
+    }
+
+    addWeekYearFormatToken('gggg',     'weekYear');
+    addWeekYearFormatToken('ggggg',    'weekYear');
+    addWeekYearFormatToken('GGGG',  'isoWeekYear');
+    addWeekYearFormatToken('GGGGG', 'isoWeekYear');
+
+    // ALIASES
+
+    addUnitAlias('weekYear', 'gg');
+    addUnitAlias('isoWeekYear', 'GG');
+
+    // PARSING
+
+    addRegexToken('G',      matchSigned);
+    addRegexToken('g',      matchSigned);
+    addRegexToken('GG',     match1to2, match2);
+    addRegexToken('gg',     match1to2, match2);
+    addRegexToken('GGGG',   match1to4, match4);
+    addRegexToken('gggg',   match1to4, match4);
+    addRegexToken('GGGGG',  match1to6, match6);
+    addRegexToken('ggggg',  match1to6, match6);
+
+    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (input, week, config, token) {
+        week[token.substr(0, 2)] = toInt(input);
+    });
+
+    addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
+        week[token] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+
+    // HELPERS
+
+    function weeksInYear(year, dow, doy) {
+        return weekOfYear(local__createLocal([year, 11, 31 + dow - doy]), dow, doy).week;
+    }
+
+    // MOMENTS
+
+    function getSetWeekYear (input) {
+        var year = weekOfYear(this, this.localeData()._week.dow, this.localeData()._week.doy).year;
+        return input == null ? year : this.add((input - year), 'y');
+    }
+
+    function getSetISOWeekYear (input) {
+        var year = weekOfYear(this, 1, 4).year;
+        return input == null ? year : this.add((input - year), 'y');
+    }
+
+    function getISOWeeksInYear () {
+        return weeksInYear(this.year(), 1, 4);
+    }
+
+    function getWeeksInYear () {
+        var weekInfo = this.localeData()._week;
+        return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
+    }
+
+    addFormatToken('Q', 0, 0, 'quarter');
+
+    // ALIASES
+
+    addUnitAlias('quarter', 'Q');
+
+    // PARSING
+
+    addRegexToken('Q', match1);
+    addParseToken('Q', function (input, array) {
+        array[MONTH] = (toInt(input) - 1) * 3;
+    });
+
+    // MOMENTS
+
+    function getSetQuarter (input) {
+        return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+    }
+
+    addFormatToken('D', ['DD', 2], 'Do', 'date');
+
+    // ALIASES
+
+    addUnitAlias('date', 'D');
+
+    // PARSING
+
+    addRegexToken('D',  match1to2);
+    addRegexToken('DD', match1to2, match2);
+    addRegexToken('Do', function (isStrict, locale) {
+        return isStrict ? locale._ordinalParse : locale._ordinalParseLenient;
+    });
+
+    addParseToken(['D', 'DD'], DATE);
+    addParseToken('Do', function (input, array) {
+        array[DATE] = toInt(input.match(match1to2)[0], 10);
+    });
+
+    // MOMENTS
+
+    var getSetDayOfMonth = makeGetSet('Date', true);
+
+    addFormatToken('d', 0, 'do', 'day');
+
+    addFormatToken('dd', 0, 0, function (format) {
+        return this.localeData().weekdaysMin(this, format);
+    });
+
+    addFormatToken('ddd', 0, 0, function (format) {
+        return this.localeData().weekdaysShort(this, format);
+    });
+
+    addFormatToken('dddd', 0, 0, function (format) {
+        return this.localeData().weekdays(this, format);
+    });
+
+    addFormatToken('e', 0, 0, 'weekday');
+    addFormatToken('E', 0, 0, 'isoWeekday');
+
+    // ALIASES
+
+    addUnitAlias('day', 'd');
+    addUnitAlias('weekday', 'e');
+    addUnitAlias('isoWeekday', 'E');
+
+    // PARSING
+
+    addRegexToken('d',    match1to2);
+    addRegexToken('e',    match1to2);
+    addRegexToken('E',    match1to2);
+    addRegexToken('dd',   matchWord);
+    addRegexToken('ddd',  matchWord);
+    addRegexToken('dddd', matchWord);
+
+    addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config) {
+        var weekday = config._locale.weekdaysParse(input);
+        // if we didn't get a weekday name, mark the date as invalid
+        if (weekday != null) {
+            week.d = weekday;
+        } else {
+            getParsingFlags(config).invalidWeekday = input;
+        }
+    });
+
+    addWeekParseToken(['d', 'e', 'E'], function (input, week, config, token) {
+        week[token] = toInt(input);
+    });
+
+    // HELPERS
+
+    function parseWeekday(input, locale) {
+        if (typeof input === 'string') {
+            if (!isNaN(input)) {
+                input = parseInt(input, 10);
+            }
+            else {
+                input = locale.weekdaysParse(input);
+                if (typeof input !== 'number') {
+                    return null;
+                }
+            }
+        }
+        return input;
+    }
+
+    // LOCALES
+
+    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
+    function localeWeekdays (m) {
+        return this._weekdays[m.day()];
+    }
+
+    var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+    function localeWeekdaysShort (m) {
+        return this._weekdaysShort[m.day()];
+    }
+
+    var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
+    function localeWeekdaysMin (m) {
+        return this._weekdaysMin[m.day()];
+    }
+
+    function localeWeekdaysParse (weekdayName) {
+        var i, mom, regex;
+
+        if (!this._weekdaysParse) {
+            this._weekdaysParse = [];
+        }
+
+        for (i = 0; i < 7; i++) {
+            // make the regex if we don't have it already
+            if (!this._weekdaysParse[i]) {
+                mom = local__createLocal([2000, 1]).day(i);
+                regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
+                this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
+            }
+            // test the regex
+            if (this._weekdaysParse[i].test(weekdayName)) {
+                return i;
+            }
+        }
+    }
+
+    // MOMENTS
+
+    function getSetDayOfWeek (input) {
+        var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+        if (input != null) {
+            input = parseWeekday(input, this.localeData());
+            return this.add(input - day, 'd');
+        } else {
+            return day;
+        }
+    }
+
+    function getSetLocaleDayOfWeek (input) {
+        var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
+        return input == null ? weekday : this.add(input - weekday, 'd');
+    }
+
+    function getSetISODayOfWeek (input) {
+        // behaves the same as moment#day except
+        // as a getter, returns 7 instead of 0 (1-7 range instead of 0-6)
+        // as a setter, sunday should belong to the previous week.
+        return input == null ? this.day() || 7 : this.day(this.day() % 7 ? input : input - 7);
+    }
+
+    addFormatToken('H', ['HH', 2], 0, 'hour');
+    addFormatToken('h', ['hh', 2], 0, function () {
+        return this.hours() % 12 || 12;
+    });
+
+    function meridiem (token, lowercase) {
+        addFormatToken(token, 0, 0, function () {
+            return this.localeData().meridiem(this.hours(), this.minutes(), lowercase);
+        });
+    }
+
+    meridiem('a', true);
+    meridiem('A', false);
+
+    // ALIASES
+
+    addUnitAlias('hour', 'h');
+
+    // PARSING
+
+    function matchMeridiem (isStrict, locale) {
+        return locale._meridiemParse;
+    }
+
+    addRegexToken('a',  matchMeridiem);
+    addRegexToken('A',  matchMeridiem);
+    addRegexToken('H',  match1to2);
+    addRegexToken('h',  match1to2);
+    addRegexToken('HH', match1to2, match2);
+    addRegexToken('hh', match1to2, match2);
+
+    addParseToken(['H', 'HH'], HOUR);
+    addParseToken(['a', 'A'], function (input, array, config) {
+        config._isPm = config._locale.isPM(input);
+        config._meridiem = input;
+    });
+    addParseToken(['h', 'hh'], function (input, array, config) {
+        array[HOUR] = toInt(input);
+        getParsingFlags(config).bigHour = true;
+    });
+
+    // LOCALES
+
+    function localeIsPM (input) {
+        // IE8 Quirks Mode & IE7 Standards Mode do not allow accessing strings like arrays
+        // Using charAt should be more compatible.
+        return ((input + '').toLowerCase().charAt(0) === 'p');
+    }
+
+    var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+    function localeMeridiem (hours, minutes, isLower) {
+        if (hours > 11) {
+            return isLower ? 'pm' : 'PM';
+        } else {
+            return isLower ? 'am' : 'AM';
+        }
+    }
+
+
+    // MOMENTS
+
+    // Setting the hour should keep the time, because the user explicitly
+    // specified which hour he wants. So trying to maintain the same hour (in
+    // a new timezone) makes sense. Adding/subtracting hours does not follow
+    // this rule.
+    var getSetHour = makeGetSet('Hours', true);
+
+    addFormatToken('m', ['mm', 2], 0, 'minute');
+
+    // ALIASES
+
+    addUnitAlias('minute', 'm');
+
+    // PARSING
+
+    addRegexToken('m',  match1to2);
+    addRegexToken('mm', match1to2, match2);
+    addParseToken(['m', 'mm'], MINUTE);
+
+    // MOMENTS
+
+    var getSetMinute = makeGetSet('Minutes', false);
+
+    addFormatToken('s', ['ss', 2], 0, 'second');
+
+    // ALIASES
+
+    addUnitAlias('second', 's');
+
+    // PARSING
+
+    addRegexToken('s',  match1to2);
+    addRegexToken('ss', match1to2, match2);
+    addParseToken(['s', 'ss'], SECOND);
+
+    // MOMENTS
+
+    var getSetSecond = makeGetSet('Seconds', false);
+
+    addFormatToken('S', 0, 0, function () {
+        return ~~(this.millisecond() / 100);
+    });
+
+    addFormatToken(0, ['SS', 2], 0, function () {
+        return ~~(this.millisecond() / 10);
+    });
+
+    function millisecond__milliseconds (token) {
+        addFormatToken(0, [token, 3], 0, 'millisecond');
+    }
+
+    millisecond__milliseconds('SSS');
+    millisecond__milliseconds('SSSS');
+
+    // ALIASES
+
+    addUnitAlias('millisecond', 'ms');
+
+    // PARSING
+
+    addRegexToken('S',    match1to3, match1);
+    addRegexToken('SS',   match1to3, match2);
+    addRegexToken('SSS',  match1to3, match3);
+    addRegexToken('SSSS', matchUnsigned);
+    addParseToken(['S', 'SS', 'SSS', 'SSSS'], function (input, array) {
+        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    });
+
+    // MOMENTS
+
+    var getSetMillisecond = makeGetSet('Milliseconds', false);
+
+    addFormatToken('z',  0, 0, 'zoneAbbr');
+    addFormatToken('zz', 0, 0, 'zoneName');
+
+    // MOMENTS
+
+    function getZoneAbbr () {
+        return this._isUTC ? 'UTC' : '';
+    }
+
+    function getZoneName () {
+        return this._isUTC ? 'Coordinated Universal Time' : '';
+    }
+
+    var momentPrototype__proto = Moment.prototype;
+
+    momentPrototype__proto.add          = add_subtract__add;
+    momentPrototype__proto.calendar     = moment_calendar__calendar;
+    momentPrototype__proto.clone        = clone;
+    momentPrototype__proto.diff         = diff;
+    momentPrototype__proto.endOf        = endOf;
+    momentPrototype__proto.format       = moment_format__format;
+    momentPrototype__proto.from         = from;
+    momentPrototype__proto.fromNow      = fromNow;
+    momentPrototype__proto.to           = to;
+    momentPrototype__proto.toNow        = toNow;
+    momentPrototype__proto.get          = getSet;
+    momentPrototype__proto.invalidAt    = invalidAt;
+    momentPrototype__proto.isAfter      = isAfter;
+    momentPrototype__proto.isBefore     = isBefore;
+    momentPrototype__proto.isBetween    = isBetween;
+    momentPrototype__proto.isSame       = isSame;
+    momentPrototype__proto.isValid      = moment_valid__isValid;
+    momentPrototype__proto.lang         = lang;
+    momentPrototype__proto.locale       = locale;
+    momentPrototype__proto.localeData   = localeData;
+    momentPrototype__proto.max          = prototypeMax;
+    momentPrototype__proto.min          = prototypeMin;
+    momentPrototype__proto.parsingFlags = parsingFlags;
+    momentPrototype__proto.set          = getSet;
+    momentPrototype__proto.startOf      = startOf;
+    momentPrototype__proto.subtract     = add_subtract__subtract;
+    momentPrototype__proto.toArray      = toArray;
+    momentPrototype__proto.toDate       = toDate;
+    momentPrototype__proto.toISOString  = moment_format__toISOString;
+    momentPrototype__proto.toJSON       = moment_format__toISOString;
+    momentPrototype__proto.toString     = toString;
+    momentPrototype__proto.unix         = unix;
+    momentPrototype__proto.valueOf      = to_type__valueOf;
+
+    // Year
+    momentPrototype__proto.year       = getSetYear;
+    momentPrototype__proto.isLeapYear = getIsLeapYear;
+
+    // Week Year
+    momentPrototype__proto.weekYear    = getSetWeekYear;
+    momentPrototype__proto.isoWeekYear = getSetISOWeekYear;
+
+    // Quarter
+    momentPrototype__proto.quarter = momentPrototype__proto.quarters = getSetQuarter;
+
+    // Month
+    momentPrototype__proto.month       = getSetMonth;
+    momentPrototype__proto.daysInMonth = getDaysInMonth;
+
+    // Week
+    momentPrototype__proto.week           = momentPrototype__proto.weeks        = getSetWeek;
+    momentPrototype__proto.isoWeek        = momentPrototype__proto.isoWeeks     = getSetISOWeek;
+    momentPrototype__proto.weeksInYear    = getWeeksInYear;
+    momentPrototype__proto.isoWeeksInYear = getISOWeeksInYear;
+
+    // Day
+    momentPrototype__proto.date       = getSetDayOfMonth;
+    momentPrototype__proto.day        = momentPrototype__proto.days             = getSetDayOfWeek;
+    momentPrototype__proto.weekday    = getSetLocaleDayOfWeek;
+    momentPrototype__proto.isoWeekday = getSetISODayOfWeek;
+    momentPrototype__proto.dayOfYear  = getSetDayOfYear;
+
+    // Hour
+    momentPrototype__proto.hour = momentPrototype__proto.hours = getSetHour;
+
+    // Minute
+    momentPrototype__proto.minute = momentPrototype__proto.minutes = getSetMinute;
+
+    // Second
+    momentPrototype__proto.second = momentPrototype__proto.seconds = getSetSecond;
+
+    // Millisecond
+    momentPrototype__proto.millisecond = momentPrototype__proto.milliseconds = getSetMillisecond;
+
+    // Offset
+    momentPrototype__proto.utcOffset            = getSetOffset;
+    momentPrototype__proto.utc                  = setOffsetToUTC;
+    momentPrototype__proto.local                = setOffsetToLocal;
+    momentPrototype__proto.parseZone            = setOffsetToParsedOffset;
+    momentPrototype__proto.hasAlignedHourOffset = hasAlignedHourOffset;
+    momentPrototype__proto.isDST                = isDaylightSavingTime;
+    momentPrototype__proto.isDSTShifted         = isDaylightSavingTimeShifted;
+    momentPrototype__proto.isLocal              = isLocal;
+    momentPrototype__proto.isUtcOffset          = isUtcOffset;
+    momentPrototype__proto.isUtc                = isUtc;
+    momentPrototype__proto.isUTC                = isUtc;
+
+    // Timezone
+    momentPrototype__proto.zoneAbbr = getZoneAbbr;
+    momentPrototype__proto.zoneName = getZoneName;
+
+    // Deprecations
+    momentPrototype__proto.dates  = deprecate('dates accessor is deprecated. Use date instead.', getSetDayOfMonth);
+    momentPrototype__proto.months = deprecate('months accessor is deprecated. Use month instead', getSetMonth);
+    momentPrototype__proto.years  = deprecate('years accessor is deprecated. Use year instead', getSetYear);
+    momentPrototype__proto.zone   = deprecate('moment().zone is deprecated, use moment().utcOffset instead. https://github.com/moment/moment/issues/1779', getSetZone);
+
+    var momentPrototype = momentPrototype__proto;
+
+    function moment_moment__createUnix (input) {
+        return local__createLocal(input * 1000);
+    }
+
+    function moment_moment__createInZone () {
+        return local__createLocal.apply(null, arguments).parseZone();
+    }
+
+    var defaultCalendar = {
+        sameDay : '[Today at] LT',
+        nextDay : '[Tomorrow at] LT',
+        nextWeek : 'dddd [at] LT',
+        lastDay : '[Yesterday at] LT',
+        lastWeek : '[Last] dddd [at] LT',
+        sameElse : 'L'
+    };
+
+    function locale_calendar__calendar (key, mom, now) {
+        var output = this._calendar[key];
+        return typeof output === 'function' ? output.call(mom, now) : output;
+    }
+
+    var defaultLongDateFormat = {
+        LTS  : 'h:mm:ss A',
+        LT   : 'h:mm A',
+        L    : 'MM/DD/YYYY',
+        LL   : 'MMMM D, YYYY',
+        LLL  : 'MMMM D, YYYY LT',
+        LLLL : 'dddd, MMMM D, YYYY LT'
+    };
+
+    function longDateFormat (key) {
+        var output = this._longDateFormat[key];
+        if (!output && this._longDateFormat[key.toUpperCase()]) {
+            output = this._longDateFormat[key.toUpperCase()].replace(/MMMM|MM|DD|dddd/g, function (val) {
+                return val.slice(1);
+            });
+            this._longDateFormat[key] = output;
+        }
+        return output;
+    }
+
+    var defaultInvalidDate = 'Invalid date';
+
+    function invalidDate () {
+        return this._invalidDate;
+    }
+
+    var defaultOrdinal = '%d';
+    var defaultOrdinalParse = /\d{1,2}/;
+
+    function ordinal (number) {
+        return this._ordinal.replace('%d', number);
+    }
+
+    function preParsePostFormat (string) {
+        return string;
+    }
+
+    var defaultRelativeTime = {
+        future : 'in %s',
+        past   : '%s ago',
+        s  : 'a few seconds',
+        m  : 'a minute',
+        mm : '%d minutes',
+        h  : 'an hour',
+        hh : '%d hours',
+        d  : 'a day',
+        dd : '%d days',
+        M  : 'a month',
+        MM : '%d months',
+        y  : 'a year',
+        yy : '%d years'
+    };
+
+    function relative__relativeTime (number, withoutSuffix, string, isFuture) {
+        var output = this._relativeTime[string];
+        return (typeof output === 'function') ?
+            output(number, withoutSuffix, string, isFuture) :
+            output.replace(/%d/i, number);
+    }
+
+    function pastFuture (diff, output) {
+        var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
+        return typeof format === 'function' ? format(output) : format.replace(/%s/i, output);
+    }
+
+    function locale_set__set (config) {
+        var prop, i;
+        for (i in config) {
+            prop = config[i];
+            if (typeof prop === 'function') {
+                this[i] = prop;
+            } else {
+                this['_' + i] = prop;
+            }
+        }
+        // Lenient ordinal parsing accepts just a number in addition to
+        // number + (possibly) stuff coming from _ordinalParseLenient.
+        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+    }
+
+    var prototype__proto = Locale.prototype;
+
+    prototype__proto._calendar       = defaultCalendar;
+    prototype__proto.calendar        = locale_calendar__calendar;
+    prototype__proto._longDateFormat = defaultLongDateFormat;
+    prototype__proto.longDateFormat  = longDateFormat;
+    prototype__proto._invalidDate    = defaultInvalidDate;
+    prototype__proto.invalidDate     = invalidDate;
+    prototype__proto._ordinal        = defaultOrdinal;
+    prototype__proto.ordinal         = ordinal;
+    prototype__proto._ordinalParse   = defaultOrdinalParse;
+    prototype__proto.preparse        = preParsePostFormat;
+    prototype__proto.postformat      = preParsePostFormat;
+    prototype__proto._relativeTime   = defaultRelativeTime;
+    prototype__proto.relativeTime    = relative__relativeTime;
+    prototype__proto.pastFuture      = pastFuture;
+    prototype__proto.set             = locale_set__set;
+
+    // Month
+    prototype__proto.months       =        localeMonths;
+    prototype__proto._months      = defaultLocaleMonths;
+    prototype__proto.monthsShort  =        localeMonthsShort;
+    prototype__proto._monthsShort = defaultLocaleMonthsShort;
+    prototype__proto.monthsParse  =        localeMonthsParse;
+
+    // Week
+    prototype__proto.week = localeWeek;
+    prototype__proto._week = defaultLocaleWeek;
+    prototype__proto.firstDayOfYear = localeFirstDayOfYear;
+    prototype__proto.firstDayOfWeek = localeFirstDayOfWeek;
+
+    // Day of Week
+    prototype__proto.weekdays       =        localeWeekdays;
+    prototype__proto._weekdays      = defaultLocaleWeekdays;
+    prototype__proto.weekdaysMin    =        localeWeekdaysMin;
+    prototype__proto._weekdaysMin   = defaultLocaleWeekdaysMin;
+    prototype__proto.weekdaysShort  =        localeWeekdaysShort;
+    prototype__proto._weekdaysShort = defaultLocaleWeekdaysShort;
+    prototype__proto.weekdaysParse  =        localeWeekdaysParse;
+
+    // Hours
+    prototype__proto.isPM = localeIsPM;
+    prototype__proto._meridiemParse = defaultLocaleMeridiemParse;
+    prototype__proto.meridiem = localeMeridiem;
+
+    function lists__get (format, index, field, setter) {
+        var locale = locale_locales__getLocale();
+        var utc = create_utc__createUTC().set(setter, index);
+        return locale[field](utc, format);
+    }
+
+    function list (format, index, field, count, setter) {
+        if (typeof format === 'number') {
+            index = format;
+            format = undefined;
+        }
+
+        format = format || '';
+
+        if (index != null) {
+            return lists__get(format, index, field, setter);
+        }
+
+        var i;
+        var out = [];
+        for (i = 0; i < count; i++) {
+            out[i] = lists__get(format, i, field, setter);
+        }
+        return out;
+    }
+
+    function lists__listMonths (format, index) {
+        return list(format, index, 'months', 12, 'month');
+    }
+
+    function lists__listMonthsShort (format, index) {
+        return list(format, index, 'monthsShort', 12, 'month');
+    }
+
+    function lists__listWeekdays (format, index) {
+        return list(format, index, 'weekdays', 7, 'day');
+    }
+
+    function lists__listWeekdaysShort (format, index) {
+        return list(format, index, 'weekdaysShort', 7, 'day');
+    }
+
+    function lists__listWeekdaysMin (format, index) {
+        return list(format, index, 'weekdaysMin', 7, 'day');
+    }
+
+    locale_locales__getSetGlobalLocale('en', {
+        ordinalParse: /\d{1,2}(th|st|nd|rd)/,
+        ordinal : function (number) {
+            var b = number % 10,
+                output = (toInt(number % 100 / 10) === 1) ? 'th' :
+                (b === 1) ? 'st' :
+                (b === 2) ? 'nd' :
+                (b === 3) ? 'rd' : 'th';
+            return number + output;
+        }
+    });
+
+    // Side effect imports
+    utils_hooks__hooks.lang = deprecate('moment.lang is deprecated. Use moment.locale instead.', locale_locales__getSetGlobalLocale);
+    utils_hooks__hooks.langData = deprecate('moment.langData is deprecated. Use moment.localeData instead.', locale_locales__getLocale);
+
+    var mathAbs = Math.abs;
+
+    function duration_abs__abs () {
+        var data           = this._data;
+
+        this._milliseconds = mathAbs(this._milliseconds);
+        this._days         = mathAbs(this._days);
+        this._months       = mathAbs(this._months);
+
+        data.milliseconds  = mathAbs(data.milliseconds);
+        data.seconds       = mathAbs(data.seconds);
+        data.minutes       = mathAbs(data.minutes);
+        data.hours         = mathAbs(data.hours);
+        data.months        = mathAbs(data.months);
+        data.years         = mathAbs(data.years);
+
+        return this;
+    }
+
+    function duration_add_subtract__addSubtract (duration, input, value, direction) {
+        var other = create__createDuration(input, value);
+
+        duration._milliseconds += direction * other._milliseconds;
+        duration._days         += direction * other._days;
+        duration._months       += direction * other._months;
+
+        return duration._bubble();
+    }
+
+    // supports only 2.0-style add(1, 's') or add(duration)
+    function duration_add_subtract__add (input, value) {
+        return duration_add_subtract__addSubtract(this, input, value, 1);
+    }
+
+    // supports only 2.0-style subtract(1, 's') or subtract(duration)
+    function duration_add_subtract__subtract (input, value) {
+        return duration_add_subtract__addSubtract(this, input, value, -1);
+    }
+
+    function bubble () {
+        var milliseconds = this._milliseconds;
+        var days         = this._days;
+        var months       = this._months;
+        var data         = this._data;
+        var seconds, minutes, hours, years = 0;
+
+        // The following code bubbles up values, see the tests for
+        // examples of what that means.
+        data.milliseconds = milliseconds % 1000;
+
+        seconds           = absFloor(milliseconds / 1000);
+        data.seconds      = seconds % 60;
+
+        minutes           = absFloor(seconds / 60);
+        data.minutes      = minutes % 60;
+
+        hours             = absFloor(minutes / 60);
+        data.hours        = hours % 24;
+
+        days += absFloor(hours / 24);
+
+        // Accurately convert days to years, assume start from year 0.
+        years = absFloor(daysToYears(days));
+        days -= absFloor(yearsToDays(years));
+
+        // 30 days to a month
+        // TODO (iskren): Use anchor date (like 1st Jan) to compute this.
+        months += absFloor(days / 30);
+        days   %= 30;
+
+        // 12 months -> 1 year
+        years  += absFloor(months / 12);
+        months %= 12;
+
+        data.days   = days;
+        data.months = months;
+        data.years  = years;
+
+        return this;
+    }
+
+    function daysToYears (days) {
+        // 400 years have 146097 days (taking into account leap year rules)
+        return days * 400 / 146097;
+    }
+
+    function yearsToDays (years) {
+        // years * 365 + absFloor(years / 4) -
+        //     absFloor(years / 100) + absFloor(years / 400);
+        return years * 146097 / 400;
+    }
+
+    function as (units) {
+        var days;
+        var months;
+        var milliseconds = this._milliseconds;
+
+        units = normalizeUnits(units);
+
+        if (units === 'month' || units === 'year') {
+            days   = this._days   + milliseconds / 864e5;
+            months = this._months + daysToYears(days) * 12;
+            return units === 'month' ? months : months / 12;
+        } else {
+            // handle milliseconds separately because of floating point math errors (issue #1867)
+            days = this._days + Math.round(yearsToDays(this._months / 12));
+            switch (units) {
+                case 'week'   : return days / 7     + milliseconds / 6048e5;
+                case 'day'    : return days         + milliseconds / 864e5;
+                case 'hour'   : return days * 24    + milliseconds / 36e5;
+                case 'minute' : return days * 1440  + milliseconds / 6e4;
+                case 'second' : return days * 86400 + milliseconds / 1000;
+                // Math.floor prevents floating point math errors here
+                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
+                default: throw new Error('Unknown unit ' + units);
+            }
+        }
+    }
+
+    // TODO: Use this.as('ms')?
+    function duration_as__valueOf () {
+        return (
+            this._milliseconds +
+            this._days * 864e5 +
+            (this._months % 12) * 2592e6 +
+            toInt(this._months / 12) * 31536e6
+        );
+    }
+
+    function makeAs (alias) {
+        return function () {
+            return this.as(alias);
+        };
+    }
+
+    var asMilliseconds = makeAs('ms');
+    var asSeconds      = makeAs('s');
+    var asMinutes      = makeAs('m');
+    var asHours        = makeAs('h');
+    var asDays         = makeAs('d');
+    var asWeeks        = makeAs('w');
+    var asMonths       = makeAs('M');
+    var asYears        = makeAs('y');
+
+    function duration_get__get (units) {
+        units = normalizeUnits(units);
+        return this[units + 's']();
+    }
+
+    function makeGetter(name) {
+        return function () {
+            return this._data[name];
+        };
+    }
+
+    var duration_get__milliseconds = makeGetter('milliseconds');
+    var seconds      = makeGetter('seconds');
+    var minutes      = makeGetter('minutes');
+    var hours        = makeGetter('hours');
+    var days         = makeGetter('days');
+    var duration_get__months       = makeGetter('months');
+    var years        = makeGetter('years');
+
+    function weeks () {
+        return absFloor(this.days() / 7);
+    }
+
+    var round = Math.round;
+    var thresholds = {
+        s: 45,  // seconds to minute
+        m: 45,  // minutes to hour
+        h: 22,  // hours to day
+        d: 26,  // days to month
+        M: 11   // months to year
+    };
+
+    // helper function for moment.fn.from, moment.fn.fromNow, and moment.duration.fn.humanize
+    function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale) {
+        return locale.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
+    }
+
+    function duration_humanize__relativeTime (posNegDuration, withoutSuffix, locale) {
+        var duration = create__createDuration(posNegDuration).abs();
+        var seconds  = round(duration.as('s'));
+        var minutes  = round(duration.as('m'));
+        var hours    = round(duration.as('h'));
+        var days     = round(duration.as('d'));
+        var months   = round(duration.as('M'));
+        var years    = round(duration.as('y'));
+
+        var a = seconds < thresholds.s && ['s', seconds]  ||
+                minutes === 1          && ['m']           ||
+                minutes < thresholds.m && ['mm', minutes] ||
+                hours   === 1          && ['h']           ||
+                hours   < thresholds.h && ['hh', hours]   ||
+                days    === 1          && ['d']           ||
+                days    < thresholds.d && ['dd', days]    ||
+                months  === 1          && ['M']           ||
+                months  < thresholds.M && ['MM', months]  ||
+                years   === 1          && ['y']           || ['yy', years];
+
+        a[2] = withoutSuffix;
+        a[3] = +posNegDuration > 0;
+        a[4] = locale;
+        return substituteTimeAgo.apply(null, a);
+    }
+
+    // This function allows you to set a threshold for relative time strings
+    function duration_humanize__getSetRelativeTimeThreshold (threshold, limit) {
+        if (thresholds[threshold] === undefined) {
+            return false;
+        }
+        if (limit === undefined) {
+            return thresholds[threshold];
+        }
+        thresholds[threshold] = limit;
+        return true;
+    }
+
+    function humanize (withSuffix) {
+        var locale = this.localeData();
+        var output = duration_humanize__relativeTime(this, !withSuffix, locale);
+
+        if (withSuffix) {
+            output = locale.pastFuture(+this, output);
+        }
+
+        return locale.postformat(output);
+    }
+
+    var iso_string__abs = Math.abs;
+
+    function iso_string__toISOString() {
+        // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
+        var Y = iso_string__abs(this.years());
+        var M = iso_string__abs(this.months());
+        var D = iso_string__abs(this.days());
+        var h = iso_string__abs(this.hours());
+        var m = iso_string__abs(this.minutes());
+        var s = iso_string__abs(this.seconds() + this.milliseconds() / 1000);
+        var total = this.asSeconds();
+
+        if (!total) {
+            // this is the same as C#'s (Noda) and python (isodate)...
+            // but not other JS (goog.date)
+            return 'P0D';
+        }
+
+        return (total < 0 ? '-' : '') +
+            'P' +
+            (Y ? Y + 'Y' : '') +
+            (M ? M + 'M' : '') +
+            (D ? D + 'D' : '') +
+            ((h || m || s) ? 'T' : '') +
+            (h ? h + 'H' : '') +
+            (m ? m + 'M' : '') +
+            (s ? s + 'S' : '');
+    }
+
+    var duration_prototype__proto = Duration.prototype;
+
+    duration_prototype__proto.abs            = duration_abs__abs;
+    duration_prototype__proto.add            = duration_add_subtract__add;
+    duration_prototype__proto.subtract       = duration_add_subtract__subtract;
+    duration_prototype__proto.as             = as;
+    duration_prototype__proto.asMilliseconds = asMilliseconds;
+    duration_prototype__proto.asSeconds      = asSeconds;
+    duration_prototype__proto.asMinutes      = asMinutes;
+    duration_prototype__proto.asHours        = asHours;
+    duration_prototype__proto.asDays         = asDays;
+    duration_prototype__proto.asWeeks        = asWeeks;
+    duration_prototype__proto.asMonths       = asMonths;
+    duration_prototype__proto.asYears        = asYears;
+    duration_prototype__proto.valueOf        = duration_as__valueOf;
+    duration_prototype__proto._bubble        = bubble;
+    duration_prototype__proto.get            = duration_get__get;
+    duration_prototype__proto.milliseconds   = duration_get__milliseconds;
+    duration_prototype__proto.seconds        = seconds;
+    duration_prototype__proto.minutes        = minutes;
+    duration_prototype__proto.hours          = hours;
+    duration_prototype__proto.days           = days;
+    duration_prototype__proto.weeks          = weeks;
+    duration_prototype__proto.months         = duration_get__months;
+    duration_prototype__proto.years          = years;
+    duration_prototype__proto.humanize       = humanize;
+    duration_prototype__proto.toISOString    = iso_string__toISOString;
+    duration_prototype__proto.toString       = iso_string__toISOString;
+    duration_prototype__proto.toJSON         = iso_string__toISOString;
+    duration_prototype__proto.locale         = locale;
+    duration_prototype__proto.localeData     = localeData;
+
+    // Deprecations
+    duration_prototype__proto.toIsoString = deprecate('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)', iso_string__toISOString);
+    duration_prototype__proto.lang = lang;
+
+    // Side effect imports
+
+    addFormatToken('X', 0, 0, 'unix');
+    addFormatToken('x', 0, 0, 'valueOf');
+
+    // PARSING
+
+    addRegexToken('x', matchSigned);
+    addRegexToken('X', matchTimestamp);
+    addParseToken('X', function (input, array, config) {
+        config._d = new Date(parseFloat(input, 10) * 1000);
+    });
+    addParseToken('x', function (input, array, config) {
+        config._d = new Date(toInt(input));
+    });
+
+    // Side effect imports
+
+    ;
+
+    //! moment.js
+    //! version : 2.10.3
+    //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
+    //! license : MIT
+    //! momentjs.com
+
+    utils_hooks__hooks.version = '2.10.3';
+
+    setHookCallback(local__createLocal);
+
+    utils_hooks__hooks.fn                    = momentPrototype;
+    utils_hooks__hooks.min                   = min;
+    utils_hooks__hooks.max                   = max;
+    utils_hooks__hooks.utc                   = create_utc__createUTC;
+    utils_hooks__hooks.unix                  = moment_moment__createUnix;
+    utils_hooks__hooks.months                = lists__listMonths;
+    utils_hooks__hooks.isDate                = isDate;
+    utils_hooks__hooks.locale                = locale_locales__getSetGlobalLocale;
+    utils_hooks__hooks.invalid               = valid__createInvalid;
+    utils_hooks__hooks.duration              = create__createDuration;
+    utils_hooks__hooks.isMoment              = isMoment;
+    utils_hooks__hooks.weekdays              = lists__listWeekdays;
+    utils_hooks__hooks.parseZone             = moment_moment__createInZone;
+    utils_hooks__hooks.localeData            = locale_locales__getLocale;
+    utils_hooks__hooks.isDuration            = isDuration;
+    utils_hooks__hooks.monthsShort           = lists__listMonthsShort;
+    utils_hooks__hooks.weekdaysMin           = lists__listWeekdaysMin;
+    utils_hooks__hooks.defineLocale          = defineLocale;
+    utils_hooks__hooks.weekdaysShort         = lists__listWeekdaysShort;
+    utils_hooks__hooks.normalizeUnits        = normalizeUnits;
+    utils_hooks__hooks.relativeTimeThreshold = duration_humanize__getSetRelativeTimeThreshold;
+
+    var _moment__default = utils_hooks__hooks;
+
+    //! moment.js locale configuration
+    //! locale : chinese (zh-cn)
+    //! author : suupic : https://github.com/suupic
+    //! author : Zeno Zeng : https://github.com/zenozeng
+
+    var zh_cn = _moment__default.defineLocale('zh-cn', {
+        months : '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
+        monthsShort : '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
+        weekdays : '星期日_星期一_星期二_星期三_星期四_星期五_星期六'.split('_'),
+        weekdaysShort : '周日_周一_周二_周三_周四_周五_周六'.split('_'),
+        weekdaysMin : '日_一_二_三_四_五_六'.split('_'),
+        longDateFormat : {
+            LT : 'Ah点mm分',
+            LTS : 'Ah点m分s秒',
+            L : 'YYYY-MM-DD',
+            LL : 'YYYY年MMMD日',
+            LLL : 'YYYY年MMMD日LT',
+            LLLL : 'YYYY年MMMD日ddddLT',
+            l : 'YYYY-MM-DD',
+            ll : 'YYYY年MMMD日',
+            lll : 'YYYY年MMMD日LT',
+            llll : 'YYYY年MMMD日ddddLT'
+        },
+        meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
+        meridiemHour: function (hour, meridiem) {
+            if (hour === 12) {
+                hour = 0;
+            }
+            if (meridiem === '凌晨' || meridiem === '早上' ||
+                    meridiem === '上午') {
+                return hour;
+            } else if (meridiem === '下午' || meridiem === '晚上') {
+                return hour + 12;
+            } else {
+                // '中午'
+                return hour >= 11 ? hour : hour + 12;
+            }
+        },
+        meridiem : function (hour, minute, isLower) {
+            var hm = hour * 100 + minute;
+            if (hm < 600) {
+                return '凌晨';
+            } else if (hm < 900) {
+                return '早上';
+            } else if (hm < 1130) {
+                return '上午';
+            } else if (hm < 1230) {
+                return '中午';
+            } else if (hm < 1800) {
+                return '下午';
+            } else {
+                return '晚上';
+            }
+        },
+        calendar : {
+            sameDay : function () {
+                return this.minutes() === 0 ? '[今天]Ah[点整]' : '[今天]LT';
+            },
+            nextDay : function () {
+                return this.minutes() === 0 ? '[明天]Ah[点整]' : '[明天]LT';
+            },
+            lastDay : function () {
+                return this.minutes() === 0 ? '[昨天]Ah[点整]' : '[昨天]LT';
+            },
+            nextWeek : function () {
+                var startOfWeek, prefix;
+                startOfWeek = _moment__default().startOf('week');
+                prefix = this.unix() - startOfWeek.unix() >= 7 * 24 * 3600 ? '[下]' : '[本]';
+                return this.minutes() === 0 ? prefix + 'dddAh点整' : prefix + 'dddAh点mm';
+            },
+            lastWeek : function () {
+                var startOfWeek, prefix;
+                startOfWeek = _moment__default().startOf('week');
+                prefix = this.unix() < startOfWeek.unix()  ? '[上]' : '[本]';
+                return this.minutes() === 0 ? prefix + 'dddAh点整' : prefix + 'dddAh点mm';
+            },
+            sameElse : 'LL'
+        },
+        ordinalParse: /\d{1,2}(日|月|周)/,
+        ordinal : function (number, period) {
+            switch (period) {
+            case 'd':
+            case 'D':
+            case 'DDD':
+                return number + '日';
+            case 'M':
+                return number + '月';
+            case 'w':
+            case 'W':
+                return number + '周';
+            default:
+                return number;
+            }
+        },
+        relativeTime : {
+            future : '%s内',
+            past : '%s前',
+            s : '几秒',
+            m : '1 分钟',
+            mm : '%d 分钟',
+            h : '1 小时',
+            hh : '%d 小时',
+            d : '1 天',
+            dd : '%d 天',
+            M : '1 个月',
+            MM : '%d 个月',
+            y : '1 年',
+            yy : '%d 年'
+        },
+        week : {
+            // GB/T 7408-1994《数据元和交换格式·信息交换·日期和时间表示法》与ISO 8601:1988等效
+            dow : 1, // Monday is the first day of the week.
+            doy : 4  // The week that contains Jan 4th is the first week of the year.
+        }
+    });
+
+    //! moment.js locale configuration
+    //! locale : chinese (zh-cn)
+    //! author : suupic : https://github.com/suupic
+    //! author : Zeno Zeng : https://github.com/zenozeng
+
+    var zh_cn = _moment__default.defineLocale('zh-cn', {
+        months : '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
+        monthsShort : '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
+        weekdays : '星期日_星期一_星期二_星期三_星期四_星期五_星期六'.split('_'),
+        weekdaysShort : '周日_周一_周二_周三_周四_周五_周六'.split('_'),
+        weekdaysMin : '日_一_二_三_四_五_六'.split('_'),
+        longDateFormat : {
+            LT : 'Ah点mm分',
+            LTS : 'Ah点m分s秒',
+            L : 'YYYY-MM-DD',
+            LL : 'YYYY年MMMD日',
+            LLL : 'YYYY年MMMD日LT',
+            LLLL : 'YYYY年MMMD日ddddLT',
+            l : 'YYYY-MM-DD',
+            ll : 'YYYY年MMMD日',
+            lll : 'YYYY年MMMD日LT',
+            llll : 'YYYY年MMMD日ddddLT'
+        },
+        meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
+        meridiemHour: function (hour, meridiem) {
+            if (hour === 12) {
+                hour = 0;
+            }
+            if (meridiem === '凌晨' || meridiem === '早上' ||
+                    meridiem === '上午') {
+                return hour;
+            } else if (meridiem === '下午' || meridiem === '晚上') {
+                return hour + 12;
+            } else {
+                // '中午'
+                return hour >= 11 ? hour : hour + 12;
+            }
+        },
+        meridiem : function (hour, minute, isLower) {
+            var hm = hour * 100 + minute;
+            if (hm < 600) {
+                return '凌晨';
+            } else if (hm < 900) {
+                return '早上';
+            } else if (hm < 1130) {
+                return '上午';
+            } else if (hm < 1230) {
+                return '中午';
+            } else if (hm < 1800) {
+                return '下午';
+            } else {
+                return '晚上';
+            }
+        },
+        calendar : {
+            sameDay : function () {
+                return this.minutes() === 0 ? '[今天]Ah[点整]' : '[今天]LT';
+            },
+            nextDay : function () {
+                return this.minutes() === 0 ? '[明天]Ah[点整]' : '[明天]LT';
+            },
+            lastDay : function () {
+                return this.minutes() === 0 ? '[昨天]Ah[点整]' : '[昨天]LT';
+            },
+            nextWeek : function () {
+                var startOfWeek, prefix;
+                startOfWeek = _moment__default().startOf('week');
+                prefix = this.unix() - startOfWeek.unix() >= 7 * 24 * 3600 ? '[下]' : '[本]';
+                return this.minutes() === 0 ? prefix + 'dddAh点整' : prefix + 'dddAh点mm';
+            },
+            lastWeek : function () {
+                var startOfWeek, prefix;
+                startOfWeek = _moment__default().startOf('week');
+                prefix = this.unix() < startOfWeek.unix()  ? '[上]' : '[本]';
+                return this.minutes() === 0 ? prefix + 'dddAh点整' : prefix + 'dddAh点mm';
+            },
+            sameElse : 'LL'
+        },
+        ordinalParse: /\d{1,2}(日|月|周)/,
+        ordinal : function (number, period) {
+            switch (period) {
+            case 'd':
+            case 'D':
+            case 'DDD':
+                return number + '日';
+            case 'M':
+                return number + '月';
+            case 'w':
+            case 'W':
+                return number + '周';
+            default:
+                return number;
+            }
+        },
+        relativeTime : {
+            future : '%s内',
+            past : '%s前',
+            s : '几秒',
+            m : '1 分钟',
+            mm : '%d 分钟',
+            h : '1 小时',
+            hh : '%d 小时',
+            d : '1 天',
+            dd : '%d 天',
+            M : '1 个月',
+            MM : '%d 个月',
+            y : '1 年',
+            yy : '%d 年'
+        },
+        week : {
+            // GB/T 7408-1994《数据元和交换格式·信息交换·日期和时间表示法》与ISO 8601:1988等效
+            dow : 1, // Monday is the first day of the week.
+            doy : 4  // The week that contains Jan 4th is the first week of the year.
+        }
+    });
+
+    var moment_with_locales = _moment__default;
+
+    return moment_with_locales;
+
+}));
+;/*! version : 4.14.30
+ =========================================================
+ bootstrap-datetimejs
+ https://github.com/Eonasdan/bootstrap-datetimepicker
+ Copyright (c) 2015 Jonathan Peterson
+ =========================================================
+ */
+/*
+ The MIT License (MIT)
+
+ Copyright (c) 2015 Jonathan Peterson
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
+/*global define:false */
+/*global exports:false */
+/*global require:false */
+/*global jQuery:false */
+/*global moment:false */
+(function (factory) {
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        // AMD is used - Register as an anonymous module.
+        define(['jquery', 'moment'], factory);
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'), require('moment'));
+    } else {
+        // Neither AMD nor CommonJS used. Use global variables.
+        if (typeof jQuery === 'undefined') {
+            throw 'bootstrap-datetimepicker requires jQuery to be loaded first';
+        }
+        if (typeof moment === 'undefined') {
+            throw 'bootstrap-datetimepicker requires Moment.js to be loaded first';
+        }
+        factory(jQuery, moment);
+    }
+}(function ($, moment) {
+    'use strict';
+    if (!moment) {
+        throw new Error('bootstrap-datetimepicker requires Moment.js to be loaded first');
+    }
+
+    var dateTimePicker = function (element, options) {
+        var picker = {},
+            date = moment().startOf('d'),
+            viewDate = date.clone(),
+            unset = true,
+            input,
+            component = false,
+            widget = false,
+            use24Hours,
+            minViewModeNumber = 0,
+            actualFormat,
+            parseFormats,
+            currentViewMode,
+            datePickerModes = [
+                {
+                    clsName: 'days',
+                    navFnc: 'M',
+                    navStep: 1
+                },
+                {
+                    clsName: 'months',
+                    navFnc: 'y',
+                    navStep: 1
+                },
+                {
+                    clsName: 'years',
+                    navFnc: 'y',
+                    navStep: 10
+                },
+                {
+                    clsName: 'decades',
+                    navFnc: 'y',
+                    navStep: 100
+                }
+            ],
+            viewModes = ['days', 'months', 'years', 'decades'],
+            verticalModes = ['top', 'bottom', 'auto'],
+            horizontalModes = ['left', 'right', 'auto'],
+            toolbarPlacements = ['default', 'top', 'bottom'],
+            keyMap = {
+                'up': 38,
+                38: 'up',
+                'down': 40,
+                40: 'down',
+                'left': 37,
+                37: 'left',
+                'right': 39,
+                39: 'right',
+                'tab': 9,
+                9: 'tab',
+                'escape': 27,
+                27: 'escape',
+                'enter': 13,
+                13: 'enter',
+                'pageUp': 33,
+                33: 'pageUp',
+                'pageDown': 34,
+                34: 'pageDown',
+                'shift': 16,
+                16: 'shift',
+                'control': 17,
+                17: 'control',
+                'space': 32,
+                32: 'space',
+                't': 84,
+                84: 't',
+                'delete': 46,
+                46: 'delete'
+            },
+            keyState = {},
+
+            /********************************************************************************
+             *
+             * Private functions
+             *
+             ********************************************************************************/
+            isEnabled = function (granularity) {
+                if (typeof granularity !== 'string' || granularity.length > 1) {
+                    throw new TypeError('isEnabled expects a single character string parameter');
+                }
+                switch (granularity) {
+                    case 'y':
+                        return actualFormat.indexOf('Y') !== -1;
+                    case 'M':
+                        return actualFormat.indexOf('M') !== -1;
+                    case 'd':
+                        return actualFormat.toLowerCase().indexOf('d') !== -1;
+                    case 'h':
+                    case 'H':
+                        return actualFormat.toLowerCase().indexOf('h') !== -1;
+                    case 'm':
+                        return actualFormat.indexOf('m') !== -1;
+                    case 's':
+                        return actualFormat.indexOf('s') !== -1;
+                    default:
+                        return false;
+                }
+            },
+            hasTime = function () {
+                return (isEnabled('h') || isEnabled('m') || isEnabled('s'));
+            },
+
+            hasDate = function () {
+                return (isEnabled('y') || isEnabled('M') || isEnabled('d'));
+            },
+
+            getDatePickerTemplate = function () {
+                var headTemplate = $('<thead>')
+                        .append($('<tr>')
+                            .append($('<th>').addClass('prev').attr('data-action', 'previous')
+                                .append($('<span>').addClass(options.icons.previous))
+                                )
+                            .append($('<th>').addClass('picker-switch').attr('data-action', 'pickerSwitch').attr('colspan', (options.calendarWeeks ? '6' : '5')))
+                            .append($('<th>').addClass('next').attr('data-action', 'next')
+                                .append($('<span>').addClass(options.icons.next))
+                                )
+                            ),
+                    contTemplate = $('<tbody>')
+                        .append($('<tr>')
+                            .append($('<td>').attr('colspan', (options.calendarWeeks ? '8' : '7')))
+                            );
+
+                return [
+                    $('<div>').addClass('datepicker-days')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate)
+                            .append($('<tbody>'))
+                            ),
+                    $('<div>').addClass('datepicker-months')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate.clone())
+                            .append(contTemplate.clone())
+                            ),
+                    $('<div>').addClass('datepicker-years')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate.clone())
+                            .append(contTemplate.clone())
+                            ),
+                    $('<div>').addClass('datepicker-decades')
+                        .append($('<table>').addClass('table-condensed')
+                            .append(headTemplate.clone())
+                            .append(contTemplate.clone())
+                            )
+                ];
+            },
+
+            getTimePickerMainTemplate = function () {
+                var topRow = $('<tr>'),
+                    middleRow = $('<tr>'),
+                    bottomRow = $('<tr>');
+
+                if (isEnabled('h')) {
+                    topRow.append($('<td>')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Increment Hour'}).addClass('btn').attr('data-action', 'incrementHours')
+                            .append($('<span>').addClass(options.icons.up))));
+                    middleRow.append($('<td>')
+                        .append($('<span>').addClass('timepicker-hour').attr({'data-time-component':'hours', 'title':'Pick Hour'}).attr('data-action', 'showHours')));
+                    bottomRow.append($('<td>')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Decrement Hour'}).addClass('btn').attr('data-action', 'decrementHours')
+                            .append($('<span>').addClass(options.icons.down))));
+                }
+                if (isEnabled('m')) {
+                    if (isEnabled('h')) {
+                        topRow.append($('<td>').addClass('separator'));
+                        middleRow.append($('<td>').addClass('separator').html(':'));
+                        bottomRow.append($('<td>').addClass('separator'));
+                    }
+                    topRow.append($('<td>')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Increment Minute'}).addClass('btn').attr('data-action', 'incrementMinutes')
+                            .append($('<span>').addClass(options.icons.up))));
+                    middleRow.append($('<td>')
+                        .append($('<span>').addClass('timepicker-minute').attr({'data-time-component': 'minutes', 'title':'Pick Minute'}).attr('data-action', 'showMinutes')));
+                    bottomRow.append($('<td>')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Decrement Minute'}).addClass('btn').attr('data-action', 'decrementMinutes')
+                            .append($('<span>').addClass(options.icons.down))));
+                }
+                if (isEnabled('s')) {
+                    if (isEnabled('m')) {
+                        topRow.append($('<td>').addClass('separator'));
+                        middleRow.append($('<td>').addClass('separator').html(':'));
+                        bottomRow.append($('<td>').addClass('separator'));
+                    }
+                    topRow.append($('<td>')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Increment Second'}).addClass('btn').attr('data-action', 'incrementSeconds')
+                            .append($('<span>').addClass(options.icons.up))));
+                    middleRow.append($('<td>')
+                        .append($('<span>').addClass('timepicker-second').attr({'data-time-component': 'seconds', 'title':'Pick Second'}).attr('data-action', 'showSeconds')));
+                    bottomRow.append($('<td>')
+                        .append($('<a>').attr({href: '#', tabindex: '-1', 'title':'Decrement Second'}).addClass('btn').attr('data-action', 'decrementSeconds')
+                            .append($('<span>').addClass(options.icons.down))));
+                }
+
+                if (!use24Hours) {
+                    topRow.append($('<td>').addClass('separator'));
+                    middleRow.append($('<td>')
+                        .append($('<button>').addClass('btn btn-primary').attr({'data-action': 'togglePeriod', tabindex: '-1', 'title':'Toggle Period'})));
+                    bottomRow.append($('<td>').addClass('separator'));
+                }
+
+                return $('<div>').addClass('timepicker-picker')
+                    .append($('<table>').addClass('table-condensed')
+                        .append([topRow, middleRow, bottomRow]));
+            },
+
+            getTimePickerTemplate = function () {
+                var hoursView = $('<div>').addClass('timepicker-hours')
+                        .append($('<table>').addClass('table-condensed')),
+                    minutesView = $('<div>').addClass('timepicker-minutes')
+                        .append($('<table>').addClass('table-condensed')),
+                    secondsView = $('<div>').addClass('timepicker-seconds')
+                        .append($('<table>').addClass('table-condensed')),
+                    ret = [getTimePickerMainTemplate()];
+
+                if (isEnabled('h')) {
+                    ret.push(hoursView);
+                }
+                if (isEnabled('m')) {
+                    ret.push(minutesView);
+                }
+                if (isEnabled('s')) {
+                    ret.push(secondsView);
+                }
+
+                return ret;
+            },
+
+            getToolbar = function () {
+                var row = [];
+                if (options.showTodayButton) {
+                    row.push($('<td>').append($('<a>').attr({'data-action':'today', 'title':'Go to today'}).append($('<span>').addClass(options.icons.today))));
+                }
+                if (!options.sideBySide && hasDate() && hasTime()) {
+                    row.push($('<td>').append($('<a>').attr({'data-action':'togglePicker', 'title':'Select Time'}).append($('<span>').addClass(options.icons.time))));
+                }
+                if (options.showClear) {
+                    row.push($('<td>').append($('<a>').attr({'data-action':'clear', 'title':'Clear selection'}).append($('<span>').addClass(options.icons.clear))));
+                }
+                if (options.showClose) {
+                    row.push($('<td>').append($('<a>').attr({'data-action':'close', 'title':'Close the picker'}).append($('<span>').addClass(options.icons.close))));
+                }
+                return $('<table>').addClass('table-condensed').append($('<tbody>').append($('<tr>').append(row)));
+            },
+
+            getTemplate = function () {
+                var template = $('<div>').addClass('bootstrap-datetimepicker-widget dropdown-menu'),
+                    dateView = $('<div>').addClass('datepicker').append(getDatePickerTemplate()),
+                    timeView = $('<div>').addClass('timepicker').append(getTimePickerTemplate()),
+                    content = $('<ul>').addClass('list-unstyled'),
+                    toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
+
+                if (options.inline) {
+                    template.removeClass('dropdown-menu');
+                }
+
+                if (use24Hours) {
+                    template.addClass('usetwentyfour');
+                }
+                if (isEnabled('s') && !use24Hours) {
+                    template.addClass('wider');
+                }
+                if (options.sideBySide && hasDate() && hasTime()) {
+                    template.addClass('timepicker-sbs');
+                    template.append(
+                        $('<div>').addClass('row')
+                            .append(dateView.addClass('col-sm-6'))
+                            .append(timeView.addClass('col-sm-6'))
+                    );
+                    template.append(toolbar);
+                    return template;
+                }
+
+                if (options.toolbarPlacement === 'top') {
+                    content.append(toolbar);
+                }
+                if (hasDate()) {
+                    content.append($('<li>').addClass((options.collapse && hasTime() ? 'collapse in' : '')).append(dateView));
+                }
+                if (options.toolbarPlacement === 'default') {
+                    content.append(toolbar);
+                }
+                if (hasTime()) {
+                    content.append($('<li>').addClass((options.collapse && hasDate() ? 'collapse' : '')).append(timeView));
+                }
+                if (options.toolbarPlacement === 'bottom') {
+                    content.append(toolbar);
+                }
+                return template.append(content);
+            },
+
+            dataToOptions = function () {
+                var eData,
+                    dataOptions = {};
+
+                if (element.is('input') || options.inline) {
+                    eData = element.data();
+                } else {
+                    eData = element.find('input').data();
+                }
+
+                if (eData.dateOptions && eData.dateOptions instanceof Object) {
+                    dataOptions = $.extend(true, dataOptions, eData.dateOptions);
+                }
+
+                $.each(options, function (key) {
+                    var attributeName = 'date' + key.charAt(0).toUpperCase() + key.slice(1);
+                    if (eData[attributeName] !== undefined) {
+                        dataOptions[key] = eData[attributeName];
+                    }
+                });
+                return dataOptions;
+            },
+
+            place = function () {
+                var position = (component || element).position(),
+                    offset = (component || element).offset(),
+                    vertical = options.widgetPositioning.vertical,
+                    horizontal = options.widgetPositioning.horizontal,
+                    parent;
+
+                if (options.widgetParent) {
+                    parent = options.widgetParent.append(widget);
+                } else if (element.is('input')) {
+                    parent = element.after(widget).parent();
+                } else if (options.inline) {
+                    parent = element.append(widget);
+                    return;
+                } else {
+                    parent = element;
+                    element.children().first().after(widget);
+                }
+
+                // Top and bottom logic
+                if (vertical === 'auto') {
+                    if (offset.top + widget.height() * 1.5 >= $(window).height() + $(window).scrollTop() &&
+                        widget.height() + element.outerHeight() < offset.top) {
+                        vertical = 'top';
+                    } else {
+                        vertical = 'bottom';
+                    }
+                }
+
+                // Left and right logic
+                if (horizontal === 'auto') {
+                    if (parent.width() < offset.left + widget.outerWidth() / 2 &&
+                        offset.left + widget.outerWidth() > $(window).width()) {
+                        horizontal = 'right';
+                    } else {
+                        horizontal = 'left';
+                    }
+                }
+
+                if (vertical === 'top') {
+                    widget.addClass('top').removeClass('bottom');
+                } else {
+                    widget.addClass('bottom').removeClass('top');
+                }
+
+                if (horizontal === 'right') {
+                    widget.addClass('pull-right');
+                } else {
+                    widget.removeClass('pull-right');
+                }
+
+                // find the first parent element that has a relative css positioning
+                if (parent.css('position') !== 'relative') {
+                    parent = parent.parents().filter(function () {
+                        return $(this).css('position') === 'relative';
+                    }).first();
+                }
+
+                if (parent.length === 0) {
+                    throw new Error('datetimepicker component should be placed within a relative positioned container');
+                }
+
+                widget.css({
+                    top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
+                    bottom: vertical === 'top' ? position.top + element.outerHeight() : 'auto',
+                    left: horizontal === 'left' ? (parent === element ? 0 : position.left) : 'auto',
+                    right: horizontal === 'left' ? 'auto' : parent.outerWidth() - element.outerWidth() - (parent === element ? 0 : position.left)
+                });
+            },
+
+            notifyEvent = function (e) {
+                if (e.type === 'dp.change' && ((e.date && e.date.isSame(e.oldDate)) || (!e.date && !e.oldDate))) {
+                    return;
+                }
+                element.trigger(e);
+            },
+
+            viewUpdate = function (e) {
+                if (e === 'y') {
+                    e = 'YYYY';
+                }
+                notifyEvent({
+                    type: 'dp.update',
+                    change: e,
+                    viewDate: viewDate.clone()
+                });
+            },
+
+            showMode = function (dir) {
+                if (!widget) {
+                    return;
+                }
+                if (dir) {
+                    currentViewMode = Math.max(minViewModeNumber, Math.min(3, currentViewMode + dir));
+                }
+                widget.find('.datepicker > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
+            },
+
+            fillDow = function () {
+                var row = $('<tr>'),
+                    currentDate = viewDate.clone().startOf('w').startOf('d');
+
+                if (options.calendarWeeks === true) {
+                    row.append($('<th>').addClass('cw').text('#'));
+                }
+
+                while (currentDate.isBefore(viewDate.clone().endOf('w'))) {
+                    row.append($('<th>').addClass('dow').text(currentDate.format('dd')));
+                    currentDate.add(1, 'd');
+                }
+                widget.find('.datepicker-days thead').append(row);
+            },
+
+            isInDisabledDates = function (testDate) {
+                return options.disabledDates[testDate.format('YYYY-MM-DD')] === true;
+            },
+
+            isInEnabledDates = function (testDate) {
+                return options.enabledDates[testDate.format('YYYY-MM-DD')] === true;
+            },
+
+            isInDisabledHours = function (testDate) {
+                return options.disabledHours[testDate.format('H')] === true;
+            },
+
+            isInEnabledHours = function (testDate) {
+                return options.enabledHours[testDate.format('H')] === true;
+            },
+
+            isValid = function (targetMoment, granularity) {
+                if (!targetMoment.isValid()) {
+                    return false;
+                }
+                if (options.disabledDates && granularity === 'd' && isInDisabledDates(targetMoment)) {
+                    return false;
+                }
+                if (options.enabledDates && granularity === 'd' && !isInEnabledDates(targetMoment)) {
+                    return false;
+                }
+                if (options.minDate && targetMoment.isBefore(options.minDate, granularity)) {
+                    return false;
+                }
+                if (options.maxDate && targetMoment.isAfter(options.maxDate, granularity)) {
+                    return false;
+                }
+                if (options.daysOfWeekDisabled && granularity === 'd' && options.daysOfWeekDisabled.indexOf(targetMoment.day()) !== -1) {
+                    return false;
+                }
+                if (options.disabledHours && (granularity === 'h' || granularity === 'm' || granularity === 's') && isInDisabledHours(targetMoment)) {
+                    return false;
+                }
+                if (options.enabledHours && (granularity === 'h' || granularity === 'm' || granularity === 's') && !isInEnabledHours(targetMoment)) {
+                    return false;
+                }
+                if (options.disabledTimeIntervals && (granularity === 'h' || granularity === 'm' || granularity === 's')) {
+                    var found = false;
+                    $.each(options.disabledTimeIntervals, function () {
+                        if (targetMoment.isBetween(this[0], this[1])) {
+                            found = true;
+                            return false;
+                        }
+                    });
+                    if (found) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+
+            fillMonths = function () {
+                var spans = [],
+                    monthsShort = viewDate.clone().startOf('y').startOf('d');
+                while (monthsShort.isSame(viewDate, 'y')) {
+                    spans.push($('<span>').attr('data-action', 'selectMonth').addClass('month').text(monthsShort.format('MMM')));
+                    monthsShort.add(1, 'M');
+                }
+                widget.find('.datepicker-months td').empty().append(spans);
+            },
+
+            updateMonths = function () {
+                var monthsView = widget.find('.datepicker-months'),
+                    monthsViewHeader = monthsView.find('th'),
+                    months = monthsView.find('tbody').find('span');
+
+                monthsViewHeader.eq(0).find('span').attr('title', 'Previous Year');
+                monthsViewHeader.eq(1).attr('title', 'Select Year');
+                monthsViewHeader.eq(2).find('span').attr('title', 'Next Year');
+
+                monthsView.find('.disabled').removeClass('disabled');
+
+                if (!isValid(viewDate.clone().subtract(1, 'y'), 'y')) {
+                    monthsViewHeader.eq(0).addClass('disabled');
+                }
+
+                monthsViewHeader.eq(1).text(viewDate.year());
+
+                if (!isValid(viewDate.clone().add(1, 'y'), 'y')) {
+                    monthsViewHeader.eq(2).addClass('disabled');
+                }
+
+                months.removeClass('active');
+                if (date.isSame(viewDate, 'y') && !unset) {
+                    months.eq(date.month()).addClass('active');
+                }
+
+                months.each(function (index) {
+                    if (!isValid(viewDate.clone().month(index), 'M')) {
+                        $(this).addClass('disabled');
+                    }
+                });
+            },
+
+            updateYears = function () {
+                var yearsView = widget.find('.datepicker-years'),
+                    yearsViewHeader = yearsView.find('th'),
+                    startYear = viewDate.clone().subtract(5, 'y'),
+                    endYear = viewDate.clone().add(6, 'y'),
+                    html = '';
+
+                yearsViewHeader.eq(0).find('span').attr('title', 'Previous Decade');
+                yearsViewHeader.eq(1).attr('title', 'Select Decade');
+                yearsViewHeader.eq(2).find('span').attr('title', 'Next Decade');
+
+                yearsView.find('.disabled').removeClass('disabled');
+
+                if (options.minDate && options.minDate.isAfter(startYear, 'y')) {
+                    yearsViewHeader.eq(0).addClass('disabled');
+                }
+
+                yearsViewHeader.eq(1).text(startYear.year() + '-' + endYear.year());
+
+                if (options.maxDate && options.maxDate.isBefore(endYear, 'y')) {
+                    yearsViewHeader.eq(2).addClass('disabled');
+                }
+
+                while (!startYear.isAfter(endYear, 'y')) {
+                    html += '<span data-action="selectYear" class="year' + (startYear.isSame(date, 'y') && !unset ? ' active' : '') + (!isValid(startYear, 'y') ? ' disabled' : '') + '">' + startYear.year() + '</span>';
+                    startYear.add(1, 'y');
+                }
+
+                yearsView.find('td').html(html);
+            },
+
+            updateDecades = function () {
+                var decadesView = widget.find('.datepicker-decades'),
+                    decadesViewHeader = decadesView.find('th'),
+                    startDecade = viewDate.isBefore(moment({y: 1999})) ? moment({y: 1899}) : moment({y: 1999}),
+                    endDecade = startDecade.clone().add(100, 'y'),
+                    html = '';
+
+                decadesViewHeader.eq(0).find('span').attr('title', 'Previous Century');
+                decadesViewHeader.eq(2).find('span').attr('title', 'Next Century');
+
+                decadesView.find('.disabled').removeClass('disabled');
+
+                if (startDecade.isSame(moment({y: 1900})) || (options.minDate && options.minDate.isAfter(startDecade, 'y'))) {
+                    decadesViewHeader.eq(0).addClass('disabled');
+                }
+
+                decadesViewHeader.eq(1).text(startDecade.year() + '-' + endDecade.year());
+
+                if (startDecade.isSame(moment({y: 2000})) || (options.maxDate && options.maxDate.isBefore(endDecade, 'y'))) {
+                    decadesViewHeader.eq(2).addClass('disabled');
+                }
+
+                while (!startDecade.isAfter(endDecade, 'y')) {
+                    html += '<span data-action="selectDecade" class="decade' + (startDecade.isSame(date, 'y') ? ' active' : '') +
+                        (!isValid(startDecade, 'y') ? ' disabled' : '') + '" data-selection="' + (startDecade.year() + 6) + '">' + (startDecade.year() + 1) + ' - ' + (startDecade.year() + 12) + '</span>';
+                    startDecade.add(12, 'y');
+                }
+                html += '<span></span><span></span><span></span>'; //push the dangling block over, at least this way it's even
+
+                decadesView.find('td').html(html);
+            },
+
+            fillDate = function () {
+                var daysView = widget.find('.datepicker-days'),
+                    daysViewHeader = daysView.find('th'),
+                    currentDate,
+                    html = [],
+                    row,
+                    clsName,
+                    i;
+
+                if (!hasDate()) {
+                    return;
+                }
+
+                daysViewHeader.eq(0).find('span').attr('title', 'Previous Month');
+                daysViewHeader.eq(1).attr('title', 'Select Month');
+                daysViewHeader.eq(2).find('span').attr('title', 'Next Month');
+
+                daysView.find('.disabled').removeClass('disabled');
+                daysViewHeader.eq(1).text(viewDate.format(options.dayViewHeaderFormat));
+
+                if (!isValid(viewDate.clone().subtract(1, 'M'), 'M')) {
+                    daysViewHeader.eq(0).addClass('disabled');
+                }
+                if (!isValid(viewDate.clone().add(1, 'M'), 'M')) {
+                    daysViewHeader.eq(2).addClass('disabled');
+                }
+
+                currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d');
+
+                for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
+                    if (currentDate.weekday() === 0) {
+                        row = $('<tr>');
+                        if (options.calendarWeeks) {
+                            row.append('<td class="cw">' + currentDate.week() + '</td>');
+                        }
+                        html.push(row);
+                    }
+                    clsName = '';
+                    if (currentDate.isBefore(viewDate, 'M')) {
+                        clsName += ' old';
+                    }
+                    if (currentDate.isAfter(viewDate, 'M')) {
+                        clsName += ' new';
+                    }
+                    if (currentDate.isSame(date, 'd') && !unset) {
+                        clsName += ' active';
+                    }
+                    if (!isValid(currentDate, 'd')) {
+                        clsName += ' disabled';
+                    }
+                    if (currentDate.isSame(moment(), 'd')) {
+                        clsName += ' today';
+                    }
+                    if (currentDate.day() === 0 || currentDate.day() === 6) {
+                        clsName += ' weekend';
+                    }
+                    row.append('<td data-action="selectDay" data-day="' + currentDate.format('L') + '" class="day' + clsName + '">' + currentDate.date() + '</td>');
+                    currentDate.add(1, 'd');
+                }
+
+                daysView.find('tbody').empty().append(html);
+
+                updateMonths();
+
+                updateYears();
+
+                updateDecades();
+            },
+
+            fillHours = function () {
+                var table = widget.find('.timepicker-hours table'),
+                    currentHour = viewDate.clone().startOf('d'),
+                    html = [],
+                    row = $('<tr>');
+
+                if (viewDate.hour() > 11 && !use24Hours) {
+                    currentHour.hour(12);
+                }
+                while (currentHour.isSame(viewDate, 'd') && (use24Hours || (viewDate.hour() < 12 && currentHour.hour() < 12) || viewDate.hour() > 11)) {
+                    if (currentHour.hour() % 4 === 0) {
+                        row = $('<tr>');
+                        html.push(row);
+                    }
+                    row.append('<td data-action="selectHour" class="hour' + (!isValid(currentHour, 'h') ? ' disabled' : '') + '">' + currentHour.format(use24Hours ? 'HH' : 'hh') + '</td>');
+                    currentHour.add(1, 'h');
+                }
+                table.empty().append(html);
+            },
+
+            fillMinutes = function () {
+                var table = widget.find('.timepicker-minutes table'),
+                    currentMinute = viewDate.clone().startOf('h'),
+                    html = [],
+                    row = $('<tr>'),
+                    step = options.stepping === 1 ? 5 : options.stepping;
+
+                while (viewDate.isSame(currentMinute, 'h')) {
+                    if (currentMinute.minute() % (step * 4) === 0) {
+                        row = $('<tr>');
+                        html.push(row);
+                    }
+                    row.append('<td data-action="selectMinute" class="minute' + (!isValid(currentMinute, 'm') ? ' disabled' : '') + '">' + currentMinute.format('mm') + '</td>');
+                    currentMinute.add(step, 'm');
+                }
+                table.empty().append(html);
+            },
+
+            fillSeconds = function () {
+                var table = widget.find('.timepicker-seconds table'),
+                    currentSecond = viewDate.clone().startOf('m'),
+                    html = [],
+                    row = $('<tr>');
+
+                while (viewDate.isSame(currentSecond, 'm')) {
+                    if (currentSecond.second() % 20 === 0) {
+                        row = $('<tr>');
+                        html.push(row);
+                    }
+                    row.append('<td data-action="selectSecond" class="second' + (!isValid(currentSecond, 's') ? ' disabled' : '') + '">' + currentSecond.format('ss') + '</td>');
+                    currentSecond.add(5, 's');
+                }
+
+                table.empty().append(html);
+            },
+
+            fillTime = function () {
+                var toggle, newDate, timeComponents = widget.find('.timepicker span[data-time-component]');
+
+                if (!use24Hours) {
+                    toggle = widget.find('.timepicker [data-action=togglePeriod]');
+                    newDate = date.clone().add((date.hours() >= 12) ? -12 : 12, 'h');
+
+                    toggle.text(date.format('A'));
+
+                    if (isValid(newDate, 'h')) {
+                        toggle.removeClass('disabled');
+                    } else {
+                        toggle.addClass('disabled');
+                    }
+                }
+                timeComponents.filter('[data-time-component=hours]').text(date.format(use24Hours ? 'HH' : 'hh'));
+                timeComponents.filter('[data-time-component=minutes]').text(date.format('mm'));
+                timeComponents.filter('[data-time-component=seconds]').text(date.format('ss'));
+
+                fillHours();
+                fillMinutes();
+                fillSeconds();
+            },
+
+            update = function () {
+                if (!widget) {
+                    return;
+                }
+                fillDate();
+                fillTime();
+            },
+
+            setValue = function (targetMoment) {
+                var oldDate = unset ? null : date;
+
+                // case of calling setValue(null or false)
+                if (!targetMoment) {
+                    unset = true;
+                    input.val('');
+                    element.data('date', '');
+                    notifyEvent({
+                        type: 'dp.change',
+                        date: false,
+                        oldDate: oldDate
+                    });
+                    update();
+                    return;
+                }
+
+                targetMoment = targetMoment.clone().locale(options.locale);
+
+                if (options.stepping !== 1) {
+                    targetMoment.minutes((Math.round(targetMoment.minutes() / options.stepping) * options.stepping) % 60).seconds(0);
+                }
+
+                if (isValid(targetMoment)) {
+                    date = targetMoment;
+                    viewDate = date.clone();
+                    input.val(date.format(actualFormat));
+                    element.data('date', date.format(actualFormat));
+                    unset = false;
+                    update();
+                    notifyEvent({
+                        type: 'dp.change',
+                        date: date.clone(),
+                        oldDate: oldDate
+                    });
+                } else {
+                    if (!options.keepInvalid) {
+                        input.val(unset ? '' : date.format(actualFormat));
+                    }
+                    notifyEvent({
+                        type: 'dp.error',
+                        date: targetMoment
+                    });
+                }
+            },
+
+            hide = function () {
+                ///<summary>Hides the widget. Possibly will emit dp.hide</summary>
+                var transitioning = false;
+                if (!widget) {
+                    return picker;
+                }
+                // Ignore event if in the middle of a picker transition
+                widget.find('.collapse').each(function () {
+                    var collapseData = $(this).data('collapse');
+                    if (collapseData && collapseData.transitioning) {
+                        transitioning = true;
+                        return false;
+                    }
+                    return true;
+                });
+                if (transitioning) {
+                    return picker;
+                }
+                if (component && component.hasClass('btn')) {
+                    component.toggleClass('active');
+                }
+                widget.hide();
+
+                $(window).off('resize', place);
+                widget.off('click', '[data-action]');
+                widget.off('mousedown', false);
+
+                widget.remove();
+                widget = false;
+
+                notifyEvent({
+                    type: 'dp.hide',
+                    date: date.clone()
+                });
+                return picker;
+            },
+
+            clear = function () {
+                setValue(null);
+            },
+
+            /********************************************************************************
+             *
+             * Widget UI interaction functions
+             *
+             ********************************************************************************/
+            actions = {
+                next: function () {
+                    var navFnc = datePickerModes[currentViewMode].navFnc;
+                    viewDate.add(datePickerModes[currentViewMode].navStep, navFnc);
+                    fillDate();
+                    viewUpdate(navFnc);
+                },
+
+                previous: function () {
+                    var navFnc = datePickerModes[currentViewMode].navFnc;
+                    viewDate.subtract(datePickerModes[currentViewMode].navStep, navFnc);
+                    fillDate();
+                    viewUpdate(navFnc);
+                },
+
+                pickerSwitch: function () {
+                    showMode(1);
+                },
+
+                selectMonth: function (e) {
+                    var month = $(e.target).closest('tbody').find('span').index($(e.target));
+                    viewDate.month(month);
+                    if (currentViewMode === minViewModeNumber) {
+                        setValue(date.clone().year(viewDate.year()).month(viewDate.month()));
+                        if (!options.inline) {
+                            hide();
+                        }
+                    } else {
+                        showMode(-1);
+                        fillDate();
+                    }
+                    viewUpdate('M');
+                },
+
+                selectYear: function (e) {
+                    var year = parseInt($(e.target).text(), 10) || 0;
+                    viewDate.year(year);
+                    if (currentViewMode === minViewModeNumber) {
+                        setValue(date.clone().year(viewDate.year()));
+                        if (!options.inline) {
+                            hide();
+                        }
+                    } else {
+                        showMode(-1);
+                        fillDate();
+                    }
+                    viewUpdate('YYYY');
+                },
+
+                selectDecade: function (e) {
+                    var year = parseInt($(e.target).data('selection'), 10) || 0;
+                    viewDate.year(year);
+                    if (currentViewMode === minViewModeNumber) {
+                        setValue(date.clone().year(viewDate.year()));
+                        if (!options.inline) {
+                            hide();
+                        }
+                    } else {
+                        showMode(-1);
+                        fillDate();
+                    }
+                    viewUpdate('YYYY');
+                },
+
+                selectDay: function (e) {
+                    var day = viewDate.clone();
+                    if ($(e.target).is('.old')) {
+                        day.subtract(1, 'M');
+                    }
+                    if ($(e.target).is('.new')) {
+                        day.add(1, 'M');
+                    }
+                    setValue(day.date(parseInt($(e.target).text(), 10)));
+                    if (!hasTime() && !options.keepOpen && !options.inline) {
+                        hide();
+                    }
+                },
+
+                incrementHours: function () {
+                    var newDate = date.clone().add(1, 'h');
+                    if (isValid(newDate, 'h')) {
+                        setValue(newDate);
+                    }
+                },
+
+                incrementMinutes: function () {
+                    var newDate = date.clone().add(options.stepping, 'm');
+                    if (isValid(newDate, 'm')) {
+                        setValue(newDate);
+                    }
+                },
+
+                incrementSeconds: function () {
+                    var newDate = date.clone().add(1, 's');
+                    if (isValid(newDate, 's')) {
+                        setValue(newDate);
+                    }
+                },
+
+                decrementHours: function () {
+                    var newDate = date.clone().subtract(1, 'h');
+                    if (isValid(newDate, 'h')) {
+                        setValue(newDate);
+                    }
+                },
+
+                decrementMinutes: function () {
+                    var newDate = date.clone().subtract(options.stepping, 'm');
+                    if (isValid(newDate, 'm')) {
+                        setValue(newDate);
+                    }
+                },
+
+                decrementSeconds: function () {
+                    var newDate = date.clone().subtract(1, 's');
+                    if (isValid(newDate, 's')) {
+                        setValue(newDate);
+                    }
+                },
+
+                togglePeriod: function () {
+                    setValue(date.clone().add((date.hours() >= 12) ? -12 : 12, 'h'));
+                },
+
+                togglePicker: function (e) {
+                    var $this = $(e.target),
+                        $parent = $this.closest('ul'),
+                        expanded = $parent.find('.in'),
+                        closed = $parent.find('.collapse:not(.in)'),
+                        collapseData;
+
+                    if (expanded && expanded.length) {
+                        collapseData = expanded.data('collapse');
+                        if (collapseData && collapseData.transitioning) {
+                            return;
+                        }
+                        if (expanded.collapse) { // if collapse plugin is available through bootstrap.js then use it
+                            expanded.collapse('hide');
+                            closed.collapse('show');
+                        } else { // otherwise just toggle in class on the two views
+                            expanded.removeClass('in');
+                            closed.addClass('in');
+                        }
+                        if ($this.is('span')) {
+                            $this.toggleClass(options.icons.time + ' ' + options.icons.date);
+                        } else {
+                            $this.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
+                        }
+
+                        // NOTE: uncomment if toggled state will be restored in show()
+                        //if (component) {
+                        //    component.find('span').toggleClass(options.icons.time + ' ' + options.icons.date);
+                        //}
+                    }
+                },
+
+                showPicker: function () {
+                    widget.find('.timepicker > div:not(.timepicker-picker)').hide();
+                    widget.find('.timepicker .timepicker-picker').show();
+                },
+
+                showHours: function () {
+                    widget.find('.timepicker .timepicker-picker').hide();
+                    widget.find('.timepicker .timepicker-hours').show();
+                },
+
+                showMinutes: function () {
+                    widget.find('.timepicker .timepicker-picker').hide();
+                    widget.find('.timepicker .timepicker-minutes').show();
+                },
+
+                showSeconds: function () {
+                    widget.find('.timepicker .timepicker-picker').hide();
+                    widget.find('.timepicker .timepicker-seconds').show();
+                },
+
+                selectHour: function (e) {
+                    var hour = parseInt($(e.target).text(), 10);
+
+                    if (!use24Hours) {
+                        if (date.hours() >= 12) {
+                            if (hour !== 12) {
+                                hour += 12;
+                            }
+                        } else {
+                            if (hour === 12) {
+                                hour = 0;
+                            }
+                        }
+                    }
+                    setValue(date.clone().hours(hour));
+                    actions.showPicker.call(picker);
+                },
+
+                selectMinute: function (e) {
+                    setValue(date.clone().minutes(parseInt($(e.target).text(), 10)));
+                    actions.showPicker.call(picker);
+                },
+
+                selectSecond: function (e) {
+                    setValue(date.clone().seconds(parseInt($(e.target).text(), 10)));
+                    actions.showPicker.call(picker);
+                },
+
+                clear: clear,
+
+                today: function () {
+                    if (isValid(moment(), 'd')) {
+                        setValue(moment());
+                    }
+                },
+
+                close: hide
+            },
+
+            doAction = function (e) {
+                if ($(e.currentTarget).is('.disabled')) {
+                    return false;
+                }
+                actions[$(e.currentTarget).data('action')].apply(picker, arguments);
+                return false;
+            },
+
+            show = function () {
+                ///<summary>Shows the widget. Possibly will emit dp.show and dp.change</summary>
+                var currentMoment,
+                    useCurrentGranularity = {
+                        'year': function (m) {
+                            return m.month(0).date(1).hours(0).seconds(0).minutes(0);
+                        },
+                        'month': function (m) {
+                            return m.date(1).hours(0).seconds(0).minutes(0);
+                        },
+                        'day': function (m) {
+                            return m.hours(0).seconds(0).minutes(0);
+                        },
+                        'hour': function (m) {
+                            return m.seconds(0).minutes(0);
+                        },
+                        'minute': function (m) {
+                            return m.seconds(0);
+                        }
+                    };
+
+                if (input.prop('disabled') || (!options.ignoreReadonly && input.prop('readonly')) || widget) {
+                    return picker;
+                }
+                if (input.val() !== undefined && input.val().trim().length !== 0) {
+                    setValue(parseInputDate(input.val().trim()));
+                } else if (options.useCurrent && unset && ((input.is('input') && input.val().trim().length === 0) || options.inline)) {
+                    currentMoment = moment();
+                    if (typeof options.useCurrent === 'string') {
+                        currentMoment = useCurrentGranularity[options.useCurrent](currentMoment);
+                    }
+                    setValue(currentMoment);
+                }
+
+                widget = getTemplate();
+
+                fillDow();
+                fillMonths();
+
+                widget.find('.timepicker-hours').hide();
+                widget.find('.timepicker-minutes').hide();
+                widget.find('.timepicker-seconds').hide();
+
+                update();
+                showMode();
+
+                $(window).on('resize', place);
+                widget.on('click', '[data-action]', doAction); // this handles clicks on the widget
+                widget.on('mousedown', false);
+
+                if (component && component.hasClass('btn')) {
+                    component.toggleClass('active');
+                }
+                widget.show();
+                place();
+
+                if (options.focusOnShow && !input.is(':focus')) {
+                    input.focus();
+                }
+
+                notifyEvent({
+                    type: 'dp.show'
+                });
+                return picker;
+            },
+
+            toggle = function () {
+                /// <summary>Shows or hides the widget</summary>
+                return (widget ? hide() : show());
+            },
+
+            parseInputDate = function (inputDate) {
+                if (options.parseInputDate === undefined) {
+                    if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+                        inputDate = moment(inputDate);
+                    } else {
+                        inputDate = moment(inputDate, parseFormats, options.useStrict);
+                    }
+                } else {
+                    inputDate = options.parseInputDate(inputDate);
+                }
+                inputDate.locale(options.locale);
+                return inputDate;
+            },
+
+            keydown = function (e) {
+                var handler = null,
+                    index,
+                    index2,
+                    pressedKeys = [],
+                    pressedModifiers = {},
+                    currentKey = e.which,
+                    keyBindKeys,
+                    allModifiersPressed,
+                    pressed = 'p';
+
+                keyState[currentKey] = pressed;
+
+                for (index in keyState) {
+                    if (keyState.hasOwnProperty(index) && keyState[index] === pressed) {
+                        pressedKeys.push(index);
+                        if (parseInt(index, 10) !== currentKey) {
+                            pressedModifiers[index] = true;
+                        }
+                    }
+                }
+
+                for (index in options.keyBinds) {
+                    if (options.keyBinds.hasOwnProperty(index) && typeof (options.keyBinds[index]) === 'function') {
+                        keyBindKeys = index.split(' ');
+                        if (keyBindKeys.length === pressedKeys.length && keyMap[currentKey] === keyBindKeys[keyBindKeys.length - 1]) {
+                            allModifiersPressed = true;
+                            for (index2 = keyBindKeys.length - 2; index2 >= 0; index2--) {
+                                if (!(keyMap[keyBindKeys[index2]] in pressedModifiers)) {
+                                    allModifiersPressed = false;
+                                    break;
+                                }
+                            }
+                            if (allModifiersPressed) {
+                                handler = options.keyBinds[index];
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (handler) {
+                    handler.call(picker, widget);
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            },
+
+            keyup = function (e) {
+                keyState[e.which] = 'r';
+                e.stopPropagation();
+                e.preventDefault();
+            },
+
+            change = function (e) {
+                var val = $(e.target).val().trim(),
+                    parsedDate = val ? parseInputDate(val) : null;
+                setValue(parsedDate);
+                e.stopImmediatePropagation();
+                return false;
+            },
+
+            attachDatePickerElementEvents = function () {
+                input.on({
+                    'change': change,
+                    'blur': options.debug ? '' : hide,
+                    'keydown': keydown,
+                    'keyup': keyup,
+                    'focus': options.allowInputToggle ? show : ''
+                });
+
+                if (element.is('input')) {
+                    input.on({
+                        'focus': show
+                    });
+                } else if (component) {
+                    component.on('click', toggle);
+                    component.on('mousedown', false);
+                }
+            },
+
+            detachDatePickerElementEvents = function () {
+                input.off({
+                    'change': change,
+                    'blur': hide,
+                    'keydown': keydown,
+                    'keyup': keyup,
+                    'focus': options.allowInputToggle ? hide : ''
+                });
+
+                if (element.is('input')) {
+                    input.off({
+                        'focus': show
+                    });
+                } else if (component) {
+                    component.off('click', toggle);
+                    component.off('mousedown', false);
+                }
+            },
+
+            indexGivenDates = function (givenDatesArray) {
+                // Store given enabledDates and disabledDates as keys.
+                // This way we can check their existence in O(1) time instead of looping through whole array.
+                // (for example: options.enabledDates['2014-02-27'] === true)
+                var givenDatesIndexed = {};
+                $.each(givenDatesArray, function () {
+                    var dDate = parseInputDate(this);
+                    if (dDate.isValid()) {
+                        givenDatesIndexed[dDate.format('YYYY-MM-DD')] = true;
+                    }
+                });
+                return (Object.keys(givenDatesIndexed).length) ? givenDatesIndexed : false;
+            },
+
+            indexGivenHours = function (givenHoursArray) {
+                // Store given enabledHours and disabledHours as keys.
+                // This way we can check their existence in O(1) time instead of looping through whole array.
+                // (for example: options.enabledHours['2014-02-27'] === true)
+                var givenHoursIndexed = {};
+                $.each(givenHoursArray, function () {
+                    givenHoursIndexed[this] = true;
+                });
+                return (Object.keys(givenHoursIndexed).length) ? givenHoursIndexed : false;
+            },
+
+            initFormatting = function () {
+                var format = options.format || 'L LT';
+
+                actualFormat = format.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput) {
+                    var newinput = date.localeData().longDateFormat(formatInput) || formatInput;
+                    return newinput.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput2) { //temp fix for #740
+                        return date.localeData().longDateFormat(formatInput2) || formatInput2;
+                    });
+                });
+
+
+                parseFormats = options.extraFormats ? options.extraFormats.slice() : [];
+                if (parseFormats.indexOf(format) < 0 && parseFormats.indexOf(actualFormat) < 0) {
+                    parseFormats.push(actualFormat);
+                }
+
+                use24Hours = (actualFormat.toLowerCase().indexOf('a') < 1 && actualFormat.replace(/\[.*?\]/g, '').indexOf('h') < 1);
+
+                if (isEnabled('y')) {
+                    minViewModeNumber = 2;
+                }
+                if (isEnabled('M')) {
+                    minViewModeNumber = 1;
+                }
+                if (isEnabled('d')) {
+                    minViewModeNumber = 0;
+                }
+
+                currentViewMode = Math.max(minViewModeNumber, currentViewMode);
+
+                if (!unset) {
+                    setValue(date);
+                }
+            };
+
+        /********************************************************************************
+         *
+         * Public API functions
+         * =====================
+         *
+         * Important: Do not expose direct references to private objects or the options
+         * object to the outer world. Always return a clone when returning values or make
+         * a clone when setting a private variable.
+         *
+         ********************************************************************************/
+        picker.destroy = function () {
+            ///<summary>Destroys the widget and removes all attached event listeners</summary>
+            hide();
+            detachDatePickerElementEvents();
+            element.removeData('DateTimePicker');
+            element.removeData('date');
+        };
+
+        picker.toggle = toggle;
+
+        picker.show = show;
+
+        picker.hide = hide;
+
+        picker.disable = function () {
+            ///<summary>Disables the input element, the component is attached to, by adding a disabled="true" attribute to it.
+            ///If the widget was visible before that call it is hidden. Possibly emits dp.hide</summary>
+            hide();
+            if (component && component.hasClass('btn')) {
+                component.addClass('disabled');
+            }
+            input.prop('disabled', true);
+            return picker;
+        };
+
+        picker.enable = function () {
+            ///<summary>Enables the input element, the component is attached to, by removing disabled attribute from it.</summary>
+            if (component && component.hasClass('btn')) {
+                component.removeClass('disabled');
+            }
+            input.prop('disabled', false);
+            return picker;
+        };
+
+        picker.ignoreReadonly = function (ignoreReadonly) {
+            if (arguments.length === 0) {
+                return options.ignoreReadonly;
+            }
+            if (typeof ignoreReadonly !== 'boolean') {
+                throw new TypeError('ignoreReadonly () expects a boolean parameter');
+            }
+            options.ignoreReadonly = ignoreReadonly;
+            return picker;
+        };
+
+        picker.options = function (newOptions) {
+            if (arguments.length === 0) {
+                return $.extend(true, {}, options);
+            }
+
+            if (!(newOptions instanceof Object)) {
+                throw new TypeError('options() options parameter should be an object');
+            }
+            $.extend(true, options, newOptions);
+            $.each(options, function (key, value) {
+                if (picker[key] !== undefined) {
+                    picker[key](value);
+                } else {
+                    throw new TypeError('option ' + key + ' is not recognized!');
+                }
+            });
+            return picker;
+        };
+
+        picker.date = function (newDate) {
+            ///<signature helpKeyword="$.fn.datetimepicker.date">
+            ///<summary>Returns the component's model current date, a moment object or null if not set.</summary>
+            ///<returns type="Moment">date.clone()</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Sets the components model current moment to it. Passing a null value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the options.format and options.useStrict components configuration.</summary>
+            ///<param name="newDate" locid="$.fn.datetimepicker.date_p:newDate">Takes string, Date, moment, null parameter.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                if (unset) {
+                    return null;
+                }
+                return date.clone();
+            }
+
+            if (newDate !== null && typeof newDate !== 'string' && !moment.isMoment(newDate) && !(newDate instanceof Date)) {
+                throw new TypeError('date() parameter must be one of [null, string, moment or Date]');
+            }
+
+            setValue(newDate === null ? null : parseInputDate(newDate));
+            return picker;
+        };
+
+        picker.format = function (newFormat) {
+            ///<summary>test su</summary>
+            ///<param name="newFormat">info about para</param>
+            ///<returns type="string|boolean">returns foo</returns>
+            if (arguments.length === 0) {
+                return options.format;
+            }
+
+            if ((typeof newFormat !== 'string') && ((typeof newFormat !== 'boolean') || (newFormat !== false))) {
+                throw new TypeError('format() expects a sting or boolean:false parameter ' + newFormat);
+            }
+
+            options.format = newFormat;
+            if (actualFormat) {
+                initFormatting(); // reinit formatting
+            }
+            return picker;
+        };
+
+        picker.dayViewHeaderFormat = function (newFormat) {
+            if (arguments.length === 0) {
+                return options.dayViewHeaderFormat;
+            }
+
+            if (typeof newFormat !== 'string') {
+                throw new TypeError('dayViewHeaderFormat() expects a string parameter');
+            }
+
+            options.dayViewHeaderFormat = newFormat;
+            return picker;
+        };
+
+        picker.extraFormats = function (formats) {
+            if (arguments.length === 0) {
+                return options.extraFormats;
+            }
+
+            if (formats !== false && !(formats instanceof Array)) {
+                throw new TypeError('extraFormats() expects an array or false parameter');
+            }
+
+            options.extraFormats = formats;
+            if (parseFormats) {
+                initFormatting(); // reinit formatting
+            }
+            return picker;
+        };
+
+        picker.disabledDates = function (dates) {
+            ///<signature helpKeyword="$.fn.datetimepicker.disabledDates">
+            ///<summary>Returns an array with the currently set disabled dates on the component.</summary>
+            ///<returns type="array">options.disabledDates</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Setting this takes precedence over options.minDate, options.maxDate configuration. Also calling this function removes the configuration of
+            ///options.enabledDates if such exist.</summary>
+            ///<param name="dates" locid="$.fn.datetimepicker.disabledDates_p:dates">Takes an [ string or Date or moment ] of values and allows the user to select only from those days.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return (options.disabledDates ? $.extend({}, options.disabledDates) : options.disabledDates);
+            }
+
+            if (!dates) {
+                options.disabledDates = false;
+                update();
+                return picker;
+            }
+            if (!(dates instanceof Array)) {
+                throw new TypeError('disabledDates() expects an array parameter');
+            }
+            options.disabledDates = indexGivenDates(dates);
+            options.enabledDates = false;
+            update();
+            return picker;
+        };
+
+        picker.enabledDates = function (dates) {
+            ///<signature helpKeyword="$.fn.datetimepicker.enabledDates">
+            ///<summary>Returns an array with the currently set enabled dates on the component.</summary>
+            ///<returns type="array">options.enabledDates</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Setting this takes precedence over options.minDate, options.maxDate configuration. Also calling this function removes the configuration of options.disabledDates if such exist.</summary>
+            ///<param name="dates" locid="$.fn.datetimepicker.enabledDates_p:dates">Takes an [ string or Date or moment ] of values and allows the user to select only from those days.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return (options.enabledDates ? $.extend({}, options.enabledDates) : options.enabledDates);
+            }
+
+            if (!dates) {
+                options.enabledDates = false;
+                update();
+                return picker;
+            }
+            if (!(dates instanceof Array)) {
+                throw new TypeError('enabledDates() expects an array parameter');
+            }
+            options.enabledDates = indexGivenDates(dates);
+            options.disabledDates = false;
+            update();
+            return picker;
+        };
+
+        picker.daysOfWeekDisabled = function (daysOfWeekDisabled) {
+            if (arguments.length === 0) {
+                return options.daysOfWeekDisabled.splice(0);
+            }
+
+            if ((typeof daysOfWeekDisabled === 'boolean') && !daysOfWeekDisabled) {
+                options.daysOfWeekDisabled = false;
+                update();
+                return picker;
+            }
+
+            if (!(daysOfWeekDisabled instanceof Array)) {
+                throw new TypeError('daysOfWeekDisabled() expects an array parameter');
+            }
+            options.daysOfWeekDisabled = daysOfWeekDisabled.reduce(function (previousValue, currentValue) {
+                currentValue = parseInt(currentValue, 10);
+                if (currentValue > 6 || currentValue < 0 || isNaN(currentValue)) {
+                    return previousValue;
+                }
+                if (previousValue.indexOf(currentValue) === -1) {
+                    previousValue.push(currentValue);
+                }
+                return previousValue;
+            }, []).sort();
+            if (options.useCurrent && !options.keepInvalid) {
+                var tries = 0;
+                while (!isValid(date, 'd')) {
+                    date.add(1, 'd');
+                    if (tries === 7) {
+                        throw 'Tried 7 times to find a valid date';
+                    }
+                    tries++;
+                }
+                setValue(date);
+            }
+            update();
+            return picker;
+        };
+
+        picker.maxDate = function (maxDate) {
+            if (arguments.length === 0) {
+                return options.maxDate ? options.maxDate.clone() : options.maxDate;
+            }
+
+            if ((typeof maxDate === 'boolean') && maxDate === false) {
+                options.maxDate = false;
+                update();
+                return picker;
+            }
+
+            if (typeof maxDate === 'string') {
+                if (maxDate === 'now' || maxDate === 'moment') {
+                    maxDate = moment();
+                }
+            }
+
+            var parsedDate = parseInputDate(maxDate);
+
+            if (!parsedDate.isValid()) {
+                throw new TypeError('maxDate() Could not parse date parameter: ' + maxDate);
+            }
+            if (options.minDate && parsedDate.isBefore(options.minDate)) {
+                throw new TypeError('maxDate() date parameter is before options.minDate: ' + parsedDate.format(actualFormat));
+            }
+            options.maxDate = parsedDate;
+            if (options.useCurrent && !options.keepInvalid && date.isAfter(maxDate)) {
+                setValue(options.maxDate);
+            }
+            if (viewDate.isAfter(parsedDate)) {
+                viewDate = parsedDate.clone();
+            }
+            update();
+            return picker;
+        };
+
+        picker.minDate = function (minDate) {
+            if (arguments.length === 0) {
+                return options.minDate ? options.minDate.clone() : options.minDate;
+            }
+
+            if ((typeof minDate === 'boolean') && minDate === false) {
+                options.minDate = false;
+                update();
+                return picker;
+            }
+
+            if (typeof minDate === 'string') {
+                if (minDate === 'now' || minDate === 'moment') {
+                    minDate = moment();
+                }
+            }
+
+            var parsedDate = parseInputDate(minDate);
+
+            if (!parsedDate.isValid()) {
+                throw new TypeError('minDate() Could not parse date parameter: ' + minDate);
+            }
+            if (options.maxDate && parsedDate.isAfter(options.maxDate)) {
+                throw new TypeError('minDate() date parameter is after options.maxDate: ' + parsedDate.format(actualFormat));
+            }
+            options.minDate = parsedDate;
+            if (options.useCurrent && !options.keepInvalid && date.isBefore(minDate)) {
+                setValue(options.minDate);
+            }
+            if (viewDate.isBefore(parsedDate)) {
+                viewDate = parsedDate.clone();
+            }
+            update();
+            return picker;
+        };
+
+        picker.defaultDate = function (defaultDate) {
+            ///<signature helpKeyword="$.fn.datetimepicker.defaultDate">
+            ///<summary>Returns a moment with the options.defaultDate option configuration or false if not set</summary>
+            ///<returns type="Moment">date.clone()</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Will set the picker's inital date. If a boolean:false value is passed the options.defaultDate parameter is cleared.</summary>
+            ///<param name="defaultDate" locid="$.fn.datetimepicker.defaultDate_p:defaultDate">Takes a string, Date, moment, boolean:false</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return options.defaultDate ? options.defaultDate.clone() : options.defaultDate;
+            }
+            if (!defaultDate) {
+                options.defaultDate = false;
+                return picker;
+            }
+
+            if (typeof defaultDate === 'string') {
+                if (defaultDate === 'now' || defaultDate === 'moment') {
+                    defaultDate = moment();
+                }
+            }
+
+            var parsedDate = parseInputDate(defaultDate);
+            if (!parsedDate.isValid()) {
+                throw new TypeError('defaultDate() Could not parse date parameter: ' + defaultDate);
+            }
+            if (!isValid(parsedDate)) {
+                throw new TypeError('defaultDate() date passed is invalid according to component setup validations');
+            }
+
+            options.defaultDate = parsedDate;
+
+            if (options.defaultDate && options.inline || (input.val().trim() === '' && input.attr('placeholder') === undefined)) {
+                setValue(options.defaultDate);
+            }
+            return picker;
+        };
+
+        picker.locale = function (locale) {
+            if (arguments.length === 0) {
+                return options.locale;
+            }
+
+            if (!moment.localeData(locale)) {
+                throw new TypeError('locale() locale ' + locale + ' is not loaded from moment locales!');
+            }
+
+            options.locale = locale;
+            date.locale(options.locale);
+            viewDate.locale(options.locale);
+
+            if (actualFormat) {
+                initFormatting(); // reinit formatting
+            }
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.stepping = function (stepping) {
+            if (arguments.length === 0) {
+                return options.stepping;
+            }
+
+            stepping = parseInt(stepping, 10);
+            if (isNaN(stepping) || stepping < 1) {
+                stepping = 1;
+            }
+            options.stepping = stepping;
+            return picker;
+        };
+
+        picker.useCurrent = function (useCurrent) {
+            var useCurrentOptions = ['year', 'month', 'day', 'hour', 'minute'];
+            if (arguments.length === 0) {
+                return options.useCurrent;
+            }
+
+            if ((typeof useCurrent !== 'boolean') && (typeof useCurrent !== 'string')) {
+                throw new TypeError('useCurrent() expects a boolean or string parameter');
+            }
+            if (typeof useCurrent === 'string' && useCurrentOptions.indexOf(useCurrent.toLowerCase()) === -1) {
+                throw new TypeError('useCurrent() expects a string parameter of ' + useCurrentOptions.join(', '));
+            }
+            options.useCurrent = useCurrent;
+            return picker;
+        };
+
+        picker.collapse = function (collapse) {
+            if (arguments.length === 0) {
+                return options.collapse;
+            }
+
+            if (typeof collapse !== 'boolean') {
+                throw new TypeError('collapse() expects a boolean parameter');
+            }
+            if (options.collapse === collapse) {
+                return picker;
+            }
+            options.collapse = collapse;
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.icons = function (icons) {
+            if (arguments.length === 0) {
+                return $.extend({}, options.icons);
+            }
+
+            if (!(icons instanceof Object)) {
+                throw new TypeError('icons() expects parameter to be an Object');
+            }
+            $.extend(options.icons, icons);
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.useStrict = function (useStrict) {
+            if (arguments.length === 0) {
+                return options.useStrict;
+            }
+
+            if (typeof useStrict !== 'boolean') {
+                throw new TypeError('useStrict() expects a boolean parameter');
+            }
+            options.useStrict = useStrict;
+            return picker;
+        };
+
+        picker.sideBySide = function (sideBySide) {
+            if (arguments.length === 0) {
+                return options.sideBySide;
+            }
+
+            if (typeof sideBySide !== 'boolean') {
+                throw new TypeError('sideBySide() expects a boolean parameter');
+            }
+            options.sideBySide = sideBySide;
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.viewMode = function (viewMode) {
+            if (arguments.length === 0) {
+                return options.viewMode;
+            }
+
+            if (typeof viewMode !== 'string') {
+                throw new TypeError('viewMode() expects a string parameter');
+            }
+
+            if (viewModes.indexOf(viewMode) === -1) {
+                throw new TypeError('viewMode() parameter must be one of (' + viewModes.join(', ') + ') value');
+            }
+
+            options.viewMode = viewMode;
+            currentViewMode = Math.max(viewModes.indexOf(viewMode), minViewModeNumber);
+
+            showMode();
+            return picker;
+        };
+
+        picker.toolbarPlacement = function (toolbarPlacement) {
+            if (arguments.length === 0) {
+                return options.toolbarPlacement;
+            }
+
+            if (typeof toolbarPlacement !== 'string') {
+                throw new TypeError('toolbarPlacement() expects a string parameter');
+            }
+            if (toolbarPlacements.indexOf(toolbarPlacement) === -1) {
+                throw new TypeError('toolbarPlacement() parameter must be one of (' + toolbarPlacements.join(', ') + ') value');
+            }
+            options.toolbarPlacement = toolbarPlacement;
+
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.widgetPositioning = function (widgetPositioning) {
+            if (arguments.length === 0) {
+                return $.extend({}, options.widgetPositioning);
+            }
+
+            if (({}).toString.call(widgetPositioning) !== '[object Object]') {
+                throw new TypeError('widgetPositioning() expects an object variable');
+            }
+            if (widgetPositioning.horizontal) {
+                if (typeof widgetPositioning.horizontal !== 'string') {
+                    throw new TypeError('widgetPositioning() horizontal variable must be a string');
+                }
+                widgetPositioning.horizontal = widgetPositioning.horizontal.toLowerCase();
+                if (horizontalModes.indexOf(widgetPositioning.horizontal) === -1) {
+                    throw new TypeError('widgetPositioning() expects horizontal parameter to be one of (' + horizontalModes.join(', ') + ')');
+                }
+                options.widgetPositioning.horizontal = widgetPositioning.horizontal;
+            }
+            if (widgetPositioning.vertical) {
+                if (typeof widgetPositioning.vertical !== 'string') {
+                    throw new TypeError('widgetPositioning() vertical variable must be a string');
+                }
+                widgetPositioning.vertical = widgetPositioning.vertical.toLowerCase();
+                if (verticalModes.indexOf(widgetPositioning.vertical) === -1) {
+                    throw new TypeError('widgetPositioning() expects vertical parameter to be one of (' + verticalModes.join(', ') + ')');
+                }
+                options.widgetPositioning.vertical = widgetPositioning.vertical;
+            }
+            update();
+            return picker;
+        };
+
+        picker.calendarWeeks = function (calendarWeeks) {
+            if (arguments.length === 0) {
+                return options.calendarWeeks;
+            }
+
+            if (typeof calendarWeeks !== 'boolean') {
+                throw new TypeError('calendarWeeks() expects parameter to be a boolean value');
+            }
+
+            options.calendarWeeks = calendarWeeks;
+            update();
+            return picker;
+        };
+
+        picker.showTodayButton = function (showTodayButton) {
+            if (arguments.length === 0) {
+                return options.showTodayButton;
+            }
+
+            if (typeof showTodayButton !== 'boolean') {
+                throw new TypeError('showTodayButton() expects a boolean parameter');
+            }
+
+            options.showTodayButton = showTodayButton;
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.showClear = function (showClear) {
+            if (arguments.length === 0) {
+                return options.showClear;
+            }
+
+            if (typeof showClear !== 'boolean') {
+                throw new TypeError('showClear() expects a boolean parameter');
+            }
+
+            options.showClear = showClear;
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.widgetParent = function (widgetParent) {
+            if (arguments.length === 0) {
+                return options.widgetParent;
+            }
+
+            if (typeof widgetParent === 'string') {
+                widgetParent = $(widgetParent);
+            }
+
+            if (widgetParent !== null && (typeof widgetParent !== 'string' && !(widgetParent instanceof $))) {
+                throw new TypeError('widgetParent() expects a string or a jQuery object parameter');
+            }
+
+            options.widgetParent = widgetParent;
+            if (widget) {
+                hide();
+                show();
+            }
+            return picker;
+        };
+
+        picker.keepOpen = function (keepOpen) {
+            if (arguments.length === 0) {
+                return options.keepOpen;
+            }
+
+            if (typeof keepOpen !== 'boolean') {
+                throw new TypeError('keepOpen() expects a boolean parameter');
+            }
+
+            options.keepOpen = keepOpen;
+            return picker;
+        };
+
+        picker.focusOnShow = function (focusOnShow) {
+            if (arguments.length === 0) {
+                return options.focusOnShow;
+            }
+
+            if (typeof focusOnShow !== 'boolean') {
+                throw new TypeError('focusOnShow() expects a boolean parameter');
+            }
+
+            options.focusOnShow = focusOnShow;
+            return picker;
+        };
+
+        picker.inline = function (inline) {
+            if (arguments.length === 0) {
+                return options.inline;
+            }
+
+            if (typeof inline !== 'boolean') {
+                throw new TypeError('inline() expects a boolean parameter');
+            }
+
+            options.inline = inline;
+            return picker;
+        };
+
+        picker.clear = function () {
+            clear();
+            return picker;
+        };
+
+        picker.keyBinds = function (keyBinds) {
+            options.keyBinds = keyBinds;
+            return picker;
+        };
+
+        picker.debug = function (debug) {
+            if (typeof debug !== 'boolean') {
+                throw new TypeError('debug() expects a boolean parameter');
+            }
+
+            options.debug = debug;
+            return picker;
+        };
+
+        picker.allowInputToggle = function (allowInputToggle) {
+            if (arguments.length === 0) {
+                return options.allowInputToggle;
+            }
+
+            if (typeof allowInputToggle !== 'boolean') {
+                throw new TypeError('allowInputToggle() expects a boolean parameter');
+            }
+
+            options.allowInputToggle = allowInputToggle;
+            return picker;
+        };
+
+        picker.showClose = function (showClose) {
+            if (arguments.length === 0) {
+                return options.showClose;
+            }
+
+            if (typeof showClose !== 'boolean') {
+                throw new TypeError('showClose() expects a boolean parameter');
+            }
+
+            options.showClose = showClose;
+            return picker;
+        };
+
+        picker.keepInvalid = function (keepInvalid) {
+            if (arguments.length === 0) {
+                return options.keepInvalid;
+            }
+
+            if (typeof keepInvalid !== 'boolean') {
+                throw new TypeError('keepInvalid() expects a boolean parameter');
+            }
+            options.keepInvalid = keepInvalid;
+            return picker;
+        };
+
+        picker.datepickerInput = function (datepickerInput) {
+            if (arguments.length === 0) {
+                return options.datepickerInput;
+            }
+
+            if (typeof datepickerInput !== 'string') {
+                throw new TypeError('datepickerInput() expects a string parameter');
+            }
+
+            options.datepickerInput = datepickerInput;
+            return picker;
+        };
+
+        picker.parseInputDate = function (parseInputDate) {
+            if (arguments.length === 0) {
+                return options.parseInputDate;
+            }
+
+            if (typeof parseInputDate !== 'function') {
+                throw new TypeError('parseInputDate() sholud be as function');
+            }
+
+            options.parseInputDate = parseInputDate;
+
+            return picker;
+        };
+
+        picker.disabledTimeIntervals = function (disabledTimeIntervals) {
+            ///<signature helpKeyword="$.fn.datetimepicker.disabledTimeIntervals">
+            ///<summary>Returns an array with the currently set disabled dates on the component.</summary>
+            ///<returns type="array">options.disabledTimeIntervals</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Setting this takes precedence over options.minDate, options.maxDate configuration. Also calling this function removes the configuration of
+            ///options.enabledDates if such exist.</summary>
+            ///<param name="dates" locid="$.fn.datetimepicker.disabledTimeIntervals_p:dates">Takes an [ string or Date or moment ] of values and allows the user to select only from those days.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return (options.disabledTimeIntervals ? $.extend({}, options.disabledTimeIntervals) : options.disabledTimeIntervals);
+            }
+
+            if (!disabledTimeIntervals) {
+                options.disabledTimeIntervals = false;
+                update();
+                return picker;
+            }
+            if (!(disabledTimeIntervals instanceof Array)) {
+                throw new TypeError('disabledTimeIntervals() expects an array parameter');
+            }
+            options.disabledTimeIntervals = disabledTimeIntervals;
+            update();
+            return picker;
+        };
+
+        picker.disabledHours = function (hours) {
+            ///<signature helpKeyword="$.fn.datetimepicker.disabledHours">
+            ///<summary>Returns an array with the currently set disabled hours on the component.</summary>
+            ///<returns type="array">options.disabledHours</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Setting this takes precedence over options.minDate, options.maxDate configuration. Also calling this function removes the configuration of
+            ///options.enabledHours if such exist.</summary>
+            ///<param name="hours" locid="$.fn.datetimepicker.disabledHours_p:hours">Takes an [ int ] of values and disallows the user to select only from those hours.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return (options.disabledHours ? $.extend({}, options.disabledHours) : options.disabledHours);
+            }
+
+            if (!hours) {
+                options.disabledHours = false;
+                update();
+                return picker;
+            }
+            if (!(hours instanceof Array)) {
+                throw new TypeError('disabledHours() expects an array parameter');
+            }
+            options.disabledHours = indexGivenHours(hours);
+            options.enabledHours = false;
+            if (options.useCurrent && !options.keepInvalid) {
+                var tries = 0;
+                while (!isValid(date, 'h')) {
+                    date.add(1, 'h');
+                    if (tries === 24) {
+                        throw 'Tried 24 times to find a valid date';
+                    }
+                    tries++;
+                }
+                setValue(date);
+            }
+            update();
+            return picker;
+        };
+
+        picker.enabledHours = function (hours) {
+            ///<signature helpKeyword="$.fn.datetimepicker.enabledHours">
+            ///<summary>Returns an array with the currently set enabled hours on the component.</summary>
+            ///<returns type="array">options.enabledHours</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Setting this takes precedence over options.minDate, options.maxDate configuration. Also calling this function removes the configuration of options.disabledHours if such exist.</summary>
+            ///<param name="hours" locid="$.fn.datetimepicker.enabledHours_p:hours">Takes an [ int ] of values and allows the user to select only from those hours.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return (options.enabledHours ? $.extend({}, options.enabledHours) : options.enabledHours);
+            }
+
+            if (!hours) {
+                options.enabledHours = false;
+                update();
+                return picker;
+            }
+            if (!(hours instanceof Array)) {
+                throw new TypeError('enabledHours() expects an array parameter');
+            }
+            options.enabledHours = indexGivenHours(hours);
+            options.disabledHours = false;
+            if (options.useCurrent && !options.keepInvalid) {
+                var tries = 0;
+                while (!isValid(date, 'h')) {
+                    date.add(1, 'h');
+                    if (tries === 24) {
+                        throw 'Tried 24 times to find a valid date';
+                    }
+                    tries++;
+                }
+                setValue(date);
+            }
+            update();
+            return picker;
+        };
+
+        picker.viewDate = function (newDate) {
+            ///<signature helpKeyword="$.fn.datetimepicker.viewDate">
+            ///<summary>Returns the component's model current viewDate, a moment object or null if not set.</summary>
+            ///<returns type="Moment">viewDate.clone()</returns>
+            ///</signature>
+            ///<signature>
+            ///<summary>Sets the components model current moment to it. Passing a null value unsets the components model current moment. Parsing of the newDate parameter is made using moment library with the options.format and options.useStrict components configuration.</summary>
+            ///<param name="newDate" locid="$.fn.datetimepicker.date_p:newDate">Takes string, viewDate, moment, null parameter.</param>
+            ///</signature>
+            if (arguments.length === 0) {
+                return viewDate.clone();
+            }
+
+            if (!newDate) {
+                viewDate = date.clone();
+                return picker;
+            }
+
+            if (typeof newDate !== 'string' && !moment.isMoment(newDate) && !(newDate instanceof Date)) {
+                throw new TypeError('viewDate() parameter must be one of [string, moment or Date]');
+            }
+
+            viewDate = parseInputDate(newDate);
+            viewUpdate();
+            return picker;
+        };
+
+        // initializing element and component attributes
+        if (element.is('input')) {
+            input = element;
+        } else {
+            input = element.find(options.datepickerInput);
+            if (input.size() === 0) {
+                input = element.find('input');
+            } else if (!input.is('input')) {
+                throw new Error('CSS class "' + options.datepickerInput + '" cannot be applied to non input element');
+            }
+        }
+
+        if (element.hasClass('input-group')) {
+            // in case there is more then one 'input-group-addon' Issue #48
+            if (element.find('.datepickerbutton').size() === 0) {
+                component = element.find('[class^="input-group-"]');
+            } else {
+                component = element.find('.datepickerbutton');
+            }
+        }
+
+        if (!options.inline && !input.is('input')) {
+            throw new Error('Could not initialize DateTimePicker without an input element');
+        }
+
+        $.extend(true, options, dataToOptions());
+
+        picker.options(options);
+
+        initFormatting();
+
+        attachDatePickerElementEvents();
+
+        if (input.prop('disabled')) {
+            picker.disable();
+        }
+        if (input.is('input') && input.val().trim().length !== 0) {
+            setValue(parseInputDate(input.val().trim()));
+        }
+        else if (options.defaultDate && input.attr('placeholder') === undefined) {
+            setValue(options.defaultDate);
+        }
+        if (options.inline) {
+            show();
+        }
+        return picker;
+    };
+
+    /********************************************************************************
+     *
+     * jQuery plugin constructor and defaults object
+     *
+     ********************************************************************************/
+
+    $.fn.datetimepicker = function (options) {
+        return this.each(function () {
+            var $this = $(this);
+            if (!$this.data('DateTimePicker')) {
+                // create a private copy of the defaults object
+                options = $.extend(true, {}, $.fn.datetimepicker.defaults, options);
+                $this.data('DateTimePicker', dateTimePicker($this, options));
+            }
+        });
+    };
+
+    $.fn.datetimepicker.defaults = {
+        format: false,
+        dayViewHeaderFormat: 'MMMM YYYY',
+        extraFormats: false,
+        stepping: 1,
+        minDate: false,
+        maxDate: false,
+        useCurrent: true,
+        collapse: true,
+        locale: moment.locale(),
+        defaultDate: false,
+        disabledDates: false,
+        enabledDates: false,
+        icons: {
+            time: 'glyphicon glyphicon-time',
+            date: 'glyphicon glyphicon-calendar',
+            up: 'glyphicon glyphicon-chevron-up',
+            down: 'glyphicon glyphicon-chevron-down',
+            previous: 'glyphicon glyphicon-chevron-left',
+            next: 'glyphicon glyphicon-chevron-right',
+            today: 'glyphicon glyphicon-screenshot',
+            clear: 'glyphicon glyphicon-trash',
+            close: 'glyphicon glyphicon-remove'
+        },
+        useStrict: false,
+        sideBySide: false,
+        daysOfWeekDisabled: false,
+        calendarWeeks: false,
+        viewMode: 'days',
+        toolbarPlacement: 'default',
+        showTodayButton: false,
+        showClear: false,
+        showClose: false,
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'auto'
+        },
+        widgetParent: null,
+        ignoreReadonly: false,
+        keepOpen: false,
+        focusOnShow: true,
+        inline: false,
+        keepInvalid: false,
+        datepickerInput: '.datepickerinput',
+        keyBinds: {
+            up: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().subtract(7, 'd'));
+                } else {
+                    this.date(d.clone().add(1, 'm'));
+                }
+            },
+            down: function (widget) {
+                if (!widget) {
+                    this.show();
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().add(7, 'd'));
+                } else {
+                    this.date(d.clone().subtract(1, 'm'));
+                }
+            },
+            'control up': function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().subtract(1, 'y'));
+                } else {
+                    this.date(d.clone().add(1, 'h'));
+                }
+            },
+            'control down': function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().add(1, 'y'));
+                } else {
+                    this.date(d.clone().subtract(1, 'h'));
+                }
+            },
+            left: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().subtract(1, 'd'));
+                }
+            },
+            right: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().add(1, 'd'));
+                }
+            },
+            pageUp: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().subtract(1, 'M'));
+                }
+            },
+            pageDown: function (widget) {
+                if (!widget) {
+                    return;
+                }
+                var d = this.date() || moment();
+                if (widget.find('.datepicker').is(':visible')) {
+                    this.date(d.clone().add(1, 'M'));
+                }
+            },
+            enter: function () {
+                this.hide();
+            },
+            escape: function () {
+                this.hide();
+            },
+            //tab: function (widget) { //this break the flow of the form. disabling for now
+            //    var toggle = widget.find('.picker-switch a[data-action="togglePicker"]');
+            //    if(toggle.length > 0) toggle.click();
+            //},
+            'control space': function (widget) {
+                if (widget.find('.timepicker').is(':visible')) {
+                    widget.find('.btn[data-action="togglePeriod"]').click();
+                }
+            },
+            t: function () {
+                this.date(moment());
+            },
+            'delete': function () {
+                this.clear();
+            }
+        },
+        debug: false,
+        allowInputToggle: false,
+        disabledTimeIntervals: false,
+        disabledHours: false,
+        enabledHours: false,
+        viewDate: false
+    };
+
+    
+}));
+
+;/*!
+Chosen, a Select Box Enhancer for jQuery and Prototype
+by Patrick Filler for Harvest, http://getharvest.com
+
+Version 1.4.2
+Full source at https://github.com/harvesthq/chosen
+Copyright (c) 2011-2015 Harvest http://getharvest.com
+
+MIT License, https://github.com/harvesthq/chosen/blob/master/LICENSE.md
+This file is generated by `grunt build`, do not edit it by hand.
+*/
+
+(function() {
+  var $, AbstractChosen, Chosen, SelectParser, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  SelectParser = (function() {
+    function SelectParser() {
+      this.options_index = 0;
+      this.parsed = [];
+    }
+
+    SelectParser.prototype.add_node = function(child) {
+      if (child.nodeName.toUpperCase() === "OPTGROUP") {
+        return this.add_group(child);
+      } else {
+        return this.add_option(child);
+      }
+    };
+
+    SelectParser.prototype.add_group = function(group) {
+      var group_position, option, _i, _len, _ref, _results;
+      group_position = this.parsed.length;
+      this.parsed.push({
+        array_index: group_position,
+        group: true,
+        label: this.escapeExpression(group.label),
+        title: group.title ? group.title : void 0,
+        children: 0,
+        disabled: group.disabled,
+        classes: group.className
+      });
+      _ref = group.childNodes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        _results.push(this.add_option(option, group_position, group.disabled));
+      }
+      return _results;
+    };
+
+    SelectParser.prototype.add_option = function(option, group_position, group_disabled) {
+      if (option.nodeName.toUpperCase() === "OPTION") {
+        if (option.text !== "") {
+          if (group_position != null) {
+            this.parsed[group_position].children += 1;
+          }
+          this.parsed.push({
+            array_index: this.parsed.length,
+            options_index: this.options_index,
+            value: option.value,
+            text: option.text,
+            html: option.innerHTML,
+            title: option.title ? option.title : void 0,
+            selected: option.selected,
+            disabled: group_disabled === true ? group_disabled : option.disabled,
+            group_array_index: group_position,
+            group_label: group_position != null ? this.parsed[group_position].label : null,
+            classes: option.className,
+            style: option.style.cssText
+          });
+        } else {
+          this.parsed.push({
+            array_index: this.parsed.length,
+            options_index: this.options_index,
+            empty: true
+          });
+        }
+        return this.options_index += 1;
+      }
+    };
+
+    SelectParser.prototype.escapeExpression = function(text) {
+      var map, unsafe_chars;
+      if ((text == null) || text === false) {
+        return "";
+      }
+      if (!/[\&\<\>\"\'\`]/.test(text)) {
+        return text;
+      }
+      map = {
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#x27;",
+        "`": "&#x60;"
+      };
+      unsafe_chars = /&(?!\w+;)|[\<\>\"\'\`]/g;
+      return text.replace(unsafe_chars, function(chr) {
+        return map[chr] || "&amp;";
+      });
+    };
+
+    return SelectParser;
+
+  })();
+
+  SelectParser.select_to_array = function(select) {
+    var child, parser, _i, _len, _ref;
+    parser = new SelectParser();
+    _ref = select.childNodes;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      parser.add_node(child);
+    }
+    return parser.parsed;
+  };
+
+  AbstractChosen = (function() {
+    function AbstractChosen(form_field, options) {
+      this.form_field = form_field;
+      this.options = options != null ? options : {};
+      if (!AbstractChosen.browser_is_supported()) {
+        return;
+      }
+      this.is_multiple = this.form_field.multiple;
+      this.set_default_text();
+      this.set_default_values();
+      this.setup();
+      this.set_up_html();
+      this.register_observers();
+      this.on_ready();
+    }
+
+    AbstractChosen.prototype.set_default_values = function() {
+      var _this = this;
+      this.click_test_action = function(evt) {
+        return _this.test_active_click(evt);
+      };
+      this.activate_action = function(evt) {
+        return _this.activate_field(evt);
+      };
+      this.active_field = false;
+      this.mouse_on_container = false;
+      this.results_showing = false;
+      this.result_highlighted = null;
+      this.allow_single_deselect = (this.options.allow_single_deselect != null) && (this.form_field.options[0] != null) && this.form_field.options[0].text === "" ? this.options.allow_single_deselect : false;
+      this.disable_search_threshold = this.options.disable_search_threshold || 0;
+      this.disable_search = this.options.disable_search || false;
+      this.enable_split_word_search = this.options.enable_split_word_search != null ? this.options.enable_split_word_search : true;
+      this.group_search = this.options.group_search != null ? this.options.group_search : true;
+      this.search_contains = this.options.search_contains || false;
+      this.single_backstroke_delete = this.options.single_backstroke_delete != null ? this.options.single_backstroke_delete : true;
+      this.max_selected_options = this.options.max_selected_options || Infinity;
+      this.inherit_select_classes = this.options.inherit_select_classes || false;
+      this.display_selected_options = this.options.display_selected_options != null ? this.options.display_selected_options : true;
+      this.display_disabled_options = this.options.display_disabled_options != null ? this.options.display_disabled_options : true;
+      return this.include_group_label_in_selected = this.options.include_group_label_in_selected || false;
+    };
+
+    AbstractChosen.prototype.set_default_text = function() {
+      if (this.form_field.getAttribute("data-placeholder")) {
+        this.default_text = this.form_field.getAttribute("data-placeholder");
+      } else if (this.is_multiple) {
+        this.default_text = this.options.placeholder_text_multiple || this.options.placeholder_text || AbstractChosen.default_multiple_text;
+      } else {
+        this.default_text = this.options.placeholder_text_single || this.options.placeholder_text || AbstractChosen.default_single_text;
+      }
+      return this.results_none_found = this.form_field.getAttribute("data-no_results_text") || this.options.no_results_text || AbstractChosen.default_no_result_text;
+    };
+
+    AbstractChosen.prototype.choice_label = function(item) {
+      if (this.include_group_label_in_selected && (item.group_label != null)) {
+        return "<b class='group-name'>" + item.group_label + "</b>" + item.html;
+      } else {
+        return item.html;
+      }
+    };
+
+    AbstractChosen.prototype.mouse_enter = function() {
+      return this.mouse_on_container = true;
+    };
+
+    AbstractChosen.prototype.mouse_leave = function() {
+      return this.mouse_on_container = false;
+    };
+
+    AbstractChosen.prototype.input_focus = function(evt) {
+      var _this = this;
+      if (this.is_multiple) {
+        if (!this.active_field) {
+          return setTimeout((function() {
+            return _this.container_mousedown();
+          }), 50);
+        }
+      } else {
+        if (!this.active_field) {
+          return this.activate_field();
+        }
+      }
+    };
+
+    AbstractChosen.prototype.input_blur = function(evt) {
+      var _this = this;
+      if (!this.mouse_on_container) {
+        this.active_field = false;
+        return setTimeout((function() {
+          return _this.blur_test();
+        }), 100);
+      }
+    };
+
+    AbstractChosen.prototype.results_option_build = function(options) {
+      var content, data, _i, _len, _ref;
+      content = '';
+      _ref = this.results_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        if (data.group) {
+          content += this.result_add_group(data);
+        } else {
+          content += this.result_add_option(data);
+        }
+        if (options != null ? options.first : void 0) {
+          if (data.selected && this.is_multiple) {
+            this.choice_build(data);
+          } else if (data.selected && !this.is_multiple) {
+            this.single_set_selected_text(this.choice_label(data));
+          }
+        }
+      }
+      return content;
+    };
+
+    AbstractChosen.prototype.result_add_option = function(option) {
+      var classes, option_el;
+      if (!option.search_match) {
+        return '';
+      }
+      if (!this.include_option_in_results(option)) {
+        return '';
+      }
+      classes = [];
+      if (!option.disabled && !(option.selected && this.is_multiple)) {
+        classes.push("active-result");
+      }
+      if (option.disabled && !(option.selected && this.is_multiple)) {
+        classes.push("disabled-result");
+      }
+      if (option.selected) {
+        classes.push("result-selected");
+      }
+      if (option.group_array_index != null) {
+        classes.push("group-option");
+      }
+      if (option.classes !== "") {
+        classes.push(option.classes);
+      }
+      option_el = document.createElement("li");
+      option_el.className = classes.join(" ");
+      option_el.style.cssText = option.style;
+      option_el.setAttribute("data-option-array-index", option.array_index);
+      option_el.innerHTML = option.search_text;
+      if (option.title) {
+        option_el.title = option.title;
+      }
+      return this.outerHTML(option_el);
+    };
+
+    AbstractChosen.prototype.result_add_group = function(group) {
+      var classes, group_el;
+      if (!(group.search_match || group.group_match)) {
+        return '';
+      }
+      if (!(group.active_options > 0)) {
+        return '';
+      }
+      classes = [];
+      classes.push("group-result");
+      if (group.classes) {
+        classes.push(group.classes);
+      }
+      group_el = document.createElement("li");
+      group_el.className = classes.join(" ");
+      group_el.innerHTML = group.search_text;
+      if (group.title) {
+        group_el.title = group.title;
+      }
+      return this.outerHTML(group_el);
+    };
+
+    AbstractChosen.prototype.results_update_field = function() {
+      this.set_default_text();
+      if (!this.is_multiple) {
+        this.results_reset_cleanup();
+      }
+      this.result_clear_highlight();
+      this.results_build();
+      if (this.results_showing) {
+        return this.winnow_results();
+      }
+    };
+
+    AbstractChosen.prototype.reset_single_select_options = function() {
+      var result, _i, _len, _ref, _results;
+      _ref = this.results_data;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        result = _ref[_i];
+        if (result.selected) {
+          _results.push(result.selected = false);
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    AbstractChosen.prototype.results_toggle = function() {
+      if (this.results_showing) {
+        return this.results_hide();
+      } else {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.results_search = function(evt) {
+      if (this.results_showing) {
+        return this.winnow_results();
+      } else {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.winnow_results = function() {
+      var escapedSearchText, option, regex, results, results_group, searchText, startpos, text, zregex, _i, _len, _ref;
+      this.no_results_clear();
+      results = 0;
+      searchText = this.get_search_text();
+      escapedSearchText = searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      zregex = new RegExp(escapedSearchText, 'i');
+      regex = this.get_search_regex(escapedSearchText);
+      _ref = this.results_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        option.search_match = false;
+        results_group = null;
+        if (this.include_option_in_results(option)) {
+          if (option.group) {
+            option.group_match = false;
+            option.active_options = 0;
+          }
+          if ((option.group_array_index != null) && this.results_data[option.group_array_index]) {
+            results_group = this.results_data[option.group_array_index];
+            if (results_group.active_options === 0 && results_group.search_match) {
+              results += 1;
+            }
+            results_group.active_options += 1;
+          }
+          option.search_text = option.group ? option.label : option.html;
+          if (!(option.group && !this.group_search)) {
+            option.search_match = this.search_string_match(option.search_text, regex);
+            if (option.search_match && !option.group) {
+              results += 1;
+            }
+            if (option.search_match) {
+              if (searchText.length) {
+                startpos = option.search_text.search(zregex);
+                text = option.search_text.substr(0, startpos + searchText.length) + '</em>' + option.search_text.substr(startpos + searchText.length);
+                option.search_text = text.substr(0, startpos) + '<em>' + text.substr(startpos);
+              }
+              if (results_group != null) {
+                results_group.group_match = true;
+              }
+            } else if ((option.group_array_index != null) && this.results_data[option.group_array_index].search_match) {
+              option.search_match = true;
+            }
+          }
+        }
+      }
+      this.result_clear_highlight();
+      if (results < 1 && searchText.length) {
+        this.update_results_content("");
+        return this.no_results(searchText);
+      } else {
+        this.update_results_content(this.results_option_build());
+        return this.winnow_results_set_highlight();
+      }
+    };
+
+    AbstractChosen.prototype.get_search_regex = function(escaped_search_string) {
+      var regex_anchor;
+      regex_anchor = this.search_contains ? "" : "^";
+      return new RegExp(regex_anchor + escaped_search_string, 'i');
+    };
+
+    AbstractChosen.prototype.search_string_match = function(search_string, regex) {
+      var part, parts, _i, _len;
+      if (regex.test(search_string)) {
+        return true;
+      } else if (this.enable_split_word_search && (search_string.indexOf(" ") >= 0 || search_string.indexOf("[") === 0)) {
+        parts = search_string.replace(/\[|\]/g, "").split(" ");
+        if (parts.length) {
+          for (_i = 0, _len = parts.length; _i < _len; _i++) {
+            part = parts[_i];
+            if (regex.test(part)) {
+              return true;
+            }
+          }
+        }
+      }
+    };
+
+    AbstractChosen.prototype.choices_count = function() {
+      var option, _i, _len, _ref;
+      if (this.selected_option_count != null) {
+        return this.selected_option_count;
+      }
+      this.selected_option_count = 0;
+      _ref = this.form_field.options;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        if (option.selected) {
+          this.selected_option_count += 1;
+        }
+      }
+      return this.selected_option_count;
+    };
+
+    AbstractChosen.prototype.choices_click = function(evt) {
+      evt.preventDefault();
+      if (!(this.results_showing || this.is_disabled)) {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.keyup_checker = function(evt) {
+      var stroke, _ref;
+      stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
+      this.search_field_scale();
+      switch (stroke) {
+        case 8:
+          if (this.is_multiple && this.backstroke_length < 1 && this.choices_count() > 0) {
+            return this.keydown_backstroke();
+          } else if (!this.pending_backstroke) {
+            this.result_clear_highlight();
+            return this.results_search();
+          }
+          break;
+        case 13:
+          evt.preventDefault();
+          if (this.results_showing) {
+            return this.result_select(evt);
+          }
+          break;
+        case 27:
+          if (this.results_showing) {
+            this.results_hide();
+          }
+          return true;
+        case 9:
+        case 38:
+        case 40:
+        case 16:
+        case 91:
+        case 17:
+          break;
+        default:
+          return this.results_search();
+      }
+    };
+
+    AbstractChosen.prototype.clipboard_event_checker = function(evt) {
+      var _this = this;
+      return setTimeout((function() {
+        return _this.results_search();
+      }), 50);
+    };
+
+    AbstractChosen.prototype.container_width = function() {
+      if (this.options.width != null) {
+        return this.options.width;
+      } else {
+        return "" + this.form_field.offsetWidth + "px";
+      }
+    };
+
+    AbstractChosen.prototype.include_option_in_results = function(option) {
+      if (this.is_multiple && (!this.display_selected_options && option.selected)) {
+        return false;
+      }
+      if (!this.display_disabled_options && option.disabled) {
+        return false;
+      }
+      if (option.empty) {
+        return false;
+      }
+      return true;
+    };
+
+    AbstractChosen.prototype.search_results_touchstart = function(evt) {
+      this.touch_started = true;
+      return this.search_results_mouseover(evt);
+    };
+
+    AbstractChosen.prototype.search_results_touchmove = function(evt) {
+      this.touch_started = false;
+      return this.search_results_mouseout(evt);
+    };
+
+    AbstractChosen.prototype.search_results_touchend = function(evt) {
+      if (this.touch_started) {
+        return this.search_results_mouseup(evt);
+      }
+    };
+
+    AbstractChosen.prototype.outerHTML = function(element) {
+      var tmp;
+      if (element.outerHTML) {
+        return element.outerHTML;
+      }
+      tmp = document.createElement("div");
+      tmp.appendChild(element);
+      return tmp.innerHTML;
+    };
+
+    AbstractChosen.browser_is_supported = function() {
+      if (window.navigator.appName === "Microsoft Internet Explorer") {
+        return document.documentMode >= 8;
+      }
+      if (/iP(od|hone)/i.test(window.navigator.userAgent)) {
+        return false;
+      }
+      if (/Android/i.test(window.navigator.userAgent)) {
+        if (/Mobile/i.test(window.navigator.userAgent)) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    AbstractChosen.default_multiple_text = "Select Some Options";
+
+    AbstractChosen.default_single_text = "Select an Option";
+
+    AbstractChosen.default_no_result_text = "No results match";
+
+    return AbstractChosen;
+
+  })();
+
+  $ = jQuery;
+
+  $.fn.extend({
+    chosen: function(options) {
+      if (!AbstractChosen.browser_is_supported()) {
+        return this;
+      }
+      return this.each(function(input_field) {
+        var $this, chosen;
+        $this = $(this);
+        chosen = $this.data('chosen');
+        if (options === 'destroy' && chosen instanceof Chosen) {
+          chosen.destroy();
+        } else if (!(chosen instanceof Chosen)) {
+          $this.data('chosen', new Chosen(this, options));
+        }
+      });
+    }
+  });
+
+  Chosen = (function(_super) {
+    __extends(Chosen, _super);
+
+    function Chosen() {
+      _ref = Chosen.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Chosen.prototype.setup = function() {
+      this.form_field_jq = $(this.form_field);
+      this.current_selectedIndex = this.form_field.selectedIndex;
+      return this.is_rtl = this.form_field_jq.hasClass("chosen-rtl");
+    };
+
+    Chosen.prototype.set_up_html = function() {
+      var container_classes, container_props;
+      container_classes = ["chosen-container"];
+      container_classes.push("chosen-container-" + (this.is_multiple ? "multi" : "single"));
+      if (this.inherit_select_classes && this.form_field.className) {
+        container_classes.push(this.form_field.className);
+      }
+      if (this.is_rtl) {
+        container_classes.push("chosen-rtl");
+      }
+      container_props = {
+        'class': container_classes.join(' '),
+        'style': "width: " + (this.container_width()) + ";",
+        'title': this.form_field.title
+      };
+      if (this.form_field.id.length) {
+        container_props.id = this.form_field.id.replace(/[^\w]/g, '_') + "_chosen";
+      }
+      this.container = $("<div />", container_props);
+      if (this.is_multiple) {
+        this.container.html('<ul class="chosen-choices"><li class="search-field"><input type="text" value="' + this.default_text + '" class="default" autocomplete="off" style="width:25px;" /></li></ul><div class="chosen-drop"><ul class="chosen-results"></ul></div>');
+      } else {
+        this.container.html('<a class="chosen-single chosen-default" tabindex="-1"><span>' + this.default_text + '</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" /></div><ul class="chosen-results"></ul></div>');
+      }
+      this.form_field_jq.hide().after(this.container);
+      this.dropdown = this.container.find('div.chosen-drop').first();
+      this.search_field = this.container.find('input').first();
+      this.search_results = this.container.find('ul.chosen-results').first();
+      this.search_field_scale();
+      this.search_no_results = this.container.find('li.no-results').first();
+      if (this.is_multiple) {
+        this.search_choices = this.container.find('ul.chosen-choices').first();
+        this.search_container = this.container.find('li.search-field').first();
+      } else {
+        this.search_container = this.container.find('div.chosen-search').first();
+        this.selected_item = this.container.find('.chosen-single').first();
+      }
+      this.results_build();
+      this.set_tab_index();
+      return this.set_label_behavior();
+    };
+
+    Chosen.prototype.on_ready = function() {
+      return this.form_field_jq.trigger("chosen:ready", {
+        chosen: this
+      });
+    };
+
+    Chosen.prototype.register_observers = function() {
+      var _this = this;
+      this.container.bind('touchstart.chosen', function(evt) {
+        _this.container_mousedown(evt);
+        return evt.preventDefault();
+      });
+      this.container.bind('touchend.chosen', function(evt) {
+        _this.container_mouseup(evt);
+        return evt.preventDefault();
+      });
+      this.container.bind('mousedown.chosen', function(evt) {
+        _this.container_mousedown(evt);
+      });
+      this.container.bind('mouseup.chosen', function(evt) {
+        _this.container_mouseup(evt);
+      });
+      this.container.bind('mouseenter.chosen', function(evt) {
+        _this.mouse_enter(evt);
+      });
+      this.container.bind('mouseleave.chosen', function(evt) {
+        _this.mouse_leave(evt);
+      });
+      this.search_results.bind('mouseup.chosen', function(evt) {
+        _this.search_results_mouseup(evt);
+      });
+      this.search_results.bind('mouseover.chosen', function(evt) {
+        _this.search_results_mouseover(evt);
+      });
+      this.search_results.bind('mouseout.chosen', function(evt) {
+        _this.search_results_mouseout(evt);
+      });
+      this.search_results.bind('mousewheel.chosen DOMMouseScroll.chosen', function(evt) {
+        _this.search_results_mousewheel(evt);
+      });
+      this.search_results.bind('touchstart.chosen', function(evt) {
+        _this.search_results_touchstart(evt);
+      });
+      this.search_results.bind('touchmove.chosen', function(evt) {
+        _this.search_results_touchmove(evt);
+      });
+      this.search_results.bind('touchend.chosen', function(evt) {
+        _this.search_results_touchend(evt);
+      });
+      this.form_field_jq.bind("chosen:updated.chosen", function(evt) {
+        _this.results_update_field(evt);
+      });
+      this.form_field_jq.bind("chosen:activate.chosen", function(evt) {
+        _this.activate_field(evt);
+      });
+      this.form_field_jq.bind("chosen:open.chosen", function(evt) {
+        _this.container_mousedown(evt);
+      });
+      this.form_field_jq.bind("chosen:close.chosen", function(evt) {
+        _this.input_blur(evt);
+      });
+      this.search_field.bind('blur.chosen', function(evt) {
+        _this.input_blur(evt);
+      });
+      this.search_field.bind('keyup.chosen', function(evt) {
+        _this.keyup_checker(evt);
+      });
+      this.search_field.bind('keydown.chosen', function(evt) {
+        _this.keydown_checker(evt);
+      });
+      this.search_field.bind('focus.chosen', function(evt) {
+        _this.input_focus(evt);
+      });
+      this.search_field.bind('cut.chosen', function(evt) {
+        _this.clipboard_event_checker(evt);
+      });
+      this.search_field.bind('paste.chosen', function(evt) {
+        _this.clipboard_event_checker(evt);
+      });
+      if (this.is_multiple) {
+        return this.search_choices.bind('click.chosen', function(evt) {
+          _this.choices_click(evt);
+        });
+      } else {
+        return this.container.bind('click.chosen', function(evt) {
+          evt.preventDefault();
+        });
+      }
+    };
+
+    Chosen.prototype.destroy = function() {
+      $(this.container[0].ownerDocument).unbind("click.chosen", this.click_test_action);
+      if (this.search_field[0].tabIndex) {
+        this.form_field_jq[0].tabIndex = this.search_field[0].tabIndex;
+      }
+      this.container.remove();
+      this.form_field_jq.removeData('chosen');
+      return this.form_field_jq.show();
+    };
+
+    Chosen.prototype.search_field_disabled = function() {
+      this.is_disabled = this.form_field_jq[0].disabled;
+      if (this.is_disabled) {
+        this.container.addClass('chosen-disabled');
+        this.search_field[0].disabled = true;
+        if (!this.is_multiple) {
+          this.selected_item.unbind("focus.chosen", this.activate_action);
+        }
+        return this.close_field();
+      } else {
+        this.container.removeClass('chosen-disabled');
+        this.search_field[0].disabled = false;
+        if (!this.is_multiple) {
+          return this.selected_item.bind("focus.chosen", this.activate_action);
+        }
+      }
+    };
+
+    Chosen.prototype.container_mousedown = function(evt) {
+      if (!this.is_disabled) {
+        if (evt && evt.type === "mousedown" && !this.results_showing) {
+          evt.preventDefault();
+        }
+        if (!((evt != null) && ($(evt.target)).hasClass("search-choice-close"))) {
+          if (!this.active_field) {
+            if (this.is_multiple) {
+              this.search_field.val("");
+            }
+            $(this.container[0].ownerDocument).bind('click.chosen', this.click_test_action);
+            this.results_show();
+          } else if (!this.is_multiple && evt && (($(evt.target)[0] === this.selected_item[0]) || $(evt.target).parents("a.chosen-single").length)) {
+            evt.preventDefault();
+            this.results_toggle();
+          }
+          return this.activate_field();
+        }
+      }
+    };
+
+    Chosen.prototype.container_mouseup = function(evt) {
+      if (evt.target.nodeName === "ABBR" && !this.is_disabled) {
+        return this.results_reset(evt);
+      }
+    };
+
+    Chosen.prototype.search_results_mousewheel = function(evt) {
+      var delta;
+      if (evt.originalEvent) {
+        delta = evt.originalEvent.deltaY || -evt.originalEvent.wheelDelta || evt.originalEvent.detail;
+      }
+      if (delta != null) {
+        evt.preventDefault();
+        if (evt.type === 'DOMMouseScroll') {
+          delta = delta * 40;
+        }
+        return this.search_results.scrollTop(delta + this.search_results.scrollTop());
+      }
+    };
+
+    Chosen.prototype.blur_test = function(evt) {
+      if (!this.active_field && this.container.hasClass("chosen-container-active")) {
+        return this.close_field();
+      }
+    };
+
+    Chosen.prototype.close_field = function() {
+      $(this.container[0].ownerDocument).unbind("click.chosen", this.click_test_action);
+      this.active_field = false;
+      this.results_hide();
+      this.container.removeClass("chosen-container-active");
+      this.clear_backstroke();
+      this.show_search_field_default();
+      return this.search_field_scale();
+    };
+
+    Chosen.prototype.activate_field = function() {
+      this.container.addClass("chosen-container-active");
+      this.active_field = true;
+      this.search_field.val(this.search_field.val());
+      return this.search_field.focus();
+    };
+
+    Chosen.prototype.test_active_click = function(evt) {
+      var active_container;
+      active_container = $(evt.target).closest('.chosen-container');
+      if (active_container.length && this.container[0] === active_container[0]) {
+        return this.active_field = true;
+      } else {
+        return this.close_field();
+      }
+    };
+
+    Chosen.prototype.results_build = function() {
+      this.parsing = true;
+      this.selected_option_count = null;
+      this.results_data = SelectParser.select_to_array(this.form_field);
+      if (this.is_multiple) {
+        this.search_choices.find("li.search-choice").remove();
+      } else if (!this.is_multiple) {
+        this.single_set_selected_text();
+        if (this.disable_search || this.form_field.options.length <= this.disable_search_threshold) {
+          this.search_field[0].readOnly = true;
+          this.container.addClass("chosen-container-single-nosearch");
+        } else {
+          this.search_field[0].readOnly = false;
+          this.container.removeClass("chosen-container-single-nosearch");
+        }
+      }
+      this.update_results_content(this.results_option_build({
+        first: true
+      }));
+      this.search_field_disabled();
+      this.show_search_field_default();
+      this.search_field_scale();
+      return this.parsing = false;
+    };
+
+    Chosen.prototype.result_do_highlight = function(el) {
+      var high_bottom, high_top, maxHeight, visible_bottom, visible_top;
+      if (el.length) {
+        this.result_clear_highlight();
+        this.result_highlight = el;
+        this.result_highlight.addClass("highlighted");
+        maxHeight = parseInt(this.search_results.css("maxHeight"), 10);
+        visible_top = this.search_results.scrollTop();
+        visible_bottom = maxHeight + visible_top;
+        high_top = this.result_highlight.position().top + this.search_results.scrollTop();
+        high_bottom = high_top + this.result_highlight.outerHeight();
+        if (high_bottom >= visible_bottom) {
+          return this.search_results.scrollTop((high_bottom - maxHeight) > 0 ? high_bottom - maxHeight : 0);
+        } else if (high_top < visible_top) {
+          return this.search_results.scrollTop(high_top);
+        }
+      }
+    };
+
+    Chosen.prototype.result_clear_highlight = function() {
+      if (this.result_highlight) {
+        this.result_highlight.removeClass("highlighted");
+      }
+      return this.result_highlight = null;
+    };
+
+    Chosen.prototype.results_show = function() {
+      if (this.is_multiple && this.max_selected_options <= this.choices_count()) {
+        this.form_field_jq.trigger("chosen:maxselected", {
+          chosen: this
+        });
+        return false;
+      }
+      this.container.addClass("chosen-with-drop");
+      this.results_showing = true;
+      this.search_field.focus();
+      this.search_field.val(this.search_field.val());
+      this.winnow_results();
+      return this.form_field_jq.trigger("chosen:showing_dropdown", {
+        chosen: this
+      });
+    };
+
+    Chosen.prototype.update_results_content = function(content) {
+      return this.search_results.html(content);
+    };
+
+    Chosen.prototype.results_hide = function() {
+      if (this.results_showing) {
+        this.result_clear_highlight();
+        this.container.removeClass("chosen-with-drop");
+        this.form_field_jq.trigger("chosen:hiding_dropdown", {
+          chosen: this
+        });
+      }
+      return this.results_showing = false;
+    };
+
+    Chosen.prototype.set_tab_index = function(el) {
+      var ti;
+      if (this.form_field.tabIndex) {
+        ti = this.form_field.tabIndex;
+        this.form_field.tabIndex = -1;
+        return this.search_field[0].tabIndex = ti;
+      }
+    };
+
+    Chosen.prototype.set_label_behavior = function() {
+      var _this = this;
+      this.form_field_label = this.form_field_jq.parents("label");
+      if (!this.form_field_label.length && this.form_field.id.length) {
+        this.form_field_label = $("label[for='" + this.form_field.id + "']");
+      }
+      if (this.form_field_label.length > 0) {
+        return this.form_field_label.bind('click.chosen', function(evt) {
+          if (_this.is_multiple) {
+            return _this.container_mousedown(evt);
+          } else {
+            return _this.activate_field();
+          }
+        });
+      }
+    };
+
+    Chosen.prototype.show_search_field_default = function() {
+      if (this.is_multiple && this.choices_count() < 1 && !this.active_field) {
+        this.search_field.val(this.default_text);
+        return this.search_field.addClass("default");
+      } else {
+        this.search_field.val("");
+        return this.search_field.removeClass("default");
+      }
+    };
+
+    Chosen.prototype.search_results_mouseup = function(evt) {
+      var target;
+      target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
+      if (target.length) {
+        this.result_highlight = target;
+        this.result_select(evt);
+        return this.search_field.focus();
+      }
+    };
+
+    Chosen.prototype.search_results_mouseover = function(evt) {
+      var target;
+      target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
+      if (target) {
+        return this.result_do_highlight(target);
+      }
+    };
+
+    Chosen.prototype.search_results_mouseout = function(evt) {
+      if ($(evt.target).hasClass("active-result" || $(evt.target).parents('.active-result').first())) {
+        return this.result_clear_highlight();
+      }
+    };
+
+    Chosen.prototype.choice_build = function(item) {
+      var choice, close_link,
+        _this = this;
+      choice = $('<li />', {
+        "class": "search-choice"
+      }).html("<span>" + (this.choice_label(item)) + "</span>");
+      if (item.disabled) {
+        choice.addClass('search-choice-disabled');
+      } else {
+        close_link = $('<a />', {
+          "class": 'search-choice-close',
+          'data-option-array-index': item.array_index
+        });
+        close_link.bind('click.chosen', function(evt) {
+          return _this.choice_destroy_link_click(evt);
+        });
+        choice.append(close_link);
+      }
+      return this.search_container.before(choice);
+    };
+
+    Chosen.prototype.choice_destroy_link_click = function(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (!this.is_disabled) {
+        return this.choice_destroy($(evt.target));
+      }
+    };
+
+    Chosen.prototype.choice_destroy = function(link) {
+      if (this.result_deselect(link[0].getAttribute("data-option-array-index"))) {
+        this.show_search_field_default();
+        if (this.is_multiple && this.choices_count() > 0 && this.search_field.val().length < 1) {
+          this.results_hide();
+        }
+        link.parents('li').first().remove();
+        return this.search_field_scale();
+      }
+    };
+
+    Chosen.prototype.results_reset = function() {
+      this.reset_single_select_options();
+      this.form_field.options[0].selected = true;
+      this.single_set_selected_text();
+      this.show_search_field_default();
+      this.results_reset_cleanup();
+      this.form_field_jq.trigger("change");
+      if (this.active_field) {
+        return this.results_hide();
+      }
+    };
+
+    Chosen.prototype.results_reset_cleanup = function() {
+      this.current_selectedIndex = this.form_field.selectedIndex;
+      return this.selected_item.find("abbr").remove();
+    };
+
+    Chosen.prototype.result_select = function(evt) {
+      var high, item;
+      if (this.result_highlight) {
+        high = this.result_highlight;
+        this.result_clear_highlight();
+        if (this.is_multiple && this.max_selected_options <= this.choices_count()) {
+          this.form_field_jq.trigger("chosen:maxselected", {
+            chosen: this
+          });
+          return false;
+        }
+        if (this.is_multiple) {
+          high.removeClass("active-result");
+        } else {
+          this.reset_single_select_options();
+        }
+        high.addClass("result-selected");
+        item = this.results_data[high[0].getAttribute("data-option-array-index")];
+        item.selected = true;
+        this.form_field.options[item.options_index].selected = true;
+        this.selected_option_count = null;
+        if (this.is_multiple) {
+          this.choice_build(item);
+        } else {
+          this.single_set_selected_text(this.choice_label(item));
+        }
+        if (!((evt.metaKey || evt.ctrlKey) && this.is_multiple)) {
+          this.results_hide();
+        }
+        this.search_field.val("");
+        if (this.is_multiple || this.form_field.selectedIndex !== this.current_selectedIndex) {
+          this.form_field_jq.trigger("change", {
+            'selected': this.form_field.options[item.options_index].value
+          });
+        }
+        this.current_selectedIndex = this.form_field.selectedIndex;
+        evt.preventDefault();
+        return this.search_field_scale();
+      }
+    };
+
+    Chosen.prototype.single_set_selected_text = function(text) {
+      if (text == null) {
+        text = this.default_text;
+      }
+      if (text === this.default_text) {
+        this.selected_item.addClass("chosen-default");
+      } else {
+        this.single_deselect_control_build();
+        this.selected_item.removeClass("chosen-default");
+      }
+      return this.selected_item.find("span").html(text);
+    };
+
+    Chosen.prototype.result_deselect = function(pos) {
+      var result_data;
+      result_data = this.results_data[pos];
+      if (!this.form_field.options[result_data.options_index].disabled) {
+        result_data.selected = false;
+        this.form_field.options[result_data.options_index].selected = false;
+        this.selected_option_count = null;
+        this.result_clear_highlight();
+        if (this.results_showing) {
+          this.winnow_results();
+        }
+        this.form_field_jq.trigger("change", {
+          deselected: this.form_field.options[result_data.options_index].value
+        });
+        this.search_field_scale();
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Chosen.prototype.single_deselect_control_build = function() {
+      if (!this.allow_single_deselect) {
+        return;
+      }
+      if (!this.selected_item.find("abbr").length) {
+        this.selected_item.find("span").first().after("<abbr class=\"search-choice-close\"></abbr>");
+      }
+      return this.selected_item.addClass("chosen-single-with-deselect");
+    };
+
+    Chosen.prototype.get_search_text = function() {
+      return $('<div/>').text($.trim(this.search_field.val())).html();
+    };
+
+    Chosen.prototype.winnow_results_set_highlight = function() {
+      var do_high, selected_results;
+      selected_results = !this.is_multiple ? this.search_results.find(".result-selected.active-result") : [];
+      do_high = selected_results.length ? selected_results.first() : this.search_results.find(".active-result").first();
+      if (do_high != null) {
+        return this.result_do_highlight(do_high);
+      }
+    };
+
+    Chosen.prototype.no_results = function(terms) {
+      var no_results_html;
+      no_results_html = $('<li class="no-results">' + this.results_none_found + ' "<span></span>"</li>');
+      no_results_html.find("span").first().html(terms);
+      this.search_results.append(no_results_html);
+      return this.form_field_jq.trigger("chosen:no_results", {
+        chosen: this
+      });
+    };
+
+    Chosen.prototype.no_results_clear = function() {
+      return this.search_results.find(".no-results").remove();
+    };
+
+    Chosen.prototype.keydown_arrow = function() {
+      var next_sib;
+      if (this.results_showing && this.result_highlight) {
+        next_sib = this.result_highlight.nextAll("li.active-result").first();
+        if (next_sib) {
+          return this.result_do_highlight(next_sib);
+        }
+      } else {
+        return this.results_show();
+      }
+    };
+
+    Chosen.prototype.keyup_arrow = function() {
+      var prev_sibs;
+      if (!this.results_showing && !this.is_multiple) {
+        return this.results_show();
+      } else if (this.result_highlight) {
+        prev_sibs = this.result_highlight.prevAll("li.active-result");
+        if (prev_sibs.length) {
+          return this.result_do_highlight(prev_sibs.first());
+        } else {
+          if (this.choices_count() > 0) {
+            this.results_hide();
+          }
+          return this.result_clear_highlight();
+        }
+      }
+    };
+
+    Chosen.prototype.keydown_backstroke = function() {
+      var next_available_destroy;
+      if (this.pending_backstroke) {
+        this.choice_destroy(this.pending_backstroke.find("a").first());
+        return this.clear_backstroke();
+      } else {
+        next_available_destroy = this.search_container.siblings("li.search-choice").last();
+        if (next_available_destroy.length && !next_available_destroy.hasClass("search-choice-disabled")) {
+          this.pending_backstroke = next_available_destroy;
+          if (this.single_backstroke_delete) {
+            return this.keydown_backstroke();
+          } else {
+            return this.pending_backstroke.addClass("search-choice-focus");
+          }
+        }
+      }
+    };
+
+    Chosen.prototype.clear_backstroke = function() {
+      if (this.pending_backstroke) {
+        this.pending_backstroke.removeClass("search-choice-focus");
+      }
+      return this.pending_backstroke = null;
+    };
+
+    Chosen.prototype.keydown_checker = function(evt) {
+      var stroke, _ref1;
+      stroke = (_ref1 = evt.which) != null ? _ref1 : evt.keyCode;
+      this.search_field_scale();
+      if (stroke !== 8 && this.pending_backstroke) {
+        this.clear_backstroke();
+      }
+      switch (stroke) {
+        case 8:
+          this.backstroke_length = this.search_field.val().length;
+          break;
+        case 9:
+          if (this.results_showing && !this.is_multiple) {
+            this.result_select(evt);
+          }
+          this.mouse_on_container = false;
+          break;
+        case 13:
+          if (this.results_showing) {
+            evt.preventDefault();
+          }
+          break;
+        case 32:
+          if (this.disable_search) {
+            evt.preventDefault();
+          }
+          break;
+        case 38:
+          evt.preventDefault();
+          this.keyup_arrow();
+          break;
+        case 40:
+          evt.preventDefault();
+          this.keydown_arrow();
+          break;
+      }
+    };
+
+    Chosen.prototype.search_field_scale = function() {
+      var div, f_width, h, style, style_block, styles, w, _i, _len;
+      if (this.is_multiple) {
+        h = 0;
+        w = 0;
+        style_block = "position:absolute; left: -1000px; top: -1000px; display:none;";
+        styles = ['font-size', 'font-style', 'font-weight', 'font-family', 'line-height', 'text-transform', 'letter-spacing'];
+        for (_i = 0, _len = styles.length; _i < _len; _i++) {
+          style = styles[_i];
+          style_block += style + ":" + this.search_field.css(style) + ";";
+        }
+        div = $('<div />', {
+          'style': style_block
+        });
+        div.text(this.search_field.val());
+        $('body').append(div);
+        w = div.width() + 25;
+        div.remove();
+        f_width = this.container.outerWidth();
+        if (w > f_width - 10) {
+          w = f_width - 10;
+        }
+        return this.search_field.css({
+          'width': w + 'px'
+        });
+      }
+    };
+
+    return Chosen;
+
+  })(AbstractChosen);
+
+}).call(this);
+
+;/*!
  * BootstrapValidator (http://bootstrapvalidator.com)
  * The best jQuery plugin to validate form fields. Designed to use with Bootstrap 3
  *
- * @version     v0.5.2, built on 2014-09-25 4:01:07 PM
+ * @version     v0.5.3, built on 2015-07-15 5:19:44 PM
  * @author      https://twitter.com/nghuuphuoc
- * @copyright   (c) 2013 - 2014 Nguyen Huu Phuoc
- * @license     MIT
+ * @copyright   (c) 2013 - 2015 Nguyen Huu Phuoc
+ * @license     Commercial: http://bootstrapvalidator.com/license/
+ *              Non-commercial: http://creativecommons.org/licenses/by-nc-nd/3.0/
  */
 if (typeof jQuery === 'undefined') {
-    throw new Error('BootstrapValidator\'s JavaScript requires jQuery');
+    throw new Error('BootstrapValidator requires jQuery');
 }
+
+(function($) {
+    var version = $.fn.jquery.split(' ')[0].split('.');
+    if ((+version[0] < 2 && +version[1] < 9) || (+version[0] === 1 && +version[1] === 9 && +version[2] < 1)) {
+        throw new Error('BootstrapValidator requires jQuery version 1.9.1 or higher');
+    }
+}(window.jQuery));
 
 (function($) {
     var BootstrapValidator = function(form, options) {
@@ -58,6 +7117,7 @@ if (typeof jQuery === 'undefined') {
         _init: function() {
             var that    = this,
                 options = {
+                    autoFocus:      this.$form.attr('data-bv-autofocus'),
                     container:      this.$form.attr('data-bv-container'),
                     events: {
                         formInit:         this.$form.attr('data-bv-events-form-init'),
@@ -176,19 +7236,22 @@ if (typeof jQuery === 'undefined') {
                 validators = {},
                 validator,
                 v,          // Validator name
+                attrName,
                 enabled,
                 optionName,
+                optionAttrName,
                 optionValue,
                 html5AttrName,
                 html5AttrMap;
 
             for (v in $.fn.bootstrapValidator.validators) {
                 validator    = $.fn.bootstrapValidator.validators[v];
-                enabled      = $field.attr('data-bv-' + v.toLowerCase()) + '';
+                attrName     = 'data-bv-' + v.toLowerCase(),
+                enabled      = $field.attr(attrName) + '';
                 html5AttrMap = ('function' === typeof validator.enableByHtml5) ? validator.enableByHtml5($field) : null;
 
                 if ((html5AttrMap && enabled !== 'false')
-                    || (html5AttrMap !== true && ('' === enabled || 'true' === enabled)))
+                    || (html5AttrMap !== true && ('' === enabled || 'true' === enabled || attrName === enabled.toLowerCase())))
                 {
                     // Try to parse the options via attributes
                     validator.html5Attributes = $.extend({}, { message: 'message', onerror: 'onError', onsuccess: 'onSuccess' }, validator.html5Attributes);
@@ -196,9 +7259,10 @@ if (typeof jQuery === 'undefined') {
 
                     for (html5AttrName in validator.html5Attributes) {
                         optionName  = validator.html5Attributes[html5AttrName];
-                        optionValue = $field.attr('data-bv-' + v.toLowerCase() + '-' + html5AttrName);
+                        optionAttrName = 'data-bv-' + v.toLowerCase() + '-' + html5AttrName,
+                        optionValue = $field.attr(optionAttrName);
                         if (optionValue) {
-                            if ('true' === optionValue) {
+                            if ('true' === optionValue || optionAttrName === optionValue.toLowerCase()) {
                                 optionValue = true;
                             } else if ('false' === optionValue) {
                                 optionValue = false;
@@ -210,6 +7274,7 @@ if (typeof jQuery === 'undefined') {
             }
 
             var opts = {
+                    autoFocus:     $field.attr('data-bv-autofocus'),
                     container:     $field.attr('data-bv-container'),
                     excluded:      $field.attr('data-bv-excluded'),
                     feedbackIcons: $field.attr('data-bv-feedbackicons'),
@@ -364,32 +7429,40 @@ if (typeof jQuery === 'undefined') {
                         $icon.addClass('bv-icon-input-group')
                              .insertAfter($parent.find('.input-group').eq(0));
                     }
+
+                    // Store the icon as a data of field element
+                    if (!updateAll) {
+                        $field.data('bv.icon', $icon);
+                    } else if (i === total - 1) {
+                        // All fields with the same name have the same icon
+                        fields.data('bv.icon', $icon);
+                    }
                     
                     if (container) {
                         $field
                             // Show tooltip/popover message when field gets focus
-                            .off('focus.bv')
-                            .on('focus.bv', function() {
+                            .off('focus.container.bv')
+                            .on('focus.container.bv', function() {
                                 switch (container) {
                                     case 'tooltip':
-                                        $icon.tooltip('show');
+                                        $(this).data('bv.icon').tooltip('show');
                                         break;
                                     case 'popover':
-                                        $icon.popover('show');
+                                        $(this).data('bv.icon').popover('show');
                                         break;
                                     default:
                                         break;
                                 }
                             })
                             // and hide them when losing focus
-                            .off('blur.bv')
-                            .on('blur.bv', function() {
+                            .off('blur.container.bv')
+                            .on('blur.container.bv', function() {
                                 switch (container) {
                                     case 'tooltip':
-                                        $icon.tooltip('hide');
+                                        $(this).data('bv.icon').tooltip('hide');
                                         break;
                                     case 'popover':
-                                        $icon.popover('hide');
+                                        $(this).data('bv.icon').popover('hide');
                                         break;
                                     default:
                                         break;
@@ -634,16 +7707,21 @@ if (typeof jQuery === 'undefined') {
                 }
             }
 
-            var $invalidField = this.$invalidFields.eq(0);
-            if ($invalidField) {
-                // Activate the tab containing the invalid field if exists
-                var $tabPane = $invalidField.parents('.tab-pane'), tabId;
-                if ($tabPane && (tabId = $tabPane.attr('id'))) {
-                    $('a[href="#' + tabId + '"][data-toggle="tab"]').tab('show');
-                }
+            // Determined the first invalid field which will be focused on automatically
+            for (var i = 0; i < this.$invalidFields.length; i++) {
+                var $field    = this.$invalidFields.eq(i),
+                    autoFocus = this._isOptionEnabled($field.attr('data-bv-field'), 'autoFocus');
+                if (autoFocus) {
+                    // Activate the tab containing the field if exists
+                    var $tabPane = $field.parents('.tab-pane'), tabId;
+                    if ($tabPane && (tabId = $tabPane.attr('id'))) {
+                        $('a[href="#' + tabId + '"][data-toggle="tab"]').tab('show');
+                    }
 
-                // Focus to the first invalid field
-                $invalidField.focus();
+                    // Focus the field
+                    $field.focus();
+                    break;
+                }
             }
         },
 
@@ -719,12 +7797,29 @@ if (typeof jQuery === 'undefined') {
                 $field.trigger($.Event(this.options.events.fieldSuccess), data);
             }
             // If all validators are completed and there is at least one validator which doesn't pass
-            else if (counter[this.STATUS_NOT_VALIDATED] === 0 && counter[this.STATUS_VALIDATING] === 0 && counter[this.STATUS_INVALID] > 0) {
+            else if ((counter[this.STATUS_NOT_VALIDATED] === 0 || !this._isOptionEnabled(field, 'verbose')) && counter[this.STATUS_VALIDATING] === 0 && counter[this.STATUS_INVALID] > 0) {
                 // Add to the list of invalid fields
                 this.$invalidFields = this.$invalidFields.add($field);
 
                 $field.trigger($.Event(this.options.events.fieldError), data);
             }
+        },
+
+        /**
+         * Check whether or not a field option is enabled
+         *
+         * @param {String} field The field name
+         * @param {String} option The option name, "verbose", "autoFocus", for example
+         * @returns {Boolean}
+         */
+        _isOptionEnabled: function(field, option) {
+            if (this.options.fields[field] && (this.options.fields[field][option] === 'true' || this.options.fields[field][option] === true)) {
+                return true;
+            }
+            if (this.options.fields[field] && (this.options.fields[field][option] === 'false' || this.options.fields[field][option] === false)) {
+                return false;
+            }
+            return this.options[option] === 'true' || this.options[option] === true;
         },
 
         // ---
@@ -757,7 +7852,7 @@ if (typeof jQuery === 'undefined') {
          */
         getOptions: function(field, validator, option) {
             if (!field) {
-                return this.options;
+                return option ? this.options[option] : this.options;
             }
             if ('object' === typeof field) {
                 field = field.attr('data-bv-field');
@@ -776,7 +7871,6 @@ if (typeof jQuery === 'undefined') {
 
             return option ? options.validators[validator][option] : options.validators[validator];
         },
-
 
         /**
          * Disable/enable submit buttons
@@ -806,11 +7900,13 @@ if (typeof jQuery === 'undefined') {
             }
             this.disableSubmitButtons(true);
 
+            this._submitIfValid = false;
             for (var field in this.options.fields) {
                 this.validateField(field);
             }
 
             this._submit();
+            this._submitIfValid = true;
 
             return this;
         },
@@ -835,7 +7931,7 @@ if (typeof jQuery === 'undefined') {
                     break;
             }
 
-            if (fields.length === 0 || (this.options.fields[field] && this.options.fields[field].enabled === false)) {
+            if (fields.length === 0 || !this.options.fields[field] || this.options.fields[field].enabled === false) {
                 return this;
             }
 
@@ -844,7 +7940,7 @@ if (typeof jQuery === 'undefined') {
                 total      = ('radio' === type || 'checkbox' === type) ? 1 : fields.length,
                 updateAll  = ('radio' === type || 'checkbox' === type),
                 validators = this.options.fields[field].validators,
-                verbose    = this.options.fields[field].verbose === 'true' || this.options.fields[field].verbose === true || this.options.verbose === 'true' || this.options.verbose === true,
+                verbose    = this._isOptionEnabled(field, 'verbose'),
                 validatorName,
                 validateResult;
 
@@ -972,6 +8068,7 @@ if (typeof jQuery === 'undefined') {
 
             if (status === this.STATUS_NOT_VALIDATED) {
                 // Reset the flag
+                // To prevent the form from doing submit when a deferred validator returns true while typing
                 this._submitIfValid = false;
             }
 
@@ -990,7 +8087,7 @@ if (typeof jQuery === 'undefined') {
                     $message     = $field.data('bv.messages'),
                     $allErrors   = $message.find('.help-block[data-bv-validator][data-bv-for="' + field + '"]'),
                     $errors      = validatorName ? $allErrors.filter('[data-bv-validator="' + validatorName + '"]') : $allErrors,
-                    $icon        = $parent.find('.form-control-feedback[data-bv-icon-for="' + field + '"]'),
+                    $icon        = $field.data('bv.icon'),
                     container    = ('function' === typeof (this.options.fields[field].container || this.options.container)) ? (this.options.fields[field].container || this.options.container).call(this, $field, this) : (this.options.fields[field].container || this.options.container),
                     isValidField = null;
 
@@ -1081,10 +8178,10 @@ if (typeof jQuery === 'undefined') {
                                 ? $icon.css('cursor', 'pointer').tooltip('destroy').tooltip({
                                     container: 'body',
                                     html: true,
-                                    placement: 'top',
+                                    placement: 'auto top',
                                     title: $allErrors.filter('[data-bv-result="' + that.STATUS_INVALID + '"]').eq(0).html()
                                 })
-                                : $icon.tooltip('hide');
+                                : $icon.css('cursor', '').tooltip('destroy');
                         break;
                     // ... or popover
                     case ($icon && 'popover' === container):
@@ -1093,10 +8190,10 @@ if (typeof jQuery === 'undefined') {
                                     container: 'body',
                                     content: $allErrors.filter('[data-bv-result="' + that.STATUS_INVALID + '"]').eq(0).html(),
                                     html: true,
-                                    placement: 'top',
+                                    placement: 'auto top',
                                     trigger: 'hover click'
                                 })
-                                : $icon.popover('hide');
+                                : $icon.css('cursor', '').popover('destroy');
                         break;
                     default:
                         (status === this.STATUS_INVALID) ? $errors.show() : $errors.hide();
@@ -1150,7 +8247,7 @@ if (typeof jQuery === 'undefined') {
                 default:
                     break;
             }
-            if (fields.length === 0 || this.options.fields[field] === null || this.options.fields[field].enabled === false) {
+            if (fields.length === 0 || !this.options.fields[field] || this.options.fields[field].enabled === false) {
                 return true;
             }
 
@@ -1238,23 +8335,23 @@ if (typeof jQuery === 'undefined') {
         // Useful APIs which aren't used internally
         // ---
 
-        /**
-         * Get the list of invalid fields
-         *
-         * @returns {jQuery[]}
-         */
-        getInvalidFields: function() {
-            return this.$invalidFields;
-        },
+        // /**
+        //  * Get the list of invalid fields
+        //  *
+        //  * @returns {jQuery[]}
+        //  */
+        // getInvalidFields: function() {
+        //     return this.$invalidFields;
+        // },
 
-        /**
-         * Returns the clicked submit button
-         *
-         * @returns {jQuery}
-         */
-        getSubmitButton: function() {
-            return this.$submitButton;
-        },
+        // /**
+        //  * Returns the clicked submit button
+        //  *
+        //  * @returns {jQuery}
+        //  */
+        // getSubmitButton: function() {
+        //     return this.$submitButton;
+        // },
 
         /**
          * Get the error messages
@@ -1265,44 +8362,44 @@ if (typeof jQuery === 'undefined') {
          * If the validator is not defined, the method returns error messages of all validators
          * @returns {String[]}
          */
-        getMessages: function(field, validator) {
-            var that     = this,
-                messages = [],
-                $fields  = $([]);
+        // getMessages: function(field, validator) {
+        //     var that     = this,
+        //         messages = [],
+        //         $fields  = $([]);
 
-            switch (true) {
-                case (field && 'object' === typeof field):
-                    $fields = field;
-                    break;
-                case (field && 'string' === typeof field):
-                    var f = this.getFieldElements(field);
-                    if (f.length > 0) {
-                        var type = f.attr('type');
-                        $fields = ('radio' === type || 'checkbox' === type) ? f.eq(0) : f;
-                    }
-                    break;
-                default:
-                    $fields = this.$invalidFields;
-                    break;
-            }
+        //     switch (true) {
+        //         case (field && 'object' === typeof field):
+        //             $fields = field;
+        //             break;
+        //         case (field && 'string' === typeof field):
+        //             var f = this.getFieldElements(field);
+        //             if (f.length > 0) {
+        //                 var type = f.attr('type');
+        //                 $fields = ('radio' === type || 'checkbox' === type) ? f.eq(0) : f;
+        //             }
+        //             break;
+        //         default:
+        //             $fields = this.$invalidFields;
+        //             break;
+        //     }
 
-            var filter = validator ? '[data-bv-validator="' + validator + '"]' : '';
-            $fields.each(function() {
-                messages = messages.concat(
-                    $(this)
-                        .data('bv.messages')
-                        .find('.help-block[data-bv-for="' + $(this).attr('data-bv-field') + '"][data-bv-result="' + that.STATUS_INVALID + '"]' + filter)
-                        .map(function() {
-                            var v = $(this).attr('data-bv-validator'),
-                                f = $(this).attr('data-bv-for');
-                            return (that.options.fields[f].validators[v].enabled === false) ? '' : $(this).html();
-                        })
-                        .get()
-                );
-            });
+        //     var filter = validator ? '[data-bv-validator="' + validator + '"]' : '';
+        //     $fields.each(function() {
+        //         messages = messages.concat(
+        //             $(this)
+        //                 .data('bv.messages')
+        //                 .find('.help-block[data-bv-for="' + $(this).attr('data-bv-field') + '"][data-bv-result="' + that.STATUS_INVALID + '"]' + filter)
+        //                 .map(function() {
+        //                     var v = $(this).attr('data-bv-validator'),
+        //                         f = $(this).attr('data-bv-for');
+        //                     return (that.options.fields[f].validators[v].enabled === false) ? '' : $(this).html();
+        //                 })
+        //                 .get()
+        //         );
+        //     });
 
-            return messages;
-        },
+        //     return messages;
+        // },
 
         /**
          * Update the option of a specific validator
@@ -1313,126 +8410,126 @@ if (typeof jQuery === 'undefined') {
          * @param {String} value The value to set
          * @returns {BootstrapValidator}
          */
-        updateOption: function(field, validator, option, value) {
-            if ('object' === typeof field) {
-                field = field.attr('data-bv-field');
-            }
-            if (this.options.fields[field] && this.options.fields[field].validators[validator]) {
-                this.options.fields[field].validators[validator][option] = value;
-                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validator);
-            }
+        // updateOption: function(field, validator, option, value) {
+        //     if ('object' === typeof field) {
+        //         field = field.attr('data-bv-field');
+        //     }
+        //     if (this.options.fields[field] && this.options.fields[field].validators[validator]) {
+        //         this.options.fields[field].validators[validator][option] = value;
+        //         this.updateStatus(field, this.STATUS_NOT_VALIDATED, validator);
+        //     }
 
-            return this;
-        },
+        //     return this;
+        // },
 
-        /**
-         * Add a new field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {Object} [options] The validator rules
-         * @returns {BootstrapValidator}
-         */
-        addField: function(field, options) {
-            var fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-bv-field') || field.attr('name');
-                    break;
-                case 'string':
-                    delete this._cacheFields[field];
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
+        // /**
+        //  * Add a new field
+        //  *
+        //  * @param {String|jQuery} field The field name or field element
+        //  * @param {Object} [options] The validator rules
+        //  * @returns {BootstrapValidator}
+        //  */
+        // addField: function(field, options) {
+        //     var fields = $([]);
+        //     switch (typeof field) {
+        //         case 'object':
+        //             fields = field;
+        //             field  = field.attr('data-bv-field') || field.attr('name');
+        //             break;
+        //         case 'string':
+        //             delete this._cacheFields[field];
+        //             fields = this.getFieldElements(field);
+        //             break;
+        //         default:
+        //             break;
+        //     }
 
-            fields.attr('data-bv-field', field);
+        //     fields.attr('data-bv-field', field);
 
-            var type  = fields.attr('type'),
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+        //     var type  = fields.attr('type'),
+        //         total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
-            for (var i = 0; i < total; i++) {
-                var $field = fields.eq(i);
+        //     for (var i = 0; i < total; i++) {
+        //         var $field = fields.eq(i);
 
-                // Try to parse the options from HTML attributes
-                var opts = this._parseOptions($field);
-                opts = (opts === null) ? options : $.extend(true, options, opts);
+        //         // Try to parse the options from HTML attributes
+        //         var opts = this._parseOptions($field);
+        //         opts = (opts === null) ? options : $.extend(true, options, opts);
 
-                this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
+        //         this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
-                // Update the cache
-                this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
+        //         // Update the cache
+        //         this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
 
-                // Init the element
-                this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
-            }
+        //         // Init the element
+        //         this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
+        //     }
 
-            this.disableSubmitButtons(false);
-            // Trigger an event
-            this.$form.trigger($.Event(this.options.events.fieldAdded), {
-                field: field,
-                element: fields,
-                options: this.options.fields[field]
-            });
+        //     this.disableSubmitButtons(false);
+        //     // Trigger an event
+        //     this.$form.trigger($.Event(this.options.events.fieldAdded), {
+        //         field: field,
+        //         element: fields,
+        //         options: this.options.fields[field]
+        //     });
 
-            return this;
-        },
+        //     return this;
+        // },
 
-        /**
-         * Remove a given field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @returns {BootstrapValidator}
-         */
-        removeField: function(field) {
-            var fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-bv-field') || field.attr('name');
-                    fields.attr('data-bv-field', field);
-                    break;
-                case 'string':
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
+        // /**
+        //  * Remove a given field
+        //  *
+        //  * @param {String|jQuery} field The field name or field element
+        //  * @returns {BootstrapValidator}
+        //  */
+        // removeField: function(field) {
+        //     var fields = $([]);
+        //     switch (typeof field) {
+        //         case 'object':
+        //             fields = field;
+        //             field  = field.attr('data-bv-field') || field.attr('name');
+        //             fields.attr('data-bv-field', field);
+        //             break;
+        //         case 'string':
+        //             fields = this.getFieldElements(field);
+        //             break;
+        //         default:
+        //             break;
+        //     }
 
-            if (fields.length === 0) {
-                return this;
-            }
+        //     if (fields.length === 0) {
+        //         return this;
+        //     }
 
-            var type  = fields.attr('type'),
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+        //     var type  = fields.attr('type'),
+        //         total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
-            for (var i = 0; i < total; i++) {
-                var $field = fields.eq(i);
+        //     for (var i = 0; i < total; i++) {
+        //         var $field = fields.eq(i);
 
-                // Remove from the list of invalid fields
-                this.$invalidFields = this.$invalidFields.not($field);
+        //         // Remove from the list of invalid fields
+        //         this.$invalidFields = this.$invalidFields.not($field);
 
-                // Update the cache
-                this._cacheFields[field] = this._cacheFields[field].not($field);
-            }
+        //         // Update the cache
+        //         this._cacheFields[field] = this._cacheFields[field].not($field);
+        //     }
 
-            if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
-                delete this.options.fields[field];
-            }
-            if ('checkbox' === type || 'radio' === type) {
-                this._initField(field);
-            }
+        //     if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
+        //         delete this.options.fields[field];
+        //     }
+        //     if ('checkbox' === type || 'radio' === type) {
+        //         this._initField(field);
+        //     }
 
-            this.disableSubmitButtons(false);
-            // Trigger an event
-            this.$form.trigger($.Event(this.options.events.fieldRemoved), {
-                field: field,
-                element: fields
-            });
+        //     this.disableSubmitButtons(false);
+        //     // Trigger an event
+        //     this.$form.trigger($.Event(this.options.events.fieldRemoved), {
+        //         field: field,
+        //         element: fields
+        //     });
 
-            return this;
-        },
+        //     return this;
+        // },
 
         /**
          * Reset given field
@@ -1509,79 +8606,79 @@ if (typeof jQuery === 'undefined') {
             return this;
         },
 
-        /**
-         * Enable/Disable all validators to given field
-         *
-         * @param {String} field The field name
-         * @param {Boolean} enabled Enable/Disable field validators
-         * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
-         * @returns {BootstrapValidator}
-         */
-        enableFieldValidators: function(field, enabled, validatorName) {
-            var validators = this.options.fields[field].validators;
+        // /**
+        //  * Enable/Disable all validators to given field
+        //  *
+        //  * @param {String} field The field name
+        //  * @param {Boolean} enabled Enable/Disable field validators
+        //  * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
+        //  * @returns {BootstrapValidator}
+        //  */
+        // enableFieldValidators: function(field, enabled, validatorName) {
+        //     var validators = this.options.fields[field].validators;
 
-            // Enable/disable particular validator
-            if (validatorName
-                && validators
-                && validators[validatorName] && validators[validatorName].enabled !== enabled)
-            {
-                this.options.fields[field].validators[validatorName].enabled = enabled;
-                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
-            }
-            // Enable/disable all validators
-            else if (!validatorName && this.options.fields[field].enabled !== enabled) {
-                this.options.fields[field].enabled = enabled;
-                for (var v in validators) {
-                    this.enableFieldValidators(field, enabled, v);
-                }
-            }
+        //     // Enable/disable particular validator
+        //     if (validatorName
+        //         && validators
+        //         && validators[validatorName] && validators[validatorName].enabled !== enabled)
+        //     {
+        //         this.options.fields[field].validators[validatorName].enabled = enabled;
+        //         this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
+        //     }
+        //     // Enable/disable all validators
+        //     else if (!validatorName && this.options.fields[field].enabled !== enabled) {
+        //         this.options.fields[field].enabled = enabled;
+        //         for (var v in validators) {
+        //             this.enableFieldValidators(field, enabled, v);
+        //         }
+        //     }
 
-            return this;
-        },
+        //     return this;
+        // },
 
-        /**
-         * Some validators have option which its value is dynamic.
-         * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
-         *
-         * @param {jQuery|String} field The field name or element
-         * @param {String|Function} option The option which can be determined by:
-         * - a string
-         * - name of field which defines the value
-         * - name of function which returns the value
-         * - a function returns the value
-         *
-         * The callback function has the format of
-         *      callback: function(value, validator, $field) {
-         *          // value is the value of field
-         *          // validator is the BootstrapValidator instance
-         *          // $field is the field element
-         *      }
-         *
-         * @returns {String}
-         */
-        getDynamicOption: function(field, option) {
-            var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
-                value  = $field.val();
+        // /**
+        //  * Some validators have option which its value is dynamic.
+        //  * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
+        //  *
+        //  * @param {jQuery|String} field The field name or element
+        //  * @param {String|Function} option The option which can be determined by:
+        //  * - a string
+        //  * - name of field which defines the value
+        //  * - name of function which returns the value
+        //  * - a function returns the value
+        //  *
+        //  * The callback function has the format of
+        //  *      callback: function(value, validator, $field) {
+        //  *          // value is the value of field
+        //  *          // validator is the BootstrapValidator instance
+        //  *          // $field is the field element
+        //  *      }
+        //  *
+        //  * @returns {String}
+        //  */
+        // getDynamicOption: function(field, option) {
+        //     var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
+        //         value  = $field.val();
 
-            // Option can be determined by
-            // ... a function
-            if ('function' === typeof option) {
-                return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]);
-            }
-            // ... value of other field
-            else if ('string' === typeof option) {
-                var $f = this.getFieldElements(option);
-                if ($f.length) {
-                    return $f.val();
-                }
-                // ... return value of callback
-                else {
-                    return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]) || option;
-                }
-            }
+        //     // Option can be determined by
+        //     // ... a function
+        //     if ('function' === typeof option) {
+        //         return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]);
+        //     }
+        //     // ... value of other field
+        //     else if ('string' === typeof option) {
+        //         var $f = this.getFieldElements(option);
+        //         if ($f.length) {
+        //             return $f.val();
+        //         }
+        //         // ... return value of callback
+        //         else {
+        //             return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]) || option;
+        //         }
+        //     }
 
-            return null;
-        },
+        //     return null;
+        // },
 
         /**
          * Destroy the plugin
@@ -1609,7 +8706,7 @@ if (typeof jQuery === 'undefined') {
                         .removeAttr('data-bv-field');
 
                     // Remove feedback icons, tooltip/popover container
-                    $icon = $field.parents(group).find('i[data-bv-icon-for="' + field + '"]');
+                    $icon = $field.data('bv.icon');
                     if ($icon) {
                         var container = ('function' === typeof (this.options.fields[field].container || this.options.container)) ? (this.options.fields[field].container || this.options.container).call(this, $field, this) : (this.options.fields[field].container || this.options.container);
                         switch (container) {
@@ -1624,6 +8721,7 @@ if (typeof jQuery === 'undefined') {
                                 break;
                         }
                     }
+                    $field.removeData('bv.icon');
 
                     for (validator in this.options.fields[field].validators) {
                         if ($field.data('bv.dfs.' + validator)) {
@@ -1674,17 +8772,10 @@ if (typeof jQuery === 'undefined') {
     };
 
     // The default options
+    // Sorted in alphabetical order
     $.fn.bootstrapValidator.DEFAULT_OPTIONS = {
-        // The form CSS class
-        elementClass: 'bv-form',
-
-        // Default invalid message
-        message: 'This value is not valid',
-
-        // The CSS selector for indicating the element consists the field
-        // By default, each field is placed inside the <div class="form-group"></div>
-        // You should adjust this option if your form group consists of many fields which not all of them need to be validated
-        group: '.form-group',
+        // The first invalid field will be focused automatically
+        autoFocus: true,
 
         //The error messages container. It can be:
         // - 'tooltip' if you want to use Bootstrap tooltip to show error messages
@@ -1694,8 +8785,24 @@ if (typeof jQuery === 'undefined') {
         // You also can define the message container for particular field
         container: null,
 
-        // The field will not be live validated if its length is less than this number of characters
-        threshold: null,
+        // The form CSS class
+        elementClass: 'bv-form',
+
+        // Use custom event name to avoid window.onerror being invoked by jQuery
+        // See https://github.com/nghuuphuoc/bootstrapvalidator/issues/630
+        events: {
+            formInit: 'init.form.bv',
+            formError: 'error.form.bv',
+            formSuccess: 'success.form.bv',
+            fieldAdded: 'added.field.bv',
+            fieldRemoved: 'removed.field.bv',
+            fieldInit: 'init.field.bv',
+            fieldError: 'error.field.bv',
+            fieldSuccess: 'success.field.bv',
+            fieldStatus: 'status.field.bv',
+            validatorError: 'error.validator.bv',
+            validatorSuccess: 'success.validator.bv'
+        },
 
         // Indicate fields which won't be validated
         // By default, the plugin will not validate the following kind of fields:
@@ -1746,9 +8853,13 @@ if (typeof jQuery === 'undefined') {
             validating: null
         },
 
-        // The submit buttons selector
-        // These buttons will be disabled to prevent the valid form from multiple submissions
-        submitButtons: '[type="submit"]',
+        // Map the field name with validator rules
+        fields: null,
+
+        // The CSS selector for indicating the element consists the field
+        // By default, each field is placed inside the <div class="form-group"></div>
+        // You should adjust this option if your form group consists of many fields which not all of them need to be validated
+        group: '.form-group',
 
         // Live validating option
         // Can be one of 3 values:
@@ -1757,25 +8868,16 @@ if (typeof jQuery === 'undefined') {
         // - submitted: The live validating is enabled after the form is submitted
         live: 'enabled',
 
-        // Map the field name with validator rules
-        fields: null,
+        // Default invalid message
+        message: 'This value is not valid',
 
-        // Use custom event name to avoid window.onerror being invoked by jQuery
-        // See https://github.com/nghuuphuoc/bootstrapvalidator/issues/630
-        events: {
-            formInit: 'init.form.bv',
-            formError: 'error.form.bv',
-            formSuccess: 'success.form.bv',
-            fieldAdded: 'added.field.bv',
-            fieldRemoved: 'removed.field.bv',
-            fieldInit: 'init.field.bv',
-            fieldError: 'error.field.bv',
-            fieldSuccess: 'success.field.bv',
-            fieldStatus: 'status.field.bv',
-            validatorError: 'error.validator.bv',
-            validatorSuccess: 'success.validator.bv'
-        },
-        
+        // The submit buttons selector
+        // These buttons will be disabled to prevent the valid form from multiple submissions
+        submitButtons: '[type="submit"]',
+
+        // The field will not be live validated if its length is less than this number of characters
+        threshold: null,
+
         // Whether to be verbose when validating a field or not.
         // Possible values:
         // - true:  when a field has multiple validators, all of them will be checked, and respectively - if errors occur in
@@ -1889,89 +8991,6 @@ if (typeof jQuery === 'undefined') {
             }
 
             return true;
-        },
-
-        /**
-         * Implement Luhn validation algorithm
-         * Credit to https://gist.github.com/ShirtlessKirk/2134376
-         *
-         * @see http://en.wikipedia.org/wiki/Luhn
-         * @param {String} value
-         * @returns {Boolean}
-         */
-        luhn: function(value) {
-            var length  = value.length,
-                mul     = 0,
-                prodArr = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 2, 4, 6, 8, 1, 3, 5, 7, 9]],
-                sum     = 0;
-
-            while (length--) {
-                sum += prodArr[mul][parseInt(value.charAt(length), 10)];
-                mul ^= 1;
-            }
-
-            return (sum % 10 === 0 && sum > 0);
-        },
-
-        /**
-         * Implement modulus 11, 10 (ISO 7064) algorithm
-         *
-         * @param {String} value
-         * @returns {Boolean}
-         */
-        mod11And10: function(value) {
-            var check  = 5,
-                length = value.length;
-            for (var i = 0; i < length; i++) {
-                check = (((check || 10) * 2) % 11 + parseInt(value.charAt(i), 10)) % 10;
-            }
-            return (check === 1);
-        },
-
-        /**
-         * Implements Mod 37, 36 (ISO 7064) algorithm
-         * Usages:
-         * mod37And36('A12425GABC1234002M')
-         * mod37And36('002006673085', '0123456789')
-         *
-         * @param {String} value
-         * @param {String} [alphabet]
-         * @returns {Boolean}
-         */
-        mod37And36: function(value, alphabet) {
-            alphabet = alphabet || '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            var modulus = alphabet.length,
-                length  = value.length,
-                check   = Math.floor(modulus / 2);
-            for (var i = 0; i < length; i++) {
-                check = (((check || modulus) * 2) % (modulus + 1) + alphabet.indexOf(value.charAt(i))) % modulus;
-            }
-            return (check === 1);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.base64 = $.extend($.fn.bootstrapValidator.i18n.base64 || {}, {
-        'default': 'Please enter a valid base 64 encoded'
-    });
-
-    $.fn.bootstrapValidator.validators.base64 = {
-        /**
-         * Return true if the input value is a base 64 encoded string.
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/.test(value);
         }
     };
 }(window.jQuery));
@@ -2024,22 +9043,31 @@ if (typeof jQuery === 'undefined') {
             if (value === '') {
                 return true;
             }
+
+			value = this._format(value);
             if (!$.isNumeric(value)) {
                 return false;
             }
 
-            var min = $.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min),
-                max = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max);
+            var min      = $.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min),
+                max      = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max),
+                minValue = this._format(min),
+                maxValue = this._format(max);
+
             value = parseFloat(value);
 			return (options.inclusive === true || options.inclusive === undefined)
                     ? {
-                        valid: value >= min && value <= max,
+                        valid: value >= minValue && value <= maxValue,
                         message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.between['default'], [min, max])
                     }
                     : {
-                        valid: value > min  && value <  max,
+                        valid: value > minValue  && value <  maxValue,
                         message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.between.notInclusive, [min, max])
                     };
+        },
+
+        _format: function(value) {
+            return (value + '').replace(',', '.');
         }
     };
 }(window.jQuery));
@@ -2182,288 +9210,19 @@ if (typeof jQuery === 'undefined') {
     };
 }(window.jQuery));
 ;(function($) {
-    $.fn.bootstrapValidator.i18n.creditCard = $.extend($.fn.bootstrapValidator.i18n.creditCard || {}, {
-        'default': 'Please enter a valid credit card number'
-    });
-
-    $.fn.bootstrapValidator.validators.creditCard = {
-        /**
-         * Return true if the input value is valid credit card number
-         * Based on https://gist.github.com/DiegoSalazar/4075533
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} [options] Can consist of the following key:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            // Accept only digits, dashes or spaces
-            if (/[^0-9-\s]+/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\D/g, '');
-
-            if (!$.fn.bootstrapValidator.helpers.luhn(value)) {
-                return false;
-            }
-
-            // Validate the card number based on prefix (IIN ranges) and length
-            var cards = {
-                AMERICAN_EXPRESS: {
-                    length: [15],
-                    prefix: ['34', '37']
-                },
-                DINERS_CLUB: {
-                    length: [14],
-                    prefix: ['300', '301', '302', '303', '304', '305', '36']
-                },
-                DINERS_CLUB_US: {
-                    length: [16],
-                    prefix: ['54', '55']
-                },
-                DISCOVER: {
-                    length: [16],
-                    prefix: ['6011', '622126', '622127', '622128', '622129', '62213',
-                             '62214', '62215', '62216', '62217', '62218', '62219',
-                             '6222', '6223', '6224', '6225', '6226', '6227', '6228',
-                             '62290', '62291', '622920', '622921', '622922', '622923',
-                             '622924', '622925', '644', '645', '646', '647', '648',
-                             '649', '65']
-                },
-                JCB: {
-                    length: [16],
-                    prefix: ['3528', '3529', '353', '354', '355', '356', '357', '358']
-                },
-                LASER: {
-                    length: [16, 17, 18, 19],
-                    prefix: ['6304', '6706', '6771', '6709']
-                },
-                MAESTRO: {
-                    length: [12, 13, 14, 15, 16, 17, 18, 19],
-                    prefix: ['5018', '5020', '5038', '6304', '6759', '6761', '6762', '6763', '6764', '6765', '6766']
-                },
-                MASTERCARD: {
-                    length: [16],
-                    prefix: ['51', '52', '53', '54', '55']
-                },
-                SOLO: {
-                    length: [16, 18, 19],
-                    prefix: ['6334', '6767']
-                },
-                UNIONPAY: {
-                    length: [16, 17, 18, 19],
-                    prefix: ['622126', '622127', '622128', '622129', '62213', '62214',
-                             '62215', '62216', '62217', '62218', '62219', '6222', '6223',
-                             '6224', '6225', '6226', '6227', '6228', '62290', '62291',
-                             '622920', '622921', '622922', '622923', '622924', '622925']
-                },
-                VISA: {
-                    length: [16],
-                    prefix: ['4']
-                }
-            };
-
-            var type, i;
-            for (type in cards) {
-                for (i in cards[type].prefix) {
-                    if (value.substr(0, cards[type].prefix[i].length) === cards[type].prefix[i]     // Check the prefix
-                        && $.inArray(value.length, cards[type].length) !== -1)                      // and length
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.cusip = $.extend($.fn.bootstrapValidator.i18n.cusip || {}, {
-        'default': 'Please enter a valid CUSIP number'
-    });
-
-    $.fn.bootstrapValidator.validators.cusip = {
-        /**
-         * Validate a CUSIP
-         * Examples:
-         * - Valid: 037833100, 931142103, 14149YAR8, 126650BG6
-         * - Invalid: 31430F200, 022615AC2
-         *
-         * @see http://en.wikipedia.org/wiki/CUSIP
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} [options] Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            value = value.toUpperCase();
-            if (!/^[0-9A-Z]{9}$/.test(value)) {
-                return false;
-            }
-
-            var converted = $.map(value.split(''), function(item) {
-                                var code = item.charCodeAt(0);
-                                return (code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0))
-                                            // Replace A, B, C, ..., Z with 10, 11, ..., 35
-                                            ? (code - 'A'.charCodeAt(0) + 10)
-                                            : item;
-                            }),
-                length    = converted.length,
-                sum       = 0;
-            for (var i = 0; i < length - 1; i++) {
-                var num = parseInt(converted[i], 10);
-                if (i % 2 !== 0) {
-                    num *= 2;
-                }
-                if (num > 9) {
-                    num -= 9;
-                }
-                sum += num;
-            }
-
-            sum = (10 - (sum % 10)) % 10;
-            return sum === converted[length - 1];
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.cvv = $.extend($.fn.bootstrapValidator.i18n.cvv || {}, {
-        'default': 'Please enter a valid CVV number'
-    });
-
-    $.fn.bootstrapValidator.validators.cvv = {
-        html5Attributes: {
-            message: 'message',
-            ccfield: 'creditCardField'
-        },
-
-        /**
-         * Return true if the input value is a valid CVV number.
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - creditCardField: The credit card number field. It can be null
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            if (!/^[0-9]{3,4}$/.test(value)) {
-                return false;
-            }
-
-            if (!options.creditCardField) {
-                return true;
-            }
-
-            // Get the credit card number
-            var creditCard = validator.getFieldElements(options.creditCardField).val();
-            if (creditCard === '') {
-                return true;
-            }
-            
-            creditCard = creditCard.replace(/\D/g, '');
-
-            // Supported credit card types
-            var cards = {
-                AMERICAN_EXPRESS: {
-                    length: [15],
-                    prefix: ['34', '37']
-                },
-                DINERS_CLUB: {
-                    length: [14],
-                    prefix: ['300', '301', '302', '303', '304', '305', '36']
-                },
-                DINERS_CLUB_US: {
-                    length: [16],
-                    prefix: ['54', '55']
-                },
-                DISCOVER: {
-                    length: [16],
-                    prefix: ['6011', '622126', '622127', '622128', '622129', '62213',
-                             '62214', '62215', '62216', '62217', '62218', '62219',
-                             '6222', '6223', '6224', '6225', '6226', '6227', '6228',
-                             '62290', '62291', '622920', '622921', '622922', '622923',
-                             '622924', '622925', '644', '645', '646', '647', '648',
-                             '649', '65']
-                },
-                JCB: {
-                    length: [16],
-                    prefix: ['3528', '3529', '353', '354', '355', '356', '357', '358']
-                },
-                LASER: {
-                    length: [16, 17, 18, 19],
-                    prefix: ['6304', '6706', '6771', '6709']
-                },
-                MAESTRO: {
-                    length: [12, 13, 14, 15, 16, 17, 18, 19],
-                    prefix: ['5018', '5020', '5038', '6304', '6759', '6761', '6762', '6763', '6764', '6765', '6766']
-                },
-                MASTERCARD: {
-                    length: [16],
-                    prefix: ['51', '52', '53', '54', '55']
-                },
-                SOLO: {
-                    length: [16, 18, 19],
-                    prefix: ['6334', '6767']
-                },
-                UNIONPAY: {
-                    length: [16, 17, 18, 19],
-                    prefix: ['622126', '622127', '622128', '622129', '62213', '62214',
-                             '62215', '62216', '62217', '62218', '62219', '6222', '6223',
-                             '6224', '6225', '6226', '6227', '6228', '62290', '62291',
-                             '622920', '622921', '622922', '622923', '622924', '622925']
-                },
-                VISA: {
-                    length: [16],
-                    prefix: ['4']
-                }
-            };
-            var type, i, creditCardType = null;
-            for (type in cards) {
-                for (i in cards[type].prefix) {
-                    if (creditCard.substr(0, cards[type].prefix[i].length) === cards[type].prefix[i]    // Check the prefix
-                        && $.inArray(creditCard.length, cards[type].length) !== -1)                     // and length
-                    {
-                        creditCardType = type;
-                        break;
-                    }
-                }
-            }
-
-            return (creditCardType === null)
-                        ? false
-                        : (('AMERICAN_EXPRESS' === creditCardType) ? (value.length === 4) : (value.length === 3));
-        }
-    };
-}(window.jQuery));
-;(function($) {
     $.fn.bootstrapValidator.i18n.date = $.extend($.fn.bootstrapValidator.i18n.date || {}, {
-        'default': 'Please enter a valid date'
+        'default': 'Please enter a valid date',
+        min: 'Please enter a date after %s',
+        max: 'Please enter a date before %s',
+        range: 'Please enter a date in the range %s - %s'
     });
 
     $.fn.bootstrapValidator.validators.date = {
         html5Attributes: {
             message: 'message',
             format: 'format',
+            min: 'min',
+            max: 'max',
             separator: 'separator'
         },
 
@@ -2474,6 +9233,8 @@ if (typeof jQuery === 'undefined') {
          * @param {jQuery} $field Field element
          * @param {Object} options Can consist of the following keys:
          * - message: The invalid message
+         * - min: the minimum date
+         * - max: the maximum date
          * - separator: Use to separate the date, month, and year.
          * By default, it is /
          * - format: The date format. Default is MM/DD/YYYY
@@ -2483,7 +9244,7 @@ if (typeof jQuery === 'undefined') {
          * ii) date and time:
          * The time can consist of h, m, s parts which are separated by :
          * ii) date, time and A (indicating AM or PM)
-         * @returns {Boolean}
+         * @returns {Boolean|Object}
          */
         validate: function(validator, $field, options) {
             var value = $field.val();
@@ -2507,7 +9268,10 @@ if (typeof jQuery === 'undefined') {
                 time       = (sections.length > 1) ? sections[1] : null;
 
             if (formats.length !== sections.length) {
-                return false;
+                return {
+                    valid: false,
+                    message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                };
             }
 
             // Determine the separator
@@ -2516,14 +9280,20 @@ if (typeof jQuery === 'undefined') {
                 separator = (date.indexOf('/') !== -1) ? '/' : ((date.indexOf('-') !== -1) ? '-' : null);
             }
             if (separator === null || date.indexOf(separator) === -1) {
-                return false;
+                return {
+                    valid: false,
+                    message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                };
             }
 
             // Determine the date
             date       = date.split(separator);
             dateFormat = dateFormat.split(separator);
             if (date.length !== dateFormat.length) {
-                return false;
+                return {
+                    valid: false,
+                    message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                };
             }
 
             var year  = date[$.inArray('YYYY', dateFormat)],
@@ -2531,7 +9301,10 @@ if (typeof jQuery === 'undefined') {
                 day   = date[$.inArray('DD', dateFormat)];
 
             if (!year || !month || !day || year.length !== 4) {
-                return false;
+                return {
+                    valid: false,
+                    message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                };
             }
 
             // Determine the time
@@ -2541,7 +9314,10 @@ if (typeof jQuery === 'undefined') {
                 time       = time.split(':');
 
                 if (timeFormat.length !== time.length) {
-                    return false;
+                    return {
+                        valid: false,
+                        message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                    };
                 }
 
                 hours   = time.length > 0 ? time[0] : null;
@@ -2551,39 +9327,137 @@ if (typeof jQuery === 'undefined') {
                 // Validate seconds
                 if (seconds) {
                     if (isNaN(seconds) || seconds.length > 2) {
-                        return false;
+                        return {
+                            valid: false,
+                            message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                        };
                     }
                     seconds = parseInt(seconds, 10);
                     if (seconds < 0 || seconds > 60) {
-                        return false;
+                        return {
+                            valid: false,
+                            message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                        };
                     }
                 }
 
                 // Validate hours
                 if (hours) {
                     if (isNaN(hours) || hours.length > 2) {
-                        return false;
+                        return {
+                            valid: false,
+                            message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                        };
                     }
                     hours = parseInt(hours, 10);
                     if (hours < 0 || hours >= 24 || (amOrPm && hours > 12)) {
-                        return false;
+                        return {
+                            valid: false,
+                            message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                        };
                     }
                 }
 
                 // Validate minutes
                 if (minutes) {
                     if (isNaN(minutes) || minutes.length > 2) {
-                        return false;
+                        return {
+                            valid: false,
+                            message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                        };
                     }
                     minutes = parseInt(minutes, 10);
                     if (minutes < 0 || minutes > 59) {
-                        return false;
+                        return {
+                            valid: false,
+                            message: options.message || $.fn.bootstrapValidator.i18n.date['default']
+                        };
                     }
                 }
             }
 
             // Validate day, month, and year
-            return $.fn.bootstrapValidator.helpers.date(year, month, day);
+            var valid   = $.fn.bootstrapValidator.helpers.date(year, month, day),
+                message = options.message || $.fn.bootstrapValidator.i18n.date['default'];
+
+            // declare the date, min and max objects
+            var min       = null,
+                max       = null,
+                minOption = options.min,
+                maxOption = options.max;
+
+            if (minOption) {
+                if (isNaN(Date.parse(minOption))) {
+                    minOption = validator.getDynamicOption($field, minOption);
+                }
+                min = this._parseDate(minOption, dateFormat, separator);
+            }
+
+            if (maxOption) {
+                if (isNaN(Date.parse(maxOption))) {
+                    maxOption = validator.getDynamicOption($field, maxOption);
+                }
+                max = this._parseDate(maxOption, dateFormat, separator);
+            }
+
+            date = new Date(year, month, day, hours, minutes, seconds);
+
+            switch (true) {
+                case (minOption && !maxOption && valid):
+                    valid   = date.getTime() >= min.getTime();
+                    message = options.message || $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.date.min, minOption);
+                    break;
+
+                case (maxOption && !minOption && valid):
+                    valid   = date.getTime() <= max.getTime();
+                    message = options.message || $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.date.max, maxOption);
+                    break;
+
+                case (maxOption && minOption && valid):
+                    valid   = date.getTime() <= max.getTime() && date.getTime() >= min.getTime();
+                    message = options.message || $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.date.range, [minOption, maxOption]);
+                    break;
+
+                default:
+                    break;
+            }
+
+            return {
+                valid: valid,
+                message: message
+            };
+        },
+
+        /**
+         * Return a date object after parsing the date string
+         *
+         * @param {String} date   The date string to parse
+         * @param {String} format The date format
+         * The format can be:
+         *   - date: Consist of DD, MM, YYYY parts which are separated by the separator option
+         *   - date and time:
+         *     The time can consist of h, m, s parts which are separated by :
+         * @param {String} separator The separator used to separate the date, month, and year
+         * @returns {Date}
+         */
+        _parseDate: function(date, format, separator) {
+            var minutes     = 0, hours = 0, seconds = 0,
+                sections    = date.split(' '),
+                dateSection = sections[0],
+                timeSection = (sections.length > 1) ? sections[1] : null;
+
+            dateSection = dateSection.split(separator);
+            var year  = dateSection[$.inArray('YYYY', format)],
+                month = dateSection[$.inArray('MM', format)],
+                day   = dateSection[$.inArray('DD', format)];
+            if (timeSection) {
+                timeSection = timeSection.split(':');
+                hours       = timeSection.length > 0 ? timeSection[0] : null;
+                minutes     = timeSection.length > 1 ? timeSection[1] : null;
+                seconds     = timeSection.length > 2 ? timeSection[2] : null;
+            }
+
+            return new Date(year, month, day, hours, minutes, seconds);
         }
     };
 }(window.jQuery));
@@ -2656,46 +9530,6 @@ if (typeof jQuery === 'undefined') {
             }
 
             return /^\d+$/.test(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.ean = $.extend($.fn.bootstrapValidator.i18n.ean || {}, {
-        'default': 'Please enter a valid EAN number'
-    });
-
-    $.fn.bootstrapValidator.validators.ean = {
-        /**
-         * Validate EAN (International Article Number)
-         * Examples:
-         * - Valid: 73513537, 9780471117094, 4006381333931
-         * - Invalid: 73513536
-         *
-         * @see http://en.wikipedia.org/wiki/European_Article_Number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            if (!/^(\d{8}|\d{12}|\d{13})$/.test(value)) {
-                return false;
-            }
-
-            var length = value.length,
-                sum    = 0,
-                weight = (length === 8) ? [3, 1] : [1, 3];
-            for (var i = 0; i < length - 1; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i % 2];
-            }
-            sum = (10 - sum % 10) % 10;
-            return (sum + '' === value.charAt(length - 1));
         }
     };
 }(window.jQuery));
@@ -2794,8 +9628,12 @@ if (typeof jQuery === 'undefined') {
     $.fn.bootstrapValidator.validators.file = {
         html5Attributes: {
             extension: 'extension',
+            maxfiles: 'maxFiles',
+            minfiles: 'minFiles',
             maxsize: 'maxSize',
             minsize: 'minSize',
+            maxtotalsize: 'maxTotalSize',
+            mintotalsize: 'minTotalSize',
             message: 'message',
             type: 'type'
         },
@@ -2807,8 +9645,12 @@ if (typeof jQuery === 'undefined') {
          * @param {jQuery} $field Field element
          * @param {Object} options Can consist of the following keys:
          * - extension: The allowed extensions, separated by a comma
+         * - maxFiles: The maximum number of files
+         * - minFiles: The minimum number of files
          * - maxSize: The maximum size in bytes
-         * - minSize: the minimum size in bytes
+         * - minSize: The minimum size in bytes
+         * - maxTotalSize: The maximum size in bytes for all files
+         * - minTotalSize: The minimum size in bytes for all files
          * - message: The invalid message
          * - type: The allowed MIME type, separated by a comma
          * @returns {Boolean}
@@ -2826,29 +9668,33 @@ if (typeof jQuery === 'undefined') {
 
             if (html5) {
                 // Get FileList instance
-                var files = $field.get(0).files,
-                    total = files.length;
+                var files     = $field.get(0).files,
+                    total     = files.length,
+                    totalSize = 0;
+
+                if ((options.maxFiles && total > parseInt(options.maxFiles, 10))        // Check the maxFiles
+                    || (options.minFiles && total < parseInt(options.minFiles, 10)))    // Check the minFiles
+                {
+                    return false;
+                }
+
                 for (var i = 0; i < total; i++) {
-                    // Check the minSize
-                    if (options.minSize && files[i].size < parseInt(options.minSize, 10)) {
-                        return false;
-                    }
-                    
-                    // Check the maxSize
-                    if (options.maxSize && files[i].size > parseInt(options.maxSize, 10)) {
-                        return false;
-                    }
+                    totalSize += files[i].size;
+                    ext        = files[i].name.substr(files[i].name.lastIndexOf('.') + 1);
 
-                    // Check file extension
-                    ext = files[i].name.substr(files[i].name.lastIndexOf('.') + 1);
-                    if (extensions && $.inArray(ext.toLowerCase(), extensions) === -1) {
+                    if ((options.minSize && files[i].size < parseInt(options.minSize, 10))                      // Check the minSize
+                        || (options.maxSize && files[i].size > parseInt(options.maxSize, 10))                   // Check the maxSize
+                        || (extensions && $.inArray(ext.toLowerCase(), extensions) === -1)                      // Check file extension
+                        || (files[i].type && types && $.inArray(files[i].type.toLowerCase(), types) === -1))    // Check file type
+                    {
                         return false;
                     }
+                }
 
-                    // Check file type
-                    if (files[i].type && types && $.inArray(files[i].type.toLowerCase(), types) === -1) {
-                        return false;
-                    }
+                if ((options.maxTotalSize && totalSize > parseInt(options.maxTotalSize, 10))        // Check the maxTotalSize
+                    || (options.minTotalSize && totalSize < parseInt(options.minTotalSize, 10)))    // Check the minTotalSize
+                {
+                    return false;
                 }
             } else {
                 // Check file extension
@@ -2908,1733 +9754,29 @@ if (typeof jQuery === 'undefined') {
             if (value === '') {
                 return true;
             }
+            
+            value = this._format(value);
             if (!$.isNumeric(value)) {
                 return false;
             }
 
-            var compareTo = $.isNumeric(options.value) ? options.value : validator.getDynamicOption($field, options.value);
+            var compareTo      = $.isNumeric(options.value) ? options.value : validator.getDynamicOption($field, options.value),
+                compareToValue = this._format(compareTo);
+
             value = parseFloat(value);
 			return (options.inclusive === true || options.inclusive === undefined)
                     ? {
-                        valid: value >= compareTo,
+                        valid: value >= compareToValue,
                         message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.greaterThan['default'], compareTo)
                     }
                     : {
-                        valid: value > compareTo,
+                        valid: value > compareToValue,
                         message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.greaterThan.notInclusive, compareTo)
                     };
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.grid = $.extend($.fn.bootstrapValidator.i18n.grid || {}, {
-        'default': 'Please enter a valid GRId number'
-    });
-
-    $.fn.bootstrapValidator.validators.grid = {
-        /**
-         * Validate GRId (Global Release Identifier)
-         * Examples:
-         * - Valid: A12425GABC1234002M, A1-2425G-ABC1234002-M, A1 2425G ABC1234002 M, Grid:A1-2425G-ABC1234002-M
-         * - Invalid: A1-2425G-ABC1234002-Q
-         *
-         * @see http://en.wikipedia.org/wiki/Global_Release_Identifier
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            value = value.toUpperCase();
-            if (!/^[GRID:]*([0-9A-Z]{2})[-\s]*([0-9A-Z]{5})[-\s]*([0-9A-Z]{10})[-\s]*([0-9A-Z]{1})$/g.test(value)) {
-                return false;
-            }
-            value = value.replace(/\s/g, '').replace(/-/g, '');
-            if ('GRID:' === value.substr(0, 5)) {
-                value = value.substr(5);
-            }
-            return $.fn.bootstrapValidator.helpers.mod37And36(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.hex = $.extend($.fn.bootstrapValidator.i18n.hex || {}, {
-        'default': 'Please enter a valid hexadecimal number'
-    });
-
-    $.fn.bootstrapValidator.validators.hex = {
-        /**
-         * Return true if and only if the input value is a valid hexadecimal number
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            return /^[0-9a-fA-F]+$/.test(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.hexColor = $.extend($.fn.bootstrapValidator.i18n.hexColor || {}, {
-        'default': 'Please enter a valid hex color'
-    });
-
-    $.fn.bootstrapValidator.validators.hexColor = {
-        enableByHtml5: function($field) {
-            return ('color' === $field.attr('type'));
         },
 
-        /**
-         * Return true if the input value is a valid hex color
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-            return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.iban = $.extend($.fn.bootstrapValidator.i18n.iban || {}, {
-        'default': 'Please enter a valid IBAN number',
-        countryNotSupported: 'The country code %s is not supported',
-        country: 'Please enter a valid IBAN number in %s',
-        countries: {
-            AD: 'Andorra',
-            AE: 'United Arab Emirates',
-            AL: 'Albania',
-            AO: 'Angola',
-            AT: 'Austria',
-            AZ: 'Azerbaijan',
-            BA: 'Bosnia and Herzegovina',
-            BE: 'Belgium',
-            BF: 'Burkina Faso',
-            BG: 'Bulgaria',
-            BH: 'Bahrain',
-            BI: 'Burundi',
-            BJ: 'Benin',
-            BR: 'Brazil',
-            CH: 'Switzerland',
-            CI: 'Ivory Coast',
-            CM: 'Cameroon',
-            CR: 'Costa Rica',
-            CV: 'Cape Verde',
-            CY: 'Cyprus',
-            CZ: 'Czech Republic',
-            DE: 'Germany',
-            DK: 'Denmark',
-            DO: 'Dominica',
-            DZ: 'Algeria',
-            EE: 'Estonia',
-            ES: 'Spain',
-            FI: 'Finland',
-            FO: 'Faroe Islands',
-            FR: 'France',
-            GB: 'United Kingdom',
-            GE: 'Georgia',
-            GI: 'Gibraltar',
-            GL: 'Greenland',
-            GR: 'Greece',
-            GT: 'Guatemala',
-            HR: 'Croatia',
-            HU: 'Hungary',
-            IE: 'Ireland',
-            IL: 'Israel',
-            IR: 'Iran',
-            IS: 'Iceland',
-            IT: 'Italy',
-            JO: 'Jordan',
-            KW: 'Kuwait',
-            KZ: 'Kazakhstan',
-            LB: 'Lebanon',
-            LI: 'Liechtenstein',
-            LT: 'Lithuania',
-            LU: 'Luxembourg',
-            LV: 'Latvia',
-            MC: 'Monaco',
-            MD: 'Moldova',
-            ME: 'Montenegro',
-            MG: 'Madagascar',
-            MK: 'Macedonia',
-            ML: 'Mali',
-            MR: 'Mauritania',
-            MT: 'Malta',
-            MU: 'Mauritius',
-            MZ: 'Mozambique',
-            NL: 'Netherlands',
-            NO: 'Norway',
-            PK: 'Pakistan',
-            PL: 'Poland',
-            PS: 'Palestine',
-            PT: 'Portugal',
-            QA: 'Qatar',
-            RO: 'Romania',
-            RS: 'Serbia',
-            SA: 'Saudi Arabia',
-            SE: 'Sweden',
-            SI: 'Slovenia',
-            SK: 'Slovakia',
-            SM: 'San Marino',
-            SN: 'Senegal',
-            TN: 'Tunisia',
-            TR: 'Turkey',
-            VG: 'Virgin Islands, British'
-        }
-    });
-
-    $.fn.bootstrapValidator.validators.iban = {
-        html5Attributes: {
-            message: 'message',
-            country: 'country'
-        },
-
-        // http://www.swift.com/dsp/resources/documents/IBAN_Registry.pdf
-        // http://en.wikipedia.org/wiki/International_Bank_Account_Number#IBAN_formats_by_country
-        REGEX: {
-            AD: 'AD[0-9]{2}[0-9]{4}[0-9]{4}[A-Z0-9]{12}',                       // Andorra
-            AE: 'AE[0-9]{2}[0-9]{3}[0-9]{16}',                                  // United Arab Emirates
-            AL: 'AL[0-9]{2}[0-9]{8}[A-Z0-9]{16}',                               // Albania
-            AO: 'AO[0-9]{2}[0-9]{21}',                                          // Angola
-            AT: 'AT[0-9]{2}[0-9]{5}[0-9]{11}',                                  // Austria
-            AZ: 'AZ[0-9]{2}[A-Z]{4}[A-Z0-9]{20}',                               // Azerbaijan
-            BA: 'BA[0-9]{2}[0-9]{3}[0-9]{3}[0-9]{8}[0-9]{2}',                   // Bosnia and Herzegovina
-            BE: 'BE[0-9]{2}[0-9]{3}[0-9]{7}[0-9]{2}',                           // Belgium
-            BF: 'BF[0-9]{2}[0-9]{23}',                                          // Burkina Faso
-            BG: 'BG[0-9]{2}[A-Z]{4}[0-9]{4}[0-9]{2}[A-Z0-9]{8}',                // Bulgaria
-            BH: 'BH[0-9]{2}[A-Z]{4}[A-Z0-9]{14}',                               // Bahrain
-            BI: 'BI[0-9]{2}[0-9]{12}',                                          // Burundi
-            BJ: 'BJ[0-9]{2}[A-Z]{1}[0-9]{23}',                                  // Benin
-            BR: 'BR[0-9]{2}[0-9]{8}[0-9]{5}[0-9]{10}[A-Z][A-Z0-9]',             // Brazil
-            CH: 'CH[0-9]{2}[0-9]{5}[A-Z0-9]{12}',                               // Switzerland
-            CI: 'CI[0-9]{2}[A-Z]{1}[0-9]{23}',                                  // Ivory Coast
-            CM: 'CM[0-9]{2}[0-9]{23}',                                          // Cameroon
-            CR: 'CR[0-9]{2}[0-9]{3}[0-9]{14}',                                  // Costa Rica
-            CV: 'CV[0-9]{2}[0-9]{21}',                                          // Cape Verde
-            CY: 'CY[0-9]{2}[0-9]{3}[0-9]{5}[A-Z0-9]{16}',                       // Cyprus
-            CZ: 'CZ[0-9]{2}[0-9]{20}',                                          // Czech Republic
-            DE: 'DE[0-9]{2}[0-9]{8}[0-9]{10}',                                  // Germany
-            DK: 'DK[0-9]{2}[0-9]{14}',                                          // Denmark
-            DO: 'DO[0-9]{2}[A-Z0-9]{4}[0-9]{20}',                               // Dominican Republic
-            DZ: 'DZ[0-9]{2}[0-9]{20}',                                          // Algeria
-            EE: 'EE[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{11}[0-9]{1}',                  // Estonia
-            ES: 'ES[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{1}[0-9]{1}[0-9]{10}',          // Spain
-            FI: 'FI[0-9]{2}[0-9]{6}[0-9]{7}[0-9]{1}',                           // Finland
-            FO: 'FO[0-9]{2}[0-9]{4}[0-9]{9}[0-9]{1}',                           // Faroe Islands
-            FR: 'FR[0-9]{2}[0-9]{5}[0-9]{5}[A-Z0-9]{11}[0-9]{2}',               // France
-            GB: 'GB[0-9]{2}[A-Z]{4}[0-9]{6}[0-9]{8}',                           // United Kingdom
-            GE: 'GE[0-9]{2}[A-Z]{2}[0-9]{16}',                                  // Georgia
-            GI: 'GI[0-9]{2}[A-Z]{4}[A-Z0-9]{15}',                               // Gibraltar
-            GL: 'GL[0-9]{2}[0-9]{4}[0-9]{9}[0-9]{1}',                           // Greenland
-            GR: 'GR[0-9]{2}[0-9]{3}[0-9]{4}[A-Z0-9]{16}',                       // Greece
-            GT: 'GT[0-9]{2}[A-Z0-9]{4}[A-Z0-9]{20}',                            // Guatemala
-            HR: 'HR[0-9]{2}[0-9]{7}[0-9]{10}',                                  // Croatia
-            HU: 'HU[0-9]{2}[0-9]{3}[0-9]{4}[0-9]{1}[0-9]{15}[0-9]{1}',          // Hungary
-            IE: 'IE[0-9]{2}[A-Z]{4}[0-9]{6}[0-9]{8}',                           // Ireland
-            IL: 'IL[0-9]{2}[0-9]{3}[0-9]{3}[0-9]{13}',                          // Israel
-            IR: 'IR[0-9]{2}[0-9]{22}',                                          // Iran
-            IS: 'IS[0-9]{2}[0-9]{4}[0-9]{2}[0-9]{6}[0-9]{10}',                  // Iceland
-            IT: 'IT[0-9]{2}[A-Z]{1}[0-9]{5}[0-9]{5}[A-Z0-9]{12}',               // Italy
-            JO: 'JO[0-9]{2}[A-Z]{4}[0-9]{4}[0]{8}[A-Z0-9]{10}',                 // Jordan
-            KW: 'KW[0-9]{2}[A-Z]{4}[0-9]{22}',                                  // Kuwait
-            KZ: 'KZ[0-9]{2}[0-9]{3}[A-Z0-9]{13}',                               // Kazakhstan
-            LB: 'LB[0-9]{2}[0-9]{4}[A-Z0-9]{20}',                               // Lebanon
-            LI: 'LI[0-9]{2}[0-9]{5}[A-Z0-9]{12}',                               // Liechtenstein
-            LT: 'LT[0-9]{2}[0-9]{5}[0-9]{11}',                                  // Lithuania
-            LU: 'LU[0-9]{2}[0-9]{3}[A-Z0-9]{13}',                               // Luxembourg
-            LV: 'LV[0-9]{2}[A-Z]{4}[A-Z0-9]{13}',                               // Latvia
-            MC: 'MC[0-9]{2}[0-9]{5}[0-9]{5}[A-Z0-9]{11}[0-9]{2}',               // Monaco
-            MD: 'MD[0-9]{2}[A-Z0-9]{20}',                                       // Moldova
-            ME: 'ME[0-9]{2}[0-9]{3}[0-9]{13}[0-9]{2}',                          // Montenegro
-            MG: 'MG[0-9]{2}[0-9]{23}',                                          // Madagascar
-            MK: 'MK[0-9]{2}[0-9]{3}[A-Z0-9]{10}[0-9]{2}',                       // Macedonia
-            ML: 'ML[0-9]{2}[A-Z]{1}[0-9]{23}',                                  // Mali
-            MR: 'MR13[0-9]{5}[0-9]{5}[0-9]{11}[0-9]{2}',                        // Mauritania
-            MT: 'MT[0-9]{2}[A-Z]{4}[0-9]{5}[A-Z0-9]{18}',                       // Malta
-            MU: 'MU[0-9]{2}[A-Z]{4}[0-9]{2}[0-9]{2}[0-9]{12}[0-9]{3}[A-Z]{3}',  // Mauritius
-            MZ: 'MZ[0-9]{2}[0-9]{21}',                                          // Mozambique
-            NL: 'NL[0-9]{2}[A-Z]{4}[0-9]{10}',                                  // Netherlands
-            NO: 'NO[0-9]{2}[0-9]{4}[0-9]{6}[0-9]{1}',                           // Norway
-            PK: 'PK[0-9]{2}[A-Z]{4}[A-Z0-9]{16}',                               // Pakistan
-            PL: 'PL[0-9]{2}[0-9]{8}[0-9]{16}',                                  // Poland
-            PS: 'PS[0-9]{2}[A-Z]{4}[A-Z0-9]{21}',                               // Palestinian
-            PT: 'PT[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{11}[0-9]{2}',                  // Portugal
-            QA: 'QA[0-9]{2}[A-Z]{4}[A-Z0-9]{21}',                               // Qatar
-            RO: 'RO[0-9]{2}[A-Z]{4}[A-Z0-9]{16}',                               // Romania
-            RS: 'RS[0-9]{2}[0-9]{3}[0-9]{13}[0-9]{2}',                          // Serbia
-            SA: 'SA[0-9]{2}[0-9]{2}[A-Z0-9]{18}',                               // Saudi Arabia
-            SE: 'SE[0-9]{2}[0-9]{3}[0-9]{16}[0-9]{1}',                          // Sweden
-            SI: 'SI[0-9]{2}[0-9]{5}[0-9]{8}[0-9]{2}',                           // Slovenia
-            SK: 'SK[0-9]{2}[0-9]{4}[0-9]{6}[0-9]{10}',                          // Slovakia
-            SM: 'SM[0-9]{2}[A-Z]{1}[0-9]{5}[0-9]{5}[A-Z0-9]{12}',               // San Marino
-            SN: 'SN[0-9]{2}[A-Z]{1}[0-9]{23}',                                  // Senegal
-            TN: 'TN59[0-9]{2}[0-9]{3}[0-9]{13}[0-9]{2}',                        // Tunisia
-            TR: 'TR[0-9]{2}[0-9]{5}[A-Z0-9]{1}[A-Z0-9]{16}',                    // Turkey
-            VG: 'VG[0-9]{2}[A-Z]{4}[0-9]{16}'                                   // Virgin Islands, British
-        },
-
-        /**
-         * Validate an International Bank Account Number (IBAN)
-         * To test it, take the sample IBAN from
-         * http://www.nordea.com/Our+services/International+products+and+services/Cash+Management/IBAN+countries/908462.html
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * - country: The ISO 3166-1 country code. It can be
-         *      - A country code
-         *      - Name of field which its value defines the country code
-         *      - Name of callback function that returns the country code
-         *      - A callback function that returns the country code
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            value = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-            var country = options.country;
-            if (!country) {
-                country = value.substr(0, 2);
-            } else if (typeof country !== 'string' || !this.REGEX[country]) {
-                // Determine the country code
-                country = validator.getDynamicOption($field, country);
-            }
-
-            if (!this.REGEX[country]) {
-                return {
-                    valid: false,
-                    message: $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.iban.countryNotSupported, country)
-                };
-            }
-
-            if (!(new RegExp('^' + this.REGEX[country] + '$')).test(value)) {
-                return {
-                    valid: false,
-                    message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.iban.country, $.fn.bootstrapValidator.i18n.iban.countries[country])
-                };
-            }
-
-            value = value.substr(4) + value.substr(0, 4);
-            value = $.map(value.split(''), function(n) {
-                var code = n.charCodeAt(0);
-                return (code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0))
-                        // Replace A, B, C, ..., Z with 10, 11, ..., 35
-                        ? (code - 'A'.charCodeAt(0) + 10)
-                        : n;
-            });
-            value = value.join('');
-
-            var temp   = parseInt(value.substr(0, 1), 10),
-                length = value.length;
-            for (var i = 1; i < length; ++i) {
-                temp = (temp * 10 + parseInt(value.substr(i, 1), 10)) % 97;
-            }
-
-            return {
-                valid: (temp === 1),
-                message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.iban.country, $.fn.bootstrapValidator.i18n.iban.countries[country])
-            };
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.id = $.extend($.fn.bootstrapValidator.i18n.id || {}, {
-        'default': 'Please enter a valid identification number',
-        countryNotSupported: 'The country code %s is not supported',
-        country: 'Please enter a valid identification number in %s',
-        countries: {
-            BA: 'Bosnia and Herzegovina',
-            BG: 'Bulgaria',
-            BR: 'Brazil',
-            CH: 'Switzerland',
-            CL: 'Chile',
-            CN: 'China',
-            CZ: 'Czech Republic',
-            DK: 'Denmark',
-            EE: 'Estonia',
-            ES: 'Spain',
-            FI: 'Finland',
-            HR: 'Croatia',
-            IE: 'Ireland',
-            IS: 'Iceland',
-            LT: 'Lithuania',
-            LV: 'Latvia',
-            ME: 'Montenegro',
-            MK: 'Macedonia',
-            NL: 'Netherlands',
-            RO: 'Romania',
-            RS: 'Serbia',
-            SE: 'Sweden',
-            SI: 'Slovenia',
-            SK: 'Slovakia',
-            SM: 'San Marino',
-            TH: 'Thailand',
-            ZA: 'South Africa'
-        }
-    });
-
-    $.fn.bootstrapValidator.validators.id = {
-        html5Attributes: {
-            message: 'message',
-            country: 'country'
-        },
-
-        // Supported country codes
-        COUNTRY_CODES: [
-            'BA', 'BG', 'BR', 'CH', 'CL', 'CN', 'CZ', 'DK', 'EE', 'ES', 'FI', 'HR', 'IE', 'IS', 'LT', 'LV', 'ME', 'MK', 'NL',
-            'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TH', 'ZA'
-        ],
-
-        /**
-         * Validate identification number in different countries
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * - country: The ISO 3166-1 country code. It can be
-         *      - One of country code defined in COUNTRY_CODES
-         *      - Name of field which its value defines the country code
-         *      - Name of callback function that returns the country code
-         *      - A callback function that returns the country code
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            var country = options.country;
-            if (!country) {
-                country = value.substr(0, 2);
-            } else if (typeof country !== 'string' || $.inArray(country.toUpperCase(), this.COUNTRY_CODES) === -1) {
-                // Determine the country code
-                country = validator.getDynamicOption($field, country);
-            }
-
-            if ($.inArray(country, this.COUNTRY_CODES) === -1) {
-                return { valid: false, message: $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.id.countryNotSupported, country) };
-            }
-
-            var method  = ['_', country.toLowerCase()].join('');
-            return this[method](value)
-                    ? true
-                    : {
-                        valid: false,
-                        message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.id.country, $.fn.bootstrapValidator.i18n.id.countries[country.toUpperCase()])
-                    };
-        },
-
-        /**
-         * Validate Unique Master Citizen Number which uses in
-         * - Bosnia and Herzegovina (country code: BA)
-         * - Macedonia (MK)
-         * - Montenegro (ME)
-         * - Serbia (RS)
-         * - Slovenia (SI)
-         *
-         * @see http://en.wikipedia.org/wiki/Unique_Master_Citizen_Number
-         * @param {String} value The ID
-         * @param {String} countryCode The ISO country code, can be BA, MK, ME, RS, SI
-         * @returns {Boolean}
-         */
-        _validateJMBG: function(value, countryCode) {
-            if (!/^\d{13}$/.test(value)) {
-                return false;
-            }
-            var day   = parseInt(value.substr(0, 2), 10),
-                month = parseInt(value.substr(2, 2), 10),
-                year  = parseInt(value.substr(4, 3), 10),
-                rr    = parseInt(value.substr(7, 2), 10),
-                k     = parseInt(value.substr(12, 1), 10);
-
-            // Validate date of birth
-            // FIXME: Validate the year of birth
-            if (day > 31 || month > 12) {
-                return false;
-            }
-
-            // Validate checksum
-            var sum = 0;
-            for (var i = 0; i < 6; i++) {
-                sum += (7 - i) * (parseInt(value.charAt(i), 10) + parseInt(value.charAt(i + 6), 10));
-            }
-            sum = 11 - sum % 11;
-            if (sum === 10 || sum === 11) {
-                sum = 0;
-            }
-            if (sum !== k) {
-                return false;
-            }
-
-            // Validate political region
-            // rr is the political region of birth, which can be in ranges:
-            // 10-19: Bosnia and Herzegovina
-            // 20-29: Montenegro
-            // 30-39: Croatia (not used anymore)
-            // 41-49: Macedonia
-            // 50-59: Slovenia (only 50 is used)
-            // 70-79: Central Serbia
-            // 80-89: Serbian province of Vojvodina
-            // 90-99: Kosovo
-            switch (countryCode.toUpperCase()) {
-                case 'BA':
-                    return (10 <= rr && rr <= 19);
-                case 'MK':
-                    return (41 <= rr && rr <= 49);
-                case 'ME':
-                    return (20 <= rr && rr <= 29);
-                case 'RS':
-                    return (70 <= rr && rr <= 99);
-                case 'SI':
-                    return (50 <= rr && rr <= 59);
-                default:
-                    return true;
-            }
-        },
-
-        _ba: function(value) {
-            return this._validateJMBG(value, 'BA');
-        },
-        _mk: function(value) {
-            return this._validateJMBG(value, 'MK');
-        },
-        _me: function(value) {
-            return this._validateJMBG(value, 'ME');
-        },
-        _rs: function(value) {
-            return this._validateJMBG(value, 'RS');
-        },
-
-        /**
-         * Examples: 0101006500006
-         */
-        _si: function(value) {
-            return this._validateJMBG(value, 'SI');
-        },
-
-        /**
-         * Validate Bulgarian national identification number (EGN)
-         * Examples:
-         * - Valid: 7523169263, 8032056031, 803205 603 1, 8001010008, 7501020018, 7552010005, 7542011030
-         * - Invalid: 8019010008
-         *
-         * @see http://en.wikipedia.org/wiki/Uniform_civil_number
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _bg: function(value) {
-            if (!/^\d{10}$/.test(value) && !/^\d{6}\s\d{3}\s\d{1}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\s/g, '');
-            // Check the birth date
-            var year  = parseInt(value.substr(0, 2), 10) + 1900,
-                month = parseInt(value.substr(2, 2), 10),
-                day   = parseInt(value.substr(4, 2), 10);
-            if (month > 40) {
-                year += 100;
-                month -= 40;
-            } else if (month > 20) {
-                year -= 100;
-                month -= 20;
-            }
-
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [2, 4, 8, 5, 10, 9, 7, 3, 6];
-            for (var i = 0; i < 9; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = (sum % 11) % 10;
-            return (sum + '' === value.substr(9, 1));
-        },
-
-        /**
-         * Validate Brazilian national identification number (CPF)
-         * Examples:
-         * - Valid: 39053344705, 390.533.447-05, 111.444.777-35
-         * - Invalid: 231.002.999-00
-         *
-         * @see http://en.wikipedia.org/wiki/Cadastro_de_Pessoas_F%C3%ADsicas
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _br: function(value) {
-            if (/^1{11}|2{11}|3{11}|4{11}|5{11}|6{11}|7{11}|8{11}|9{11}|0{11}$/.test(value)) {
-                return false;
-            }
-            if (!/^\d{11}$/.test(value) && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\./g, '').replace(/-/g, '');
-
-            var d1 = 0;
-            for (var i = 0; i < 9; i++) {
-                d1 += (10 - i) * parseInt(value.charAt(i), 10);
-            }
-            d1 = 11 - d1 % 11;
-            if (d1 === 10 || d1 === 11) {
-                d1 = 0;
-            }
-            if (d1 + '' !== value.charAt(9)) {
-                return false;
-            }
-
-            var d2 = 0;
-            for (i = 0; i < 10; i++) {
-                d2 += (11 - i) * parseInt(value.charAt(i), 10);
-            }
-            d2 = 11 - d2 % 11;
-            if (d2 === 10 || d2 === 11) {
-                d2 = 0;
-            }
-
-            return (d2 + '' === value.charAt(10));
-        },
-
-        /**
-         * Validate Swiss Social Security Number (AHV-Nr/No AVS)
-         * Examples:
-         * - Valid: 756.1234.5678.95, 7561234567895
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#Switzerland
-         * @see http://www.bsv.admin.ch/themen/ahv/00011/02185/index.html?lang=de
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _ch: function(value) {
-            if (!/^756[\.]{0,1}[0-9]{4}[\.]{0,1}[0-9]{4}[\.]{0,1}[0-9]{2}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\D/g, '').substr(3);
-            var length = value.length,
-                sum    = 0,
-                weight = (length === 8) ? [3, 1] : [1, 3];
-            for (var i = 0; i < length - 1; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i % 2];
-            }
-            sum = 10 - sum % 10;
-            return (sum + '' === value.charAt(length - 1));
-        },
-
-        /**
-         * Validate Chilean national identification number (RUN/RUT)
-         * Examples:
-         * - Valid: 76086428-5, 22060449-7, 12531909-2
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#Chile
-         * @see https://palena.sii.cl/cvc/dte/ee_empresas_emisoras.html for samples
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _cl: function(value) {
-            if (!/^\d{7,8}[-]{0,1}[0-9K]$/i.test(value)) {
-                return false;
-            }
-            value = value.replace(/\-/g, '');
-            while (value.length < 9) {
-                value = '0' + value;
-            }
-            var sum    = 0,
-                weight = [3, 2, 7, 6, 5, 4, 3, 2];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = 11 - sum % 11;
-            if (sum === 11) {
-                sum = 0;
-            } else if (sum === 10) {
-                sum = 'K';
-            }
-            return sum + '' === value.charAt(8).toUpperCase();
-        },
-
-        /**
-         * Validate Chinese citizen identification number
-         *
-         * Rules:
-         * - For current 18-digit system (since 1st Oct 1999, defined by GB11643—1999 national standard):
-         *     - Digit 0-5: Must be a valid administrative division code of China PR.
-         *     - Digit 6-13: Must be a valid YYYYMMDD date of birth. A future date is tolerated.
-         *     - Digit 14-16: Order code, any integer.
-         *     - Digit 17: An ISO 7064:1983, MOD 11-2 checksum.
-         *       Both upper/lower case of X are tolerated.
-         * - For deprecated 15-digit system:
-         *     - Digit 0-5: Must be a valid administrative division code of China PR.
-         *     - Digit 6-11: Must be a valid YYMMDD date of birth, indicating the year of 19XX.
-         *     - Digit 12-14: Order code, any integer.
-         * Lists of valid administrative division codes of China PR can be seen here:
-         * <http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/>
-         * Published and maintained by National Bureau of Statistics of China PR.
-         * NOTE: Current and deprecated codes MUST BOTH be considered valid.
-         * Many Chinese citizens born in once existed administrative divisions!
-         *
-         * @see http://en.wikipedia.org/wiki/Resident_Identity_Card#Identity_card_number
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _cn: function(value) {
-            // Basic format check (18 or 15 digits, considering X in checksum)
-            value = value.trim();
-            if (!/^\d{15}$/.test(value) && !/^\d{17}[\dXx]{1}$/.test(value)) {
-                return false;
-            }
-            
-            // Check China PR Administrative division code
-            var adminDivisionCodes = {
-                11: {
-                    0: [0],
-                    1: [[0, 9], [11, 17]],
-                    2: [0, 28, 29]
-                },
-                12: {
-                    0: [0],
-                    1: [[0, 16]],
-                    2: [0, 21, 23, 25]
-                },
-                13: {
-                    0: [0],
-                    1: [[0, 5], 7, 8, 21, [23, 33], [81, 85]],
-                    2: [[0, 5], [7, 9], [23, 25], 27, 29, 30, 81, 83],
-                    3: [[0, 4], [21, 24]],
-                    4: [[0, 4], 6, 21, [23, 35], 81],
-                    5: [[0, 3], [21, 35], 81, 82],
-                    6: [[0, 4], [21, 38], [81, 84]],
-                    7: [[0, 3], 5, 6, [21, 33]],
-                    8: [[0, 4], [21, 28]],
-                    9: [[0, 3], [21, 30], [81, 84]],
-                    10: [[0, 3], [22, 26], 28, 81, 82],
-                    11: [[0, 2], [21, 28], 81, 82]
-                },
-                14: {
-                    0: [0],
-                    1: [0, 1, [5, 10], [21, 23], 81],
-                    2: [[0, 3], 11, 12, [21, 27]],
-                    3: [[0, 3], 11, 21, 22],
-                    4: [[0, 2], 11, 21, [23, 31], 81],
-                    5: [[0, 2], 21, 22, 24, 25, 81],
-                    6: [[0, 3], [21, 24]],
-                    7: [[0, 2], [21, 29], 81],
-                    8: [[0, 2], [21, 30], 81, 82],
-                    9: [[0, 2], [21, 32], 81],
-                    10: [[0, 2], [21, 34], 81, 82],
-                    11: [[0, 2], [21, 30], 81, 82],
-                    23: [[0, 3], 22, 23, [25, 30], 32, 33]
-                },
-                15: {
-                    0: [0],
-                    1: [[0, 5], [21, 25]],
-                    2: [[0, 7], [21, 23]],
-                    3: [[0, 4]],
-                    4: [[0, 4], [21, 26], [28, 30]],
-                    5: [[0, 2], [21, 26], 81],
-                    6: [[0, 2], [21, 27]],
-                    7: [[0, 3], [21, 27], [81, 85]],
-                    8: [[0, 2], [21, 26]],
-                    9: [[0, 2], [21, 29], 81],
-                    22: [[0, 2], [21, 24]],
-                    25: [[0, 2], [22, 31]],
-                    26: [[0, 2], [24, 27], [29, 32], 34],
-                    28: [0, 1, [22, 27]],
-                    29: [0, [21, 23]]
-                },
-                21: {
-                    0: [0],
-                    1: [[0, 6], [11, 14], [22, 24], 81],
-                    2: [[0, 4], [11, 13], 24, [81, 83]],
-                    3: [[0, 4], 11, 21, 23, 81],
-                    4: [[0, 4], 11, [21, 23]],
-                    5: [[0, 5], 21, 22],
-                    6: [[0, 4], 24, 81, 82],
-                    7: [[0, 3], 11, 26, 27, 81, 82],
-                    8: [[0, 4], 11, 81, 82],
-                    9: [[0, 5], 11, 21, 22],
-                    10: [[0, 5], 11, 21, 81],
-                    11: [[0, 3], 21, 22],
-                    12: [[0, 2], 4, 21, 23, 24, 81, 82],
-                    13: [[0, 3], 21, 22, 24, 81, 82],
-                    14: [[0, 4], 21, 22, 81]
-                },
-                22: {
-                    0: [0],
-                    1: [[0, 6], 12, 22, [81, 83]],
-                    2: [[0, 4], 11, 21, [81, 84]],
-                    3: [[0, 3], 22, 23, 81, 82],
-                    4: [[0, 3], 21, 22],
-                    5: [[0, 3], 21, 23, 24, 81, 82],
-                    6: [[0, 2], 4, 5, [21, 23], 25, 81],
-                    7: [[0, 2], [21, 24], 81],
-                    8: [[0, 2], 21, 22, 81, 82],
-                    24: [[0, 6], 24, 26]
-                },
-                23: {
-                    0: [0],
-                    1: [[0, 12], 21, [23, 29], [81, 84]],
-                    2: [[0, 8], 21, [23, 25], 27, [29, 31], 81],
-                    3: [[0, 7], 21, 81, 82],
-                    4: [[0, 7], 21, 22],
-                    5: [[0, 3], 5, 6, [21, 24]],
-                    6: [[0, 6], [21, 24]],
-                    7: [[0, 16], 22, 81],
-                    8: [[0, 5], 11, 22, 26, 28, 33, 81, 82],
-                    9: [[0, 4], 21],
-                    10: [[0, 5], 24, 25, 81, [83, 85]],
-                    11: [[0, 2], 21, 23, 24, 81, 82],
-                    12: [[0, 2], [21, 26], [81, 83]],
-                    27: [[0, 4], [21, 23]]
-                },
-                31: {
-                    0: [0],
-                    1: [0, 1, [3, 10], [12, 20]],
-                    2: [0, 30]
-                },
-                32: {
-                    0: [0],
-                    1: [[0, 7], 11, [13, 18], 24, 25],
-                    2: [[0, 6], 11, 81, 82],
-                    3: [[0, 5], 11, 12, [21, 24], 81, 82],
-                    4: [[0, 2], 4, 5, 11, 12, 81, 82],
-                    5: [[0, 9], [81, 85]],
-                    6: [[0, 2], 11, 12, 21, 23, [81, 84]],
-                    7: [0, 1, 3, 5, 6, [21, 24]],
-                    8: [[0, 4], 11, 26, [29, 31]],
-                    9: [[0, 3], [21, 25], 28, 81, 82],
-                    10: [[0, 3], 11, 12, 23, 81, 84, 88],
-                    11: [[0, 2], 11, 12, [81, 83]],
-                    12: [[0, 4], [81, 84]],
-                    13: [[0, 2], 11, [21, 24]]
-                },
-                33: {
-                    0: [0],
-                    1: [[0, 6], [8, 10], 22, 27, 82, 83, 85],
-                    2: [0, 1, [3, 6], 11, 12, 25, 26, [81, 83]],
-                    3: [[0, 4], 22, 24, [26, 29], 81, 82],
-                    4: [[0, 2], 11, 21, 24, [81, 83]],
-                    5: [[0, 3], [21, 23]],
-                    6: [[0, 2], 21, 24, [81, 83]],
-                    7: [[0, 3], 23, 26, 27, [81, 84]],
-                    8: [[0, 3], 22, 24, 25, 81],
-                    9: [[0, 3], 21, 22],
-                    10: [[0, 4], [21, 24], 81, 82],
-                    11: [[0, 2], [21, 27], 81]
-                },
-                34: {
-                    0: [0],
-                    1: [[0, 4], 11, [21, 24], 81],
-                    2: [[0, 4], 7, 8, [21, 23], 25],
-                    3: [[0, 4], 11, [21, 23]],
-                    4: [[0, 6], 21],
-                    5: [[0, 4], 6, [21, 23]],
-                    6: [[0, 4], 21],
-                    7: [[0, 3], 11, 21],
-                    8: [[0, 3], 11, [22, 28], 81],
-                    10: [[0, 4], [21, 24]],
-                    11: [[0, 3], 22, [24, 26], 81, 82],
-                    12: [[0, 4], 21, 22, 25, 26, 82],
-                    13: [[0, 2], [21, 24]],
-                    14: [[0, 2], [21, 24]],
-                    15: [[0, 3], [21, 25]],
-                    16: [[0, 2], [21, 23]],
-                    17: [[0, 2], [21, 23]],
-                    18: [[0, 2], [21, 25], 81]
-                },
-                35: {
-                    0: [0],
-                    1: [[0, 5], 11, [21, 25], 28, 81, 82],
-                    2: [[0, 6], [11, 13]],
-                    3: [[0, 5], 22],
-                    4: [[0, 3], 21, [23, 30], 81],
-                    5: [[0, 5], 21, [24, 27], [81, 83]],
-                    6: [[0, 3], [22, 29], 81],
-                    7: [[0, 2], [21, 25], [81, 84]],
-                    8: [[0, 2], [21, 25], 81],
-                    9: [[0, 2], [21, 26], 81, 82]
-                },
-                36: {
-                    0: [0],
-                    1: [[0, 5], 11, [21, 24]],
-                    2: [[0, 3], 22, 81],
-                    3: [[0, 2], 13, [21, 23]],
-                    4: [[0, 3], 21, [23, 30], 81, 82],
-                    5: [[0, 2], 21],
-                    6: [[0, 2], 22, 81],
-                    7: [[0, 2], [21, 35], 81, 82],
-                    8: [[0, 3], [21, 30], 81],
-                    9: [[0, 2], [21, 26], [81, 83]],
-                    10: [[0, 2], [21, 30]],
-                    11: [[0, 2], [21, 30], 81]
-                },
-                37: {
-                    0: [0],
-                    1: [[0, 5], 12, 13, [24, 26], 81],
-                    2: [[0, 3], 5, [11, 14], [81, 85]],
-                    3: [[0, 6], [21, 23]],
-                    4: [[0, 6], 81],
-                    5: [[0, 3], [21, 23]],
-                    6: [[0, 2], [11, 13], 34, [81, 87]],
-                    7: [[0, 5], 24, 25, [81, 86]],
-                    8: [[0, 2], 11, [26, 32], [81, 83]],
-                    9: [[0, 3], 11, 21, 23, 82, 83],
-                    10: [[0, 2], [81, 83]],
-                    11: [[0, 3], 21, 22],
-                    12: [[0, 3]],
-                    13: [[0, 2], 11, 12, [21, 29]],
-                    14: [[0, 2], [21, 28], 81, 82],
-                    15: [[0, 2], [21, 26], 81],
-                    16: [[0, 2], [21, 26]],
-                    17: [[0, 2], [21, 28]]
-                },
-                41: {
-                    0: [0],
-                    1: [[0, 6], 8, 22, [81, 85]],
-                    2: [[0, 5], 11, [21, 25]],
-                    3: [[0, 7], 11, [22, 29], 81],
-                    4: [[0, 4], 11, [21, 23], 25, 81, 82],
-                    5: [[0, 3], 5, 6, 22, 23, 26, 27, 81],
-                    6: [[0, 3], 11, 21, 22],
-                    7: [[0, 4], 11, 21, [24, 28], 81, 82],
-                    8: [[0, 4], 11, [21, 23], 25, [81, 83]],
-                    9: [[0, 2], 22, 23, [26, 28]],
-                    10: [[0, 2], [23, 25], 81, 82],
-                    11: [[0, 4], [21, 23]],
-                    12: [[0, 2], 21, 22, 24, 81, 82],
-                    13: [[0, 3], [21, 30], 81],
-                    14: [[0, 3], [21, 26], 81],
-                    15: [[0, 3], [21, 28]],
-                    16: [[0, 2], [21, 28], 81],
-                    17: [[0, 2], [21, 29]],
-                    90: [0, 1]
-                },
-                42: {
-                    0: [0],
-                    1: [[0, 7], [11, 17]],
-                    2: [[0, 5], 22, 81],
-                    3: [[0, 3], [21, 25], 81],
-                    5: [[0, 6], [25, 29], [81, 83]],
-                    6: [[0, 2], 6, 7, [24, 26], [82, 84]],
-                    7: [[0, 4]],
-                    8: [[0, 2], 4, 21, 22, 81],
-                    9: [[0, 2], [21, 23], 81, 82, 84],
-                    10: [[0, 3], [22, 24], 81, 83, 87],
-                    11: [[0, 2], [21, 27], 81, 82],
-                    12: [[0, 2], [21, 24], 81],
-                    13: [[0, 3], 21, 81],
-                    28: [[0, 2], 22, 23, [25, 28]],
-                    90: [0, [4, 6], 21]
-                },
-                43: {
-                    0: [0],
-                    1: [[0, 5], 11, 12, 21, 22, 24, 81],
-                    2: [[0, 4], 11, 21, [23, 25], 81],
-                    3: [[0, 2], 4, 21, 81, 82],
-                    4: [0, 1, [5, 8], 12, [21, 24], 26, 81, 82],
-                    5: [[0, 3], 11, [21, 25], [27, 29], 81],
-                    6: [[0, 3], 11, 21, 23, 24, 26, 81, 82],
-                    7: [[0, 3], [21, 26], 81],
-                    8: [[0, 2], 11, 21, 22],
-                    9: [[0, 3], [21, 23], 81],
-                    10: [[0, 3], [21, 28], 81],
-                    11: [[0, 3], [21, 29]],
-                    12: [[0, 2], [21, 30], 81],
-                    13: [[0, 2], 21, 22, 81, 82],
-                    31: [0, 1, [22, 27], 30]
-                },
-                44: {
-                    0: [0],
-                    1: [[0, 7], [11, 16], 83, 84],
-                    2: [[0, 5], 21, 22, 24, 29, 32, 33, 81, 82],
-                    3: [0, 1, [3, 8]],
-                    4: [[0, 4]],
-                    5: [0, 1, [6, 15], 23, 82, 83],
-                    6: [0, 1, [4, 8]],
-                    7: [0, 1, [3, 5], 81, [83, 85]],
-                    8: [[0, 4], 11, 23, 25, [81, 83]],
-                    9: [[0, 3], 23, [81, 83]],
-                    12: [[0, 3], [23, 26], 83, 84],
-                    13: [[0, 3], [22, 24], 81],
-                    14: [[0, 2], [21, 24], 26, 27, 81],
-                    15: [[0, 2], 21, 23, 81],
-                    16: [[0, 2], [21, 25]],
-                    17: [[0, 2], 21, 23, 81],
-                    18: [[0, 3], 21, 23, [25, 27], 81, 82],
-                    19: [0],
-                    20: [0],
-                    51: [[0, 3], 21, 22],
-                    52: [[0, 3], 21, 22, 24, 81],
-                    53: [[0, 2], [21, 23], 81]
-                },
-                45: {
-                    0: [0],
-                    1: [[0, 9], [21, 27]],
-                    2: [[0, 5], [21, 26]],
-                    3: [[0, 5], 11, 12, [21, 32]],
-                    4: [0, 1, [3, 6], 11, [21, 23], 81],
-                    5: [[0, 3], 12, 21],
-                    6: [[0, 3], 21, 81],
-                    7: [[0, 3], 21, 22],
-                    8: [[0, 4], 21, 81],
-                    9: [[0, 3], [21, 24], 81],
-                    10: [[0, 2], [21, 31]],
-                    11: [[0, 2], [21, 23]],
-                    12: [[0, 2], [21, 29], 81],
-                    13: [[0, 2], [21, 24], 81],
-                    14: [[0, 2], [21, 25], 81]
-                },
-                46: {
-                    0: [0],
-                    1: [0, 1, [5, 8]],
-                    2: [0, 1],
-                    3: [0, [21, 23]],
-                    90: [[0, 3], [5, 7], [21, 39]]
-                },
-                50: {
-                    0: [0],
-                    1: [[0, 19]],
-                    2: [0, [22, 38], [40, 43]],
-                    3: [0, [81, 84]]
-                },
-                51: {
-                    0: [0],
-                    1: [0, 1, [4, 8], [12, 15], [21, 24], 29, 31, 32, [81, 84]],
-                    3: [[0, 4], 11, 21, 22],
-                    4: [[0, 3], 11, 21, 22],
-                    5: [[0, 4], 21, 22, 24, 25],
-                    6: [0, 1, 3, 23, 26, [81, 83]],
-                    7: [0, 1, 3, 4, [22, 27], 81],
-                    8: [[0, 2], 11, 12, [21, 24]],
-                    9: [[0, 4], [21, 23]],
-                    10: [[0, 2], 11, 24, 25, 28],
-                    11: [[0, 2], [11, 13], 23, 24, 26, 29, 32, 33, 81],
-                    13: [[0, 4], [21, 25], 81],
-                    14: [[0, 2], [21, 25]],
-                    15: [[0, 3], [21, 29]],
-                    16: [[0, 3], [21, 23], 81],
-                    17: [[0, 3], [21, 25], 81],
-                    18: [[0, 3], [21, 27]],
-                    19: [[0, 3], [21, 23]],
-                    20: [[0, 2], 21, 22, 81],
-                    32: [0, [21, 33]],
-                    33: [0, [21, 38]],
-                    34: [0, 1, [22, 37]]
-                },
-                52: {
-                    0: [0],
-                    1: [[0, 3], [11, 15], [21, 23], 81],
-                    2: [0, 1, 3, 21, 22],
-                    3: [[0, 3], [21, 30], 81, 82],
-                    4: [[0, 2], [21, 25]],
-                    5: [[0, 2], [21, 27]],
-                    6: [[0, 3], [21, 28]],
-                    22: [0, 1, [22, 30]],
-                    23: [0, 1, [22, 28]],
-                    24: [0, 1, [22, 28]],
-                    26: [0, 1, [22, 36]],
-                    27: [[0, 2], 22, 23, [25, 32]]
-                },
-                53: {
-                    0: [0],
-                    1: [[0, 3], [11, 14], 21, 22, [24, 29], 81],
-                    3: [[0, 2], [21, 26], 28, 81],
-                    4: [[0, 2], [21, 28]],
-                    5: [[0, 2], [21, 24]],
-                    6: [[0, 2], [21, 30]],
-                    7: [[0, 2], [21, 24]],
-                    8: [[0, 2], [21, 29]],
-                    9: [[0, 2], [21, 27]],
-                    23: [0, 1, [22, 29], 31],
-                    25: [[0, 4], [22, 32]],
-                    26: [0, 1, [21, 28]],
-                    27: [0, 1, [22, 30]], 28: [0, 1, 22, 23],
-                    29: [0, 1, [22, 32]],
-                    31: [0, 2, 3, [22, 24]],
-                    34: [0, [21, 23]],
-                    33: [0, 21, [23, 25]],
-                    35: [0, [21, 28]]
-                },
-                54: {
-                    0: [0],
-                    1: [[0, 2], [21, 27]],
-                    21: [0, [21, 29], 32, 33],
-                    22: [0, [21, 29], [31, 33]],
-                    23: [0, 1, [22, 38]],
-                    24: [0, [21, 31]],
-                    25: [0, [21, 27]],
-                    26: [0, [21, 27]]
-                },
-                61: {
-                    0: [0],
-                    1: [[0, 4], [11, 16], 22, [24, 26]],
-                    2: [[0, 4], 22],
-                    3: [[0, 4], [21, 24], [26, 31]],
-                    4: [[0, 4], [22, 31], 81],
-                    5: [[0, 2], [21, 28], 81, 82],
-                    6: [[0, 2], [21, 32]],
-                    7: [[0, 2], [21, 30]],
-                    8: [[0, 2], [21, 31]],
-                    9: [[0, 2], [21, 29]],
-                    10: [[0, 2], [21, 26]]
-                },
-                62: {
-                    0: [0],
-                    1: [[0, 5], 11, [21, 23]],
-                    2: [0, 1],
-                    3: [[0, 2], 21],
-                    4: [[0, 3], [21, 23]],
-                    5: [[0, 3], [21, 25]],
-                    6: [[0, 2], [21, 23]],
-                    7: [[0, 2], [21, 25]],
-                    8: [[0, 2], [21, 26]],
-                    9: [[0, 2], [21, 24], 81, 82],
-                    10: [[0, 2], [21, 27]],
-                    11: [[0, 2], [21, 26]],
-                    12: [[0, 2], [21, 28]],
-                    24: [0, 21, [24, 29]],
-                    26: [0, 21, [23, 30]],
-                    29: [0, 1, [21, 27]],
-                    30: [0, 1, [21, 27]]
-                },
-                63: {
-                    0: [0],
-                    1: [[0, 5], [21, 23]],
-                    2: [0, 2, [21, 25]],
-                    21: [0, [21, 23], [26, 28]],
-                    22: [0, [21, 24]],
-                    23: [0, [21, 24]],
-                    25: [0, [21, 25]],
-                    26: [0, [21, 26]],
-                    27: [0, 1, [21, 26]],
-                    28: [[0, 2], [21, 23]]
-                },
-                64: {
-                    0: [0],
-                    1: [0, 1, [4, 6], 21, 22, 81],
-                    2: [[0, 3], 5, [21, 23]],
-                    3: [[0, 3], [21, 24], 81],
-                    4: [[0, 2], [21, 25]],
-                    5: [[0, 2], 21, 22]
-                },
-                65: {
-                    0: [0],
-                    1: [[0, 9], 21],
-                    2: [[0, 5]],
-                    21: [0, 1, 22, 23],
-                    22: [0, 1, 22, 23],
-                    23: [[0, 3], [23, 25], 27, 28],
-                    28: [0, 1, [22, 29]],
-                    29: [0, 1, [22, 29]],
-                    30: [0, 1, [22, 24]], 31: [0, 1, [21, 31]],
-                    32: [0, 1, [21, 27]],
-                    40: [0, 2, 3, [21, 28]],
-                    42: [[0, 2], 21, [23, 26]],
-                    43: [0, 1, [21, 26]],
-                    90: [[0, 4]], 27: [[0, 2], 22, 23]
-                },
-                71: { 0: [0] },
-                81: { 0: [0] },
-                82: { 0: [0] }
-            };
-            
-            var provincial  = parseInt(value.substr(0, 2), 10),
-                prefectural = parseInt(value.substr(2, 2), 10),
-                county      = parseInt(value.substr(4, 2), 10);
-            
-            if (!adminDivisionCodes[provincial] || !adminDivisionCodes[provincial][prefectural]) {
-                return false;
-            }
-            var inRange  = false,
-                rangeDef = adminDivisionCodes[provincial][prefectural];
-            for (var i = 0; i < rangeDef.length; i++) {
-                if (($.isArray(rangeDef[i]) && rangeDef[i][0] <= county && county <= rangeDef[i][1])
-                    || (!$.isArray(rangeDef[i]) && county === rangeDef[i]))
-                {
-                    inRange = true;
-                    break;
-                }
-            }
-
-            if (!inRange) {
-                return false;
-            }
-            
-            // Check date of birth
-            var dob;
-            if (value.length === 18) {
-                dob = value.substr(6, 8);
-            } else /* length == 15 */ { 
-                dob = '19' + value.substr(6, 6);
-            }
-            var year  = parseInt(dob.substr(0, 4), 10),
-                month = parseInt(dob.substr(4, 2), 10),
-                day   = parseInt(dob.substr(6, 2), 10);
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                return false;
-            }
-            
-            // Check checksum (18-digit system only)
-            if (value.length === 18) {
-                var sum    = 0,
-                    weight = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
-                for (i = 0; i < 17; i++) {
-                    sum += parseInt(value.charAt(i), 10) * weight[i];
-                }
-                sum = (12 - (sum % 11)) % 11;
-                var checksum = (value.charAt(17).toUpperCase() !== 'X') ? parseInt(value.charAt(17), 10) : 10;
-                return checksum === sum;
-            }
-            
-            return true;
-        },
-        
-        /**
-         * Validate Czech national identification number (RC)
-         * Examples:
-         * - Valid: 7103192745, 991231123
-         * - Invalid: 1103492745, 590312123
-         *
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _cz: function(value) {
-            if (!/^\d{9,10}$/.test(value)) {
-                return false;
-            }
-            var year  = 1900 + parseInt(value.substr(0, 2), 10),
-                month = parseInt(value.substr(2, 2), 10) % 50 % 20,
-                day   = parseInt(value.substr(4, 2), 10);
-            if (value.length === 9) {
-                if (year >= 1980) {
-                    year -= 100;
-                }
-                if (year > 1953) {
-                    return false;
-                }
-            } else if (year < 1954) {
-                year += 100;
-            }
-
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                return false;
-            }
-
-            // Check that the birth date is not in the future
-            if (value.length === 10) {
-                var check = parseInt(value.substr(0, 9), 10) % 11;
-                if (year < 1985) {
-                    check = check % 10;
-                }
-                return (check + '' === value.substr(9, 1));
-            }
-
-            return true;
-        },
-
-        /**
-         * Validate Danish Personal Identification number (CPR)
-         * Examples:
-         * - Valid: 2110625629, 211062-5629
-         * - Invalid: 511062-5629
-         *
-         * @see https://en.wikipedia.org/wiki/Personal_identification_number_(Denmark)
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _dk: function(value) {
-            if (!/^[0-9]{6}[-]{0,1}[0-9]{4}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/-/g, '');
-            var day   = parseInt(value.substr(0, 2), 10),
-                month = parseInt(value.substr(2, 2), 10),
-                year  = parseInt(value.substr(4, 2), 10);
-
-            switch (true) {
-                case ('5678'.indexOf(value.charAt(6)) !== -1 && year >= 58):
-                    year += 1800;
-                    break;
-                case ('0123'.indexOf(value.charAt(6)) !== -1):
-                case ('49'.indexOf(value.charAt(6)) !== -1 && year >= 37):
-                    year += 1900;
-                    break;
-                default:
-                    year += 2000;
-                    break;
-            }
-
-            return $.fn.bootstrapValidator.helpers.date(year, month, day);
-        },
-
-        /**
-         * Validate Estonian Personal Identification Code (isikukood)
-         * Examples:
-         * - Valid: 37605030299
-         *
-         * @see http://et.wikipedia.org/wiki/Isikukood
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _ee: function(value) {
-            // Use the same format as Lithuanian Personal Code
-            return this._lt(value);
-        },
-
-        /**
-         * Validate Spanish personal identity code (DNI)
-         * Support i) DNI (for Spanish citizens) and ii) NIE (for foreign people)
-         *
-         * Examples:
-         * - Valid: i) 54362315K, 54362315-K; ii) X2482300W, X-2482300W, X-2482300-W
-         * - Invalid: i) 54362315Z; ii) X-2482300A
-         *
-         * @see https://en.wikipedia.org/wiki/National_identification_number#Spain
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _es: function(value) {
-            if (!/^[0-9A-Z]{8}[-]{0,1}[0-9A-Z]$/.test(value)                    // DNI
-                && !/^[XYZ][-]{0,1}[0-9]{7}[-]{0,1}[0-9A-Z]$/.test(value)) {    // NIE
-                return false;
-            }
-
-            value = value.replace(/-/g, '');
-            var index = 'XYZ'.indexOf(value.charAt(0));
-            if (index !== -1) {
-                // It is NIE number
-                value = index + value.substr(1) + '';
-            }
-
-            var check = parseInt(value.substr(0, 8), 10);
-            check = 'TRWAGMYFPDXBNJZSQVHLCKE'[check % 23];
-            return (check === value.substr(8, 1));
-        },
-
-        /**
-         * Validate Finnish Personal Identity Code (HETU)
-         * Examples:
-         * - Valid: 311280-888Y, 131052-308T
-         * - Invalid: 131052-308U, 310252-308Y
-         *
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _fi: function(value) {
-            if (!/^[0-9]{6}[-+A][0-9]{3}[0-9ABCDEFHJKLMNPRSTUVWXY]$/.test(value)) {
-                return false;
-            }
-            var day       = parseInt(value.substr(0, 2), 10),
-                month     = parseInt(value.substr(2, 2), 10),
-                year      = parseInt(value.substr(4, 2), 10),
-                centuries = {
-                    '+': 1800,
-                    '-': 1900,
-                    'A': 2000
-                };
-            year = centuries[value.charAt(6)] + year;
-
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                return false;
-            }
-
-            var individual = parseInt(value.substr(7, 3), 10);
-            if (individual < 2) {
-                return false;
-            }
-            var n = value.substr(0, 6) + value.substr(7, 3) + '';
-            n = parseInt(n, 10);
-            return '0123456789ABCDEFHJKLMNPRSTUVWXY'.charAt(n % 31) === value.charAt(10);
-        },
-
-        /**
-         * Validate Croatian personal identification number (OIB)
-         * Examples:
-         * - Valid: 33392005961
-         * - Invalid: 33392005962
-         *
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _hr: function(value) {
-            if (!/^[0-9]{11}$/.test(value)) {
-                return false;
-            }
-            return $.fn.bootstrapValidator.helpers.mod11And10(value);
-        },
-
-        /**
-         * Validate Irish Personal Public Service Number (PPS)
-         * Examples:
-         * - Valid: 6433435F, 6433435FT, 6433435FW, 6433435OA, 6433435IH, 1234567TW, 1234567FA
-         * - Invalid: 6433435E, 6433435VH
-         *
-         * @see https://en.wikipedia.org/wiki/Personal_Public_Service_Number
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _ie: function(value) {
-            if (!/^\d{7}[A-W][AHWTX]?$/.test(value)) {
-                return false;
-            }
-
-            var getCheckDigit = function(value) {
-                while (value.length < 7) {
-                    value = '0' + value;
-                }
-                var alphabet = 'WABCDEFGHIJKLMNOPQRSTUV',
-                    sum      = 0;
-                for (var i = 0; i < 7; i++) {
-                    sum += parseInt(value.charAt(i), 10) * (8 - i);
-                }
-                sum += 9 * alphabet.indexOf(value.substr(7));
-                return alphabet[sum % 23];
-            };
-
-            // 2013 format
-            if (value.length === 9 && ('A' === value.charAt(8) || 'H' === value.charAt(8))) {
-                return value.charAt(7) === getCheckDigit(value.substr(0, 7) + value.substr(8) + '');
-            }
-            // The old format
-            else {
-                return value.charAt(7) === getCheckDigit(value.substr(0, 7));
-            }
-        },
-
-        /**
-         * Validate Iceland national identification number (Kennitala)
-         * Examples:
-         * - Valid: 120174-3399, 1201743399, 0902862349
-         *
-         * @see http://en.wikipedia.org/wiki/Kennitala
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _is: function(value) {
-            if (!/^[0-9]{6}[-]{0,1}[0-9]{4}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/-/g, '');
-            var day     = parseInt(value.substr(0, 2), 10),
-                month   = parseInt(value.substr(2, 2), 10),
-                year    = parseInt(value.substr(4, 2), 10),
-                century = parseInt(value.charAt(9), 10);
-
-            year = (century === 9) ? (1900 + year) : ((20 + century) * 100 + year);
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day, true)) {
-                return false;
-            }
-            // Validate the check digit
-            var sum    = 0,
-                weight = [3, 2, 7, 6, 5, 4, 3, 2];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = 11 - sum % 11;
-            return (sum + '' === value.charAt(8));
-        },
-
-        /**
-         * Validate Lithuanian Personal Code (Asmens kodas)
-         * Examples:
-         * - Valid: 38703181745
-         * - Invalid: 38703181746, 78703181745, 38703421745
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#Lithuania
-         * @see http://www.adomas.org/midi2007/pcode.html
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _lt: function(value) {
-            if (!/^[0-9]{11}$/.test(value)) {
-                return false;
-            }
-            var gender  = parseInt(value.charAt(0), 10),
-                year    = parseInt(value.substr(1, 2), 10),
-                month   = parseInt(value.substr(3, 2), 10),
-                day     = parseInt(value.substr(5, 2), 10),
-                century = (gender % 2 === 0) ? (17 + gender / 2) : (17 + (gender + 1) / 2);
-            year = century * 100 + year;
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day, true)) {
-                return false;
-            }
-
-            // Validate the check digit
-            var sum    = 0,
-                weight = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
-            for (var i = 0; i < 10; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = sum % 11;
-            if (sum !== 10) {
-                return sum + '' === value.charAt(10);
-            }
-
-            // Re-calculate the check digit
-            sum    = 0;
-            weight = [3, 4, 5, 6, 7, 8, 9, 1, 2, 3];
-            for (i = 0; i < 10; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = sum % 11;
-            if (sum === 10) {
-                sum = 0;
-            }
-            return (sum + '' === value.charAt(10));
-        },
-
-        /**
-         * Validate Latvian Personal Code (Personas kods)
-         * Examples:
-         * - Valid: 161175-19997, 16117519997
-         * - Invalid: 161375-19997
-         *
-         * @see http://laacz.lv/2006/11/25/pk-parbaudes-algoritms/
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _lv: function(value) {
-            if (!/^[0-9]{6}[-]{0,1}[0-9]{5}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\D/g, '');
-            // Check birth date
-            var day   = parseInt(value.substr(0, 2), 10),
-                month = parseInt(value.substr(2, 2), 10),
-                year  = parseInt(value.substr(4, 2), 10);
-            year = year + 1800 + parseInt(value.charAt(6), 10) * 100;
-
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day, true)) {
-                return false;
-            }
-
-            // Check personal code
-            var sum    = 0,
-                weight = [10, 5, 8, 4, 2, 1, 6, 3, 7, 9];
-            for (var i = 0; i < 10; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = (sum + 1) % 11 % 10;
-            return (sum + '' === value.charAt(10));
-        },
-
-        /**
-         * Validate Dutch national identification number (BSN)
-         * Examples:
-         * - Valid: 111222333, 941331490, 9413.31.490
-         * - Invalid: 111252333
-         *
-         * @see https://nl.wikipedia.org/wiki/Burgerservicenummer
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _nl: function(value) {
-            while (value.length < 9) {
-                value = '0' + value;
-            }
-            if (!/^[0-9]{4}[.]{0,1}[0-9]{2}[.]{0,1}[0-9]{3}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\./g, '');
-            if (parseInt(value, 10) === 0) {
-                return false;
-            }
-            var sum    = 0,
-                length = value.length;
-            for (var i = 0; i < length - 1; i++) {
-                sum += (9 - i) * parseInt(value.charAt(i), 10);
-            }
-            sum = sum % 11;
-            if (sum === 10) {
-                sum = 0;
-            }
-            return (sum + '' === value.charAt(length - 1));
-        },
-
-        /**
-         * Validate Romanian numerical personal code (CNP)
-         * Examples:
-         * - Valid: 1630615123457, 1800101221144
-         * - Invalid: 8800101221144, 1632215123457, 1630615123458
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#Romania
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _ro: function(value) {
-            if (!/^[0-9]{13}$/.test(value)) {
-                return false;
-            }
-            var gender = parseInt(value.charAt(0), 10);
-            if (gender === 0 || gender === 7 || gender === 8) {
-                return false;
-            }
-
-            // Determine the date of birth
-            var year      = parseInt(value.substr(1, 2), 10),
-                month     = parseInt(value.substr(3, 2), 10),
-                day       = parseInt(value.substr(5, 2), 10),
-                // The year of date is determined base on the gender
-                centuries = {
-                    '1': 1900,  // Male born between 1900 and 1999
-                    '2': 1900,  // Female born between 1900 and 1999
-                    '3': 1800,  // Male born between 1800 and 1899
-                    '4': 1800,  // Female born between 1800 and 1899
-                    '5': 2000,  // Male born after 2000
-                    '6': 2000   // Female born after 2000
-                };
-            if (day > 31 && month > 12) {
-                return false;
-            }
-            if (gender !== 9) {
-                year = centuries[gender + ''] + year;
-                if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                    return false;
-                }
-            }
-
-            // Validate the check digit
-            var sum    = 0,
-                weight = [2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9],
-                length = value.length;
-            for (var i = 0; i < length - 1; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = sum % 11;
-            if (sum === 10) {
-                sum = 1;
-            }
-            return (sum + '' === value.charAt(length - 1));
-        },
-
-        /**
-         * Validate Swedish personal identity number (personnummer)
-         * Examples:
-         * - Valid: 8112289874, 811228-9874, 811228+9874
-         * - Invalid: 811228-9873
-         *
-         * @see http://en.wikipedia.org/wiki/Personal_identity_number_(Sweden)
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _se: function(value) {
-            if (!/^[0-9]{10}$/.test(value) && !/^[0-9]{6}[-|+][0-9]{4}$/.test(value)) {
-                return false;
-            }
-            value = value.replace(/[^0-9]/g, '');
-
-            var year  = parseInt(value.substr(0, 2), 10) + 1900,
-                month = parseInt(value.substr(2, 2), 10),
-                day   = parseInt(value.substr(4, 2), 10);
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                return false;
-            }
-
-            // Validate the last check digit
-            return $.fn.bootstrapValidator.helpers.luhn(value);
-        },
-
-        /**
-         * Validate Slovak national identifier number (RC)
-         * Examples:
-         * - Valid: 7103192745, 991231123
-         * - Invalid: 7103192746, 1103492745
-         *
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _sk: function(value) {
-            // Slovakia uses the same format as Czech Republic
-            return this._cz(value);
-        },
-
-        /**
-         * Validate San Marino citizen number
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#San_Marino
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _sm: function(value) {
-            return /^\d{5}$/.test(value);
-        },
-
-        /**
-         * Validate Thailand citizen number
-         * Examples:
-         * - Valid: 7145620509547, 3688699975685, 2368719339716
-         * - Invalid: 1100800092310
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#Thailand
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _th: function(value) {
-            if (value.length !== 13) {
-                return false;
-            }
-
-            var sum = 0;
-            for (var i = 0; i < 12; i++) {
-                sum += parseInt(value.charAt(i), 10) * (13 - i);
-            }
-
-            return (11 - sum % 11) % 10 === parseInt(value.charAt(12), 10);
-        },
-
-        /**
-         * Validate South African ID
-         * Example:
-         * - Valid: 8001015009087
-         * - Invalid: 8001015009287, 8001015009086
-         *
-         * @see http://en.wikipedia.org/wiki/National_identification_number#South_Africa
-         * @param {String} value The ID
-         * @returns {Boolean}
-         */
-        _za: function(value) {
-            if (!/^[0-9]{10}[0|1][8|9][0-9]$/.test(value)) {
-                return false;
-            }
-            var year        = parseInt(value.substr(0, 2), 10),
-                currentYear = new Date().getFullYear() % 100,
-                month       = parseInt(value.substr(2, 2), 10),
-                day         = parseInt(value.substr(4, 2), 10);
-            year = (year >= currentYear) ? (year + 1900) : (year + 2000);
-
-            if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                return false;
-            }
-
-            // Validate the last check digit
-            return $.fn.bootstrapValidator.helpers.luhn(value);
+        _format: function(value) {
+            return (value + '').replace(',', '.');
         }
     };
 }(window.jQuery));
@@ -4679,95 +9821,6 @@ if (typeof jQuery === 'undefined') {
     };
 }(window.jQuery));
 ;(function($) {
-    $.fn.bootstrapValidator.i18n.imei = $.extend($.fn.bootstrapValidator.i18n.imei || {}, {
-        'default': 'Please enter a valid IMEI number'
-    });
-
-    $.fn.bootstrapValidator.validators.imei = {
-        /**
-         * Validate IMEI (International Mobile Station Equipment Identity)
-         * Examples:
-         * - Valid: 35-209900-176148-1, 35-209900-176148-23, 3568680000414120, 490154203237518
-         * - Invalid: 490154203237517
-         *
-         * @see http://en.wikipedia.org/wiki/International_Mobile_Station_Equipment_Identity
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            switch (true) {
-                case /^\d{15}$/.test(value):
-                case /^\d{2}-\d{6}-\d{6}-\d{1}$/.test(value):
-                case /^\d{2}\s\d{6}\s\d{6}\s\d{1}$/.test(value):
-                    value = value.replace(/[^0-9]/g, '');
-                    return $.fn.bootstrapValidator.helpers.luhn(value);
-
-                case /^\d{14}$/.test(value):
-                case /^\d{16}$/.test(value):
-                case /^\d{2}-\d{6}-\d{6}(|-\d{2})$/.test(value):
-                case /^\d{2}\s\d{6}\s\d{6}(|\s\d{2})$/.test(value):
-                    return true;
-
-                default:
-                    return false;
-            }
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.imo = $.extend($.fn.bootstrapValidator.i18n.imo || {}, {
-        'default': 'Please enter a valid IMO number'
-    });
-
-    $.fn.bootstrapValidator.validators.imo = {
-        /**
-         * Validate IMO (International Maritime Organization)
-         * Examples:
-         * - Valid: IMO 8814275, IMO 9176187
-         * - Invalid: IMO 8814274
-         *
-         * @see http://en.wikipedia.org/wiki/IMO_Number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            if (!/^IMO \d{7}$/i.test(value)) {
-                return false;
-            }
-            
-            // Grab just the digits
-            var sum    = 0,
-                digits = value.replace(/^.*(\d{7})$/, '$1');
-            
-            // Go over each char, multiplying by the inverse of it's position
-            // IMO 9176187
-            // (9 * 7) + (1 * 6) + (7 * 5) + (6 * 4) + (1 * 3) + (8 * 2) = 147
-            // Take the last digit of that, that's the check digit (7)
-            for (var i = 6; i >= 1; i--) {
-                sum += (digits.slice((6 - i), -i) * (i + 1));
-            }
-
-            return sum % 10 === parseInt(digits.charAt(6), 10);
-        }
-    };
-}(window.jQuery));
-;(function($) {
     $.fn.bootstrapValidator.i18n.integer = $.extend($.fn.bootstrapValidator.i18n.integer || {}, {
         'default': 'Please enter a valid number'
     });
@@ -4796,318 +9849,6 @@ if (typeof jQuery === 'undefined') {
                 return true;
             }
             return /^(?:-?(?:0|[1-9][0-9]*))$/.test(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.ip = $.extend($.fn.bootstrapValidator.i18n.ip || {}, {
-        'default': 'Please enter a valid IP address',
-        ipv4: 'Please enter a valid IPv4 address',
-        ipv6: 'Please enter a valid IPv6 address'
-    });
-
-    $.fn.bootstrapValidator.validators.ip = {
-        html5Attributes: {
-            message: 'message',
-            ipv4: 'ipv4',
-            ipv6: 'ipv6'
-        },
-
-        /**
-         * Return true if the input value is a IP address.
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - ipv4: Enable IPv4 validator, default to true
-         * - ipv6: Enable IPv6 validator, default to true
-         * - message: The invalid message
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-            options = $.extend({}, { ipv4: true, ipv6: true }, options);
-
-            var ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-                ipv6Regex = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/,
-                valid     = false,
-                message;
-
-            switch (true) {
-                case (options.ipv4 && !options.ipv6):
-                    valid   = ipv4Regex.test(value);
-                    message = options.message || $.fn.bootstrapValidator.i18n.ip.ipv4;
-                    break;
-
-                case (!options.ipv4 && options.ipv6):
-                    valid   = ipv6Regex.test(value);
-                    message = options.message || $.fn.bootstrapValidator.i18n.ip.ipv6;
-                    break;
-
-                case (options.ipv4 && options.ipv6):
-                /* falls through */
-                default:
-                    valid   = ipv4Regex.test(value) || ipv6Regex.test(value);
-                    message = options.message || $.fn.bootstrapValidator.i18n.ip['default'];
-                    break;
-            }
-
-            return {
-                valid: valid,
-                message: message
-            };
-        }
-    };
-}(window.jQuery));;(function($) {
-    $.fn.bootstrapValidator.i18n.isbn = $.extend($.fn.bootstrapValidator.i18n.isbn || {}, {
-        'default': 'Please enter a valid ISBN number'
-    });
-
-    $.fn.bootstrapValidator.validators.isbn = {
-        /**
-         * Return true if the input value is a valid ISBN 10 or ISBN 13 number
-         * Examples:
-         * - Valid:
-         * ISBN 10: 99921-58-10-7, 9971-5-0210-0, 960-425-059-0, 80-902734-1-6, 85-359-0277-5, 1-84356-028-3, 0-684-84328-5, 0-8044-2957-X, 0-85131-041-9, 0-943396-04-2, 0-9752298-0-X
-         * ISBN 13: 978-0-306-40615-7
-         * - Invalid:
-         * ISBN 10: 99921-58-10-6
-         * ISBN 13: 978-0-306-40615-6
-         *
-         * @see http://en.wikipedia.org/wiki/International_Standard_Book_Number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} [options] Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            // http://en.wikipedia.org/wiki/International_Standard_Book_Number#Overview
-            // Groups are separated by a hyphen or a space
-            var type;
-            switch (true) {
-                case /^\d{9}[\dX]$/.test(value):
-                case (value.length === 13 && /^(\d+)-(\d+)-(\d+)-([\dX])$/.test(value)):
-                case (value.length === 13 && /^(\d+)\s(\d+)\s(\d+)\s([\dX])$/.test(value)):
-                    type = 'ISBN10';
-                    break;
-                case /^(978|979)\d{9}[\dX]$/.test(value):
-                case (value.length === 17 && /^(978|979)-(\d+)-(\d+)-(\d+)-([\dX])$/.test(value)):
-                case (value.length === 17 && /^(978|979)\s(\d+)\s(\d+)\s(\d+)\s([\dX])$/.test(value)):
-                    type = 'ISBN13';
-                    break;
-                default:
-                    return false;
-            }
-
-            // Replace all special characters except digits and X
-            value = value.replace(/[^0-9X]/gi, '');
-            var chars  = value.split(''),
-                length = chars.length,
-                sum    = 0,
-                i,
-                checksum;
-
-            switch (type) {
-                case 'ISBN10':
-                    sum = 0;
-                    for (i = 0; i < length - 1; i++) {
-                        sum += parseInt(chars[i], 10) * (10 - i);
-                    }
-                    checksum = 11 - (sum % 11);
-                    if (checksum === 11) {
-                        checksum = 0;
-                    } else if (checksum === 10) {
-                        checksum = 'X';
-                    }
-                    return (checksum + '' === chars[length - 1]);
-
-                case 'ISBN13':
-                    sum = 0;
-                    for (i = 0; i < length - 1; i++) {
-                        sum += ((i % 2 === 0) ? parseInt(chars[i], 10) : (parseInt(chars[i], 10) * 3));
-                    }
-                    checksum = 10 - (sum % 10);
-                    if (checksum === 10) {
-                        checksum = '0';
-                    }
-                    return (checksum + '' === chars[length - 1]);
-
-                default:
-                    return false;
-            }
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.isin = $.extend($.fn.bootstrapValidator.i18n.isin || {}, {
-        'default': 'Please enter a valid ISIN number'
-    });
-
-    $.fn.bootstrapValidator.validators.isin = {
-        // Available country codes
-        // See http://isin.net/country-codes/
-        COUNTRY_CODES: 'AF|AX|AL|DZ|AS|AD|AO|AI|AQ|AG|AR|AM|AW|AU|AT|AZ|BS|BH|BD|BB|BY|BE|BZ|BJ|BM|BT|BO|BQ|BA|BW|BV|BR|IO|BN|BG|BF|BI|KH|CM|CA|CV|KY|CF|TD|CL|CN|CX|CC|CO|KM|CG|CD|CK|CR|CI|HR|CU|CW|CY|CZ|DK|DJ|DM|DO|EC|EG|SV|GQ|ER|EE|ET|FK|FO|FJ|FI|FR|GF|PF|TF|GA|GM|GE|DE|GH|GI|GR|GL|GD|GP|GU|GT|GG|GN|GW|GY|HT|HM|VA|HN|HK|HU|IS|IN|ID|IR|IQ|IE|IM|IL|IT|JM|JP|JE|JO|KZ|KE|KI|KP|KR|KW|KG|LA|LV|LB|LS|LR|LY|LI|LT|LU|MO|MK|MG|MW|MY|MV|ML|MT|MH|MQ|MR|MU|YT|MX|FM|MD|MC|MN|ME|MS|MA|MZ|MM|NA|NR|NP|NL|NC|NZ|NI|NE|NG|NU|NF|MP|NO|OM|PK|PW|PS|PA|PG|PY|PE|PH|PN|PL|PT|PR|QA|RE|RO|RU|RW|BL|SH|KN|LC|MF|PM|VC|WS|SM|ST|SA|SN|RS|SC|SL|SG|SX|SK|SI|SB|SO|ZA|GS|SS|ES|LK|SD|SR|SJ|SZ|SE|CH|SY|TW|TJ|TZ|TH|TL|TG|TK|TO|TT|TN|TR|TM|TC|TV|UG|UA|AE|GB|US|UM|UY|UZ|VU|VE|VN|VG|VI|WF|EH|YE|ZM|ZW',
-
-        /**
-         * Validate an ISIN (International Securities Identification Number)
-         * Examples:
-         * - Valid: US0378331005, AU0000XVGZA3, GB0002634946
-         * - Invalid: US0378331004, AA0000XVGZA3
-         *
-         * @see http://en.wikipedia.org/wiki/International_Securities_Identifying_Number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            value = value.toUpperCase();
-            var regex = new RegExp('^(' + this.COUNTRY_CODES + ')[0-9A-Z]{10}$');
-            if (!regex.test(value)) {
-                return false;
-            }
-
-            var converted = '',
-                length    = value.length;
-            // Convert letters to number
-            for (var i = 0; i < length - 1; i++) {
-                var c = value.charCodeAt(i);
-                converted += ((c > 57) ? (c - 55).toString() : value.charAt(i));
-            }
-
-            var digits = '',
-                n      = converted.length,
-                group  = (n % 2 !== 0) ? 0 : 1;
-            for (i = 0; i < n; i++) {
-                digits += (parseInt(converted[i], 10) * ((i % 2) === group ? 2 : 1) + '');
-            }
-
-            var sum = 0;
-            for (i = 0; i < digits.length; i++) {
-                sum += parseInt(digits.charAt(i), 10);
-            }
-            sum = (10 - (sum % 10)) % 10;
-            return sum + '' === value.charAt(length - 1);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.ismn = $.extend($.fn.bootstrapValidator.i18n.ismn || {}, {
-        'default': 'Please enter a valid ISMN number'
-    });
-
-    $.fn.bootstrapValidator.validators.ismn = {
-        /**
-         * Validate ISMN (International Standard Music Number)
-         * Examples:
-         * - Valid: M230671187, 979-0-0601-1561-5, 979 0 3452 4680 5, 9790060115615
-         * - Invalid: 9790060115614
-         *
-         * @see http://en.wikipedia.org/wiki/International_Standard_Music_Number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            // Groups are separated by a hyphen or a space
-            var type;
-            switch (true) {
-                case /^M\d{9}$/.test(value):
-                case /^M-\d{4}-\d{4}-\d{1}$/.test(value):
-                case /^M\s\d{4}\s\d{4}\s\d{1}$/.test(value):
-                    type = 'ISMN10';
-                    break;
-                case /^9790\d{9}$/.test(value):
-                case /^979-0-\d{4}-\d{4}-\d{1}$/.test(value):
-                case /^979\s0\s\d{4}\s\d{4}\s\d{1}$/.test(value):
-                    type = 'ISMN13';
-                    break;
-                default:
-                    return false;
-            }
-
-            if ('ISMN10' === type) {
-                value = '9790' + value.substr(1);
-            }
-
-            // Replace all special characters except digits
-            value = value.replace(/[^0-9]/gi, '');
-            var length = value.length,
-                sum    = 0,
-                weight = [1, 3];
-            for (var i = 0; i < length - 1; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i % 2];
-            }
-            sum = 10 - sum % 10;
-            return (sum + '' === value.charAt(length - 1));
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.issn = $.extend($.fn.bootstrapValidator.i18n.issn || {}, {
-        'default': 'Please enter a valid ISSN number'
-    });
-
-    $.fn.bootstrapValidator.validators.issn = {
-        /**
-         * Validate ISSN (International Standard Serial Number)
-         * Examples:
-         * - Valid: 0378-5955, 0024-9319, 0032-1478
-         * - Invalid: 0032-147X
-         *
-         * @see http://en.wikipedia.org/wiki/International_Standard_Serial_Number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            // Groups are separated by a hyphen or a space
-            if (!/^\d{4}\-\d{3}[\dX]$/.test(value)) {
-                return false;
-            }
-
-            // Replace all special characters except digits and X
-            value = value.replace(/[^0-9X]/gi, '');
-            var chars  = value.split(''),
-                length = chars.length,
-                sum    = 0;
-
-            if (chars[7] === 'X') {
-                chars[7] = 10;
-            }
-            for (var i = 0; i < length; i++) {
-                sum += parseInt(chars[i], 10) * (8 - i);
-            }
-            return (sum % 11 === 0);
         }
     };
 }(window.jQuery));
@@ -5157,129 +9898,29 @@ if (typeof jQuery === 'undefined') {
             if (value === '') {
                 return true;
             }
+            
+			value = this._format(value);
             if (!$.isNumeric(value)) {
                 return false;
             }
 
-            var compareTo = $.isNumeric(options.value) ? options.value : validator.getDynamicOption($field, options.value);
+            var compareTo      = $.isNumeric(options.value) ? options.value : validator.getDynamicOption($field, options.value),
+                compareToValue = this._format(compareTo);
+
             value = parseFloat(value);
             return (options.inclusive === true || options.inclusive === undefined)
                     ? {
-                        valid: value <= compareTo,
+                        valid: value <= compareToValue,
                         message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.lessThan['default'], compareTo)
                     }
                     : {
-                        valid: value < compareTo,
+                        valid: value < compareToValue,
                         message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.lessThan.notInclusive, compareTo)
                     };
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.mac = $.extend($.fn.bootstrapValidator.i18n.mac || {}, {
-        'default': 'Please enter a valid MAC address'
-    });
+        },
 
-    $.fn.bootstrapValidator.validators.mac = {
-        /**
-         * Return true if the input value is a MAC address.
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            return /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/.test(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.meid = $.extend($.fn.bootstrapValidator.i18n.meid || {}, {
-        'default': 'Please enter a valid MEID number'
-    });
-
-    $.fn.bootstrapValidator.validators.meid = {
-        /**
-         * Validate MEID (Mobile Equipment Identifier)
-         * Examples:
-         * - Valid: 293608736500703710, 29360-87365-0070-3710, AF0123450ABCDE, AF-012345-0ABCDE
-         * - Invalid: 2936087365007037101
-         *
-         * @see http://en.wikipedia.org/wiki/Mobile_equipment_identifier
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            switch (true) {
-                // 14 digit hex representation (no check digit)
-                case /^[0-9A-F]{15}$/i.test(value):
-                // 14 digit hex representation + dashes or spaces (no check digit)
-                case /^[0-9A-F]{2}[- ][0-9A-F]{6}[- ][0-9A-F]{6}[- ][0-9A-F]$/i.test(value):
-                // 18 digit decimal representation (no check digit)
-                case /^\d{19}$/.test(value):
-                // 18 digit decimal representation + dashes or spaces (no check digit)
-                case /^\d{5}[- ]\d{5}[- ]\d{4}[- ]\d{4}[- ]\d$/.test(value):
-                    // Grab the check digit
-                    var cd = value.charAt(value.length - 1);
-
-                    // Strip any non-hex chars
-                    value = value.replace(/[- ]/g, '');
-
-                    // If it's all digits, luhn base 10 is used
-                    if (value.match(/^\d*$/i)) {
-                        return $.fn.bootstrapValidator.helpers.luhn(value);
-                    }
-
-                    // Strip the check digit
-                    value = value.slice(0, -1);
-
-                    // Get every other char, and double it
-                    var cdCalc = '';
-                    for (var i = 1; i <= 13; i += 2) {
-                        cdCalc += (parseInt(value.charAt(i), 16) * 2).toString(16);
-                    }
-
-                    // Get the sum of each char in the string
-                    var sum = 0;
-                    for (i = 0; i < cdCalc.length; i++) {
-                        sum += parseInt(cdCalc.charAt(i), 16);
-                    }
-
-                    // If the last digit of the calc is 0, the check digit is 0
-                    return (sum % 10 === 0)
-                            ? (cd === '0')
-                            // Subtract it from the next highest 10s number (64 goes to 70) and subtract the sum
-                            // Double it and turn it into a hex char
-                            : (cd === ((Math.floor((sum + 10) / 10) * 10 - sum) * 2).toString(16));
-
-                // 14 digit hex representation (no check digit)
-                case /^[0-9A-F]{14}$/i.test(value):
-                // 14 digit hex representation + dashes or spaces (no check digit)
-                case /^[0-9A-F]{2}[- ][0-9A-F]{6}[- ][0-9A-F]{6}$/i.test(value):
-                // 18 digit decimal representation (no check digit)
-                case /^\d{18}$/.test(value):
-                // 18 digit decimal representation + dashes or spaces (no check digit)
-                case /^\d{5}[- ]\d{5}[- ]\d{4}[- ]\d{4}$/.test(value):
-                    return true;
-
-                default:
-                    return false;
-            }
+        _format: function(value) {
+            return (value + '').replace(',', '.');
         }
     };
 }(window.jQuery));
@@ -5368,21 +10009,22 @@ if (typeof jQuery === 'undefined') {
         countryNotSupported: 'The country code %s is not supported',
         country: 'Please enter a valid phone number in %s',
         countries: {
-            BR: 'Brazil',
-            CN: 'China',
-            CZ: 'Czech Republic',
-            DK: 'Denmark',
-            ES: 'Spain',
-            FR: 'France',
-            GB: 'United Kingdom',
-            MA: 'Morocco',
-            PK: 'Pakistan',
-            RO: 'Romania',
-            RU: 'Russia',
-            SK: 'Slovakia',
-            TH: 'Thailand',
-            US: 'USA',
-            VE: 'Venezuela'
+            // BR: 'Brazil',
+            CN: 'China'
+            // CZ: 'Czech Republic',
+            // DE: 'Germany',
+            // DK: 'Denmark',
+            // ES: 'Spain',
+            // FR: 'France',
+            // GB: 'United Kingdom',
+            // MA: 'Morocco',
+            // PK: 'Pakistan',
+            // RO: 'Romania',
+            // RU: 'Russia',
+            // SK: 'Slovakia',
+            // TH: 'Thailand',
+            // US: 'USA',
+            // VE: 'Venezuela'
         }
     });
 
@@ -5393,7 +10035,7 @@ if (typeof jQuery === 'undefined') {
         },
 
         // The supported countries
-        COUNTRY_CODES: ['BR', 'CN', 'CZ', 'DK', 'ES', 'FR', 'GB', 'MA', 'PK', 'RO', 'RU', 'SK', 'TH', 'US', 'VE'],
+        COUNTRY_CODES: ['BR', 'CN', 'CZ', 'DE', 'DK', 'ES', 'FR', 'GB', 'MA', 'PK', 'RO', 'RU', 'SK', 'TH', 'US', 'VE'],
 
         /**
          * Return true if the input value contains a valid phone number for the country
@@ -5432,11 +10074,11 @@ if (typeof jQuery === 'undefined') {
 
             var isValid = true;
             switch (country.toUpperCase()) {
-                case 'BR':
-                    // Test: http://regexr.com/399m1
-                    value   = $.trim(value);
-                    isValid = (/^(([\d]{4}[-.\s]{1}[\d]{2,3}[-.\s]{1}[\d]{2}[-.\s]{1}[\d]{2})|([\d]{4}[-.\s]{1}[\d]{3}[-.\s]{1}[\d]{4})|((\(?\+?[0-9]{2}\)?\s?)?(\(?\d{2}\)?\s?)?\d{4,5}[-.\s]?\d{4}))$/).test(value);
-                    break;
+                // case 'BR':
+                //     // Test: http://regexr.com/399m1
+                //     value   = $.trim(value);
+                //     isValid = (/^(([\d]{4}[-.\s]{1}[\d]{2,3}[-.\s]{1}[\d]{2}[-.\s]{1}[\d]{2})|([\d]{4}[-.\s]{1}[\d]{3}[-.\s]{1}[\d]{4})|((\(?\+?[0-9]{2}\)?\s?)?(\(?\d{2}\)?\s?)?\d{4,5}[-.\s]?\d{4}))$/).test(value);
+                //     break;
 
                 case 'CN':
                     // http://regexr.com/39dq4
@@ -5444,81 +10086,87 @@ if (typeof jQuery === 'undefined') {
                     isValid = (/^((00|\+)?(86(?:-| )))?((\d{11})|(\d{3}[- ]{1}\d{4}[- ]{1}\d{4})|((\d{2,4}[- ]){1}(\d{7,8}|(\d{3,4}[- ]{1}\d{4}))([- ]{1}\d{1,4})?))$/).test(value);
                     break;
 
-                case 'CZ':
-                    // Test: http://regexr.com/39hhl
-                    isValid = /^(((00)([- ]?)|\+)(420)([- ]?))?((\d{3})([- ]?)){2}(\d{3})$/.test(value);
-                    break;
+          //       case 'CZ':
+          //           // Test: http://regexr.com/39hhl
+          //           isValid = /^(((00)([- ]?)|\+)(420)([- ]?))?((\d{3})([- ]?)){2}(\d{3})$/.test(value);
+          //           break;
 
-                case 'DK':
-                    // Mathing DK phone numbers with country code in 1 of 3 formats and an
-                    // 8 digit phone number not starting with a 0 or 1. Can have 1 space
-                    // between each character except inside the country code.
-                    // Test: http://regex101.com/r/sS8fO4/1
-                    value   = $.trim(value);
-                    isValid = (/^(\+45|0045|\(45\))?\s?[2-9](\s?\d){7}$/).test(value);
-                    break;
+          //       case 'DE':
+          //           // Test: http://regexr.com/39pkg
+          //           value   = $.trim(value);
+          //           isValid = (/^(((((((00|\+)49[ \-/]?)|0)[1-9][0-9]{1,4})[ \-/]?)|((((00|\+)49\()|\(0)[1-9][0-9]{1,4}\)[ \-/]?))[0-9]{1,7}([ \-/]?[0-9]{1,5})?)$/).test(value);
+          //           break;
 
-                case 'ES':
-                    // http://regex101.com/r/rB9mA9/1
-                    value   = $.trim(value);
-                    isValid = (/^(?:(?:(?:\+|00)34\D?))?(?:9|6)(?:\d\D?){8}$/).test(value);
-                    break;
+          //       case 'DK':
+          //           // Mathing DK phone numbers with country code in 1 of 3 formats and an
+          //           // 8 digit phone number not starting with a 0 or 1. Can have 1 space
+          //           // between each character except inside the country code.
+          //           // Test: http://regex101.com/r/sS8fO4/1
+          //           value   = $.trim(value);
+          //           isValid = (/^(\+45|0045|\(45\))?\s?[2-9](\s?\d){7}$/).test(value);
+          //           break;
 
-                case 'FR':
-                    // http://regexr.com/39a2p
-                    value   = $.trim(value);
-                    isValid = (/^(?:(?:(?:\+|00)33[ ]?(?:\(0\)[ ]?)?)|0){1}[1-9]{1}([ .-]?)(?:\d{2}\1?){3}\d{2}$/).test(value);
-                    break;
+          //       case 'ES':
+          //           // http://regex101.com/r/rB9mA9/1
+          //           value   = $.trim(value);
+          //           isValid = (/^(?:(?:(?:\+|00)34\D?))?(?:9|6)(?:\d\D?){8}$/).test(value);
+          //           break;
 
-            	case 'GB':
-            		// http://aa-asterisk.org.uk/index.php/Regular_Expressions_for_Validating_and_Formatting_GB_Telephone_Numbers#Match_GB_telephone_number_in_any_format
-            		// Test: http://regexr.com/38uhv
-            		value   = $.trim(value);
-            		isValid = (/^\(?(?:(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?\(?(?:0\)?[\s-]?\(?)?|0)(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}|\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4}|\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3})|\d{5}\)?[\s-]?\d{4,5}|8(?:00[\s-]?11[\s-]?11|45[\s-]?46[\s-]?4\d))(?:(?:[\s-]?(?:x|ext\.?\s?|\#)\d+)?)$/).test(value);
-                    break;
+          //       case 'FR':
+          //           // http://regexr.com/39a2p
+          //           value   = $.trim(value);
+          //           isValid = (/^(?:(?:(?:\+|00)33[ ]?(?:\(0\)[ ]?)?)|0){1}[1-9]{1}([ .-]?)(?:\d{2}\1?){3}\d{2}$/).test(value);
+          //           break;
 
-                case 'MA':
-                    // http://en.wikipedia.org/wiki/Telephone_numbers_in_Morocco
-                    // Test: http://regexr.com/399n8
-                    value   = $.trim(value);
-                    isValid = (/^(?:(?:(?:\+|00)212[\s]?(?:[\s]?\(0\)[\s]?)?)|0){1}(?:5[\s.-]?[2-3]|6[\s.-]?[13-9]){1}[0-9]{1}(?:[\s.-]?\d{2}){3}$/).test(value);
-                    break;
+          //   	case 'GB':
+          //   		// http://aa-asterisk.org.uk/index.php/Regular_Expressions_for_Validating_and_Formatting_GB_Telephone_Numbers#Match_GB_telephone_number_in_any_format
+          //   		// Test: http://regexr.com/38uhv
+          //   		value   = $.trim(value);
+          //   		isValid = (/^\(?(?:(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?\(?(?:0\)?[\s-]?\(?)?|0)(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}|\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4}|\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3})|\d{5}\)?[\s-]?\d{4,5}|8(?:00[\s-]?11[\s-]?11|45[\s-]?46[\s-]?4\d))(?:(?:[\s-]?(?:x|ext\.?\s?|\#)\d+)?)$/).test(value);
+          //           break;
 
-                case 'PK':
-                    // http://regex101.com/r/yH8aV9/2
-                    value   = $.trim(value);
-                    isValid = (/^0?3[0-9]{2}[0-9]{7}$/).test(value);
-                    break;
+          //       case 'MA':
+          //           // http://en.wikipedia.org/wiki/Telephone_numbers_in_Morocco
+          //           // Test: http://regexr.com/399n8
+          //           value   = $.trim(value);
+          //           isValid = (/^(?:(?:(?:\+|00)212[\s]?(?:[\s]?\(0\)[\s]?)?)|0){1}(?:5[\s.-]?[2-3]|6[\s.-]?[13-9]){1}[0-9]{1}(?:[\s.-]?\d{2}){3}$/).test(value);
+          //           break;
 
-        		case 'RO':
-        		    // All mobile network and land line
-                    // http://regexr.com/39fv1
-        		    isValid = (/^(\+4|)?(07[0-8]{1}[0-9]{1}|02[0-9]{2}|03[0-9]{2}){1}?(\s|\.|\-)?([0-9]{3}(\s|\.|\-|)){2}$/g).test(value);
-        		    break;
+          //       case 'PK':
+          //           // http://regex101.com/r/yH8aV9/2
+          //           value   = $.trim(value);
+          //           isValid = (/^0?3[0-9]{2}[0-9]{7}$/).test(value);
+          //           break;
 
-                case 'RU':
-                    // http://regex101.com/r/gW7yT5/5
-                    isValid = (/^((8|\+7|007)[\-\.\/ ]?)?([\(\/\.]?\d{3}[\)\/\.]?[\-\.\/ ]?)?[\d\-\.\/ ]{7,10}$/g).test(value);
-                    break;
+        		// case 'RO':
+        		//     // All mobile network and land line
+          //           // http://regexr.com/39fv1
+        		//     isValid = (/^(\+4|)?(07[0-8]{1}[0-9]{1}|02[0-9]{2}|03[0-9]{2}){1}?(\s|\.|\-)?([0-9]{3}(\s|\.|\-|)){2}$/g).test(value);
+        		//     break;
 
-                case 'SK':
-                    // Test: http://regexr.com/39hhl
-                    isValid = /^(((00)([- ]?)|\+)(420)([- ]?))?((\d{3})([- ]?)){2}(\d{3})$/.test(value);
-                    break;
+          //       case 'RU':
+          //           // http://regex101.com/r/gW7yT5/5
+          //           isValid = (/^((8|\+7|007)[\-\.\/ ]?)?([\(\/\.]?\d{3}[\)\/\.]?[\-\.\/ ]?)?[\d\-\.\/ ]{7,10}$/g).test(value);
+          //           break;
 
-                case 'TH':
-        		    // http://regex101.com/r/vM5mZ4/2
-        		    isValid = (/^0\(?([6|8-9]{2})*-([0-9]{3})*-([0-9]{4})$/).test(value);
-        		    break;
+          //       case 'SK':
+          //           // Test: http://regexr.com/39hhl
+          //           isValid = /^(((00)([- ]?)|\+)(420)([- ]?))?((\d{3})([- ]?)){2}(\d{3})$/.test(value);
+          //           break;
 
-                case 'VE':
-                    // http://regex101.com/r/eM2yY0/6
-                    value   = $.trim(value);
-                    isValid = (/^0(?:2(?:12|4[0-9]|5[1-9]|6[0-9]|7[0-8]|8[1-35-8]|9[1-5]|3[45789])|4(?:1[246]|2[46]))\d{7}$/).test(value);
-                    break;
+          //       case 'TH':
+        		//     // http://regex101.com/r/vM5mZ4/2
+        		//     isValid = (/^0\(?([6|8-9]{2})*-([0-9]{3})*-([0-9]{4})$/).test(value);
+        		//     break;
 
-                case 'US':
-                /* falls through */
+          //       case 'VE':
+          //           // http://regex101.com/r/eM2yY0/6
+          //           value   = $.trim(value);
+          //           isValid = (/^0(?:2(?:12|4[0-9]|5[1-9]|6[0-9]|7[0-8]|8[1-35-8]|9[1-5]|3[45789])|4(?:1[246]|2[46]))\d{7}$/).test(value);
+          //           break;
+
+          //       case 'US':
+          //       /* falls through */
                 default:
                     // Make sure US phone numbers have 10 digits
                     // May start with 1, +1, or 1-; should discard
@@ -5589,6 +10237,7 @@ if (typeof jQuery === 'undefined') {
             name: 'name',
             type: 'type',
             url: 'url',
+            data: 'data',
             delay: 'delay'
         },
 
@@ -5639,6 +10288,11 @@ if (typeof jQuery === 'undefined') {
                 data = data.call(this, validator);
             }
 
+            // Parse string data from HTML5 attribute
+            if ('string' === typeof data) {
+                data = JSON.parse(data);
+            }
+
             // Support dynamic url
             if ('function' === typeof url) {
                 url = url.call(this, validator);
@@ -5677,214 +10331,6 @@ if (typeof jQuery === 'undefined') {
             } else {
                 return runCallback();
             }
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.rtn = $.extend($.fn.bootstrapValidator.i18n.rtn || {}, {
-        'default': 'Please enter a valid RTN number'
-    });
-
-    $.fn.bootstrapValidator.validators.rtn = {
-        /**
-         * Validate a RTN (Routing transit number)
-         * Examples:
-         * - Valid: 021200025, 789456124
-         *
-         * @see http://en.wikipedia.org/wiki/Routing_transit_number
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            if (!/^\d{9}$/.test(value)) {
-                return false;
-            }
-
-            var sum = 0;
-            for (var i = 0; i < value.length; i += 3) {
-                sum += parseInt(value.charAt(i),     10) * 3
-                    +  parseInt(value.charAt(i + 1), 10) * 7
-                    +  parseInt(value.charAt(i + 2), 10);
-            }
-            return (sum !== 0 && sum % 10 === 0);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.sedol = $.extend($.fn.bootstrapValidator.i18n.sedol || {}, {
-        'default': 'Please enter a valid SEDOL number'
-    });
-
-    $.fn.bootstrapValidator.validators.sedol = {
-        /**
-         * Validate a SEDOL (Stock Exchange Daily Official List)
-         * Examples:
-         * - Valid: 0263494, B0WNLY7
-         *
-         * @see http://en.wikipedia.org/wiki/SEDOL
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            value = value.toUpperCase();
-            if (!/^[0-9A-Z]{7}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [1, 3, 1, 7, 3, 9, 1],
-                length = value.length;
-            for (var i = 0; i < length - 1; i++) {
-	            sum += weight[i] * parseInt(value.charAt(i), 36);
-	        }
-	        sum = (10 - sum % 10) % 10;
-            return sum + '' === value.charAt(length - 1);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.siren = $.extend($.fn.bootstrapValidator.i18n.siren || {}, {
-        'default': 'Please enter a valid SIREN number'
-    });
-
-	$.fn.bootstrapValidator.validators.siren = {
-		/**
-		 * Check if a string is a siren number
-		 *
-		 * @param {BootstrapValidator} validator The validator plugin instance
-		 * @param {jQuery} $field Field element
-		 * @param {Object} options Consist of key:
-         * - message: The invalid message
-		 * @returns {Boolean}
-		 */
-		validate: function(validator, $field, options) {
-			var value = $field.val();
-			if (value === '') {
-				return true;
-			}
-
-            if (!/^\d{9}$/.test(value)) {
-                return false;
-            }
-            return $.fn.bootstrapValidator.helpers.luhn(value);
-		}
-	};
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.siret = $.extend($.fn.bootstrapValidator.i18n.siret || {}, {
-        'default': 'Please enter a valid SIRET number'
-    });
-
-	$.fn.bootstrapValidator.validators.siret = {
-        /**
-         * Check if a string is a siret number
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-		validate: function(validator, $field, options) {
-			var value = $field.val();
-			if (value === '') {
-				return true;
-			}
-
-			var sum    = 0,
-                length = value.length,
-                tmp;
-			for (var i = 0; i < length; i++) {
-                tmp = parseInt(value.charAt(i), 10);
-				if ((i % 2) === 0) {
-					tmp = tmp * 2;
-					if (tmp > 9) {
-						tmp -= 9;
-					}
-				}
-				sum += tmp;
-			}
-			return (sum % 10 === 0);
-		}
-	};
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.step = $.extend($.fn.bootstrapValidator.i18n.step || {}, {
-        'default': 'Please enter a valid step of %s'
-    });
-
-    $.fn.bootstrapValidator.validators.step = {
-        html5Attributes: {
-            message: 'message',
-            base: 'baseValue',
-            step: 'step'
-        },
-
-        /**
-         * Return true if the input value is valid step one
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - baseValue: The base value
-         * - step: The step
-         * - message: The invalid message
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            options = $.extend({}, { baseValue: 0, step: 1 }, options);
-            value   = parseFloat(value);
-            if (!$.isNumeric(value)) {
-                return false;
-            }
-
-            var round = function(x, precision) {
-                    var m = Math.pow(10, precision);
-                    x = x * m;
-                    var sign   = (x > 0) | -(x < 0),
-                        isHalf = (x % 1 === 0.5 * sign);
-                    if (isHalf) {
-                        return (Math.floor(x) + (sign > 0)) / m;
-                    } else {
-                        return Math.round(x) / m;
-                    }
-                },
-                floatMod = function(x, y) {
-                    if (y === 0.0) {
-                        return 1.0;
-                    }
-                    var dotX      = (x + '').split('.'),
-                        dotY      = (y + '').split('.'),
-                        precision = ((dotX.length === 1) ? 0 : dotX[1].length) + ((dotY.length === 1) ? 0 : dotY[1].length);
-                    return round(x - y * Math.floor(x / y), precision);
-                };
-
-            var mod = floatMod(value - options.baseValue, options.step);
-            return {
-                valid: mod === 0.0 || mod === options.step,
-                message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.step['default'], [options.step])
-            };
         }
     };
 }(window.jQuery));
@@ -5936,7 +10382,9 @@ if (typeof jQuery === 'undefined') {
         html5Attributes: {
             message: 'message',
             min: 'min',
-            max: 'max'
+            max: 'max',
+            trim: 'trim',
+            utf8bytes: 'utf8Bytes'
         },
 
         enableByHtml5: function($field) {
@@ -5969,19 +10417,41 @@ if (typeof jQuery === 'undefined') {
          *      - A callback function that returns the number
          *
          * - message: The invalid message
+         * - trim: Indicate the length will be calculated after trimming the value or not. It is false, by default
+         * - utf8bytes: Evaluate string length in UTF-8 bytes, default to false
          * @returns {Object}
          */
         validate: function(validator, $field, options) {
             var value = $field.val();
+            if (options.trim === true || options.trim === 'true') {
+                value = $.trim(value);
+            }
+
             if (value === '') {
                 return true;
             }
 
-            var min     = $.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min),
-                max     = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max),
-                length  = value.length,
-                isValid = true,
-                message = options.message || $.fn.bootstrapValidator.i18n.stringLength['default'];
+            var min        = $.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min),
+                max        = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max),
+                // Credit to http://stackoverflow.com/a/23329386 (@lovasoa) for UTF-8 byte length code
+                utf8Length = function(str) {
+                                 var s = str.length;
+                                 for (var i = str.length - 1; i >= 0; i--) {
+                                     var code = str.charCodeAt(i);
+                                     if (code > 0x7f && code <= 0x7ff) {
+                                         s++;
+                                     } else if (code > 0x7ff && code <= 0xffff) {
+                                         s += 2;
+                                     }
+                                     if (code >= 0xDC00 && code <= 0xDFFF) {
+                                         i--;
+                                     }
+                                 }
+                                 return s;
+                             },
+                length     = options.utf8Bytes ? utf8Length(value) : value.length,
+                isValid    = true,
+                message    = options.message || $.fn.bootstrapValidator.i18n.stringLength['default'];
 
             if ((min && length < parseInt(min, 10)) || (max && length > parseInt(max, 10))) {
                 isValid = false;
@@ -6117,1703 +10587,6 @@ if (typeof jQuery === 'undefined') {
         }
     };
 }(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.uuid = $.extend($.fn.bootstrapValidator.i18n.uuid || {}, {
-        'default': 'Please enter a valid UUID number',
-        version: 'Please enter a valid UUID version %s number'
-    });
-
-    $.fn.bootstrapValidator.validators.uuid = {
-        html5Attributes: {
-            message: 'message',
-            version: 'version'
-        },
-
-        /**
-         * Return true if and only if the input value is a valid UUID string
-         *
-         * @see http://en.wikipedia.org/wiki/Universally_unique_identifier
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * - version: Can be 3, 4, 5, null
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            // See the format at http://en.wikipedia.org/wiki/Universally_unique_identifier#Variants_and_versions
-            var patterns = {
-                    '3': /^[0-9A-F]{8}-[0-9A-F]{4}-3[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
-                    '4': /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
-                    '5': /^[0-9A-F]{8}-[0-9A-F]{4}-5[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
-                    all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
-                },
-                version = options.version ? (options.version + '') : 'all';
-            return {
-                valid: (null === patterns[version]) ? true : patterns[version].test(value),
-                message: options.version
-                            ? $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.uuid.version, options.version)
-                            : (options.message || $.fn.bootstrapValidator.i18n.uuid['default'])
-            };
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.vat = $.extend($.fn.bootstrapValidator.i18n.vat || {}, {
-        'default': 'Please enter a valid VAT number',
-        countryNotSupported: 'The country code %s is not supported',
-        country: 'Please enter a valid VAT number in %s',
-        countries: {
-            AT: 'Austria',
-            BE: 'Belgium',
-            BG: 'Bulgaria',
-            BR: 'Brazil',
-            CH: 'Switzerland',
-            CY: 'Cyprus',
-            CZ: 'Czech Republic',
-            DE: 'Germany',
-            DK: 'Denmark',
-            EE: 'Estonia',
-            ES: 'Spain',
-            FI: 'Finland',
-            FR: 'France',
-            GB: 'United Kingdom',
-            GR: 'Greek',
-            EL: 'Greek',
-            HU: 'Hungary',
-            HR: 'Croatia',
-            IE: 'Ireland',
-            IS: 'Iceland',
-            IT: 'Italy',
-            LT: 'Lithuania',
-            LU: 'Luxembourg',
-            LV: 'Latvia',
-            MT: 'Malta',
-            NL: 'Netherlands',
-            NO: 'Norway',
-            PL: 'Poland',
-            PT: 'Portugal',
-            RO: 'Romania',
-            RU: 'Russia',
-            RS: 'Serbia',
-            SE: 'Sweden',
-            SI: 'Slovenia',
-            SK: 'Slovakia',
-            VE: 'Venezuela',
-            ZA: 'South Africa'
-        }
-    });
-
-    $.fn.bootstrapValidator.validators.vat = {
-        html5Attributes: {
-            message: 'message',
-            country: 'country'
-        },
-
-        // Supported country codes
-        COUNTRY_CODES: [
-            'AT', 'BE', 'BG', 'BR', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU',
-            'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RU', 'RS', 'SE', 'SK', 'SI', 'VE',
-            'ZA'
-        ],
-
-        /**
-         * Validate an European VAT number
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * - country: The ISO 3166-1 country code. It can be
-         *      - One of country code defined in COUNTRY_CODES
-         *      - Name of field which its value defines the country code
-         *      - Name of callback function that returns the country code
-         *      - A callback function that returns the country code
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            var country = options.country;
-            if (!country) {
-                country = value.substr(0, 2);
-            } else if (typeof country !== 'string' || $.inArray(country.toUpperCase(), this.COUNTRY_CODES) === -1) {
-                // Determine the country code
-                country = validator.getDynamicOption($field, country);
-            }
-
-            if ($.inArray(country, this.COUNTRY_CODES) === -1) {
-                return {
-                    valid: false,
-                    message: $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.vat.countryNotSupported, country)
-                };
-            }
-
-            var method  = ['_', country.toLowerCase()].join('');
-            return this[method](value)
-                ? true
-                : {
-                    valid: false,
-                    message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.vat.country, $.fn.bootstrapValidator.i18n.vat.countries[country.toUpperCase()])
-                };
-        },
-
-        // VAT validators
-
-        /**
-         * Validate Austrian VAT number
-         * Example:
-         * - Valid: ATU13585627
-         * - Invalid: ATU13585626
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _at: function(value) {
-            if (/^ATU[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^U[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            value = value.substr(1);
-            var sum    = 0,
-                weight = [1, 2, 1, 2, 1, 2, 1],
-                temp   = 0;
-            for (var i = 0; i < 7; i++) {
-                temp = parseInt(value.charAt(i), 10) * weight[i];
-                if (temp > 9) {
-                    temp = Math.floor(temp / 10) + temp % 10;
-                }
-                sum += temp;
-            }
-
-            sum = 10 - (sum + 4) % 10;
-            if (sum === 10) {
-                sum = 0;
-            }
-
-            return (sum + '' === value.substr(7, 1));
-        },
-
-        /**
-         * Validate Belgian VAT number
-         * Example:
-         * - Valid: BE0428759497
-         * - Invalid: BE431150351
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _be: function(value) {
-            if (/^BE[0]{0,1}[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0]{0,1}[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            if (value.length === 9) {
-                value = '0' + value;
-            }
-            if (value.substr(1, 1) === '0') {
-                return false;
-            }
-
-            var sum = parseInt(value.substr(0, 8), 10) + parseInt(value.substr(8, 2), 10);
-            return (sum % 97 === 0);
-        },
-
-        /**
-         * Validate Bulgarian VAT number
-         * Example:
-         * - Valid: BG175074752,
-         * BG7523169263, BG8032056031,
-         * BG7542011030,
-         * BG7111042925
-         * - Invalid: BG175074753, BG7552A10004, BG7111042922
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _bg: function(value) {
-            if (/^BG[0-9]{9,10}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9,10}$/.test(value)) {
-                return false;
-            }
-
-            var sum = 0, i = 0;
-
-            // Legal entities
-            if (value.length === 9) {
-                for (i = 0; i < 8; i++) {
-                    sum += parseInt(value.charAt(i), 10) * (i + 1);
-                }
-                sum = sum % 11;
-                if (sum === 10) {
-                    sum = 0;
-                    for (i = 0; i < 8; i++) {
-                        sum += parseInt(value.charAt(i), 10) * (i + 3);
-                    }
-                }
-                sum = sum % 10;
-                return (sum + '' === value.substr(8));
-            }
-            // Physical persons, foreigners and others
-            else if (value.length === 10) {
-                // Validate Bulgarian national identification numbers
-                var egn = function(value) {
-                        // Check the birth date
-                        var year  = parseInt(value.substr(0, 2), 10) + 1900,
-                            month = parseInt(value.substr(2, 2), 10),
-                            day   = parseInt(value.substr(4, 2), 10);
-                        if (month > 40) {
-                            year += 100;
-                            month -= 40;
-                        } else if (month > 20) {
-                            year -= 100;
-                            month -= 20;
-                        }
-
-                        if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                            return false;
-                        }
-
-                        var sum    = 0,
-                            weight = [2, 4, 8, 5, 10, 9, 7, 3, 6];
-                        for (var i = 0; i < 9; i++) {
-                            sum += parseInt(value.charAt(i), 10) * weight[i];
-                        }
-                        sum = (sum % 11) % 10;
-                        return (sum + '' === value.substr(9, 1));
-                    },
-                    // Validate Bulgarian personal number of a foreigner
-                    pnf = function(value) {
-                        var sum    = 0,
-                            weight = [21, 19, 17, 13, 11, 9, 7, 3, 1];
-                        for (var i = 0; i < 9; i++) {
-                            sum += parseInt(value.charAt(i), 10) * weight[i];
-                        }
-                        sum = sum % 10;
-                        return (sum + '' === value.substr(9, 1));
-                    },
-                    // Finally, consider it as a VAT number
-                    vat = function(value) {
-                        var sum    = 0,
-                            weight = [4, 3, 2, 7, 6, 5, 4, 3, 2];
-                        for (var i = 0; i < 9; i++) {
-                            sum += parseInt(value.charAt(i), 10) * weight[i];
-                        }
-                        sum = 11 - sum % 11;
-                        if (sum === 10) {
-                            return false;
-                        }
-                        if (sum === 11) {
-                            sum = 0;
-                        }
-                        return (sum + '' === value.substr(9, 1));
-                    };
-                return (egn(value) || pnf(value) || vat(value));
-            }
-
-            return false;
-        },
-        
-        /**
-         * Validate Brazilian VAT number (CNPJ)
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _br: function(value) {
-            if (value === '') {
-                return true;
-            }
-            var cnpj = value.replace(/[^\d]+/g, '');
-            if (cnpj === '' || cnpj.length !== 14) {
-                return false;
-            }
-
-            // Remove invalids CNPJs
-            if (cnpj === '00000000000000' || cnpj === '11111111111111' || cnpj === '22222222222222' ||
-                cnpj === '33333333333333' || cnpj === '44444444444444' || cnpj === '55555555555555' ||
-                cnpj === '66666666666666' || cnpj === '77777777777777' || cnpj === '88888888888888' ||
-                cnpj === '99999999999999')
-            {
-                return false;
-            }
-
-            // Validate verification digits
-            var length  = cnpj.length - 2,
-                numbers = cnpj.substring(0, length),
-                digits  = cnpj.substring(length),
-                sum     = 0,
-                pos     = length - 7;
-
-            for (var i = length; i >= 1; i--) {
-                sum += parseInt(numbers.charAt(length - i), 10) * pos--;
-                if (pos < 2) {
-                    pos = 9;
-                }
-            }
-
-            var result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-            if (result !== parseInt(digits.charAt(0), 10)) {
-                return false;
-            }
-
-            length  = length + 1;
-            numbers = cnpj.substring(0, length);
-            sum     = 0;
-            pos     = length - 7;
-            for (i = length; i >= 1; i--) {
-                sum += parseInt(numbers.charAt(length - i), 10) * pos--;
-                if (pos < 2) {
-                    pos = 9;
-                }
-            }
-
-            result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-            return (result === parseInt(digits.charAt(1), 10));
-        },
-
-        /**
-         * Validate Swiss VAT number
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _ch: function(value) {
-            if (/^CHE[0-9]{9}(MWST)?$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^E[0-9]{9}(MWST)?$/.test(value)) {
-                return false;
-            }
-
-            value = value.substr(1);
-            var sum    = 0,
-                weight = [5, 4, 3, 2, 7, 6, 5, 4];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            sum = 11 - sum % 11;
-            if (sum === 10) {
-                return false;
-            }
-            if (sum === 11) {
-                sum = 0;
-            }
-
-            return (sum + '' === value.substr(8, 1));
-        },
-
-        /**
-         * Validate Cypriot VAT number
-         * Examples:
-         * - Valid: CY10259033P
-         * - Invalid: CY10259033Z
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _cy: function(value) {
-            if (/^CY[0-5|9]{1}[0-9]{7}[A-Z]{1}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-5|9]{1}[0-9]{7}[A-Z]{1}$/.test(value)) {
-                return false;
-            }
-
-            // Do not allow to start with "12"
-            if (value.substr(0, 2) === '12') {
-                return false;
-            }
-
-            // Extract the next digit and multiply by the counter.
-            var sum         = 0,
-                translation = {
-                    '0': 1,  '1': 0,  '2': 5,  '3': 7,  '4': 9,
-                    '5': 13, '6': 15, '7': 17, '8': 19, '9': 21
-                };
-            for (var i = 0; i < 8; i++) {
-                var temp = parseInt(value.charAt(i), 10);
-                if (i % 2 === 0) {
-                    temp = translation[temp + ''];
-                }
-                sum += temp;
-            }
-
-            sum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[sum % 26];
-            return (sum + '' === value.substr(8, 1));
-        },
-
-        /**
-         * Validate Czech Republic VAT number
-         * Can be:
-         * i) Legal entities (8 digit numbers)
-         * ii) Individuals with a RC (the 9 or 10 digit Czech birth number)
-         * iii) Individuals without a RC (9 digit numbers beginning with 6)
-         *
-         * Examples:
-         * - Valid: i) CZ25123891; ii) CZ7103192745, CZ991231123; iii) CZ640903926
-         * - Invalid: i) CZ25123890; ii) CZ1103492745, CZ590312123
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _cz: function(value) {
-            if (/^CZ[0-9]{8,10}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8,10}$/.test(value)) {
-                return false;
-            }
-
-            var sum = 0,
-                i   = 0;
-            if (value.length === 8) {
-                // Do not allow to start with '9'
-                if (value.charAt(0) + '' === '9') {
-                    return false;
-                }
-
-                sum = 0;
-                for (i = 0; i < 7; i++) {
-                    sum += parseInt(value.charAt(i), 10) * (8 - i);
-                }
-                sum = 11 - sum % 11;
-                if (sum === 10) {
-                    sum = 0;
-                }
-                if (sum === 11) {
-                    sum = 1;
-                }
-
-                return (sum + '' === value.substr(7, 1));
-            } else if (value.length === 9 && (value.charAt(0) + '' === '6')) {
-                sum = 0;
-                // Skip the first (which is 6)
-                for (i = 0; i < 7; i++) {
-                    sum += parseInt(value.charAt(i + 1), 10) * (8 - i);
-                }
-                sum = 11 - sum % 11;
-                if (sum === 10) {
-                    sum = 0;
-                }
-                if (sum === 11) {
-                    sum = 1;
-                }
-                sum = [8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 10][sum - 1];
-                return (sum + '' === value.substr(8, 1));
-            } else if (value.length === 9 || value.length === 10) {
-                // Validate Czech birth number (Rodné číslo), which is also national identifier
-                var year  = 1900 + parseInt(value.substr(0, 2), 10),
-                    month = parseInt(value.substr(2, 2), 10) % 50 % 20,
-                    day   = parseInt(value.substr(4, 2), 10);
-                if (value.length === 9) {
-                    if (year >= 1980) {
-                        year -= 100;
-                    }
-                    if (year > 1953) {
-                        return false;
-                    }
-                } else if (year < 1954) {
-                    year += 100;
-                }
-
-                if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                    return false;
-                }
-
-                // Check that the birth date is not in the future
-                if (value.length === 10) {
-                    var check = parseInt(value.substr(0, 9), 10) % 11;
-                    if (year < 1985) {
-                        check = check % 10;
-                    }
-                    return (check + '' === value.substr(9, 1));
-                }
-
-                return true;
-            }
-
-            return false;
-        },
-
-        /**
-         * Validate German VAT number
-         * Examples:
-         * - Valid: DE136695976
-         * - Invalid: DE136695978
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _de: function(value) {
-            if (/^DE[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            return $.fn.bootstrapValidator.helpers.mod11And10(value);
-        },
-
-        /**
-         * Validate Danish VAT number
-         * Example:
-         * - Valid: DK13585628
-         * - Invalid: DK13585627
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _dk: function(value) {
-            if (/^DK[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [2, 7, 6, 5, 4, 3, 2, 1];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            return (sum % 11 === 0);
-        },
-
-        /**
-         * Validate Estonian VAT number
-         * Examples:
-         * - Valid: EE100931558, EE100594102
-         * - Invalid: EE100594103
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _ee: function(value) {
-            if (/^EE[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [3, 7, 1, 3, 7, 1, 3, 7, 1];
-            for (var i = 0; i < 9; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            return (sum % 10 === 0);
-        },
-
-        /**
-         * Validate Spanish VAT number (NIF - Número de Identificación Fiscal)
-         * Can be:
-         * i) DNI (Documento nacional de identidad), for Spaniards
-         * ii) NIE (Número de Identificación de Extranjeros), for foreigners
-         * iii) CIF (Certificado de Identificación Fiscal), for legal entities and others
-         *
-         * Examples:
-         * - Valid: i) ES54362315K; ii) ESX2482300W, ESX5253868R; iii) ESM1234567L, ESJ99216582, ESB58378431, ESB64717838
-         * - Invalid: i) ES54362315Z; ii) ESX2482300A; iii) ESJ99216583
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _es: function(value) {
-            if (/^ES[0-9A-Z][0-9]{7}[0-9A-Z]$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9A-Z][0-9]{7}[0-9A-Z]$/.test(value)) {
-                return false;
-            }
-
-            var dni = function(value) {
-                    var check = parseInt(value.substr(0, 8), 10);
-                    check = 'TRWAGMYFPDXBNJZSQVHLCKE'[check % 23];
-                    return (check + '' === value.substr(8, 1));
-                },
-                nie = function(value) {
-                    var check = ['XYZ'.indexOf(value.charAt(0)), value.substr(1)].join('');
-                    check = parseInt(check, 10);
-                    check = 'TRWAGMYFPDXBNJZSQVHLCKE'[check % 23];
-                    return (check + '' === value.substr(8, 1));
-                },
-                cif = function(value) {
-                    var first = value.charAt(0), check;
-                    if ('KLM'.indexOf(first) !== -1) {
-                        // K: Spanish younger than 14 year old
-                        // L: Spanish living outside Spain without DNI
-                        // M: Granted the tax to foreigners who have no NIE
-                        check = parseInt(value.substr(1, 8), 10);
-                        check = 'TRWAGMYFPDXBNJZSQVHLCKE'[check % 23];
-                        return (check + '' === value.substr(8, 1));
-                    } else if ('ABCDEFGHJNPQRSUVW'.indexOf(first) !== -1) {
-                        var sum    = 0,
-                            weight = [2, 1, 2, 1, 2, 1, 2],
-                            temp   = 0;
-
-                        for (var i = 0; i < 7; i++) {
-                            temp = parseInt(value.charAt(i + 1), 10) * weight[i];
-                            if (temp > 9) {
-                                temp = Math.floor(temp / 10) + temp % 10;
-                            }
-                            sum += temp;
-                        }
-                        sum = 10 - sum % 10;
-                        return (sum + '' === value.substr(8, 1) || 'JABCDEFGHI'[sum] === value.substr(8, 1));
-                    }
-
-                    return false;
-                };
-
-            var first = value.charAt(0);
-            if (/^[0-9]$/.test(first)) {
-                return dni(value);
-            } else if (/^[XYZ]$/.test(first)) {
-                return nie(value);
-            } else {
-                return cif(value);
-            }
-        },
-
-        /**
-         * Validate Finnish VAT number
-         * Examples:
-         * - Valid: FI20774740
-         * - Invalid: FI20774741
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _fi: function(value) {
-            if (/^FI[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [7, 9, 10, 5, 8, 4, 2, 1];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            return (sum % 11 === 0);
-        },
-
-        /**
-         * Validate French VAT number (TVA - taxe sur la valeur ajoutée)
-         * It's constructed by a SIREN number, prefixed by two characters.
-         *
-         * Examples:
-         * - Valid: FR40303265045, FR23334175221, FRK7399859412, FR4Z123456782
-         * - Invalid: FR84323140391
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _fr: function(value) {
-            if (/^FR[0-9A-Z]{2}[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9A-Z]{2}[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            if (!$.fn.bootstrapValidator.helpers.luhn(value.substr(2))) {
-                return false;
-            }
-
-            if (/^[0-9]{2}$/.test(value.substr(0, 2))) {
-                // First two characters are digits
-                return value.substr(0, 2) === (parseInt(value.substr(2) + '12', 10) % 97 + '');
-            } else {
-                // The first characters cann't be O and I
-                var alphabet = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ',
-                    check;
-                // First one is digit
-                if (/^[0-9]{1}$/.test(value.charAt(0))) {
-                    check = alphabet.indexOf(value.charAt(0)) * 24 + alphabet.indexOf(value.charAt(1)) - 10;
-                } else {
-                    check = alphabet.indexOf(value.charAt(0)) * 34 + alphabet.indexOf(value.charAt(1)) - 100;
-                }
-                return ((parseInt(value.substr(2), 10) + 1 + Math.floor(check / 11)) % 11) === (check % 11);
-            }
-        },
-
-        /**
-         * Validate United Kingdom VAT number
-         * Example:
-         * - Valid: GB980780684
-         * - Invalid: GB802311781
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _gb: function(value) {
-            if (/^GB[0-9]{9}$/.test(value)             /* Standard */
-                || /^GB[0-9]{12}$/.test(value)         /* Branches */
-                || /^GBGD[0-9]{3}$/.test(value)        /* Government department */
-                || /^GBHA[0-9]{3}$/.test(value)        /* Health authority */
-                || /^GB(GD|HA)8888[0-9]{5}$/.test(value))
-            {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)
-                && !/^[0-9]{12}$/.test(value)
-                && !/^GD[0-9]{3}$/.test(value)
-                && !/^HA[0-9]{3}$/.test(value)
-                && !/^(GD|HA)8888[0-9]{5}$/.test(value))
-            {
-                return false;
-            }
-
-            var length = value.length;
-            if (length === 5) {
-                var firstTwo  = value.substr(0, 2),
-                    lastThree = parseInt(value.substr(2), 10);
-                return ('GD' === firstTwo && lastThree < 500) || ('HA' === firstTwo && lastThree >= 500);
-            } else if (length === 11 && ('GD8888' === value.substr(0, 6) || 'HA8888' === value.substr(0, 6))) {
-                if (('GD' === value.substr(0, 2) && parseInt(value.substr(6, 3), 10) >= 500)
-                    || ('HA' === value.substr(0, 2) && parseInt(value.substr(6, 3), 10) < 500))
-                {
-                    return false;
-                }
-                return (parseInt(value.substr(6, 3), 10) % 97 === parseInt(value.substr(9, 2), 10));
-            } else if (length === 9 || length === 12) {
-                var sum    = 0,
-                    weight = [8, 7, 6, 5, 4, 3, 2, 10, 1];
-                for (var i = 0; i < 9; i++) {
-                    sum += parseInt(value.charAt(i), 10) * weight[i];
-                }
-                sum = sum % 97;
-
-                if (parseInt(value.substr(0, 3), 10) >= 100) {
-                    return (sum === 0 || sum === 42 || sum === 55);
-                } else {
-                    return (sum === 0);
-                }
-            }
-
-            return true;
-        },
-
-        /**
-         * Validate Greek VAT number
-         * Examples:
-         * - Valid: GR023456780, EL094259216
-         * - Invalid: EL123456781
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _gr: function(value) {
-            if (/^(GR|EL)[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            if (value.length === 8) {
-                value = '0' + value;
-            }
-
-            var sum    = 0,
-                weight = [256, 128, 64, 32, 16, 8, 4, 2];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = (sum % 11) % 10;
-
-            return (sum + '' === value.substr(8, 1));
-        },
-
-        // EL is traditionally prefix of Greek VAT numbers
-        _el: function(value) {
-            return this._gr(value);
-        },
-
-        /**
-         * Validate Hungarian VAT number
-         * Examples:
-         * - Valid: HU12892312
-         * - Invalid: HU12892313
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _hu: function(value) {
-            if (/^HU[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [9, 7, 3, 1, 9, 7, 3, 1];
-
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            return (sum % 10 === 0);
-        },
-
-        /**
-         * Validate Croatian VAT number
-         * Examples:
-         * - Valid: HR33392005961
-         * - Invalid: HR33392005962
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _hr: function(value) {
-            if (/^HR[0-9]{11}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{11}$/.test(value)) {
-                return false;
-            }
-
-            return $.fn.bootstrapValidator.helpers.mod11And10(value);
-        },
-
-        /**
-         * Validate Irish VAT number
-         * Examples:
-         * - Valid: IE6433435F, IE6433435OA, IE8D79739I
-         * - Invalid: IE8D79738J
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _ie: function(value) {
-            if (/^IE[0-9]{1}[0-9A-Z\*\+]{1}[0-9]{5}[A-Z]{1,2}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{1}[0-9A-Z\*\+]{1}[0-9]{5}[A-Z]{1,2}$/.test(value)) {
-                return false;
-            }
-
-            var getCheckDigit = function(value) {
-                while (value.length < 7) {
-                    value = '0' + value;
-                }
-                var alphabet = 'WABCDEFGHIJKLMNOPQRSTUV',
-                    sum      = 0;
-                for (var i = 0; i < 7; i++) {
-                    sum += parseInt(value.charAt(i), 10) * (8 - i);
-                }
-                sum += 9 * alphabet.indexOf(value.substr(7));
-                return alphabet[sum % 23];
-            };
-
-            // The first 7 characters are digits
-            if (/^[0-9]+$/.test(value.substr(0, 7))) {
-                // New system
-                return value.charAt(7) === getCheckDigit(value.substr(0, 7) + value.substr(8) + '');
-            } else if ('ABCDEFGHIJKLMNOPQRSTUVWXYZ+*'.indexOf(value.charAt(1)) !== -1) {
-                // Old system
-                return value.charAt(7) === getCheckDigit(value.substr(2, 5) + value.substr(0, 1) + '');
-            }
-
-            return true;
-        },
-
-        /**
-         * Validate Icelandic VAT (VSK) number
-         * Examples:
-         * - Valid: 12345, 123456
-         * - Invalid: 1234567
-         *
-         * @params {String} value VAT number
-         * @returns {Boolean}
-         */
-        _is: function(value) {
-            if (/^IS[0-9]{5,6}$/.test(value)) {
-                value = value.substr(2);
-            }
-            return /^[0-9]{5,6}$/.test(value);
-        },
-
-        /**
-         * Validate Italian VAT number, which consists of 11 digits.
-         * - First 7 digits are a company identifier
-         * - Next 3 are the province of residence
-         * - The last one is a check digit
-         *
-         * Examples:
-         * - Valid: IT00743110157
-         * - Invalid: IT00743110158
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _it: function(value) {
-            if (/^IT[0-9]{11}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{11}$/.test(value)) {
-                return false;
-            }
-
-            if (parseInt(value.substr(0, 7), 10) === 0) {
-                return false;
-            }
-
-            var lastThree = parseInt(value.substr(7, 3), 10);
-            if ((lastThree < 1) || (lastThree > 201) && lastThree !== 999 && lastThree !== 888) {
-                return false;
-            }
-
-            return $.fn.bootstrapValidator.helpers.luhn(value);
-        },
-
-        /**
-         * Validate Lithuanian VAT number
-         * It can be:
-         * - 9 digits, for legal entities
-         * - 12 digits, for temporarily registered taxpayers
-         *
-         * Examples:
-         * - Valid: LT119511515, LT100001919017, LT100004801610
-         * - Invalid: LT100001919018
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _lt: function(value) {
-            if (/^LT([0-9]{7}1[0-9]{1}|[0-9]{10}1[0-9]{1})$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^([0-9]{7}1[0-9]{1}|[0-9]{10}1[0-9]{1})$/.test(value)) {
-                return false;
-            }
-
-            var length = value.length,
-                sum    = 0,
-                i;
-            for (i = 0; i < length - 1; i++) {
-                sum += parseInt(value.charAt(i), 10) * (1 + i % 9);
-            }
-            var check = sum % 11;
-            if (check === 10) {
-                sum = 0;
-                for (i = 0; i < length - 1; i++) {
-                    sum += parseInt(value.charAt(i), 10) * (1 + (i + 2) % 9);
-                }
-            }
-            check = check % 11 % 10;
-            return (check + '' === value.charAt(length - 1));
-        },
-
-        /**
-         * Validate Luxembourg VAT number
-         * Examples:
-         * - Valid: LU15027442
-         * - Invalid: LU15027443
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _lu: function(value) {
-            if (/^LU[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            return ((parseInt(value.substr(0, 6), 10) % 89) + '' === value.substr(6, 2));
-        },
-
-        /**
-         * Validate Latvian VAT number
-         * Examples:
-         * - Valid: LV40003521600, LV16117519997
-         * - Invalid: LV40003521601, LV16137519997
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _lv: function(value) {
-            if (/^LV[0-9]{11}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{11}$/.test(value)) {
-                return false;
-            }
-
-            var first  = parseInt(value.charAt(0), 10),
-                sum    = 0,
-                weight = [],
-                i,
-                length = value.length;
-            if (first > 3) {
-                // Legal entity
-                sum    = 0;
-                weight = [9, 1, 4, 8, 3, 10, 2, 5, 7, 6, 1];
-                for (i = 0; i < length; i++) {
-                    sum += parseInt(value.charAt(i), 10) * weight[i];
-                }
-                sum = sum % 11;
-                return (sum === 3);
-            } else {
-                // Check birth date
-                var day   = parseInt(value.substr(0, 2), 10),
-                    month = parseInt(value.substr(2, 2), 10),
-                    year  = parseInt(value.substr(4, 2), 10);
-                year = year + 1800 + parseInt(value.charAt(6), 10) * 100;
-
-                if (!$.fn.bootstrapValidator.helpers.date(year, month, day)) {
-                    return false;
-                }
-
-                // Check personal code
-                sum    = 0;
-                weight = [10, 5, 8, 4, 2, 1, 6, 3, 7, 9];
-                for (i = 0; i < length - 1; i++) {
-                    sum += parseInt(value.charAt(i), 10) * weight[i];
-                }
-                sum = (sum + 1) % 11 % 10;
-                return (sum + '' === value.charAt(length - 1));
-            }
-        },
-
-        /**
-         * Validate Maltese VAT number
-         * Examples:
-         * - Valid: MT11679112
-         * - Invalid: MT11679113
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _mt: function(value) {
-            if (/^MT[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [3, 4, 6, 7, 8, 9, 10, 1];
-
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            return (sum % 37 === 0);
-        },
-
-        /**
-         * Validate Dutch VAT number
-         * Examples:
-         * - Valid: NL004495445B01
-         * - Invalid: NL123456789B90
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _nl: function(value) {
-            if (/^NL[0-9]{9}B[0-9]{2}$/.test(value)) {
-               value = value.substr(2);
-            }
-            if (!/^[0-9]{9}B[0-9]{2}$/.test(value)) {
-               return false;
-            }
-
-            var sum    = 0,
-                weight = [9, 8, 7, 6, 5, 4, 3, 2];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            sum = sum % 11;
-            if (sum > 9) {
-                sum = 0;
-            }
-            return (sum + '' === value.substr(8, 1));
-        },
-
-        /**
-         * Validate Norwegian VAT number
-         *
-         * @see http://www.brreg.no/english/coordination/number.html
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _no: function(value) {
-            if (/^NO[0-9]{9}$/.test(value)) {
-               value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)) {
-               return false;
-            }
-
-            var sum    = 0,
-                weight = [3, 2, 7, 6, 5, 4, 3, 2];
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            sum = 11 - sum % 11;
-            if (sum === 11) {
-                sum = 0;
-            }
-            return (sum + '' === value.substr(8, 1));
-        },
-
-        /**
-         * Validate Polish VAT number
-         * Examples:
-         * - Valid: PL8567346215
-         * - Invalid: PL8567346216
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _pl: function(value) {
-            if (/^PL[0-9]{10}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{10}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [6, 5, 7, 2, 3, 4, 5, 6, 7, -1];
-
-            for (var i = 0; i < 10; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            return (sum % 11 === 0);
-        },
-
-        /**
-         * Validate Portuguese VAT number
-         * Examples:
-         * - Valid: PT501964843
-         * - Invalid: PT501964842
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _pt: function(value) {
-            if (/^PT[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [9, 8, 7, 6, 5, 4, 3, 2];
-
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = 11 - sum % 11;
-            if (sum > 9) {
-                sum = 0;
-            }
-            return (sum + '' === value.substr(8, 1));
-        },
-
-        /**
-         * Validate Romanian VAT number
-         * Examples:
-         * - Valid: RO18547290
-         * - Invalid: RO18547291
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _ro: function(value) {
-            if (/^RO[1-9][0-9]{1,9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[1-9][0-9]{1,9}$/.test(value)) {
-                return false;
-            }
-
-            var length = value.length,
-                weight = [7, 5, 3, 2, 1, 7, 5, 3, 2].slice(10 - length),
-                sum    = 0;
-            for (var i = 0; i < length - 1; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-
-            sum = (10 * sum) % 11 % 10;
-            return (sum + '' === value.substr(length - 1, 1));
-        },
-
-        /**
-         * Validate Russian VAT number (Taxpayer Identification Number - INN)
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _ru: function(value) {
-            if (/^RU([0-9]{10}|[0-9]{12})$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^([0-9]{10}|[0-9]{12})$/.test(value)) {
-                return false;
-            }
-
-            var i = 0;
-            if (value.length === 10) {
-                var sum    = 0,
-                    weight = [2, 4, 10, 3, 5, 9, 4, 6, 8, 0];
-                for (i = 0; i < 10; i++) {
-                    sum += parseInt(value.charAt(i), 10) * weight[i];
-                }
-                sum = sum % 11;
-                if (sum > 9) {
-                    sum = sum % 10;
-                }
-
-                return (sum + '' === value.substr(9, 1));
-            } else if (value.length === 12) {
-                var sum1    = 0,
-                    weight1 = [7, 2, 4, 10, 3, 5, 9, 4, 6, 8, 0],
-                    sum2    = 0,
-                    weight2 = [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8, 0];
-
-                for (i = 0; i < 11; i++) {
-                    sum1 += parseInt(value.charAt(i), 10) * weight1[i];
-                    sum2 += parseInt(value.charAt(i), 10) * weight2[i];
-                }
-                sum1 = sum1 % 11;
-                if (sum1 > 9) {
-                    sum1 = sum1 % 10;
-                }
-                sum2 = sum2 % 11;
-                if (sum2 > 9) {
-                    sum2 = sum2 % 10;
-                }
-
-                return (sum1 + '' === value.substr(10, 1) && sum2 + '' === value.substr(11, 1));
-            }
-
-            return false;
-        },
-
-        /**
-         * Validate Serbian VAT number
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _rs: function(value) {
-            if (/^RS[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            var sum  = 10,
-                temp = 0;
-            for (var i = 0; i < 8; i++) {
-                temp = (parseInt(value.charAt(i), 10) + sum) % 10;
-                if (temp === 0) {
-                    temp = 10;
-                }
-                sum = (2 * temp) % 11;
-            }
-
-            return ((sum + parseInt(value.substr(8, 1), 10)) % 10 === 1);
-        },
-
-        /**
-         * Validate Swedish VAT number
-         * Examples:
-         * - Valid: SE123456789701
-         * - Invalid: SE123456789101
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _se: function(value) {
-            if (/^SE[0-9]{10}01$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{10}01$/.test(value)) {
-                return false;
-            }
-
-            value = value.substr(0, 10);
-            return $.fn.bootstrapValidator.helpers.luhn(value);
-        },
-
-        /**
-         * Validate Slovenian VAT number
-         * Examples:
-         * - Valid: SI50223054
-         * - Invalid: SI50223055
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _si: function(value) {
-            if (/^SI[0-9]{8}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[0-9]{8}$/.test(value)) {
-                return false;
-            }
-
-            var sum    = 0,
-                weight = [8, 7, 6, 5, 4, 3, 2];
-
-            for (var i = 0; i < 7; i++) {
-                sum += parseInt(value.charAt(i), 10) * weight[i];
-            }
-            sum = 11 - sum % 11;
-            if (sum === 10) {
-                sum = 0;
-            }
-            return (sum + '' === value.substr(7, 1));
-        },
-
-        /**
-         * Validate Slovak VAT number
-         * Examples:
-         * - Valid: SK2022749619
-         * - Invalid: SK2022749618
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _sk: function(value) {
-            if (/^SK[1-9][0-9][(2-4)|(6-9)][0-9]{7}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[1-9][0-9][(2-4)|(6-9)][0-9]{7}$/.test(value)) {
-                return false;
-            }
-
-            return (parseInt(value, 10) % 11 === 0);
-        },
-
-        /**
-         * Validate Venezuelan VAT number (RIF)
-         * Examples:
-         * - Valid: VEJ309272292, VEV242818101, VEJ000126518, VEJ000458324, J309272292, V242818101, J000126518, J000458324
-         * - Invalid: VEJ309272293, VEV242818100, J000126519, J000458323
-         *
-         * @param {String} value VAT number
-         * @returns {Boolean}
-         */
-        _ve: function(value) {
-            if (/^VE[VEJPG][0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-            if (!/^[VEJPG][0-9]{9}$/.test(value)) {
-                return false;
-            }
-
-            var types  = {
-                    'V': 4,
-                    'E': 8,
-                    'J': 12,
-                    'P': 16,
-                    'G': 20
-                },
-                sum    = types[value.charAt(0)],
-                weight = [3, 2, 7, 6, 5, 4, 3, 2];
-
-            for (var i = 0; i < 8; i++) {
-                sum += parseInt(value.charAt(i + 1), 10) * weight[i];
-            }
-
-            sum = 11 - sum % 11;
-            if (sum === 11 || sum === 10) {
-                sum = 0;
-            }
-            return (sum + '' === value.substr(9, 1));
-        },
-
-        /**
-         * Validate South African VAT number
-         * Examples:
-         * - Valid: 4012345678
-         * - Invalid: 40123456789, 3012345678
-         *
-         * @params {String} value VAT number
-         * @returns {Boolean}
-         */
-         _za: function(value) {
-            if (/^ZA4[0-9]{9}$/.test(value)) {
-                value = value.substr(2);
-            }
-
-            return /^4[0-9]{9}$/.test(value);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.vin = $.extend($.fn.bootstrapValidator.i18n.vin || {}, {
-        'default': 'Please enter a valid VIN number'
-    });
-
-    $.fn.bootstrapValidator.validators.vin = {
-        /**
-         * Validate an US VIN (Vehicle Identification Number)
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return true;
-            }
-
-            // Don't accept I, O, Q characters
-            if (!/^[a-hj-npr-z0-9]{8}[0-9xX][a-hj-npr-z0-9]{8}$/i.test(value)) {
-                return false;
-            }
-
-            value = value.toUpperCase();
-            var chars   = {
-                    A: 1,   B: 2,   C: 3,   D: 4,   E: 5,   F: 6,   G: 7,   H: 8,
-                    J: 1,   K: 2,   L: 3,   M: 4,   N: 5,           P: 7,           R: 9,
-                            S: 2,   T: 3,   U: 4,   V: 5,   W: 6,   X: 7,   Y: 8,   Z: 9,
-                    '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '0': 0
-                },
-                weights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2],
-                sum     = 0,
-                length  = value.length;
-            for (var i = 0; i < length; i++) {
-                sum += chars[value.charAt(i) + ''] * weights[i];
-            }
-
-            var reminder = sum % 11;
-            if (reminder === 10) {
-                reminder = 'X';
-            }
-
-            return (reminder + '') === value.charAt(8);
-        }
-    };
-}(window.jQuery));
-;(function($) {
-    $.fn.bootstrapValidator.i18n.zipCode = $.extend($.fn.bootstrapValidator.i18n.zipCode || {}, {
-        'default': 'Please enter a valid postal code',
-        countryNotSupported: 'The country code %s is not supported',
-        country: 'Please enter a valid postal code in %s',
-        countries: {
-            BR: 'Brazil',
-            CA: 'Canada',
-            CZ: 'Czech Republic',
-            DK: 'Denmark',
-            GB: 'United Kingdom',
-            IT: 'Italy',
-            MA: 'Morocco',
-            NL: 'Netherlands',
-            RO: 'Romania',
-            RU: 'Russia',
-            SE: 'Sweden',
-            SG: 'Singapore',
-            SK: 'Slovakia',
-            US: 'USA'
-        }
-    });
-
-    $.fn.bootstrapValidator.validators.zipCode = {
-        html5Attributes: {
-            message: 'message',
-            country: 'country'
-        },
-
-        COUNTRY_CODES: ['BR', 'CA', 'CZ', 'DK', 'GB', 'IT', 'MA', 'NL', 'RO', 'RU', 'SE', 'SG', 'SK', 'US'],
-
-        /**
-         * Return true if and only if the input value is a valid country zip code
-         *
-         * @param {BootstrapValidator} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * - country: The country
-         *
-         * The country can be defined by:
-         * - An ISO 3166 country code
-         * - Name of field which its value defines the country code
-         * - Name of callback function that returns the country code
-         * - A callback function that returns the country code
-         *
-         * callback: function(value, validator, $field) {
-         *      // value is the value of field
-         *      // validator is the BootstrapValidator instance
-         *      // $field is jQuery element representing the field
-         * }
-         *
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '' || !options.country) {
-                return true;
-            }
-
-            var country = options.country;
-            if (typeof country !== 'string' || $.inArray(country, this.COUNTRY_CODES) === -1) {
-                // Try to determine the country
-                country = validator.getDynamicOption($field, country);
-            }
-
-            if (!country || $.inArray(country.toUpperCase(), this.COUNTRY_CODES) === -1) {
-                return { valid: false, message: $.fn.bootstrapValidator.helpers.format($.fn.bootstrapValidator.i18n.zipCode.countryNotSupported, country) };
-            }
-
-            var isValid = false;
-            country = country.toUpperCase();
-            switch (country) {
-                case 'BR':
-                    isValid = /^(\d{2})([\.]?)(\d{3})([\-]?)(\d{3})$/.test(value);
-                    break;
-
-                case 'CA':
-                    isValid = /^(?:A|B|C|E|G|H|J|K|L|M|N|P|R|S|T|V|X|Y){1}[0-9]{1}(?:A|B|C|E|G|H|J|K|L|M|N|P|R|S|T|V|W|X|Y|Z){1}\s?[0-9]{1}(?:A|B|C|E|G|H|J|K|L|M|N|P|R|S|T|V|W|X|Y|Z){1}[0-9]{1}$/i.test(value);
-                    break;
-
-                case 'CZ':
-                    // Test: http://regexr.com/39hhr
-                    isValid = /^(\d{3})([ ]?)(\d{2})$/.test(value);
-                    break;
-
-                case 'DK':
-                    isValid = /^(DK(-|\s)?)?\d{4}$/i.test(value);
-                    break;
-
-                case 'GB':
-                    isValid = this._gb(value);
-                    break;
-
-                // http://en.wikipedia.org/wiki/List_of_postal_codes_in_Italy
-                case 'IT':
-                    isValid = /^(I-|IT-)?\d{5}$/i.test(value);
-                    break;
-
-                // http://en.wikipedia.org/wiki/List_of_postal_codes_in_Morocco
-                case 'MA':
-                    isValid = /^[1-9][0-9]{4}$/i.test(value);
-                    break;
-
-                // http://en.wikipedia.org/wiki/Postal_codes_in_the_Netherlands
-                case 'NL':
-                    isValid = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i.test(value);
-                    break;
-                    
-                case 'RO':
-                    isValid = /^(0[1-8]{1}|[1-9]{1}[0-5]{1})?[0-9]{4}$/i.test(value);
-                    break;
-
-                case 'RU':
-                    isValid = /^[0-9]{6}$/i.test(value);
-                    break;
-
-                case 'SE':
-                    isValid = /^(S-)?\d{3}\s?\d{2}$/i.test(value);
-                    break;
-
-                case 'SG':
-                    isValid = /^([0][1-9]|[1-6][0-9]|[7]([0-3]|[5-9])|[8][0-2])(\d{4})$/i.test(value);
-                    break;                
-
-                case 'SK':
-                    // Test: http://regexr.com/39hhr
-                    isValid = /^(\d{3})([ ]?)(\d{2})$/.test(value);
-                    break;
-
-                case 'US':
-                /* falls through */
-                default:
-                    isValid = /^\d{4,5}([\-]?\d{4})?$/.test(value);
-                    break;
-            }
-
-            return {
-                valid: isValid,
-                message: $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.zipCode.country, $.fn.bootstrapValidator.i18n.zipCode.countries[country])
-            };
-        },
-
-        /**
-         * Validate United Kingdom postcode
-         * Examples:
-         * - Standard: EC1A 1BB, W1A 1HQ, M1 1AA, B33 8TH, CR2 6XH, DN55 1PT
-         * - Special cases:
-         * AI-2640, ASCN 1ZZ, GIR 0AA
-         *
-         * @see http://en.wikipedia.org/wiki/Postcodes_in_the_United_Kingdom
-         * @param {String} value The postcode
-         * @returns {Boolean}
-         */
-        _gb: function(value) {
-            var firstChar  = '[ABCDEFGHIJKLMNOPRSTUWYZ]',     // Does not accept QVX
-                secondChar = '[ABCDEFGHKLMNOPQRSTUVWXY]',     // Does not accept IJZ
-                thirdChar  = '[ABCDEFGHJKPMNRSTUVWXY]',
-                fourthChar = '[ABEHMNPRVWXY]',
-                fifthChar  = '[ABDEFGHJLNPQRSTUWXYZ]',
-                regexps    = [
-                    // AN NAA, ANN NAA, AAN NAA, AANN NAA format
-                    new RegExp('^(' + firstChar + '{1}' + secondChar + '?[0-9]{1,2})(\\s*)([0-9]{1}' + fifthChar + '{2})$', 'i'),
-                    // ANA NAA
-                    new RegExp('^(' + firstChar + '{1}[0-9]{1}' + thirdChar + '{1})(\\s*)([0-9]{1}' + fifthChar + '{2})$', 'i'),
-                    // AANA NAA
-                    new RegExp('^(' + firstChar + '{1}' + secondChar + '{1}?[0-9]{1}' + fourthChar + '{1})(\\s*)([0-9]{1}' + fifthChar + '{2})$', 'i'),
-
-                    new RegExp('^(BF1)(\\s*)([0-6]{1}[ABDEFGHJLNPQRST]{1}[ABDEFGHJLNPQRSTUWZYZ]{1})$', 'i'),        // BFPO postcodes
-                    /^(GIR)(\s*)(0AA)$/i,                       // Special postcode GIR 0AA
-                    /^(BFPO)(\s*)([0-9]{1,4})$/i,               // Standard BFPO numbers
-                    /^(BFPO)(\s*)(c\/o\s*[0-9]{1,3})$/i,        // c/o BFPO numbers
-                    /^([A-Z]{4})(\s*)(1ZZ)$/i,                  // Overseas Territories
-                    /^(AI-2640)$/i                              // Anguilla
-                ];
-            for (var i = 0; i < regexps.length; i++) {
-                if (regexps[i].test(value)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    };
-}(window.jQuery));
 
 ;(function ($) {
     /**
@@ -7821,9 +10594,6 @@ if (typeof jQuery === 'undefined') {
      * Translated by @shamiao
      */
     $.fn.bootstrapValidator.i18n = $.extend(true, $.fn.bootstrapValidator.i18n, {
-        base64: {
-            'default': '请输入有效的Base64编码'
-        },
         between: {
             'default': '请输入在 %s 和 %s 之间的数值',
             notInclusive: '请输入在 %s 和 %s 之间(不含两端)的数值'
@@ -7837,26 +10607,17 @@ if (typeof jQuery === 'undefined') {
             more: '最多只能选中 %s 个选项',
             between: '请选择 %s 至 %s 个选项'
         },
-        creditCard: {
-            'default': '请输入有效的信用卡号码'
-        },
-        cusip: {
-            'default': '请输入有效的美国CUSIP代码'
-        },
-        cvv: {
-            'default': '请输入有效的CVV代码'
-        },
         date: {
-            'default': '请输入有效的日期'
+            'default': '请输入有效的日期', 
+            min: '请输入 %s 或之后的日期',
+            max: '请输入 %s 或以前的日期',
+            range: '请输入 %s 和 %s 之间的日期'
         },
         different: {
             'default': '请输入不同的值'
         },
         digits: {
             'default': '请输入有效的数字'
-        },
-        ean: {
-            'default': '请输入有效的EAN商品编码'
         },
         emailAddress: {
             'default': '请输入有效的邮件地址'
@@ -7868,174 +10629,18 @@ if (typeof jQuery === 'undefined') {
             'default': '请输入大于等于 %s 的数值',
             notInclusive: '请输入大于 %s 的数值'
         },
-        grid: {
-            'default': '请输入有效的GRId编码'
-        },
-        hex: {
-            'default': '请输入有效的16进制数'
-        },
-        hexColor: {
-            'default': '请输入有效的16进制颜色值'
-        },
-        iban: {
-            'default': '请输入有效的IBAN(国际银行账户)号码',
-            countryNotSupported: '不支持 %s 国家或地区',
-            country: '请输入有效的 %s 国家或地区的IBAN(国际银行账户)号码',
-            countries: {
-                AD: '安道​​尔',
-                AE: '阿联酋',
-                AL: '阿尔巴尼亚',
-                AO: '安哥拉',
-                AT: '奥地利',
-                AZ: '阿塞拜疆',
-                BA: '波斯尼亚和黑塞哥维那',
-                BE: '比利时',
-                BF: '布基纳法索',
-                BG: '保加利亚',
-                BH: '巴林',
-                BI: '布隆迪',
-                BJ: '贝宁',
-                BR: '巴西',
-                CH: '瑞士',
-                CI: '科特迪瓦',
-                CM: '喀麦隆',
-                CR: '哥斯达黎加',
-                CV: '佛得角',
-                CY: '塞浦路斯',
-                CZ: '捷克共和国',
-                DE: '德国',
-                DK: '丹麦',
-                DO: '多米尼加共和国',
-                DZ: '阿尔及利亚',
-                EE: '爱沙尼亚',
-                ES: '西班牙',
-                FI: '芬兰',
-                FO: '法罗群岛',
-                FR: '法国',
-                GB: '英国',
-                GE: '格鲁吉亚',
-                GI: '直布罗陀',
-                GL: '格陵兰岛',
-                GR: '希腊',
-                GT: '危地马拉',
-                HR: '克罗地亚',
-                HU: '匈牙利',
-                IE: '爱尔兰',
-                IL: '以色列',
-                IR: '伊朗',
-                IS: '冰岛',
-                IT: '意大利',
-                JO: '约旦',
-                KW: '科威特',
-                KZ: '哈萨克斯坦',
-                LB: '黎巴嫩',
-                LI: '列支敦士登',
-                LT: '立陶宛',
-                LU: '卢森堡',
-                LV: '拉脱维亚',
-                MC: '摩纳哥',
-                MD: '摩尔多瓦',
-                ME: '黑山',
-                MG: '马达加斯加',
-                MK: '马其顿',
-                ML: '马里',
-                MR: '毛里塔尼亚',
-                MT: '马耳他',
-                MU: '毛里求斯',
-                MZ: '莫桑比克',
-                NL: '荷兰',
-                NO: '挪威',
-                PK: '巴基斯坦',
-                PL: '波兰',
-                PS: '巴勒斯坦',
-                PT: '葡萄牙',
-                QA: '卡塔尔',
-                RO: '罗马尼亚',
-                RS: '塞尔维亚',
-                SA: '沙特阿拉伯',
-                SE: '瑞典',
-                SI: '斯洛文尼亚',
-                SK: '斯洛伐克',
-                SM: '圣马力诺',
-                SN: '塞内加尔',
-                TN: '突尼斯',
-                TR: '土耳其',
-                VG: '英属维尔京群岛'
-            }
-        },
-        id: {
-            'default': '请输入有效的身份证件号码',
-            countryNotSupported: '不支持 %s 国家或地区',
-            country: '请输入有效的 %s 国家或地区的身份证件号码',
-            countries: {
-                BA: '波黑',
-                BG: '保加利亚',
-                BR: '巴西',
-                CH: '瑞士',
-                CL: '智利',
-                CN: '中国',
-                CZ: '捷克共和国',
-                DK: '丹麦',
-                EE: '爱沙尼亚',
-                ES: '西班牙',
-                FI: '芬兰',
-                HR: '克罗地亚',
-                IE: '爱尔兰',
-                IS: '冰岛',
-                LT: '立陶宛',
-                LV: '拉脱维亚',
-                ME: '黑山',
-                MK: '马其顿',
-                NL: '荷兰',
-                RO: '罗马尼亚',
-                RS: '塞尔维亚',
-                SE: '瑞典',
-                SI: '斯洛文尼亚',
-                SK: '斯洛伐克',
-                SM: '圣马力诺',
-                TH: '泰国',
-                ZA: '南非'
-            }
-        },
         identical: {
             'default': '请输入相同的值'
-        },
-        imei: {
-            'default': '请输入有效的IMEI(手机串号)'
-        },
-        imo: {
-            'default': '请输入有效的国际海事组织(IMO)号码'
         },
         integer: {
             'default': '请输入有效的整数值'
         },
-        ip: {
-            'default': '请输入有效的IP地址',
-            ipv4: '请输入有效的IPv4地址',
-            ipv6: '请输入有效的IPv6地址'
-        },
-        isbn: {
-            'default': '请输入有效的ISBN(国际标准书号)'
-        },
-        isin: {
-            'default': '请输入有效的ISIN(国际证券编码)'
-        },
-        ismn: {
-            'default': '请输入有效的ISMN(印刷音乐作品编码)'
-        },
-        issn: {
-            'default': '请输入有效的ISSN(国际标准杂志书号)'
-        },
+        
         lessThan: {
             'default': '请输入小于等于 %s 的数值',
             notInclusive: '请输入小于 %s 的数值'
         },
-        mac: {
-            'default': '请输入有效的MAC物理地址'
-        },
-        meid: {
-            'default': '请输入有效的MEID(移动设备识别码)'
-        },
+        
         notEmpty: {
             'default': '请填写必填项目'
         },
@@ -8047,21 +10652,7 @@ if (typeof jQuery === 'undefined') {
             countryNotSupported: '不支持 %s 国家或地区',
             country: '请输入有效的 %s 国家或地区的电话号码',
             countries: {
-                BR: '巴西',
-                CN: '中国',
-                CZ: '捷克共和国',
-                DK: '丹麦',
-                ES: '西班牙',
-                FR: '法国',
-                GB: '英国',
-                MA: '摩洛哥',
-                PK: '巴基斯坦',
-                RO: '罗马尼亚',
-                RU: '俄罗斯',
-                SK: '斯洛伐克',
-                TH: '泰国',
-                US: '美国',
-                VE: '委内瑞拉'
+                CN: '中国'
             }
         },
         regexp: {
@@ -8069,21 +10660,6 @@ if (typeof jQuery === 'undefined') {
         },
         remote: {
             'default': '请输入有效的值'
-        },
-        rtn: {
-            'default': '请输入有效的RTN号码'
-        },
-        sedol: {
-            'default': '请输入有效的SEDOL代码'
-        },
-        siren: {
-            'default': '请输入有效的SIREN号码'
-        },
-        siret: {
-            'default': '请输入有效的SIRET号码'
-        },
-        step: {
-            'default': '请输入在基础值上，增加 %s 的整数倍的数值'
         },
         stringCase: {
             'default': '只能输入小写字母',
@@ -8097,78 +10673,6 @@ if (typeof jQuery === 'undefined') {
         },
         uri: {
             'default': '请输入一个有效的URL地址'
-        },
-        uuid: {
-            'default': '请输入有效的UUID',
-            version: '请输入版本 %s 的UUID'
-        },
-        vat: {
-            'default': '请输入有效的VAT(税号)',
-            countryNotSupported: '不支持 %s 国家或地区',
-            country: '请输入有效的 %s 国家或地区的VAT(税号)',
-            countries: {
-                AT: '奥地利',
-                BE: '比利时',
-                BG: '保加利亚',
-                BR: '巴西',
-                CH: '瑞士',
-                CY: '塞浦路斯',
-                CZ: '捷克共和国',
-                DE: '德国',
-                DK: '丹麦',
-                EE: '爱沙尼亚',
-                ES: '西班牙',
-                FI: '芬兰',
-                FR: '法语',
-                GB: '英国',
-                GR: '希腊',
-                EL: '希腊',
-                HU: '匈牙利',
-                HR: '克罗地亚',
-                IE: '爱尔兰',
-                IS: '冰岛',
-                IT: '意大利',
-                LT: '立陶宛',
-                LU: '卢森堡',
-                LV: '拉脱维亚',
-                MT: '马耳他',
-                NL: '荷兰',
-                NO: '挪威',
-                PL: '波兰',
-                PT: '葡萄牙',
-                RO: '罗马尼亚',
-                RU: '俄罗斯',
-                RS: '塞尔维亚',
-                SE: '瑞典',
-                SI: '斯洛文尼亚',
-                SK: '斯洛伐克',
-                VE: '委内瑞拉',
-                ZA: '南非'
-            }
-        },
-        vin: {
-            'default': '请输入有效的VIN(美国车辆识别号码)'
-        },
-        zipCode: {
-            'default': '请输入有效的邮政编码',
-            countryNotSupported: '不支持 %s 国家或地区',
-            country: '请输入有效的 %s 国家或地区的邮政编码',
-            countries: {
-                BR: '巴西',
-                CA: '加拿大',
-                CZ: '捷克共和国',
-                DK: '丹麦',
-                GB: '英国',
-                IT: '意大利',
-                MA: '摩洛哥',
-                NL: '荷兰',
-                RO: '罗马尼亚',
-                RU: '俄罗斯',
-                SE: '瑞典',
-                SG: '新加坡',
-                SK: '斯洛伐克',
-                US: '美国'
-            }
         }
     });
 }(window.jQuery));
@@ -8835,7 +11339,7 @@ if (typeof jQuery === 'undefined') {
 })(window.jQuery);
 
 ;/**
- * bootbox.js [master branch]
+ * bootbox.js v4.4.0
  *
  * http://bootboxjs.com/license.txt
  */
@@ -31067,7 +33571,7 @@ if (typeof jQuery === 'undefined') {
 }(jQuery));
 }));
 ;/*!
- * mower - v1.1.1 - 2015-07-07
+ * mower - v1.1.1 - 2015-07-15
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -31091,7 +33595,7 @@ var UniqueId = (function() {
     };
 })();
 
-//返回一个树形的根集合，对原有的数组顺序不改变，但会增加parent和children两个属性
+//����һ�����εĸ����ϣ���ԭ�е�����˳�򲻸ı䣬��������parent��children��������
 Array.prototype.makeLevelTree = function(option) {
     var o = option || {},
         id = o.id || 'id',
@@ -31237,12 +33741,12 @@ Date.prototype.setISO8601 = function(string) {
     this.setTime(Number(time));
 };
 
-/** 获取介于之间的数值 */
+/** ��ȡ����֮������ֵ */
 Number.prototype.limit = function(min, max) {
     return (this < min) ? min : (this > max ? max : this);
 };
 
-/** 匹配与字符串相同的split方法 */
+/** ƥ�����ַ�����ͬ��split���� */
 Number.prototype.split = function() {
     return [this];
 };
@@ -31318,7 +33822,7 @@ Number.prototype.split = function() {
     };
 
     $.fn.extend({
-        /** 获取该元素所隶属的应用上下文信息 */
+        /** ��ȡ��Ԫ����������Ӧ����������Ϣ */
         getContextPath: function() {
             if (typeof base == "undefined") {
                 var base = '/';
@@ -31334,19 +33838,19 @@ Number.prototype.split = function() {
                 return base;
             }
         },
-        /** 检测是否存在 */
+        /** �����Ƿ����� */
         exists: function() {
             return $(this) && $(this).size() > 0;
         },
-        /** 获取(padding+border+margin)高度 */
+        /** ��ȡ(padding+border+margin)�߶� */
         patchHeight: function() {
             return $(this).outerHeight(true) - $(this).height();
         },
-        /** 获取(padding+border+margin)宽度 */
+        /** ��ȡ(padding+border+margin)���� */
         patchWidth: function() {
             return $(this).outerWidth(true) - $(this).width();
         },
-        /** 获取元素的scrollHeight */
+        /** ��ȡԪ�ص�scrollHeight */
         scrollHeight: function() {
             return $(this)[0].scrollHeight;
         },
@@ -31363,21 +33867,21 @@ Number.prototype.split = function() {
                 'left': (calWidth > 20 ? calWidth : 0)
             });
         },
-        /** 显示元素 */
+        /** ��ʾԪ�� */
         showme: function() {
             return $(this).css({
                 'display': 'block',
                 'visibility': 'visible'
             });
         },
-        /** 隐藏元素 */
+        /** ����Ԫ�� */
         hideme: function() {
             return $(this).css({
                 'display': 'none',
                 'visibility': 'hidden'
             });
         },
-        /** 设置元素为相同高度，高度按指定或元素中最大高度为准 */
+        /** ����Ԫ��Ϊ��ͬ�߶ȣ��߶Ȱ�ָ����Ԫ���������߶�Ϊ׼ */
         sameHeight: function(height) {
             var max = height || -1;
             if (max < 0) {
@@ -31387,7 +33891,7 @@ Number.prototype.split = function() {
             }
             return $(this).css('min-height', max);
         },
-        /** 设置元素为相同宽度，宽度按指定或元素中最大宽度为准 */
+        /** ����Ԫ��Ϊ��ͬ���ȣ����Ȱ�ָ����Ԫ������������Ϊ׼ */
         sameWidth: function(width) {
             var max = width || -1;
             if (max < 0) {
@@ -31543,33 +34047,31 @@ Number.prototype.split = function() {
             $(document).triggerHandler('update', self);
 
             //update javascript 
-            var scripts = [];
             $html.filter('script').each(function() {
-                if (this.src) {
-                    scripts.push($(this));
-                } else {
-                    scripts.unshift($(this));
-                }
-            });
-
-            for (var i = 0; i < scripts.length; i++) {
-                var id = scripts[i].attr('id');
+                var $script = $(this);
+                var id = $script.attr('id');
                 if (id) {
                     self.find('#' + id).remove();
-                }!scripts[i].attr('data-ref-target') && scripts[i].attr('data-ref-target', ajaxId);
-                self.append(scripts[i]);
-            }
+                }
+                if(!$script.attr('data-ref-target')) $script.attr('data-ref-target', ajaxId);
+                self.append($script);
+            });
 
             //process call back
             if (callback && $.isFunction(callback)) {
-                callback.apply(self, [data]);
+                callback.apply(self, [true,data]);
             }
 
             return self; //keep chain
         },
         _privateProcessContents: function(url, ajaxOptions, action, callback, isScrollTop) {
             var self = $(this),
-                s = {};
+                s = {},
+                handleError = function(){
+                    if (callback && $.isFunction(callback)) {
+                        callback.apply(self, [false]);
+                    }
+                };
 
             s = $.extend({
                 url: url,
@@ -31587,23 +34089,28 @@ Number.prototype.split = function() {
                 success: function(data, status, xhr) {
                     var ct = xhr.getResponseHeader('content-type') || '';
                     if (ct.indexOf('json') > -1) {
-                        self.html('<h4 style="margin-top:10px; display:block; text-align:left"><i class="fa fa-warning txt-color-orangeDark"></i> Error! Content type not match.</h4>');
+                        handleError();
                         self.trigger('ajaxError', [xhr, s]);
                         return;
                     }
+                    try{
+                        self.css({
+                            opacity: '0.0'
+                        }).updateHtml(data, action, callback).delay(50).animate({
+                            opacity: '1.0'
+                        }, 300);
 
-                    self.find('h3._loadmask').remove();
-                    self.children().removeClass('hidden');
-                    self.css({
-                        opacity: '0.0'
-                    }).updateHtml(data, action, callback).delay(50).animate({
-                        opacity: '1.0'
-                    }, 300);
-
-                    $(window).trigger('resize');
+                        $(window).trigger('resize');
+                    }catch(e){
+                        handleError();
+                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    self.html('<h4 style="margin-top:10px; display:block; text-align:left"><i class="fa fa-warning txt-color-orangeDark"></i> Error 404! Page not found.</h4>');
+                    handleError();
+                },
+                complete:function( xhr, status){
+                    self.find('h3._loadmask').remove();
+                    self.children().removeClass('hidden');
                 }
             }, ajaxOptions || {});
             $.ajax(s);
@@ -32013,6 +34520,7 @@ var Utils = (function($, window, document, undefined) {
 $(function() {
     Utils.init();
 });
+
 ;/** ========================================================================
  * Mower: utils.mower.js - v1.0.0
  *
@@ -32520,7 +35028,7 @@ $(function() {
 
             return $content.attr('data-target');
         },
-        _pushHeader: function(label, url) {
+        _pushHeader: function(targetId, label, url) {
             var path = this._getXPath(this.$element.children('li'));
 
             if (path.length > 0) {
@@ -32544,23 +35052,21 @@ $(function() {
 
                 var that = this;
                 this.$element.children('li').filter(':last')
-                    .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
-                        event.preventDefault();
-                        /* Act on the event */
-                        var index = path.length - 1;
-                        var popCount = that.$element.children('li').length - index;
-                        that.pop(popCount);
-                    });
+                .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
+                    event.preventDefault();
+                    /* Act on the event */
+                    var index = path.length - 1;
+                    var popCount = that.$element.children('li').length - index;
+                    that.pop(popCount);
+                });
             }
 
             path.push(label);
 
-            var target = this.options.prefix + this.panelSeq++;
-
             var li = [
                 '<li ',
                 'data-target="',
-                target,
+                targetId,
                 '" class="active">',
                 path.length === 1 ? this.options.home : this.options.divider,
                 label,
@@ -32568,11 +35074,9 @@ $(function() {
             ].join('');
 
             this.$element.append(li);
-            return target;
+            return ;
         },
         _pushContent: function(panelId, url, _callback) {
-            var $li = this.$element.find('[data-target="' + panelId + '"]'); //header
-
             if (url) {
 
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
@@ -32602,31 +35106,47 @@ $(function() {
         push: function(label, url, relatedTarget) {
             if (!label || !url) return;
 
-            //update header in breadcrumb
-            var panelId = this._pushHeader(label, url);
+            var targetId = this.options.prefix + this.panelSeq++;
 
             var that = this;
-            var callback = function(data) {
-                //move forward
-                that.current++;
+            var callback = function(isSuccessLoaded,data) {
 
-                //trigger populdate success event 
-                var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
-                    "data": data
-                });
+                if(isSuccessLoaded){
+                    //move forward
+                    that.current++;
 
-                that.$element.trigger(e);
+                    //trigger populdate success event 
+                    var e = $.Event(BreadCrumb.DEFAULTS.events.populateSuccess, {
+                        "data": data
+                    });
+                    that.$element.trigger(e);
+
+                    //update header in breadcrumb
+                    that._pushHeader(targetId, label, url);
+                    var trigger = relatedTarget || that.element;
+                    $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
+                        "path": that._getXPath(that.$element.children('li'))
+                    });
+
+                } else {
+                    //trigger populdate success event 
+                    var e = $.Event(BreadCrumb.DEFAULTS.events.populateError, {
+                        "data": data
+                    });
+
+                    that.$element.trigger(e);
+
+                    var target = that.$element.data('target');
+                    var $panel = $(target).find('[data-panel="' + targetId + '"]');
+                    $panel.prev().removeClass('hidden');
+                    $panel.remove();
+                    //hide siblings
+                    
+                }
             };
 
             //update breadcrumb's target content
-            this._pushContent(panelId, url, callback);
-
-            this.cleanup(); //may be old state
-
-            var trigger = relatedTarget || this.element;
-            $(trigger).trigger(BreadCrumb.DEFAULTS.events.pushed, {
-                "path": this._getXPath(this.$element.children('li'))
-            });
+            this._pushContent(targetId, url, callback);
         },
         _popHeader: function(popCount) {
             var popArray = new Array();
@@ -32691,8 +35211,6 @@ $(function() {
             //move backward
             this.current -= popArray.length;
 
-            this.cleanup(); //may be old state
-
             var trigger = relatedTarget || this.element;
             $(trigger).trigger(BreadCrumb.DEFAULTS.events.poped, {
                 "path": this._getXPath(this.$element.children('li'))
@@ -32706,9 +35224,6 @@ $(function() {
             this.$element.data("target").children().remove();
 
             this.$element.trigger(BreadCrumb.DEFAULTS.events.reset);
-        },
-        cleanup: function() {
-            this.$element.closest('.mu-breadcrumb').next('._mower-alerts').remove();
         },
         _destory: function() {}
     };
@@ -32860,15 +35375,17 @@ $(function() {
                 var href = $this.attr('data-href') || $this.attr('href');
                 href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
 
-                $.ajax({
-                    url: utils.getAbsoluteUrl(href, $this.getContextPath()),
-                    type: 'post',
-                    dataType: 'json',
-                    success: function(data) {
-                        var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
-                        $this.trigger(e, data);
-                    }
-                });
+                if(href){
+                    $.ajax({
+                        url: utils.getAbsoluteUrl(href, $this.getContextPath()),
+                        type: 'post',
+                        dataType: 'json',
+                        success: function(data) {
+                            var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
+                            $this.trigger(e, data);
+                        }
+                    });
+                }
             };
 
             if ($this.attr('data-process')) {
@@ -32889,6 +35406,304 @@ $(function() {
         });
 })(JSON || {}, Utils || {}, jQuery, window, document);
 ;/** ========================================================================
+ * Mower: chosen.mower.js - v1.0.0
+ *
+ * apply chosen on document ready.
+ *
+ * Copyright 2011-2014 Infinitus, Inc
+ * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
+ * ======================================================================== */
+
+;
+(function($, base, window, document, undefined) {
+
+    'use strict';
+
+    // private functions & variables
+
+    // Apply chosen to all elements with the rel="chosen" attribute
+    // ===================================
+    
+    $(document).on('ready update', function(event, updatedFragment) {
+        /* Act on the event */
+        var $root = $(updatedFragment || 'html');
+
+        $root.find('[rel=chosen]').each(function(index, el) {
+            var $this = $(this);
+
+            if (!$this.data('chosen')) {
+
+                 var options = $.extend({},
+                    base.parseOptions($this, [{
+                            disable_search_threshold: 'number',
+                            no_results_text: 'string',
+                            max_selected_options: 'number',
+                            allow_single_deselect:'boolean'
+                        }])
+                );
+
+                $(this).chosen(options);
+            }
+        });
+    });
+
+}(jQuery, Base || {}, window, document));;/** ========================================================================
+ * Mower: chosen.remote.mower.js - v0.1.0
+ *
+ * add ajax load remote data base on chosen.
+ *
+ * Copyright 2011-2014 Infinitus, Inc
+ * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
+ * ======================================================================== */
+
+ ;(function ( $, window, document, undefined ) {
+
+  "use strict";
+
+
+ /* RemoteChosen CLASS DEFINITION
+  * ====================== */
+
+  var RemoteChosen = function (element, options) {
+    this.options = options;
+    this.element = element;
+    this.$element = $(element);
+  };
+
+  var RemoteChosen_Name = 'mu.remoteChosen';
+  var Chosen_Name = 'chosen'; //sync with chosen.jquery.js
+
+  if (!$.fn.chosen) throw new Error('RemoteChosen requires chosen.jquery.js');
+
+  //you can put your plugin defaults in here.
+  RemoteChosen.DEFAULTS = {
+    server :false,
+    url        :'',
+    datasource :false,
+    callback   :null,
+    nameField  :'text',
+    valueField :'value'
+  };
+
+  RemoteChosen.prototype = {
+
+    constructor: RemoteChosen ,  
+
+    _init: function(element, options){
+      var $element = $(element);
+      this.options = $.extend({}, RemoteChosen.DEFAULTS, $element.data(), typeof options === 'object' && options);
+
+      this._initChosen();
+      this._loadData();
+    },
+
+    _initChosen: function(){
+      //instance chosen plugin
+      return this.$element.chosen(this.options || {});
+    },
+
+    _construct : function(data) {
+      if(!data) return;
+
+      var items, nbItems, selected_values,selected_values = [],
+          that = this,$select = this.$element;
+
+      $select.find('option').each(function() {
+        if (!$(this).is(":selected")) {
+          return $(this).remove();
+        } else {
+          return selected_values.push($(this).val() + "-" + $(this).text());
+        }
+      });
+
+      $select.find('optgroup:empty').each(function() {
+        return $(this).remove();
+      });
+
+      items = this.options.callback != null ? this.options.callback(data, that.element) : data;
+      nbItems = 0;
+      $.each(items, function(i, element) {
+        var group, text, value;
+        nbItems++;
+        if (element.group) {
+          group = $select.find("optgroup[label='" + element.text + "']");
+          if (!group.size()) {
+            group = $("<optgroup />");
+          }
+          group.attr('label', element.text).appendTo($select);
+          return $.each(element.items, function(i, element) {
+            var text, value;
+            if (typeof element === "string") {
+              value = i;
+              text = element;
+            } else {
+              value = element[that.options.valueField];
+              text = element[that.options.nameField];
+            }
+            if ($.inArray(value + "-" + text, selected_values) === -1) {
+              return $("<option />").attr('value', value).html(text).appendTo(group);
+            }
+          });
+        } else {
+          if (typeof element === "string") {
+            value = i;
+            text = element;
+          } else {
+            value = element[that.options.valueField];
+            text = element[that.options.nameField];
+          }
+          if ($.inArray(value + "-" + text, selected_values) === -1) {
+            return $("<option />").attr('value', value).html(text).appendTo($select);
+          }
+        }
+      });
+      if (nbItems) {
+        $select.trigger("chosen:updated");//notify chosen update field.
+      } else {
+        $select.data().chosen.no_results_clear();
+        $select.data().chosen.no_results($select.val());
+      }
+    },
+    _loadData: function(){
+      var that = this,
+          ajaxurl = this.options.url,
+          ajaxurl = (ajaxurl && ajaxurl.replace(/.*(?=#[^\s]+$)/, '')),
+          ajaxOption;
+
+      if (this.options.server === true && ajaxurl) {
+
+          ajaxOption = $.extend({}, {
+              'url': ajaxurl,
+              dataType: 'json',
+              type: 'GET'
+          });
+          ajaxOption.success = function(data) {
+              that._construct(data);
+          };
+          $.ajax(ajaxOption); 
+      } else {
+          var data = this.options.datasource;
+          if ($.isFunction(window[data])){
+               data = data(that);
+           }
+           
+           this._construct(data);
+      }
+    },
+    reload: function(options) {
+
+      this.options = $.extend({}, this.options, typeof options === 'object' && options);
+
+      this._loadData();
+          
+    },
+    getChosenIntance: function(){
+      return this.$element.data('chosen') || this._initChosen();
+    },
+
+    _destroy: function() {
+      //clear chosen instance
+      $.data(this.$element,Chosen_Name,null);
+    }
+  };
+
+ /* RemoteChosen PLUGIN DEFINITION
+  * ======================= */
+
+  var old = $.fn.remoteChosen;
+
+  $.fn.remoteChosen = function (options) {
+      var args = Array.prototype.slice.call(arguments, 1);
+
+      var results;
+      this.each(function() {
+          var element = this
+              ,$element = $(element)
+              ,pluginKey = RemoteChosen_Name
+              ,instance = $.data(element, pluginKey);
+
+          // if there's no plugin instance for this element, create a new one, calling its "init" method, if it exists.
+          if (!instance) {
+              instance = $.data(element, pluginKey, new RemoteChosen(element,options));
+              if (instance && typeof RemoteChosen.prototype['_init'] === 'function')
+                  RemoteChosen.prototype['_init'].apply(instance, [element, options]);
+          }
+
+          // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
+          if (instance && typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+
+              var methodName = (options == 'destroy' ? '_destroy' : options);
+              if (typeof RemoteChosen.prototype[methodName] === 'function')
+                  results = RemoteChosen.prototype[methodName].apply(instance, args);
+
+              // Allow instances to be destroyed via the 'destroy' method
+              if (options === 'destroy')
+                  $.data(element, pluginKey, null);
+          }
+      });
+
+      // If the earlier cached method gives a value back, return the resulting value, otherwise return this to preserve chainability.
+      return results !== undefined ? results : this;
+  };
+
+  $.fn.remoteChosen.Constructor = RemoteChosen;
+
+
+ /* RemoteChosen NO CONFLICT
+  * ================= */
+
+  $.fn.remoteChosen.noConflict = function () {
+    $.fn.remoteChosen = old;
+    return this;
+  };
+
+
+ /* RemoteChosen DATA-API
+  * ============== */
+
+  $(document).on('ready update', function(event, updatedFragment) {
+      /* Act on the event */
+      var $root = $(updatedFragment || 'html');
+
+      $root.find('[rel=remoteChosen]').each(function(index, el) {
+          var $this = $(this);
+
+          if (!$this.data(RemoteChosen_Name)) {
+              $(this).remoteChosen();
+          }
+      });
+  });
+})( jQuery, window, document );;/** ========================================================================
+ * Mower: datetimepicker.mower.js - v1.0.0
+ *
+ * apply datetimepicker on document ready.
+ *
+ * Copyright 2011-2014 Infinitus, Inc
+ * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
+ * ======================================================================== */
+
+;
+(function($, window, document, undefined) {
+
+    'use strict';
+
+    // private functions & variables
+
+    // Apply datetimepicker to all elements with the rel="datetimepicker" attribute
+    // ===================================
+
+    $(document).on('ready update', function(event, updatedFragment) {
+        /* Act on the event */
+        var $root = $(updatedFragment || 'html');
+
+        $root.find('[rel="datetimepicker"]').each(function(index, el) {
+                var $this = $(this),
+                    options = $this.data();
+                
+                $this.datetimepicker(options);
+        });
+    });
+}(jQuery, window, document));;/** ========================================================================
  * Mower: datatables.selectrows.mower.js - v1.0.0
  *
  * datatables.selector script to handle datatables selected row functionally.
