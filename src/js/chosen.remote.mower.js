@@ -28,7 +28,6 @@
 
   //you can put your plugin defaults in here.
   RemoteChosen.DEFAULTS = {
-    server :false,
     url        :'',
     datasource :false,
     callback   :null,
@@ -121,8 +120,7 @@
           ajaxurl = (ajaxurl && ajaxurl.replace(/.*(?=#[^\s]+$)/, '')),
           ajaxOption;
 
-      if (this.options.server === true && ajaxurl) {
-
+      if (ajaxurl) {
           ajaxOption = $.extend({}, {
               'url': ajaxurl,
               dataType: 'json',
@@ -131,6 +129,7 @@
           ajaxOption.success = function(data) {
               that._construct(data);
           };
+          
           $.ajax(ajaxOption); 
       } else {
           var data = this.options.datasource;

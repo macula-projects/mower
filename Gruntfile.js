@@ -83,6 +83,7 @@ module.exports = function(grunt) {
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/validator.<%= pkg.name %>.js',
                         'src/js/messagebox.<%= pkg.name %>.js',
+                        'src/js/form.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -159,15 +160,17 @@ module.exports = function(grunt) {
                         'src/js/utils.<%= pkg.name %>.js',
                         'src/js/string.<%= pkg.name %>.js',
                         'src/js/base.<%= pkg.name %>.js',
+                        'src/js/chosen.<%= pkg.name %>.js',
+                        'src/js/chosen.remote.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
-                        'src/js/magnifier.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertival.menu.<%= pkg.name %>.js',
                         'src/js/modal.remote.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
-                        'src/js/tooltip.<%= pkg.name %>.js'
+                        'src/js/tooltip.<%= pkg.name %>.js',
+                        'src/js/validator.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -178,10 +181,12 @@ module.exports = function(grunt) {
                 files: {
                     'dist/front/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
+                        'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'dist/front/css/<%= pkg.name %>.css'
                     ],
                     'dist/front/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
+                        'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'dist/front/css/<%= pkg.name %>.min.css'
                     ]
                 }
@@ -192,9 +197,11 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/front/js/<%= pkg.name %>.js': [
+                        'plugins/chosen/js/chosen.jquery.js',
                         'dist/front/js/<%= pkg.name %>.js'
                     ],
                     'dist/front/js/<%= pkg.name %>.min.js': [
+                        'plugins/chosen/js/chosen.jquery.min.js',
                         'dist/front/js/<%= pkg.name %>.min.js'
                     ]
                 }

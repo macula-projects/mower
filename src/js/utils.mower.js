@@ -15,7 +15,7 @@ var UniqueId = (function() {
     };
 })();
 
-//·µ»ØÒ»¸öÊ÷ĞÎµÄ¸ù¼¯ºÏ£¬¶ÔÔ­ÓĞµÄÊı×éË³Ğò²»¸Ä±ä£¬µ«»áÔö¼ÓparentºÍchildrenÁ½¸öÊôĞÔ
+//è¿”å›ä¸€ä¸ªæ ‘å½¢çš„æ ¹é›†åˆï¼Œå¯¹åŸæœ‰çš„æ•°ç»„é¡ºåºä¸æ”¹å˜ï¼Œä½†ä¼šå¢åŠ parentå’Œchildrenä¸¤ä¸ªå±æ€§
 Array.prototype.makeLevelTree = function(option) {
     var o = option || {},
         id = o.id || 'id',
@@ -161,12 +161,12 @@ Date.prototype.setISO8601 = function(string) {
     this.setTime(Number(time));
 };
 
-/** »ñÈ¡½éÓÚÖ®¼äµÄÊıÖµ */
+/** è·å–ä»‹äºä¹‹é—´çš„æ•°å€¼ */
 Number.prototype.limit = function(min, max) {
     return (this < min) ? min : (this > max ? max : this);
 };
 
-/** Æ¥ÅäÓë×Ö·û´®ÏàÍ¬µÄsplit·½·¨ */
+/** åŒ¹é…ä¸å­—ç¬¦ä¸²ç›¸åŒçš„splitæ–¹æ³• */
 Number.prototype.split = function() {
     return [this];
 };
@@ -242,7 +242,7 @@ Number.prototype.split = function() {
     };
 
     $.fn.extend({
-        /** »ñÈ¡¸ÃÔªËØËùÁ¥ÊôµÄÓ¦ÓÃÉÏÏÂÎÄĞÅÏ¢ */
+        /** è·å–è¯¥å…ƒç´ æ‰€éš¶å±çš„åº”ç”¨ä¸Šä¸‹æ–‡ä¿¡æ¯ */
         getContextPath: function() {
             if (typeof base == "undefined") {
                 var base = '/';
@@ -258,19 +258,19 @@ Number.prototype.split = function() {
                 return base;
             }
         },
-        /** ¼ì²âÊÇ·ñ´æÔÚ */
+        /** æ£€æµ‹æ˜¯å¦å­˜åœ¨ */
         exists: function() {
             return $(this) && $(this).size() > 0;
         },
-        /** »ñÈ¡(padding+border+margin)¸ß¶È */
+        /** è·å–(padding+border+margin)é«˜åº¦ */
         patchHeight: function() {
             return $(this).outerHeight(true) - $(this).height();
         },
-        /** »ñÈ¡(padding+border+margin)¿í¶È */
+        /** è·å–(padding+border+margin)å®½åº¦ */
         patchWidth: function() {
             return $(this).outerWidth(true) - $(this).width();
         },
-        /** »ñÈ¡ÔªËØµÄscrollHeight */
+        /** è·å–å…ƒç´ çš„scrollHeight */
         scrollHeight: function() {
             return $(this)[0].scrollHeight;
         },
@@ -287,21 +287,21 @@ Number.prototype.split = function() {
                 'left': (calWidth > 20 ? calWidth : 0)
             });
         },
-        /** ÏÔÊ¾ÔªËØ */
+        /** æ˜¾ç¤ºå…ƒç´  */
         showme: function() {
             return $(this).css({
                 'display': 'block',
                 'visibility': 'visible'
             });
         },
-        /** Òş²ØÔªËØ */
+        /** éšè—å…ƒç´  */
         hideme: function() {
             return $(this).css({
                 'display': 'none',
                 'visibility': 'hidden'
             });
         },
-        /** ÉèÖÃÔªËØÎªÏàÍ¬¸ß¶È£¬¸ß¶È°´Ö¸¶¨»òÔªËØÖĞ×î´ó¸ß¶ÈÎª×¼ */
+        /** è®¾ç½®å…ƒç´ ä¸ºç›¸åŒé«˜åº¦ï¼Œé«˜åº¦æŒ‰æŒ‡å®šæˆ–å…ƒç´ ä¸­æœ€å¤§é«˜åº¦ä¸ºå‡† */
         sameHeight: function(height) {
             var max = height || -1;
             if (max < 0) {
@@ -311,7 +311,7 @@ Number.prototype.split = function() {
             }
             return $(this).css('min-height', max);
         },
-        /** ÉèÖÃÔªËØÎªÏàÍ¬¿í¶È£¬¿í¶È°´Ö¸¶¨»òÔªËØÖĞ×î´ó¿í¶ÈÎª×¼ */
+        /** è®¾ç½®å…ƒç´ ä¸ºç›¸åŒå®½åº¦ï¼Œå®½åº¦æŒ‰æŒ‡å®šæˆ–å…ƒç´ ä¸­æœ€å¤§å®½åº¦ä¸ºå‡† */
         sameWidth: function(width) {
             var max = width || -1;
             if (max < 0) {
@@ -722,13 +722,15 @@ var Utils = (function($, window, document, undefined) {
             handleOnResize(); // set and handle responsive    
         },
         executeFunctionByName: function(functionName, context /*, args */ ) {
-            var args = Array.prototype.slice.call(arguments, 2);
-            var namespaces = functionName.split(".");
-            var func = namespaces.pop();
-            for (var i = 0; i < namespaces.length; i++) {
-                context = context[namespaces[i]];
+            if(functionName){
+                var args = Array.prototype.slice.call(arguments, 2);
+                var namespaces = functionName.split(".");
+                var func = namespaces.pop();
+                for (var i = 0; i < namespaces.length; i++) {
+                    context = context[namespaces[i]];
+                }
+                return context[func].apply(context, args);
             }
-            return context[func].apply(context, args);
         },
         getAbsoluteUrl: function(url, contextPath) {
             if (url.indexOf('://') >= 0) {
