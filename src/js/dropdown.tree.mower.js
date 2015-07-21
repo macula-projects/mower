@@ -315,16 +315,7 @@
                 url: options.url,
                 dataType: 'json',
                 success: function(data) {
-                    if (options.processData) {
-                        if (typeof options.processData === 'string') {
-                            utils.executeFunctionByName(options.processData, window, data, this);
-                        }
-
-                        if ($.isFunction(options.processData)) {
-                            options.processData.call(this, data);
-                        }
-                    }
-
+                    utils.executeFunction(options.processData,data);
                     cb.call(this, data);
                 }
             };

@@ -711,6 +711,7 @@ var Utils = (function($, window, document, undefined) {
         }
     };
 
+
     // public functions
     return {
 
@@ -721,15 +722,22 @@ var Utils = (function($, window, document, undefined) {
             handleInit(); // initialize core variables
             handleOnResize(); // set and handle responsive    
         },
-        executeFunctionByName: function(functionName, context /*, args */ ) {
-            if(functionName){
-                var args = Array.prototype.slice.call(arguments, 2);
-                var namespaces = functionName.split(".");
-                var func = namespaces.pop();
-                for (var i = 0; i < namespaces.length; i++) {
-                    context = context[namespaces[i]];
+        executeFunction: function(functionName /*, args */ ) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            if ('function' === typeof functionName) {
+                return functionName.apply(this, args);
+            } else if ('string' === typeof functionName) {
+                if ('()' === functionName.substring(functionName.length - 2)) {
+                    functionName = functionName.substring(0, functionName.length - 2);
                 }
-                return context[func].apply(context, args);
+                var ns      = functionName.split('.'),
+                    func    = ns.pop(),
+                    context = window;
+                for (var i = 0; i < ns.length; i++) {
+                    context = context[ns[i]];
+                }
+
+                return (typeof context[func] === 'undefined') ? null : context[func].apply(this, args);
             }
         },
         getAbsoluteUrl: function(url, contextPath) {
@@ -860,12 +868,6 @@ var Utils = (function($, window, document, undefined) {
             return !!result;
         },
         mixin: $.extend,
-        getUniqueId: function() {
-            var counter = 0;
-            return function() {
-                return counter++;
-            };
-        }(),
         templatify: function templatify(obj) {
             return $.isFunction(obj) ? obj : template;
 

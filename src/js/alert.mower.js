@@ -150,6 +150,6 @@
     if (typeof module !== 'undefined' && module.exports) { //Node
         module.exports = factory(require('jquery'), require('uniqueId'));
     } else {
-        window['alertbox'] = factory(window['jQuery'], window['UniqueId']);
+        window['AlertBox'] = factory(window['jQuery'], window['UniqueId']);
     }
 }));

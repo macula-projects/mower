@@ -101,13 +101,13 @@
 
                 var that = this;
                 this.$element.children('li').filter(':last')
-                .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
-                    event.preventDefault();
-                    /* Act on the event */
-                    var index = path.length - 1;
-                    var popCount = that.$element.children('li').length - index;
-                    that.pop(popCount);
-                });
+                    .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
+                        event.preventDefault();
+                        /* Act on the event */
+                        var index = path.length - 1;
+                        var popCount = that.$element.children('li').length - index;
+                        that.pop(popCount);
+                    });
             }
 
             path.push(label);
@@ -123,7 +123,7 @@
             ].join('');
 
             this.$element.append(li);
-            return ;
+            return;
         },
         _pushContent: function(panelId, url, _callback) {
             if (url) {
@@ -158,9 +158,9 @@
             var targetId = this.options.prefix + this.panelSeq++;
 
             var that = this;
-            var callback = function(isSuccessLoaded,data) {
+            var callback = function(isSuccessLoaded, data) {
 
-                if(isSuccessLoaded){
+                if (isSuccessLoaded) {
                     //move forward
                     that.current++;
 
@@ -190,7 +190,7 @@
                     $panel.prev().removeClass('hidden');
                     $panel.remove();
                     //hide siblings
-                    
+
                 }
             };
 
@@ -248,7 +248,7 @@
                 .children('[data-panel="' + showPanelId + '"]')
                 .removeClass('hidden');
         },
-        pop: function(popCount,relatedTarget) {
+        pop: function(popCount, relatedTarget) {
             if (parseInt(popCount) <= 0) return;
 
             //update header in breadcrumb
@@ -347,20 +347,22 @@
             var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
                 option = $.extend({}, $target.data(), $this.data());
 
-                var page = option.page;
-                if($.isFunction(page))
-                {
-                    var that = this;
-                    page = option.page.apply(window,that);
-                }
-                page = (page && page.replace(/.*(?=#[^\s]+$)/, ''));// strip for ie7
+            var page = option.page;
+            if ($.isFunction(page)) {
+                var that = this;
+                page = utils.executeFunction(page, that);
+            }
+            page = (page && page.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
 
-            $target
-                .breadcrumb(option)
-                .breadcrumb("push", option.label, page)
-                .one('hide', function() {
-                    $this.is(':visible') && $this.focus();
-                });
+            if (page) {
+                $target
+                    .breadcrumb(option)
+                    .breadcrumb("push", option.label, page)
+                    .one('hide', function() {
+                        $this.is(':visible') && $this.focus();
+                    });
+            }
+
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="popBreadcrumb"]', function(event) {
             var $this = $(this);
@@ -383,12 +385,8 @@
                 };
 
             if (option.process) {
-                var that = this;
-                if ('string' === typeof option.process) {
-                    result = utils.executeFunctionByName(option.process, window, that);
-                } else if ($.isFunction(option.process)) {
-                    result = option.process.apply(window, that);
-                }
+                var that = this,
+                    result = utils.executeFunction(option.process, that);
 
                 // result can be a $.Deferred object ...
                 if ('object' === typeof result && result.resolve) {
@@ -413,38 +411,34 @@
 
             if (e.isDefaultPrevented()) return;
 
-            var option = $this.data();
+            var that = this,
+                option = $this.data();
 
-            var that = this;
-            if ('string' === typeof option.process) {
-                utils.executeFunctionByName(option.process, window, that);
-            } else if ($.isFunction(option.process)) {
-                option.process.apply(window, that);
-            }
+            utils.executeFunction(option.process, that);
         });
 
-        /* BREADCRUMB attach or detach handler 
-         * ============== */
-        $.fn.extend({
-            attachBCHandler: function(options) {
-                var $this = $(this);
-                if (typeof options === 'object') {
-                    $.each(function(k, v) {
-                        $.data($this, k, v);
-                    });
-                }
-                return this;
-            },
-            detachBCHandler: function(optionsName) {
-                var $this = $(this);
-                if (typeof optionsName === 'string') {
-                    $.removeData($this, optionsName);
-                } else if ($.isArray(optionsName)) {
-                    $.each(function(index, v) {
-                        $.removeData($this,v);
-                    });
-                }
-                return this;
+    /* BREADCRUMB attach or detach handler 
+     * ============== */
+    $.fn.extend({
+        attachBCHandler: function(options) {
+            var $this = $(this);
+            if (typeof options === 'object') {
+                $.each(options, function(k, v) {
+                    $this.data(k, v);
+                });
             }
-        });
+            return this;
+        },
+        detachBCHandler: function(optionsName) {
+            var $this = $(this);
+            if (typeof optionsName === 'string') {
+                $this.removeData(optionsName);
+            } else if ($.isArray(optionsName)) {
+                $.each(optionsName, function(index, v) {
+                    $this.removeData(v);
+                });
+            }
+            return this;
+        }
+    });
 })(JSON || {}, Utils || {}, jQuery, window, document);

@@ -12,12 +12,20 @@ var Form = (function($) {
 
     return {
         init: function() {
-            // $('[data-toggle="popBreadcrumb"]').on('pop.mu.breadcrumb', function(e) {
+            $('#saveForm').attachBCHandler({
+                'process': function() {
+                    return $(this).ajaxValidForm({
+                        'form': '#form_sample_1',
+                        sucess: function() {
+                            alert("success");
+                        },
+                        error: function() {
 
-            //     MessageBox.info('系统发生未知异常消息!', '异常信息');
+                        }
+                    });
+                }
+            });
 
-            // });
-            
             this.initTagsSelect();
 
             //this.initTagsInput();
@@ -84,7 +92,7 @@ var Form = (function($) {
             elt1.tagsinput({
                 amodal: {
                     url: 'ajax_modal.html',
-                    header:'Title',
+                    header: 'Title',
                     handlers: [{
                         // first button (cancel)
                         "label": 'cancel',
