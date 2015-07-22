@@ -12,22 +12,21 @@ var Form = (function($) {
 
     return {
         init: function() {
-            $('#saveForm').attachBCHandler({
-                'process': function() {
-                    return $(this).ajaxValidForm({
-                        'form': '#form_sample_1',
-                        sucess: function() {
-                            alert("success");
-                        },
-                        error: function() {
+            $('#saveForm').on('click',function(e){
 
-                        }
-                    });
-                }
+                var that = this;
+                $("#form_sample_1").ajaxValidForm({
+                    submitButton:that,
+                    success: function(data) {
+
+                    },
+                    error: function() {
+
+                    }
+                });
             });
 
             this.initTagsSelect();
-
             //this.initTagsInput();
         },
         initTagsSelect: function() {

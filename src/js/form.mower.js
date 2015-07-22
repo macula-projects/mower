@@ -14,50 +14,58 @@
     // Prepare the events
     var FORM_ERROR_EVENT = 'error.form.bv',
         FORM_SUCCESS_EVENT = 'success.form.bv',
-        FORM_SUBMIT_SVENT = 'submit.bv';
+        FORM_SUBMIT_SVENT = 'submit.bv',
+        POP_BREADCRUMB_EVENT = 'pop.mu.breadcrumb';
+
 
     $.fn.ajaxValidForm = function(options) {
-        if (!options || !options.form) return;
+        var $form = $(this);
 
-        var dfd = new $.Deferred();
-
-        var $form = $(options.form);
         $form
-            .on(FORM_SUCCESS_EVENT, function() {
-                $form.ajaxSubmit({
-                    sucess: function(data) {
-                        if (data.success) {
-                            MessageBox.success('保存成功');
-
-                            utils.executeFunction(options.success);
-
-                            dfd.resolve();
-                        } else {
-                            data.exceptionMessage && AlertBox.error(data.exceptionMessage);
-                            var $formValidator = $form.data('bootstrapValidator');
-                            if($formValidator.length){
-                                $(data.validateErrors).each(function() {
-                                    $formValidator
-                                        .updateMessage(this.element, 'blank', this.message)
-                                        .updateStatus(this.element, 'INVALID', 'blank');
-                                });
-                            }
-
-                            utils.executeFunction(options.error);
-                        }
-                    }
-                });
-            })
-            .on(FORM_ERROR_EVENT, function() {
-                AlertBox.error('<strong>注意: </strong>请仔细检查下面表单中错误提示信息.');
-            });
+            .off(FORM_SUCCESS_EVENT)
+            .off(FORM_ERROR_EVENT)
+            .on(FORM_SUCCESS_EVENT, this.selector, options, doFormSuccess)
+            .on(FORM_ERROR_EVENT, this.selector, options, doFormError);
 
         $form.triggerHandler(FORM_SUBMIT_SVENT);
 
-        return dfd;
+        return this;
     };
 
-  
+    function doFormSuccess(e) {
+        var $form = $(e.target),
+            options = e.data.options;
+
+        $form.ajaxSubmit({
+            success: function(data) {
+                if (data.success) {
+                    MessageBox.success('保存成功');
+
+                    utils.executeFunction(options.success,data);
+
+                    if(options.submitButton) $(options.submitButton).trigger(POP_BREADCRUMB_EVENT);
+                    
+                } else {
+                    data.exceptionMessage && AlertBox.error(data.exceptionMessage);
+                    var $formValidator = $form.data('bootstrapValidator');
+                    if ($formValidator.length) {
+                        $(data.validateErrors).each(function() {
+                            $formValidator
+                                .updateMessage(this.element, 'blank', this.message)
+                                .updateStatus(this.element, 'INVALID', 'blank');
+                        });
+                    }
+
+                    utils.executeFunction(options.error,data);
+                }
+            }
+        });
+    }
+
+    function doFormError(e) {
+        AlertBox.error('<strong>注意: </strong>请仔细检查下面表单中错误提示信息.');
+    }
+
     // private functions & variables
     var SELECTOR = '[rel="validate-form"]';
 
@@ -86,4 +94,4 @@
             });
         });
 
-}(jQuery, Utils|| {}, Base || {}, window, document));
+}(jQuery, Utils || {}, Base || {}, window, document));

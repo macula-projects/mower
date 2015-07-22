@@ -335,34 +335,42 @@
     /* BREADCRUMB DATA-API
      * ============== */
     $(document)
+        .on(BreadCrumb.DEFAULTS.events.push, 'a,button,input[type="button"]', function(event) {
+            var $target = $(event.target),
+                $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
+                option = $.extend({}, $breadcrumb.data(), $target.data(), ((typeof event.page != 'undefined') && {
+                    'page': event.page
+                }));
+
+            var page = option.page;
+            if ($.isFunction(page)) {
+                page = utils.executeFunction(page, $target);
+            }
+
+            page = (page && page.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
+
+            if (page) {
+                $breadcrumb
+                    .breadcrumb(option)
+                    .breadcrumb("push", option.label, page);
+            }
+        })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="pushBreadcrumb"]', function(event) {
             var $this = $(this);
             if ($this.is('a')) event.preventDefault();
 
             var e = $.Event(BreadCrumb.DEFAULTS.events.push);
             $this.trigger(e);
+        })
+        .on(BreadCrumb.DEFAULTS.events.pop, 'a,button,input[type="button"]', function(event) {
 
-            if (e.isDefaultPrevented()) return;
+            var $target = $(event.target),
+                $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
+                option = $.extend({}, $breadcrumb.data(), $target.data());
 
-            var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
-                option = $.extend({}, $target.data(), $this.data());
-
-            var page = option.page;
-            if ($.isFunction(page)) {
-                var that = this;
-                page = utils.executeFunction(page, that);
-            }
-            page = (page && page.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
-
-            if (page) {
-                $target
-                    .breadcrumb(option)
-                    .breadcrumb("push", option.label, page)
-                    .one('hide', function() {
-                        $this.is(':visible') && $this.focus();
-                    });
-            }
-
+            $breadcrumb
+                .breadcrumb(option)
+                .breadcrumb("pop", 1);
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="popBreadcrumb"]', function(event) {
             var $this = $(this);
@@ -370,75 +378,6 @@
 
             var e = $.Event(BreadCrumb.DEFAULTS.events.pop);
             $this.trigger(e);
-
-            if (e.isDefaultPrevented()) return;
-
-            var result, $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
-                option = $.extend({}, $target.data(), $this.data()),
-                pop = function() {
-                    $target
-                        .breadcrumb(option)
-                        .breadcrumb("pop", 1)
-                        .one('hide', function() {
-                            $this.is(':visible') && $this.focus();
-                        });
-                };
-
-            if (option.process) {
-                var that = this,
-                    result = utils.executeFunction(option.process, that);
-
-                // result can be a $.Deferred object ...
-                if ('object' === typeof result && result.resolve) {
-                    result.done(function() {
-                        pop();
-                    });
-                }
-                // ... or a boolean value
-                else if ('boolean' === typeof result && result === true) {
-                    pop();
-                }
-            } else {
-                pop();
-            }
-        })
-        .on('click.mu.breadcrumb.data-api', '[data-toggle^="commandBreadcrumb"]', function(event) {
-            var $this = $(this);
-            if ($this.is('a')) event.preventDefault();
-
-            var e = $.Event(BreadCrumb.DEFAULTS.events.command);
-            $this.trigger(e);
-
-            if (e.isDefaultPrevented()) return;
-
-            var that = this,
-                option = $this.data();
-
-            utils.executeFunction(option.process, that);
         });
 
-    /* BREADCRUMB attach or detach handler 
-     * ============== */
-    $.fn.extend({
-        attachBCHandler: function(options) {
-            var $this = $(this);
-            if (typeof options === 'object') {
-                $.each(options, function(k, v) {
-                    $this.data(k, v);
-                });
-            }
-            return this;
-        },
-        detachBCHandler: function(optionsName) {
-            var $this = $(this);
-            if (typeof optionsName === 'string') {
-                $this.removeData(optionsName);
-            } else if ($.isArray(optionsName)) {
-                $.each(optionsName, function(index, v) {
-                    $this.removeData(v);
-                });
-            }
-            return this;
-        }
-    });
 })(JSON || {}, Utils || {}, jQuery, window, document);
