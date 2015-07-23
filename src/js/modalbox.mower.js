@@ -54,6 +54,7 @@
         width: null, // number, css definition
         size: null, // 'md', 'sm', 'lg', 'fullscreen'
         height: 'auto',
+        name: 'remoteModal',
         spinner: '<div class="fa fa-spinner fa-pulse loader"></div>',
         delay: 0
     };
@@ -111,7 +112,6 @@
                 {
                     modal: $modal,
                     options: options,
-                    modalTrigger: that,
                     ready: readyToShow
                 });
                 if (typeof customContent === 'string')
@@ -231,6 +231,13 @@
                     readyToShow();
                 });
             }
+        }
+
+        //modal show 
+        if (shouldShow === true) {
+          //add loading spinner
+          $modal.prepend(options.spinner);
+          $modal.modal("show");
         }
     };
 

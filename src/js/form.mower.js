@@ -39,12 +39,7 @@
         $form.ajaxSubmit({
             success: function(data) {
                 if (data.success) {
-                    MessageBox.success('保存成功');
-
                     utils.executeFunction(options.success,data);
-
-                    if(options.submitButton) $(options.submitButton).trigger(POP_BREADCRUMB_EVENT);
-                    
                 } else {
                     data.exceptionMessage && AlertBox.error(data.exceptionMessage);
                     var $formValidator = $form.data('bootstrapValidator');
@@ -63,7 +58,7 @@
     }
 
     function doFormError(e) {
-        AlertBox.error('<strong>注意: </strong>请仔细检查下面表单中错误提示信息.');
+        
     }
 
     // private functions & variables

@@ -14,11 +14,13 @@ var Form = (function($) {
         init: function() {
             $('#saveForm').on('click',function(e){
 
-                var that = this;
-                $("#form_sample_1").ajaxValidForm({
-                    submitButton:that,
+                var $button  = $(this);
+                $(this).ajaxValidForm({
+                    'form':'#form_sample_1'
                     success: function(data) {
+                        //do anything
 
+                        $button.trigger(POP_BREADCRUMB_EVENT);
                     },
                     error: function() {
 
