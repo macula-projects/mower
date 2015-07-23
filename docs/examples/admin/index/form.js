@@ -13,12 +13,12 @@ var Form = (function($) {
     return {
         init: function() {
             $('#saveForm').on('click',function(e){
-
                 var $button  = $(this);
-                $(this).ajaxValidForm({
-                    'form':'#form_sample_1'
+                $('#form_sample_1').ajaxValidForm({
                     success: function(data) {
-                        //do anything
+                        MessageBox.success('保存成功');
+
+                         //TODO
 
                         $button.trigger(POP_BREADCRUMB_EVENT);
                     },

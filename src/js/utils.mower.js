@@ -478,7 +478,7 @@ Number.prototype.split = function() {
             });
 
             //process call back
-            if (callback && $.isFunction(callback)) {
+            if ($.isFunction(callback)) {
                 callback.apply(self, [true,data]);
             }
 
@@ -498,7 +498,7 @@ Number.prototype.split = function() {
                 dataType: 'html',
                 beforeSend: function() {
                     self.children().addClass('hidden');
-                    self.append('<h3 class="_loadmask"><i class="fa fa-cog fa-spin"></i> Loading...</h3>');
+                    self.append('<h2 class="_loadmask"><i class="fa fa-spinner fa-pulse"></i></h2>');
                     if (isScrollTop === true) {
                         // scroll up
                         $("html").animate({
@@ -529,7 +529,7 @@ Number.prototype.split = function() {
                     handleError();
                 },
                 complete:function( xhr, status){
-                    self.find('h3._loadmask').remove();
+                    self.find('h2._loadmask').remove();
                     self.children().removeClass('hidden');
                 }
             }, ajaxOptions || {});

@@ -11,12 +11,10 @@
         module.exports = factory(require("jquery"));
     } else {
         // Browser globals (root is window)
-        root.ModalBox = factory(root.jQuery);
+        root.ModalBox = factory(root.jQuery, window, document);
     }
 
-}(this, function init($, undefined) {
-
-    "use strict";
+}(this, function init($, window, document, undefined) {
 
     if (!window.bootbox) throw new Error('RemoteChosen requires bootbox.js');
 
@@ -49,7 +47,9 @@
         }
     }
 
-    ModalBox.DEFAULTS = {
+    var NAME = 'mower.modalbox';
+
+    var defaults = {
         type: 'custom',
         width: null, // number, css definition
         size: null, // 'md', 'sm', 'lg', 'fullscreen'
@@ -60,10 +60,10 @@
     };
 
     // our public object; augmented after our private API
-    var exports = object(bootbox);
+    var exports = bootbox;
 
     exports.ajaxDialog = function(option) {
-        var options = $.extend({}, ModalBox.DEFAULTS, option);
+        var options = $.extend({}, defaults, option);
 
         _init(options);
         // capture the user's show value; we always set this to false before
@@ -72,70 +72,56 @@
         var shouldShow = (options.show === undefined) ? true : options.show;
 
         options.show = false;
-        var $modal = exports.dialog(options),
+        var that = this,
+            $modal = exports.dialog(options),
+            $dialog = $modal.find('.modal-dialog'),
             custom = options.custom,
-            $body = $modal.find('.modal-body').css('padding', ''),
-            $header = $modal.find('.modal-header'),
-            $content = $modal.find('.modal-content');
+            $body = $dialog.find('.modal-body').css('padding', ''),
+            $header = $dialog.find('.modal-header'),
+            $content = $dialog.find('.modal-content');
 
         $modal.toggleClass('modal-loading', true);
-        if (options.size)
-        {
+        if (options.size) {
             options.width = '';
             options.height = '';
         }
 
-        var readyToShow = function(delay)
-        {
+        var readyToShow = function(delay) {
             if (typeof delay === 'undefined') delay = 300;
-            setTimeout(function()
-            {
-                var $dialog = $modal.find('.modal-dialog');
-                if (options.width && options.width != 'auto')
-                {
+            setTimeout(function() {
+                $dialog = $modal.find('.modal-dialog');
+                if (options.width && options.width != 'auto') {
                     $dialog.css('width', options.width);
                 }
-                if (options.height && options.height != 'auto')
-                {
+                if (options.height && options.height != 'auto') {
                     $dialog.css('height', options.height);
-                    if(options.type === 'iframe') $body.css('height', $dialog.height() - $header.outerHeight());
+                    if (options.type === 'iframe') $body.css('height', $dialog.height() - $header.outerHeight());
                 }
                 $modal.removeClass('modal-loading');
             }, delay);
         };
 
-        if (options.type === 'custom' && custom)
-        {
-            if ($.isFunction(custom))
-            {
-                var customContent = custom(
-                {
+        if (options.type === 'custom' && custom) {
+            if ($.isFunction(custom)) {
+                var customContent = custom({
                     modal: $modal,
                     options: options,
                     ready: readyToShow
                 });
-                if (typeof customContent === 'string')
-                {
+                if (typeof customContent === 'string') {
                     $body.html(customContent);
                     readyToShow();
                 }
-            }
-            else if (custom instanceof $)
-            {
+            } else if (custom instanceof $) {
                 $body.html($('<div>').append(custom.clone()).html());
                 readyToShow();
-            }
-            else
-            {
+            } else {
                 $body.html(custom);
                 readyToShow();
             }
-        }
-        else if (options.url)
-        {
+        } else if (options.url) {
             $modal.attr('ref', options.url);
-            if (options.type === 'iframe')
-            {
+            if (options.type === 'iframe') {
                 $modal.addClass('modal-iframe');
                 this.firstLoad = true;
                 var iframeName = 'iframe-' + options.name;
@@ -145,33 +131,27 @@
                 $body.css('padding', 0)
                     .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
 
-                if (options.waittime > 0)
-                {
+                if (options.waittime > 0) {
                     that.waitTimeout = setTimeout(readyToShow, options.waittime);
                 }
 
                 var frame = document.getElementById(iframeName);
-                frame.onload = frame.onreadystatechange = function()
-                {
+                frame.onload = frame.onreadystatechange = function() {
                     if (that.firstLoad) $modal.addClass('modal-loading');
                     if (this.readyState && this.readyState != 'complete') return;
                     that.firstLoad = false;
 
-                    if (options.waittime > 0)
-                    {
+                    if (options.waittime > 0) {
                         clearTimeout(that.waitTimeout);
                     }
 
-                    try
-                    {
+                    try {
                         $modal.attr('ref', frame.contentWindow.location.href);
                         var frame$ = window.frames[iframeName].$;
-                        if (frame$ && options.height === 'auto')
-                        {
+                        if (frame$ && options.height === 'auto') {
                             // todo: update iframe url to ref attribute
                             var $framebody = frame$('body').addClass('body-modal');
-                            var ajustFrameSize = function()
-                            {
+                            var ajustFrameSize = function() {
                                 $modal.removeClass('fade');
                                 var height = $framebody.outerHeight();
                                 $body.css('height', height);
@@ -179,8 +159,7 @@
                                 readyToShow();
                             };
 
-                            $modal.callEvent('loaded.mower.modal',
-                            {
+                            $modal.callEvent('loaded.mower.modal', {
                                 modalType: 'iframe'
                             });
 
@@ -189,43 +168,28 @@
                             $framebody.off('resize.' + NAME).on('resize.' + NAME, ajustFrameSize);
                         }
 
-                        frame$.extend(
-                        {
+                        frame$.extend({
                             closeModal: window.closeModal
                         });
-                    }
-                    catch (e)
-                    {
+                    } catch (e) {
                         readyToShow();
                     }
                 };
-            }
-            else
-            {
-                $.get(options.url, function(data)
-                {
-                    try
-                    {
+            } else {
+                $.get(options.url, function(data) {
+                    try {
                         var $data = $(data);
-                        if ($data.hasClass('modal-dialog'))
-                        {
+                        if ($data.hasClass('modal-dialog')) {
                             $dialog.replaceWith($data);
-                        }
-                        else if ($data.hasClass('modal-content'))
-                        {
+                        } else if ($data.hasClass('modal-content')) {
                             $dialog.find('.modal-content').replaceWith($data);
-                        }
-                        else
-                        {
+                        } else {
                             $body.wrapInner($data);
                         }
-                    }
-                    catch(e)
-                    {
+                    } catch (e) {
                         $modal.html(data);
                     }
-                    $modal.callEvent('loaded.mower.modal',
-                    {
+                    $modal.callEvent('loaded.mower.modal', {
                         modalType: 'ajax'
                     });
                     readyToShow();
@@ -235,11 +199,23 @@
 
         //modal show 
         if (shouldShow === true) {
-          //add loading spinner
-          $modal.prepend(options.spinner);
-          $modal.modal("show");
+            //add loading spinner
+            $modal.prepend(options.spinner);
+            $modal.modal("show");
         }
     };
 
+
+    $(document).on('click.' + NAME + '.data-api', '[data-toggle="modalbox"]', function(e)
+    {
+        var $this = $(this);
+        exports.ajaxDialog($.extend({}, $this.data()));
+
+        if ($this.is('a'))
+        {
+            e.preventDefault();
+        }
+    });
+    
     return exports;
 }));

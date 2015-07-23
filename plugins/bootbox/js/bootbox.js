@@ -137,9 +137,9 @@
       throw new Error("Please supply an object of options");
     }
 
-    if (!options.message) {
-      throw new Error("Please specify a message");
-    }
+    // if (!options.message) {
+    //   throw new Error("Please specify a message");
+    // }
 
     // make sure any supplied options take precedence over defaults
     options = $.extend({}, defaults, options);
