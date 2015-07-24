@@ -16,7 +16,9 @@
 
 }(this, function init($, window, document, undefined) {
 
-    if (!window.bootbox) throw new Error('RemoteChosen requires bootbox.js');
+    if (!window.bootbox) throw new Error('ModalBox requires bootbox.js');
+
+    if (!$.fn.slimScroll) throw new Error('ModalBox requires slimScroll.js');
 
     function _init(options) {
         if (options.url) {
@@ -94,8 +96,9 @@
                     $dialog.css('width', options.width);
                 }
                 if (options.height && options.height != 'auto') {
-                    $dialog.css('height', options.height);
-                    if (options.type === 'iframe') $body.css('height', $dialog.height() - $header.outerHeight());
+                    $body.slimScroll({
+                        height: options.height
+                    });
                 }
                 $modal.removeClass('modal-loading');
             }, delay);
@@ -206,16 +209,14 @@
     };
 
 
-    $(document).on('click.' + NAME + '.data-api', '[data-toggle="modalbox"]', function(e)
-    {
+    $(document).on('click.' + NAME + '.data-api', '[data-toggle="modalbox"]', function(e) {
         var $this = $(this);
         exports.ajaxDialog($.extend({}, $this.data()));
 
-        if ($this.is('a'))
-        {
+        if ($this.is('a')) {
             e.preventDefault();
         }
     });
-    
+
     return exports;
 }));
