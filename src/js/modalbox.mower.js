@@ -61,6 +61,23 @@
         delay: 0
     };
 
+    var templates = {
+      dialog:
+        "<div class='bootbox modal' tabindex='-1' role='dialog' aria-hidden='true'>" +
+          "<div class='modal-dialog'>" +
+            "<div class='modal-content'>" +
+              "<div class='modal-body'><div class='bootbox-body'></div></div>" +
+            "</div>" +
+          "</div>" +
+        "</div>",
+      header:
+        "<div class='modal-header'>" +
+          "<h4 class='modal-title'></h4>" +
+        "</div>",
+      footer:
+        "<div class='modal-footer'></div>"
+    };
+
     // our public object; augmented after our private API
     var exports = bootbox;
 
@@ -181,14 +198,40 @@
             } else {
                 $.get(options.url, function(data) {
                     try {
-                        var $data = $(data);
-                        if ($data.hasClass('modal-dialog')) {
-                            $dialog.replaceWith($data);
-                        } else if ($data.hasClass('modal-content')) {
-                            $dialog.find('.modal-content').replaceWith($data);
-                        } else {
-                            $body.wrapInner($data);
+                        var $html = $(data);
+
+                        //update version
+                        var version = $html.filter('meta');
+                        if (version.exists()) {
+                            $('meta[name=version]', document).attr('content', version.attr('content'));
                         }
+
+                        var exclude = ':not(meta)';
+                        //update content
+                        $($.parseHTML(data)).filter(exclude).each(function() {
+                            var $data = $(this);
+                            if ($data.hasClass('modal-dialog')) {
+                                $dialog.replaceWith($data);
+                            } else if ($data.hasClass('modal-content')) {
+                                $dialog.find('.modal-content').replaceWith($data);
+                            } else if ($data.hasClass('modal-title')) {
+                                $dialog.find('.modal-title').replaceWith($data);
+                            } else if ($data.hasClass('modal-body')) {
+                                $dialog.find('.modal-body').replaceWith($data);
+                            } else {
+                                $body.wrapInner($data);
+                            }
+                        });
+
+                        //reinit document ready function in the new fragment 
+                        $(document).triggerHandler('update', $modal[0]);
+
+                        //update javascript 
+                        $html.filter('script').each(function() {
+                            var $script = $(this);
+                            $modal.append($script);
+                        });
+
                     } catch (e) {
                         $modal.html(data);
                     }
