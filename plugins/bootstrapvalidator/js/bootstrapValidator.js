@@ -2,7 +2,7 @@
  * BootstrapValidator (http://bootstrapvalidator.com)
  * The best jQuery plugin to validate form fields. Designed to use with Bootstrap 3
  *
- * @version     v0.5.3, built on 2015-07-15 5:19:44 PM
+ * @version     v0.5.3, built on 2015-07-27 10:18:35 AM
  * @author      https://twitter.com/nghuuphuoc
  * @copyright   (c) 2013 - 2015 Nguyen Huu Phuoc
  * @license     Commercial: http://bootstrapvalidator.com/license/
@@ -1371,114 +1371,114 @@ if (typeof jQuery === 'undefined') {
         //     return this;
         // },
 
-        // /**
-        //  * Add a new field
-        //  *
-        //  * @param {String|jQuery} field The field name or field element
-        //  * @param {Object} [options] The validator rules
-        //  * @returns {BootstrapValidator}
-        //  */
-        // addField: function(field, options) {
-        //     var fields = $([]);
-        //     switch (typeof field) {
-        //         case 'object':
-        //             fields = field;
-        //             field  = field.attr('data-bv-field') || field.attr('name');
-        //             break;
-        //         case 'string':
-        //             delete this._cacheFields[field];
-        //             fields = this.getFieldElements(field);
-        //             break;
-        //         default:
-        //             break;
-        //     }
+        /**
+         * Add a new field
+         *
+         * @param {String|jQuery} field The field name or field element
+         * @param {Object} [options] The validator rules
+         * @returns {BootstrapValidator}
+         */
+        addField: function(field, options) {
+            var fields = $([]);
+            switch (typeof field) {
+                case 'object':
+                    fields = field;
+                    field  = field.attr('data-bv-field') || field.attr('name');
+                    break;
+                case 'string':
+                    delete this._cacheFields[field];
+                    fields = this.getFieldElements(field);
+                    break;
+                default:
+                    break;
+            }
 
-        //     fields.attr('data-bv-field', field);
+            fields.attr('data-bv-field', field);
 
-        //     var type  = fields.attr('type'),
-        //         total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+            var type  = fields.attr('type'),
+                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
-        //     for (var i = 0; i < total; i++) {
-        //         var $field = fields.eq(i);
+            for (var i = 0; i < total; i++) {
+                var $field = fields.eq(i);
 
-        //         // Try to parse the options from HTML attributes
-        //         var opts = this._parseOptions($field);
-        //         opts = (opts === null) ? options : $.extend(true, options, opts);
+                // Try to parse the options from HTML attributes
+                var opts = this._parseOptions($field);
+                opts = (opts === null) ? options : $.extend(true, options, opts);
 
-        //         this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
+                this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
-        //         // Update the cache
-        //         this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
+                // Update the cache
+                this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
 
-        //         // Init the element
-        //         this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
-        //     }
+                // Init the element
+                this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
+            }
 
-        //     this.disableSubmitButtons(false);
-        //     // Trigger an event
-        //     this.$form.trigger($.Event(this.options.events.fieldAdded), {
-        //         field: field,
-        //         element: fields,
-        //         options: this.options.fields[field]
-        //     });
+            this.disableSubmitButtons(false);
+            // Trigger an event
+            this.$form.trigger($.Event(this.options.events.fieldAdded), {
+                field: field,
+                element: fields,
+                options: this.options.fields[field]
+            });
 
-        //     return this;
-        // },
+            return this;
+        },
 
-        // /**
-        //  * Remove a given field
-        //  *
-        //  * @param {String|jQuery} field The field name or field element
-        //  * @returns {BootstrapValidator}
-        //  */
-        // removeField: function(field) {
-        //     var fields = $([]);
-        //     switch (typeof field) {
-        //         case 'object':
-        //             fields = field;
-        //             field  = field.attr('data-bv-field') || field.attr('name');
-        //             fields.attr('data-bv-field', field);
-        //             break;
-        //         case 'string':
-        //             fields = this.getFieldElements(field);
-        //             break;
-        //         default:
-        //             break;
-        //     }
+        /**
+         * Remove a given field
+         *
+         * @param {String|jQuery} field The field name or field element
+         * @returns {BootstrapValidator}
+         */
+        removeField: function(field) {
+            var fields = $([]);
+            switch (typeof field) {
+                case 'object':
+                    fields = field;
+                    field  = field.attr('data-bv-field') || field.attr('name');
+                    fields.attr('data-bv-field', field);
+                    break;
+                case 'string':
+                    fields = this.getFieldElements(field);
+                    break;
+                default:
+                    break;
+            }
 
-        //     if (fields.length === 0) {
-        //         return this;
-        //     }
+            if (fields.length === 0) {
+                return this;
+            }
 
-        //     var type  = fields.attr('type'),
-        //         total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+            var type  = fields.attr('type'),
+                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
-        //     for (var i = 0; i < total; i++) {
-        //         var $field = fields.eq(i);
+            for (var i = 0; i < total; i++) {
+                var $field = fields.eq(i);
 
-        //         // Remove from the list of invalid fields
-        //         this.$invalidFields = this.$invalidFields.not($field);
+                // Remove from the list of invalid fields
+                this.$invalidFields = this.$invalidFields.not($field);
 
-        //         // Update the cache
-        //         this._cacheFields[field] = this._cacheFields[field].not($field);
-        //     }
+                // Update the cache
+                this._cacheFields[field] = this._cacheFields[field].not($field);
+            }
 
-        //     if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
-        //         delete this.options.fields[field];
-        //     }
-        //     if ('checkbox' === type || 'radio' === type) {
-        //         this._initField(field);
-        //     }
+            if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
+                delete this.options.fields[field];
+            }
+            if ('checkbox' === type || 'radio' === type) {
+                this._initField(field);
+            }
 
-        //     this.disableSubmitButtons(false);
-        //     // Trigger an event
-        //     this.$form.trigger($.Event(this.options.events.fieldRemoved), {
-        //         field: field,
-        //         element: fields
-        //     });
+            this.disableSubmitButtons(false);
+            // Trigger an event
+            this.$form.trigger($.Event(this.options.events.fieldRemoved), {
+                field: field,
+                element: fields
+            });
 
-        //     return this;
-        // },
+            return this;
+        },
 
         /**
          * Reset given field
@@ -1585,49 +1585,49 @@ if (typeof jQuery === 'undefined') {
         //     return this;
         // },
 
-        // /**
-        //  * Some validators have option which its value is dynamic.
-        //  * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
-        //  *
-        //  * @param {jQuery|String} field The field name or element
-        //  * @param {String|Function} option The option which can be determined by:
-        //  * - a string
-        //  * - name of field which defines the value
-        //  * - name of function which returns the value
-        //  * - a function returns the value
-        //  *
-        //  * The callback function has the format of
-        //  *      callback: function(value, validator, $field) {
-        //  *          // value is the value of field
-        //  *          // validator is the BootstrapValidator instance
-        //  *          // $field is the field element
-        //  *      }
-        //  *
-        //  * @returns {String}
-        //  */
-        // getDynamicOption: function(field, option) {
-        //     var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
-        //         value  = $field.val();
+        /**
+         * Some validators have option which its value is dynamic.
+         * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
+         *
+         * @param {jQuery|String} field The field name or element
+         * @param {String|Function} option The option which can be determined by:
+         * - a string
+         * - name of field which defines the value
+         * - name of function which returns the value
+         * - a function returns the value
+         *
+         * The callback function has the format of
+         *      callback: function(value, validator, $field) {
+         *          // value is the value of field
+         *          // validator is the BootstrapValidator instance
+         *          // $field is the field element
+         *      }
+         *
+         * @returns {String}
+         */
+        getDynamicOption: function(field, option) {
+            var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
+                value  = $field.val();
 
-        //     // Option can be determined by
-        //     // ... a function
-        //     if ('function' === typeof option) {
-        //         return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]);
-        //     }
-        //     // ... value of other field
-        //     else if ('string' === typeof option) {
-        //         var $f = this.getFieldElements(option);
-        //         if ($f.length) {
-        //             return $f.val();
-        //         }
-        //         // ... return value of callback
-        //         else {
-        //             return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]) || option;
-        //         }
-        //     }
+            // Option can be determined by
+            // ... a function
+            if ('function' === typeof option) {
+                return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]);
+            }
+            // ... value of other field
+            else if ('string' === typeof option) {
+                var $f = this.getFieldElements(option);
+                if ($f.length) {
+                    return $f.val();
+                }
+                // ... return value of callback
+                else {
+                    return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]) || option;
+                }
+            }
 
-        //     return null;
-        // },
+            return null;
+        },
 
         /**
          * Destroy the plugin

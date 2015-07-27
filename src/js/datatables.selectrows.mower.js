@@ -116,7 +116,7 @@
 
                 var container = $(this.s.dt.nTable).closest('.dataTables_scrollBody');
                 var scrollTo = $(this.s.dt.nTable).find(selector);
-                if (scrollTo.length) {
+                if (scrollTo.length && container.length){
                     container.scrollTop(0);
                     container.scrollTop(scrollTo.offset().top - container.offset().top);
                 }
