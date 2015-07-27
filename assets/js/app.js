@@ -55,7 +55,8 @@ var App = (function($, utils, window, document, undefined) {
             var isLocal = window.location.href.indexOf('macula.top');
             if(isLocal != -1){
                 $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-                    if(options.url.indexOf(".js") == -1)
+                    var isJs = options.url.indexOf(".js");
+                    if( isJs == -1)
                       options.url = "http://macula.top/mower/"  + options.url;
                 });
             }
