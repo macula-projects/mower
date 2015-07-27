@@ -52,11 +52,14 @@ var App = (function($, utils, window, document, undefined) {
         //main function
         init: function() {
 
-            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-                if(!options.url.indexOf(".js"))
-                  options.url = "http://macula.top/mower/"  + options.url;
-            });
-            
+            var isLocal = window.location.href.indexOf('macula.top');
+            if(isLocal != -1){
+                $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                    if(options.url.indexOf(".js") == -1)
+                      options.url = "http://macula.top/mower/"  + options.url;
+                });
+            }
+
             loading();
             
             this.initMainMenu();

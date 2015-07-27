@@ -42449,8 +42449,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         $form
             .off(FORM_SUCCESS_EVENT)
             .off(FORM_ERROR_EVENT)
-            .on(FORM_SUCCESS_EVENT, this.selector, options, doFormSuccess)
-            .on(FORM_ERROR_EVENT, this.selector, options, doFormError);
+            .on(FORM_SUCCESS_EVENT, options, doFormSuccess)
+            .on(FORM_ERROR_EVENT, options, doFormError);
 
         $form.triggerHandler(FORM_SUBMIT_SVENT);
 
@@ -42459,12 +42459,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     function doFormSuccess(e) {
         var $form = $(e.target),
-            options = e.data.options;
+            options = e.data;
 
         $form.ajaxSubmit({
             success: function(data) {
                 if (data.success) {
-                    utils.executeFunction(options.success,data);
+                    utils.executeFunction(options.success, data);
                 } else {
                     data.exceptionMessage && AlertBox.error(data.exceptionMessage);
                     var $formValidator = $form.data('bootstrapValidator');
@@ -42476,15 +42476,13 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         });
                     }
 
-                    utils.executeFunction(options.error,data);
+                    utils.executeFunction(options.error, data);
                 }
             }
         });
     }
 
-    function doFormError(e) {
-        
-    }
+    function doFormError(e) {}
 
     // private functions & variables
     var SELECTOR = '[rel="validate-form"]';
