@@ -87,7 +87,7 @@ var App = (function($, utils, window, document, undefined) {
             }
 
             $(".sidebar-menu").sidebarMenu({
-                'url': "../../assets/ajax/data/menu.txt",
+                'url': "../assets/ajax/data/menu.txt",
                 "populate": false
             }).sidebarMenu('populate', rcode, mcode);
 
