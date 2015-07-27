@@ -51,6 +51,10 @@ var App = (function($, utils, window, document, undefined) {
     return {
         //main function
         init: function() {
+
+            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                options.url = "http://macula.top/mower/" + encodeURIComponent( options.url );
+            });
             
             loading();
             
