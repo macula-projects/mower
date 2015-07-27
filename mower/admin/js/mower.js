@@ -42443,7 +42443,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         POP_BREADCRUMB_EVENT = 'pop.mu.breadcrumb';
 
 
-    $.fn.ajaxValidForm = function(options) {
+    $.fn.ajaxValidSubmit = function(options) {
         var $form = $(this);
 
         $form
