@@ -14,7 +14,7 @@ var Form = (function($) {
         init: function() {
             $('#saveForm').on('click',function(e){
                 var $button  = $(this);
-                $('#form_sample_1').ajaxValidForm({
+                $('#form_sample_1').ajaxValidSubmit({
                     success: function(data) {
                         MessageBox.success('保存成功');
 

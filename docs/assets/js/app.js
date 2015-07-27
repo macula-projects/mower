@@ -51,7 +51,16 @@ var App = (function($, utils, window, document, undefined) {
     return {
         //main function
         init: function() {
-            
+
+            var isLocal = window.location.href.indexOf('macula.top');
+            if(isLocal != -1){
+                $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                    var isJs = options.url.indexOf(".js");
+                    if( isJs == -1)
+                      options.url = "http://macula.top/mower/"  + options.url;
+                });
+            }
+
             loading();
             
             this.initMainMenu();
@@ -87,7 +96,7 @@ var App = (function($, utils, window, document, undefined) {
             }
 
             $(".sidebar-menu").sidebarMenu({
-                'url': "../../assets/ajax/data/menu.txt",
+                'url': "assets/ajax/data/menu.txt",
                 "populate": false
             }).sidebarMenu('populate', rcode, mcode);
 
