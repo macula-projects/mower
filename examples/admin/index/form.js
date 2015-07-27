@@ -12,14 +12,23 @@ var Form = (function($) {
 
     return {
         init: function() {
-            // $('[data-toggle="popBreadcrumb"]').on('pop.mu.breadcrumb', function(e) {
+            $('#saveForm').on('click',function(e){
+                var $button  = $(this);
+                $('#form_sample_1').ajaxValidForm({
+                    success: function(data) {
+                        MessageBox.success('保存成功');
 
-            //     MessageBox.info('系统发生未知异常消息!', '异常信息');
+                         //TODO
 
-            // });
-            
+                        $button.trigger(POP_BREADCRUMB_EVENT);
+                    },
+                    error: function() {
+
+                    }
+                });
+            });
+
             this.initTagsSelect();
-
             //this.initTagsInput();
         },
         initTagsSelect: function() {
@@ -84,7 +93,7 @@ var Form = (function($) {
             elt1.tagsinput({
                 amodal: {
                     url: 'ajax_modal.html',
-                    header:'Title',
+                    header: 'Title',
                     handlers: [{
                         // first button (cancel)
                         "label": 'cancel',

@@ -3344,6 +3344,477 @@
     return moment_with_locales;
 
 }));
+;/*! Copyright (c) 2011 Piotr Rochala (http://rocha.la)
+ * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+ * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ *
+ * Version: 1.3.6
+ *
+ */
+(function($) {
+
+  $.fn.extend({
+    slimScroll: function(options) {
+
+      var defaults = {
+
+        // width in pixels of the visible scroll area
+        width : 'auto',
+
+        // height in pixels of the visible scroll area
+        height : '250px',
+
+        // width in pixels of the scrollbar and rail
+        size : '7px',
+
+        // scrollbar color, accepts any hex/color value
+        color: '#000',
+
+        // scrollbar position - left/right
+        position : 'right',
+
+        // distance in pixels between the side edge and the scrollbar
+        distance : '1px',
+
+        // default scroll position on load - top / bottom / $('selector')
+        start : 'top',
+
+        // sets scrollbar opacity
+        opacity : .4,
+
+        // enables always-on mode for the scrollbar
+        alwaysVisible : false,
+
+        // check if we should hide the scrollbar when user is hovering over
+        disableFadeOut : false,
+
+        // sets visibility of the rail
+        railVisible : false,
+
+        // sets rail color
+        railColor : '#333',
+
+        // sets rail opacity
+        railOpacity : .2,
+
+        // whether  we should use jQuery UI Draggable to enable bar dragging
+        railDraggable : true,
+
+        // defautlt CSS class of the slimscroll rail
+        railClass : 'slimScrollRail',
+
+        // defautlt CSS class of the slimscroll bar
+        barClass : 'slimScrollBar',
+
+        // defautlt CSS class of the slimscroll wrapper
+        wrapperClass : 'slimScrollDiv',
+
+        // check if mousewheel should scroll the window if we reach top/bottom
+        allowPageScroll : false,
+
+        // scroll amount applied to each mouse wheel step
+        wheelStep : 20,
+
+        // scroll amount applied when user is using gestures
+        touchScrollStep : 200,
+
+        // sets border radius
+        borderRadius: '7px',
+
+        // sets border radius of the rail
+        railBorderRadius : '7px'
+      };
+
+      var o = $.extend(defaults, options);
+
+      // do it for every element that matches selector
+      this.each(function(){
+
+      var isOverPanel, isOverBar, isDragg, queueHide, touchDif,
+        barHeight, percentScroll, lastScroll,
+        divS = '<div></div>',
+        minBarHeight = 30,
+        releaseScroll = false;
+
+        // used in event handlers and for better minification
+        var me = $(this);
+
+        // ensure we are not binding it again
+        if (me.parent().hasClass(o.wrapperClass))
+        {
+            // start from last bar position
+            var offset = me.scrollTop();
+
+            // find bar and rail
+            bar = me.closest('.' + o.barClass);
+            rail = me.closest('.' + o.railClass);
+
+            getBarHeight();
+
+            // check if we should scroll existing instance
+            if ($.isPlainObject(options))
+            {
+              // Pass height: auto to an existing slimscroll object to force a resize after contents have changed
+              if ( 'height' in options && options.height == 'auto' ) {
+                me.parent().css('height', 'auto');
+                me.css('height', 'auto');
+                var height = me.parent().parent().height();
+                me.parent().css('height', height);
+                me.css('height', height);
+              }
+
+              if ('scrollTo' in options)
+              {
+                // jump to a static point
+                offset = parseInt(o.scrollTo);
+              }
+              else if ('scrollBy' in options)
+              {
+                // jump by value pixels
+                offset += parseInt(o.scrollBy);
+              }
+              else if ('destroy' in options)
+              {
+                // remove slimscroll elements
+                bar.remove();
+                rail.remove();
+                me.unwrap();
+                return;
+              }
+
+              // scroll content by the given offset
+              scrollContent(offset, false, true);
+            }
+
+            return;
+        }
+        else if ($.isPlainObject(options))
+        {
+            if ('destroy' in options)
+            {
+            	return;
+            }
+        }
+
+        // optionally set height to the parent's height
+        o.height = (o.height == 'auto') ? me.parent().height() : o.height;
+
+        // wrap content
+        var wrapper = $(divS)
+          .addClass(o.wrapperClass)
+          .css({
+            position: 'relative',
+            overflow: 'hidden',
+            width: o.width,
+            height: o.height
+          });
+
+        // update style for the div
+        me.css({
+          overflow: 'hidden',
+          width: o.width,
+          height: o.height
+        });
+
+        // create scrollbar rail
+        var rail = $(divS)
+          .addClass(o.railClass)
+          .css({
+            width: o.size,
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            display: (o.alwaysVisible && o.railVisible) ? 'block' : 'none',
+            'border-radius': o.railBorderRadius,
+            background: o.railColor,
+            opacity: o.railOpacity,
+            zIndex: 90
+          });
+
+        // create scrollbar
+        var bar = $(divS)
+          .addClass(o.barClass)
+          .css({
+            background: o.color,
+            width: o.size,
+            position: 'absolute',
+            top: 0,
+            opacity: o.opacity,
+            display: o.alwaysVisible ? 'block' : 'none',
+            'border-radius' : o.borderRadius,
+            BorderRadius: o.borderRadius,
+            MozBorderRadius: o.borderRadius,
+            WebkitBorderRadius: o.borderRadius,
+            zIndex: 99
+          });
+
+        // set position
+        var posCss = (o.position == 'right') ? { right: o.distance } : { left: o.distance };
+        rail.css(posCss);
+        bar.css(posCss);
+
+        // wrap it
+        me.wrap(wrapper);
+
+        // append to parent div
+        me.parent().append(bar);
+        me.parent().append(rail);
+
+        // make it draggable and no longer dependent on the jqueryUI
+        if (o.railDraggable){
+          bar.bind("mousedown", function(e) {
+            var $doc = $(document);
+            isDragg = true;
+            t = parseFloat(bar.css('top'));
+            pageY = e.pageY;
+
+            $doc.bind("mousemove.slimscroll", function(e){
+              currTop = t + e.pageY - pageY;
+              bar.css('top', currTop);
+              scrollContent(0, bar.position().top, false);// scroll content
+            });
+
+            $doc.bind("mouseup.slimscroll", function(e) {
+              isDragg = false;hideBar();
+              $doc.unbind('.slimscroll');
+            });
+            return false;
+          }).bind("selectstart.slimscroll", function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+          });
+        }
+
+        // on rail over
+        rail.hover(function(){
+          showBar();
+        }, function(){
+          hideBar();
+        });
+
+        // on bar over
+        bar.hover(function(){
+          isOverBar = true;
+        }, function(){
+          isOverBar = false;
+        });
+
+        // show on parent mouseover
+        me.hover(function(){
+          isOverPanel = true;
+          showBar();
+          hideBar();
+        }, function(){
+          isOverPanel = false;
+          hideBar();
+        });
+
+        // support for mobile
+        me.bind('touchstart', function(e,b){
+          if (e.originalEvent.touches.length)
+          {
+            // record where touch started
+            touchDif = e.originalEvent.touches[0].pageY;
+          }
+        });
+
+        me.bind('touchmove', function(e){
+          // prevent scrolling the page if necessary
+          if(!releaseScroll)
+          {
+  		      e.originalEvent.preventDefault();
+		      }
+          if (e.originalEvent.touches.length)
+          {
+            // see how far user swiped
+            var diff = (touchDif - e.originalEvent.touches[0].pageY) / o.touchScrollStep;
+            // scroll content
+            scrollContent(diff, true);
+            touchDif = e.originalEvent.touches[0].pageY;
+          }
+        });
+
+        // set up initial height
+        getBarHeight();
+
+        // check start position
+        if (o.start === 'bottom')
+        {
+          // scroll content to bottom
+          bar.css({ top: me.outerHeight() - bar.outerHeight() });
+          scrollContent(0, true);
+        }
+        else if (o.start !== 'top')
+        {
+          // assume jQuery selector
+          scrollContent($(o.start).position().top, null, true);
+
+          // make sure bar stays hidden
+          if (!o.alwaysVisible) { bar.hide(); }
+        }
+
+        // attach scroll events
+        attachWheel(this);
+
+        function _onWheel(e)
+        {
+          // use mouse wheel only when mouse is over
+          if (!isOverPanel) { return; }
+
+          var e = e || window.event;
+
+          var delta = 0;
+          if (e.wheelDelta) { delta = -e.wheelDelta/120; }
+          if (e.detail) { delta = e.detail / 3; }
+
+          var target = e.target || e.srcTarget || e.srcElement;
+          if ($(target).closest('.' + o.wrapperClass).is(me.parent())) {
+            // scroll content
+            scrollContent(delta, true);
+          }
+
+          // stop window scroll
+          if (e.preventDefault && !releaseScroll) { e.preventDefault(); }
+          if (!releaseScroll) { e.returnValue = false; }
+        }
+
+        function scrollContent(y, isWheel, isJump)
+        {
+          releaseScroll = false;
+          var delta = y;
+          var maxTop = me.outerHeight() - bar.outerHeight();
+
+          if (isWheel)
+          {
+            // move bar with mouse wheel
+            delta = parseInt(bar.css('top')) + y * parseInt(o.wheelStep) / 100 * bar.outerHeight();
+
+            // move bar, make sure it doesn't go out
+            delta = Math.min(Math.max(delta, 0), maxTop);
+
+            // if scrolling down, make sure a fractional change to the
+            // scroll position isn't rounded away when the scrollbar's CSS is set
+            // this flooring of delta would happened automatically when
+            // bar.css is set below, but we floor here for clarity
+            delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
+
+            // scroll the scrollbar
+            bar.css({ top: delta + 'px' });
+          }
+
+          // calculate actual scroll amount
+          percentScroll = parseInt(bar.css('top')) / (me.outerHeight() - bar.outerHeight());
+          delta = percentScroll * (me[0].scrollHeight - me.outerHeight());
+
+          if (isJump)
+          {
+            delta = y;
+            var offsetTop = delta / me[0].scrollHeight * me.outerHeight();
+            offsetTop = Math.min(Math.max(offsetTop, 0), maxTop);
+            bar.css({ top: offsetTop + 'px' });
+          }
+
+          // scroll content
+          me.scrollTop(delta);
+
+          // fire scrolling event
+          me.trigger('slimscrolling', ~~delta);
+
+          // ensure bar is visible
+          showBar();
+
+          // trigger hide when scroll is stopped
+          hideBar();
+        }
+
+        function attachWheel(target)
+        {
+          if (window.addEventListener)
+          {
+            target.addEventListener('DOMMouseScroll', _onWheel, false );
+            target.addEventListener('mousewheel', _onWheel, false );
+          }
+          else
+          {
+            document.attachEvent("onmousewheel", _onWheel)
+          }
+        }
+
+        function getBarHeight()
+        {
+          // calculate scrollbar height and make sure it is not too small
+          barHeight = Math.max((me.outerHeight() / me[0].scrollHeight) * me.outerHeight(), minBarHeight);
+          bar.css({ height: barHeight + 'px' });
+
+          // hide scrollbar if content is not long enough
+          var display = barHeight == me.outerHeight() ? 'none' : 'block';
+          bar.css({ display: display });
+        }
+
+        function showBar()
+        {
+          // recalculate bar height
+          getBarHeight();
+          clearTimeout(queueHide);
+
+          // when bar reached top or bottom
+          if (percentScroll == ~~percentScroll)
+          {
+            //release wheel
+            releaseScroll = o.allowPageScroll;
+
+            // publish approporiate event
+            if (lastScroll != percentScroll)
+            {
+                var msg = (~~percentScroll == 0) ? 'top' : 'bottom';
+                me.trigger('slimscroll', msg);
+            }
+          }
+          else
+          {
+            releaseScroll = false;
+          }
+          lastScroll = percentScroll;
+
+          // show only when required
+          if(barHeight >= me.outerHeight()) {
+            //allow window scroll
+            releaseScroll = true;
+            return;
+          }
+          bar.stop(true,true).fadeIn('fast');
+          if (o.railVisible) { rail.stop(true,true).fadeIn('fast'); }
+        }
+
+        function hideBar()
+        {
+          // only hide when options allow it
+          if (!o.alwaysVisible)
+          {
+            queueHide = setTimeout(function(){
+              if (!(o.disableFadeOut && isOverPanel) && !isOverBar && !isDragg)
+              {
+                bar.fadeOut('slow');
+                rail.fadeOut('slow');
+              }
+            }, 1000);
+          }
+        }
+
+      });
+
+      // maintain chainability
+      return this;
+    }
+  });
+
+  $.fn.extend({
+    slimscroll: $.fn.slimScroll
+  });
+
+})(jQuery);
+
 ;/*! version : 4.14.30
  =========================================================
  bootstrap-datetimejs
@@ -7050,10 +7521,1288 @@ This file is generated by `grunt build`, do not edit it by hand.
 }).call(this);
 
 ;/*!
+ * jQuery Form Plugin
+ * version: 3.51.0-2014.06.20
+ * Requires jQuery v1.5 or later
+ * Copyright (c) 2014 M. Alsup
+ * Examples and documentation at: http://malsup.com/jquery/form/
+ * Project repository: https://github.com/malsup/form
+ * Dual licensed under the MIT and GPL licenses.
+ * https://github.com/malsup/form#copyright-and-license
+ */
+/*global ActiveXObject */
+
+// AMD support
+(function (factory) {
+    "use strict";
+    if (typeof define === 'function' && define.amd) {
+        // using AMD; register as anon module
+        define(['jquery'], factory);
+    } else {
+        // no AMD; invoke directly
+        factory( (typeof(jQuery) != 'undefined') ? jQuery : window.Zepto );
+    }
+}
+
+(function($) {
+"use strict";
+
+/*
+    Usage Note:
+    -----------
+    Do not use both ajaxSubmit and ajaxForm on the same form.  These
+    functions are mutually exclusive.  Use ajaxSubmit if you want
+    to bind your own submit handler to the form.  For example,
+
+    $(document).ready(function() {
+        $('#myForm').on('submit', function(e) {
+            e.preventDefault(); // <-- important
+            $(this).ajaxSubmit({
+                target: '#output'
+            });
+        });
+    });
+
+    Use ajaxForm when you want the plugin to manage all the event binding
+    for you.  For example,
+
+    $(document).ready(function() {
+        $('#myForm').ajaxForm({
+            target: '#output'
+        });
+    });
+
+    You can also use ajaxForm with delegation (requires jQuery v1.7+), so the
+    form does not have to exist when you invoke ajaxForm:
+
+    $('#myForm').ajaxForm({
+        delegation: true,
+        target: '#output'
+    });
+
+    When using ajaxForm, the ajaxSubmit function will be invoked for you
+    at the appropriate time.
+*/
+
+/**
+ * Feature detection
+ */
+var feature = {};
+feature.fileapi = $("<input type='file'/>").get(0).files !== undefined;
+feature.formdata = window.FormData !== undefined;
+
+var hasProp = !!$.fn.prop;
+
+// attr2 uses prop when it can but checks the return type for
+// an expected string.  this accounts for the case where a form 
+// contains inputs with names like "action" or "method"; in those
+// cases "prop" returns the element
+$.fn.attr2 = function() {
+    if ( ! hasProp ) {
+        return this.attr.apply(this, arguments);
+    }
+    var val = this.prop.apply(this, arguments);
+    if ( ( val && val.jquery ) || typeof val === 'string' ) {
+        return val;
+    }
+    return this.attr.apply(this, arguments);
+};
+
+/**
+ * ajaxSubmit() provides a mechanism for immediately submitting
+ * an HTML form using AJAX.
+ */
+$.fn.ajaxSubmit = function(options) {
+    /*jshint scripturl:true */
+
+    // fast fail if nothing selected (http://dev.jquery.com/ticket/2752)
+    if (!this.length) {
+        log('ajaxSubmit: skipping submit process - no element selected');
+        return this;
+    }
+
+    var method, action, url, $form = this;
+
+    if (typeof options == 'function') {
+        options = { success: options };
+    }
+    else if ( options === undefined ) {
+        options = {};
+    }
+
+    method = options.type || this.attr2('method');
+    action = options.url  || this.attr2('action');
+
+    url = (typeof action === 'string') ? $.trim(action) : '';
+    url = url || window.location.href || '';
+    if (url) {
+        // clean url (don't include hash vaue)
+        url = (url.match(/^([^#]+)/)||[])[1];
+    }
+
+    options = $.extend(true, {
+        url:  url,
+        success: $.ajaxSettings.success,
+        type: method || $.ajaxSettings.type,
+        iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank'
+    }, options);
+
+    // hook for manipulating the form data before it is extracted;
+    // convenient for use with rich editors like tinyMCE or FCKEditor
+    var veto = {};
+    this.trigger('form-pre-serialize', [this, options, veto]);
+    if (veto.veto) {
+        log('ajaxSubmit: submit vetoed via form-pre-serialize trigger');
+        return this;
+    }
+
+    // provide opportunity to alter form data before it is serialized
+    if (options.beforeSerialize && options.beforeSerialize(this, options) === false) {
+        log('ajaxSubmit: submit aborted via beforeSerialize callback');
+        return this;
+    }
+
+    var traditional = options.traditional;
+    if ( traditional === undefined ) {
+        traditional = $.ajaxSettings.traditional;
+    }
+
+    var elements = [];
+    var qx, a = this.formToArray(options.semantic, elements);
+    if (options.data) {
+        options.extraData = options.data;
+        qx = $.param(options.data, traditional);
+    }
+
+    // give pre-submit callback an opportunity to abort the submit
+    if (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {
+        log('ajaxSubmit: submit aborted via beforeSubmit callback');
+        return this;
+    }
+
+    // fire vetoable 'validate' event
+    this.trigger('form-submit-validate', [a, this, options, veto]);
+    if (veto.veto) {
+        log('ajaxSubmit: submit vetoed via form-submit-validate trigger');
+        return this;
+    }
+
+    var q = $.param(a, traditional);
+    if (qx) {
+        q = ( q ? (q + '&' + qx) : qx );
+    }
+    if (options.type.toUpperCase() == 'GET') {
+        options.url += (options.url.indexOf('?') >= 0 ? '&' : '?') + q;
+        options.data = null;  // data is null for 'get'
+    }
+    else {
+        options.data = q; // data is the query string for 'post'
+    }
+
+    var callbacks = [];
+    if (options.resetForm) {
+        callbacks.push(function() { $form.resetForm(); });
+    }
+    if (options.clearForm) {
+        callbacks.push(function() { $form.clearForm(options.includeHidden); });
+    }
+
+    // perform a load on the target only if dataType is not provided
+    if (!options.dataType && options.target) {
+        var oldSuccess = options.success || function(){};
+        callbacks.push(function(data) {
+            var fn = options.replaceTarget ? 'replaceWith' : 'html';
+            $(options.target)[fn](data).each(oldSuccess, arguments);
+        });
+    }
+    else if (options.success) {
+        callbacks.push(options.success);
+    }
+
+    options.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg
+        var context = options.context || this ;    // jQuery 1.4+ supports scope context
+        for (var i=0, max=callbacks.length; i < max; i++) {
+            callbacks[i].apply(context, [data, status, xhr || $form, $form]);
+        }
+    };
+
+    if (options.error) {
+        var oldError = options.error;
+        options.error = function(xhr, status, error) {
+            var context = options.context || this;
+            oldError.apply(context, [xhr, status, error, $form]);
+        };
+    }
+
+     if (options.complete) {
+        var oldComplete = options.complete;
+        options.complete = function(xhr, status) {
+            var context = options.context || this;
+            oldComplete.apply(context, [xhr, status, $form]);
+        };
+    }
+
+    // are there files to upload?
+
+    // [value] (issue #113), also see comment:
+    // https://github.com/malsup/form/commit/588306aedba1de01388032d5f42a60159eea9228#commitcomment-2180219
+    var fileInputs = $('input[type=file]:enabled', this).filter(function() { return $(this).val() !== ''; });
+
+    var hasFileInputs = fileInputs.length > 0;
+    var mp = 'multipart/form-data';
+    var multipart = ($form.attr('enctype') == mp || $form.attr('encoding') == mp);
+
+    var fileAPI = feature.fileapi && feature.formdata;
+    log("fileAPI :" + fileAPI);
+    var shouldUseFrame = (hasFileInputs || multipart) && !fileAPI;
+
+    var jqxhr;
+
+    // options.iframe allows user to force iframe mode
+    // 06-NOV-09: now defaulting to iframe mode if file input is detected
+    if (options.iframe !== false && (options.iframe || shouldUseFrame)) {
+        // hack to fix Safari hang (thanks to Tim Molendijk for this)
+        // see:  http://groups.google.com/group/jquery-dev/browse_thread/thread/36395b7ab510dd5d
+        if (options.closeKeepAlive) {
+            $.get(options.closeKeepAlive, function() {
+                jqxhr = fileUploadIframe(a);
+            });
+        }
+        else {
+            jqxhr = fileUploadIframe(a);
+        }
+    }
+    else if ((hasFileInputs || multipart) && fileAPI) {
+        jqxhr = fileUploadXhr(a);
+    }
+    else {
+        jqxhr = $.ajax(options);
+    }
+
+    $form.removeData('jqxhr').data('jqxhr', jqxhr);
+
+    // clear element array
+    for (var k=0; k < elements.length; k++) {
+        elements[k] = null;
+    }
+
+    // fire 'notify' event
+    this.trigger('form-submit-notify', [this, options]);
+    return this;
+
+    // utility fn for deep serialization
+    function deepSerialize(extraData){
+        var serialized = $.param(extraData, options.traditional).split('&');
+        var len = serialized.length;
+        var result = [];
+        var i, part;
+        for (i=0; i < len; i++) {
+            // #252; undo param space replacement
+            serialized[i] = serialized[i].replace(/\+/g,' ');
+            part = serialized[i].split('=');
+            // #278; use array instead of object storage, favoring array serializations
+            result.push([decodeURIComponent(part[0]), decodeURIComponent(part[1])]);
+        }
+        return result;
+    }
+
+     // XMLHttpRequest Level 2 file uploads (big hat tip to francois2metz)
+    function fileUploadXhr(a) {
+        var formdata = new FormData();
+
+        for (var i=0; i < a.length; i++) {
+            formdata.append(a[i].name, a[i].value);
+        }
+
+        if (options.extraData) {
+            var serializedData = deepSerialize(options.extraData);
+            for (i=0; i < serializedData.length; i++) {
+                if (serializedData[i]) {
+                    formdata.append(serializedData[i][0], serializedData[i][1]);
+                }
+            }
+        }
+
+        options.data = null;
+
+        var s = $.extend(true, {}, $.ajaxSettings, options, {
+            contentType: false,
+            processData: false,
+            cache: false,
+            type: method || 'POST'
+        });
+
+        if (options.uploadProgress) {
+            // workaround because jqXHR does not expose upload property
+            s.xhr = function() {
+                var xhr = $.ajaxSettings.xhr();
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', function(event) {
+                        var percent = 0;
+                        var position = event.loaded || event.position; /*event.position is deprecated*/
+                        var total = event.total;
+                        if (event.lengthComputable) {
+                            percent = Math.ceil(position / total * 100);
+                        }
+                        options.uploadProgress(event, position, total, percent);
+                    }, false);
+                }
+                return xhr;
+            };
+        }
+
+        s.data = null;
+        var beforeSend = s.beforeSend;
+        s.beforeSend = function(xhr, o) {
+            //Send FormData() provided by user
+            if (options.formData) {
+                o.data = options.formData;
+            }
+            else {
+                o.data = formdata;
+            }
+            if(beforeSend) {
+                beforeSend.call(this, xhr, o);
+            }
+        };
+        return $.ajax(s);
+    }
+
+    // private function for handling file uploads (hat tip to YAHOO!)
+    function fileUploadIframe(a) {
+        var form = $form[0], el, i, s, g, id, $io, io, xhr, sub, n, timedOut, timeoutHandle;
+        var deferred = $.Deferred();
+
+        // #341
+        deferred.abort = function(status) {
+            xhr.abort(status);
+        };
+
+        if (a) {
+            // ensure that every serialized input is still enabled
+            for (i=0; i < elements.length; i++) {
+                el = $(elements[i]);
+                if ( hasProp ) {
+                    el.prop('disabled', false);
+                }
+                else {
+                    el.removeAttr('disabled');
+                }
+            }
+        }
+
+        s = $.extend(true, {}, $.ajaxSettings, options);
+        s.context = s.context || s;
+        id = 'jqFormIO' + (new Date().getTime());
+        if (s.iframeTarget) {
+            $io = $(s.iframeTarget);
+            n = $io.attr2('name');
+            if (!n) {
+                $io.attr2('name', id);
+            }
+            else {
+                id = n;
+            }
+        }
+        else {
+            $io = $('<iframe name="' + id + '" src="'+ s.iframeSrc +'" />');
+            $io.css({ position: 'absolute', top: '-1000px', left: '-1000px' });
+        }
+        io = $io[0];
+
+
+        xhr = { // mock object
+            aborted: 0,
+            responseText: null,
+            responseXML: null,
+            status: 0,
+            statusText: 'n/a',
+            getAllResponseHeaders: function() {},
+            getResponseHeader: function() {},
+            setRequestHeader: function() {},
+            abort: function(status) {
+                var e = (status === 'timeout' ? 'timeout' : 'aborted');
+                log('aborting upload... ' + e);
+                this.aborted = 1;
+
+                try { // #214, #257
+                    if (io.contentWindow.document.execCommand) {
+                        io.contentWindow.document.execCommand('Stop');
+                    }
+                }
+                catch(ignore) {}
+
+                $io.attr('src', s.iframeSrc); // abort op in progress
+                xhr.error = e;
+                if (s.error) {
+                    s.error.call(s.context, xhr, e, status);
+                }
+                if (g) {
+                    $.event.trigger("ajaxError", [xhr, s, e]);
+                }
+                if (s.complete) {
+                    s.complete.call(s.context, xhr, e);
+                }
+            }
+        };
+
+        g = s.global;
+        // trigger ajax global events so that activity/block indicators work like normal
+        if (g && 0 === $.active++) {
+            $.event.trigger("ajaxStart");
+        }
+        if (g) {
+            $.event.trigger("ajaxSend", [xhr, s]);
+        }
+
+        if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {
+            if (s.global) {
+                $.active--;
+            }
+            deferred.reject();
+            return deferred;
+        }
+        if (xhr.aborted) {
+            deferred.reject();
+            return deferred;
+        }
+
+        // add submitting element to data if we know it
+        sub = form.clk;
+        if (sub) {
+            n = sub.name;
+            if (n && !sub.disabled) {
+                s.extraData = s.extraData || {};
+                s.extraData[n] = sub.value;
+                if (sub.type == "image") {
+                    s.extraData[n+'.x'] = form.clk_x;
+                    s.extraData[n+'.y'] = form.clk_y;
+                }
+            }
+        }
+
+        var CLIENT_TIMEOUT_ABORT = 1;
+        var SERVER_ABORT = 2;
+                
+        function getDoc(frame) {
+            /* it looks like contentWindow or contentDocument do not
+             * carry the protocol property in ie8, when running under ssl
+             * frame.document is the only valid response document, since
+             * the protocol is know but not on the other two objects. strange?
+             * "Same origin policy" http://en.wikipedia.org/wiki/Same_origin_policy
+             */
+            
+            var doc = null;
+            
+            // IE8 cascading access check
+            try {
+                if (frame.contentWindow) {
+                    doc = frame.contentWindow.document;
+                }
+            } catch(err) {
+                // IE8 access denied under ssl & missing protocol
+                log('cannot get iframe.contentWindow document: ' + err);
+            }
+
+            if (doc) { // successful getting content
+                return doc;
+            }
+
+            try { // simply checking may throw in ie8 under ssl or mismatched protocol
+                doc = frame.contentDocument ? frame.contentDocument : frame.document;
+            } catch(err) {
+                // last attempt
+                log('cannot get iframe.contentDocument: ' + err);
+                doc = frame.document;
+            }
+            return doc;
+        }
+
+        // Rails CSRF hack (thanks to Yvan Barthelemy)
+        var csrf_token = $('meta[name=csrf-token]').attr('content');
+        var csrf_param = $('meta[name=csrf-param]').attr('content');
+        if (csrf_param && csrf_token) {
+            s.extraData = s.extraData || {};
+            s.extraData[csrf_param] = csrf_token;
+        }
+
+        // take a breath so that pending repaints get some cpu time before the upload starts
+        function doSubmit() {
+            // make sure form attrs are set
+            var t = $form.attr2('target'), 
+                a = $form.attr2('action'), 
+                mp = 'multipart/form-data',
+                et = $form.attr('enctype') || $form.attr('encoding') || mp;
+
+            // update form attrs in IE friendly way
+            form.setAttribute('target',id);
+            if (!method || /post/i.test(method) ) {
+                form.setAttribute('method', 'POST');
+            }
+            if (a != s.url) {
+                form.setAttribute('action', s.url);
+            }
+
+            // ie borks in some cases when setting encoding
+            if (! s.skipEncodingOverride && (!method || /post/i.test(method))) {
+                $form.attr({
+                    encoding: 'multipart/form-data',
+                    enctype:  'multipart/form-data'
+                });
+            }
+
+            // support timout
+            if (s.timeout) {
+                timeoutHandle = setTimeout(function() { timedOut = true; cb(CLIENT_TIMEOUT_ABORT); }, s.timeout);
+            }
+
+            // look for server aborts
+            function checkState() {
+                try {
+                    var state = getDoc(io).readyState;
+                    log('state = ' + state);
+                    if (state && state.toLowerCase() == 'uninitialized') {
+                        setTimeout(checkState,50);
+                    }
+                }
+                catch(e) {
+                    log('Server abort: ' , e, ' (', e.name, ')');
+                    cb(SERVER_ABORT);
+                    if (timeoutHandle) {
+                        clearTimeout(timeoutHandle);
+                    }
+                    timeoutHandle = undefined;
+                }
+            }
+
+            // add "extra" data to form if provided in options
+            var extraInputs = [];
+            try {
+                if (s.extraData) {
+                    for (var n in s.extraData) {
+                        if (s.extraData.hasOwnProperty(n)) {
+                           // if using the $.param format that allows for multiple values with the same name
+                           if($.isPlainObject(s.extraData[n]) && s.extraData[n].hasOwnProperty('name') && s.extraData[n].hasOwnProperty('value')) {
+                               extraInputs.push(
+                               $('<input type="hidden" name="'+s.extraData[n].name+'">').val(s.extraData[n].value)
+                                   .appendTo(form)[0]);
+                           } else {
+                               extraInputs.push(
+                               $('<input type="hidden" name="'+n+'">').val(s.extraData[n])
+                                   .appendTo(form)[0]);
+                           }
+                        }
+                    }
+                }
+
+                if (!s.iframeTarget) {
+                    // add iframe to doc and submit the form
+                    $io.appendTo('body');
+                }
+                if (io.attachEvent) {
+                    io.attachEvent('onload', cb);
+                }
+                else {
+                    io.addEventListener('load', cb, false);
+                }
+                setTimeout(checkState,15);
+
+                try {
+                    form.submit();
+                } catch(err) {
+                    // just in case form has element with name/id of 'submit'
+                    var submitFn = document.createElement('form').submit;
+                    submitFn.apply(form);
+                }
+            }
+            finally {
+                // reset attrs and remove "extra" input elements
+                form.setAttribute('action',a);
+                form.setAttribute('enctype', et); // #380
+                if(t) {
+                    form.setAttribute('target', t);
+                } else {
+                    $form.removeAttr('target');
+                }
+                $(extraInputs).remove();
+            }
+        }
+
+        if (s.forceSync) {
+            doSubmit();
+        }
+        else {
+            setTimeout(doSubmit, 10); // this lets dom updates render
+        }
+
+        var data, doc, domCheckCount = 50, callbackProcessed;
+
+        function cb(e) {
+            if (xhr.aborted || callbackProcessed) {
+                return;
+            }
+            
+            doc = getDoc(io);
+            if(!doc) {
+                log('cannot access response document');
+                e = SERVER_ABORT;
+            }
+            if (e === CLIENT_TIMEOUT_ABORT && xhr) {
+                xhr.abort('timeout');
+                deferred.reject(xhr, 'timeout');
+                return;
+            }
+            else if (e == SERVER_ABORT && xhr) {
+                xhr.abort('server abort');
+                deferred.reject(xhr, 'error', 'server abort');
+                return;
+            }
+
+            if (!doc || doc.location.href == s.iframeSrc) {
+                // response not received yet
+                if (!timedOut) {
+                    return;
+                }
+            }
+            if (io.detachEvent) {
+                io.detachEvent('onload', cb);
+            }
+            else {
+                io.removeEventListener('load', cb, false);
+            }
+
+            var status = 'success', errMsg;
+            try {
+                if (timedOut) {
+                    throw 'timeout';
+                }
+
+                var isXml = s.dataType == 'xml' || doc.XMLDocument || $.isXMLDoc(doc);
+                log('isXml='+isXml);
+                if (!isXml && window.opera && (doc.body === null || !doc.body.innerHTML)) {
+                    if (--domCheckCount) {
+                        // in some browsers (Opera) the iframe DOM is not always traversable when
+                        // the onload callback fires, so we loop a bit to accommodate
+                        log('requeing onLoad callback, DOM not available');
+                        setTimeout(cb, 250);
+                        return;
+                    }
+                    // let this fall through because server response could be an empty document
+                    //log('Could not access iframe DOM after mutiple tries.');
+                    //throw 'DOMException: not available';
+                }
+
+                //log('response detected');
+                var docRoot = doc.body ? doc.body : doc.documentElement;
+                xhr.responseText = docRoot ? docRoot.innerHTML : null;
+                xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;
+                if (isXml) {
+                    s.dataType = 'xml';
+                }
+                xhr.getResponseHeader = function(header){
+                    var headers = {'content-type': s.dataType};
+                    return headers[header.toLowerCase()];
+                };
+                // support for XHR 'status' & 'statusText' emulation :
+                if (docRoot) {
+                    xhr.status = Number( docRoot.getAttribute('status') ) || xhr.status;
+                    xhr.statusText = docRoot.getAttribute('statusText') || xhr.statusText;
+                }
+
+                var dt = (s.dataType || '').toLowerCase();
+                var scr = /(json|script|text)/.test(dt);
+                if (scr || s.textarea) {
+                    // see if user embedded response in textarea
+                    var ta = doc.getElementsByTagName('textarea')[0];
+                    if (ta) {
+                        xhr.responseText = ta.value;
+                        // support for XHR 'status' & 'statusText' emulation :
+                        xhr.status = Number( ta.getAttribute('status') ) || xhr.status;
+                        xhr.statusText = ta.getAttribute('statusText') || xhr.statusText;
+                    }
+                    else if (scr) {
+                        // account for browsers injecting pre around json response
+                        var pre = doc.getElementsByTagName('pre')[0];
+                        var b = doc.getElementsByTagName('body')[0];
+                        if (pre) {
+                            xhr.responseText = pre.textContent ? pre.textContent : pre.innerText;
+                        }
+                        else if (b) {
+                            xhr.responseText = b.textContent ? b.textContent : b.innerText;
+                        }
+                    }
+                }
+                else if (dt == 'xml' && !xhr.responseXML && xhr.responseText) {
+                    xhr.responseXML = toXml(xhr.responseText);
+                }
+
+                try {
+                    data = httpData(xhr, dt, s);
+                }
+                catch (err) {
+                    status = 'parsererror';
+                    xhr.error = errMsg = (err || status);
+                }
+            }
+            catch (err) {
+                log('error caught: ',err);
+                status = 'error';
+                xhr.error = errMsg = (err || status);
+            }
+
+            if (xhr.aborted) {
+                log('upload aborted');
+                status = null;
+            }
+
+            if (xhr.status) { // we've set xhr.status
+                status = (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) ? 'success' : 'error';
+            }
+
+            // ordering of these callbacks/triggers is odd, but that's how $.ajax does it
+            if (status === 'success') {
+                if (s.success) {
+                    s.success.call(s.context, data, 'success', xhr);
+                }
+                deferred.resolve(xhr.responseText, 'success', xhr);
+                if (g) {
+                    $.event.trigger("ajaxSuccess", [xhr, s]);
+                }
+            }
+            else if (status) {
+                if (errMsg === undefined) {
+                    errMsg = xhr.statusText;
+                }
+                if (s.error) {
+                    s.error.call(s.context, xhr, status, errMsg);
+                }
+                deferred.reject(xhr, 'error', errMsg);
+                if (g) {
+                    $.event.trigger("ajaxError", [xhr, s, errMsg]);
+                }
+            }
+
+            if (g) {
+                $.event.trigger("ajaxComplete", [xhr, s]);
+            }
+
+            if (g && ! --$.active) {
+                $.event.trigger("ajaxStop");
+            }
+
+            if (s.complete) {
+                s.complete.call(s.context, xhr, status);
+            }
+
+            callbackProcessed = true;
+            if (s.timeout) {
+                clearTimeout(timeoutHandle);
+            }
+
+            // clean up
+            setTimeout(function() {
+                if (!s.iframeTarget) {
+                    $io.remove();
+                }
+                else { //adding else to clean up existing iframe response.
+                    $io.attr('src', s.iframeSrc);
+                }
+                xhr.responseXML = null;
+            }, 100);
+        }
+
+        var toXml = $.parseXML || function(s, doc) { // use parseXML if available (jQuery 1.5+)
+            if (window.ActiveXObject) {
+                doc = new ActiveXObject('Microsoft.XMLDOM');
+                doc.async = 'false';
+                doc.loadXML(s);
+            }
+            else {
+                doc = (new DOMParser()).parseFromString(s, 'text/xml');
+            }
+            return (doc && doc.documentElement && doc.documentElement.nodeName != 'parsererror') ? doc : null;
+        };
+        var parseJSON = $.parseJSON || function(s) {
+            /*jslint evil:true */
+            return window['eval']('(' + s + ')');
+        };
+
+        var httpData = function( xhr, type, s ) { // mostly lifted from jq1.4.4
+
+            var ct = xhr.getResponseHeader('content-type') || '',
+                xml = type === 'xml' || !type && ct.indexOf('xml') >= 0,
+                data = xml ? xhr.responseXML : xhr.responseText;
+
+            if (xml && data.documentElement.nodeName === 'parsererror') {
+                if ($.error) {
+                    $.error('parsererror');
+                }
+            }
+            if (s && s.dataFilter) {
+                data = s.dataFilter(data, type);
+            }
+            if (typeof data === 'string') {
+                if (type === 'json' || !type && ct.indexOf('json') >= 0) {
+                    data = parseJSON(data);
+                } else if (type === "script" || !type && ct.indexOf("javascript") >= 0) {
+                    $.globalEval(data);
+                }
+            }
+            return data;
+        };
+
+        return deferred;
+    }
+};
+
+/**
+ * ajaxForm() provides a mechanism for fully automating form submission.
+ *
+ * The advantages of using this method instead of ajaxSubmit() are:
+ *
+ * 1: This method will include coordinates for <input type="image" /> elements (if the element
+ *    is used to submit the form).
+ * 2. This method will include the submit element's name/value data (for the element that was
+ *    used to submit the form).
+ * 3. This method binds the submit() method to the form for you.
+ *
+ * The options argument for ajaxForm works exactly as it does for ajaxSubmit.  ajaxForm merely
+ * passes the options argument along after properly binding events for submit elements and
+ * the form itself.
+ */
+$.fn.ajaxForm = function(options) {
+    options = options || {};
+    //options.delegation = options.delegation && $.isFunction($.fn.on);
+
+    // in jQuery 1.3+ we can fix mistakes with the ready state
+    // if (!options.delegation && this.length === 0) {
+    //     var o = { s: this.selector, c: this.context };
+    //     if (!$.isReady && o.s) {
+    //         log('DOM not ready, queuing ajaxForm');
+    //         $(function() {
+    //             $(o.s,o.c).ajaxForm(options);
+    //         });
+    //         return this;
+    //     }
+    //     // is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
+    //     log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
+    //     return this;
+    // }
+
+    //if ( options.delegation ) {
+        $(document)
+            .off('submit.form-plugin', this.selector, doAjaxSubmit)
+            .off('click.form-plugin', this.selector, captureSubmittingElement)
+            .on('submit.form-plugin', this.selector, options, doAjaxSubmit)
+            .on('click.form-plugin', this.selector, options, captureSubmittingElement);
+        return this;
+    //}
+
+    // return this.ajaxFormUnbind()
+    //     .bind('submit.form-plugin', options, doAjaxSubmit)
+    //     .bind('click.form-plugin', options, captureSubmittingElement);
+};
+
+// private event handlers
+function doAjaxSubmit(e) {
+    /*jshint validthis:true */
+    var options = e.data;
+    if (!e.isDefaultPrevented()) { // if event has been canceled, don't proceed
+        e.preventDefault();
+        $(e.target).ajaxSubmit(options); // #365
+    }
+}
+
+function captureSubmittingElement(e) {
+    /*jshint validthis:true */
+    var target = e.target;
+    var $el = $(target);
+    if (!($el.is("[type=submit],[type=image]"))) {
+        // is this a child element of the submit el?  (ex: a span within a button)
+        var t = $el.closest('[type=submit]');
+        if (t.length === 0) {
+            return;
+        }
+        target = t[0];
+    }
+    var form = this;
+    form.clk = target;
+    if (target.type == 'image') {
+        if (e.offsetX !== undefined) {
+            form.clk_x = e.offsetX;
+            form.clk_y = e.offsetY;
+        } else if (typeof $.fn.offset == 'function') {
+            var offset = $el.offset();
+            form.clk_x = e.pageX - offset.left;
+            form.clk_y = e.pageY - offset.top;
+        } else {
+            form.clk_x = e.pageX - target.offsetLeft;
+            form.clk_y = e.pageY - target.offsetTop;
+        }
+    }
+    // clear form vars
+    setTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);
+}
+
+
+// ajaxFormUnbind unbinds the event handlers that were bound by ajaxForm
+// $.fn.ajaxFormUnbind = function() {
+//     return this.unbind('submit.form-plugin click.form-plugin');
+// };
+
+/**
+ * formToArray() gathers form element data into an array of objects that can
+ * be passed to any of the following ajax functions: $.get, $.post, or load.
+ * Each object in the array has both a 'name' and 'value' property.  An example of
+ * an array for a simple login form might be:
+ *
+ * [ { name: 'username', value: 'jresig' }, { name: 'password', value: 'secret' } ]
+ *
+ * It is this array that is passed to pre-submit callback functions provided to the
+ * ajaxSubmit() and ajaxForm() methods.
+ */
+$.fn.formToArray = function(semantic, elements) {
+    var a = [];
+    if (this.length === 0) {
+        return a;
+    }
+
+    var form = this[0];
+    var formId = this.attr('id');
+    var els = semantic ? form.getElementsByTagName('*') : form.elements;
+    var els2;
+
+    if (els && !/MSIE [678]/.test(navigator.userAgent)) { // #390
+        els = $(els).get();  // convert to standard array
+    }
+
+    // #386; account for inputs outside the form which use the 'form' attribute
+    if ( formId ) {
+        els2 = $(':input[form="' + formId + '"]').get(); // hat tip @thet
+        if ( els2.length ) {
+            els = (els || []).concat(els2);
+        }
+    }
+
+    if (!els || !els.length) {
+        return a;
+    }
+
+    var i,j,n,v,el,max,jmax;
+    for(i=0, max=els.length; i < max; i++) {
+        el = els[i];
+        n = el.name;
+        if (!n || el.disabled) {
+            continue;
+        }
+
+        if (semantic && form.clk && el.type == "image") {
+            // handle image inputs on the fly when semantic == true
+            if(form.clk == el) {
+                a.push({name: n, value: $(el).val(), type: el.type });
+                a.push({name: n+'.x', value: form.clk_x}, {name: n+'.y', value: form.clk_y});
+            }
+            continue;
+        }
+
+        v = $.fieldValue(el, true);
+        if (v && v.constructor == Array) {
+            if (elements) {
+                elements.push(el);
+            }
+            for(j=0, jmax=v.length; j < jmax; j++) {
+                a.push({name: n, value: v[j]});
+            }
+        }
+        else if (feature.fileapi && el.type == 'file') {
+            if (elements) {
+                elements.push(el);
+            }
+            var files = el.files;
+            if (files.length) {
+                for (j=0; j < files.length; j++) {
+                    a.push({name: n, value: files[j], type: el.type});
+                }
+            }
+            else {
+                // #180
+                a.push({ name: n, value: '', type: el.type });
+            }
+        }
+        else if (v !== null && typeof v != 'undefined') {
+            if (elements) {
+                elements.push(el);
+            }
+            a.push({name: n, value: v, type: el.type, required: el.required});
+        }
+    }
+
+    if (!semantic && form.clk) {
+        // input type=='image' are not found in elements array! handle it here
+        var $input = $(form.clk), input = $input[0];
+        n = input.name;
+        if (n && !input.disabled && input.type == 'image') {
+            a.push({name: n, value: $input.val()});
+            a.push({name: n+'.x', value: form.clk_x}, {name: n+'.y', value: form.clk_y});
+        }
+    }
+    return a;
+};
+
+/**
+ * Serializes form data into a 'submittable' string. This method will return a string
+ * in the format: name1=value1&amp;name2=value2
+ */
+$.fn.formSerialize = function(semantic) {
+    //hand off to jQuery.param for proper encoding
+    return $.param(this.formToArray(semantic));
+};
+
+/**
+ * Serializes all field elements in the jQuery object into a query string.
+ * This method will return a string in the format: name1=value1&amp;name2=value2
+ */
+$.fn.fieldSerialize = function(successful) {
+    var a = [];
+    this.each(function() {
+        var n = this.name;
+        if (!n) {
+            return;
+        }
+        var v = $.fieldValue(this, successful);
+        if (v && v.constructor == Array) {
+            for (var i=0,max=v.length; i < max; i++) {
+                a.push({name: n, value: v[i]});
+            }
+        }
+        else if (v !== null && typeof v != 'undefined') {
+            a.push({name: this.name, value: v});
+        }
+    });
+    //hand off to jQuery.param for proper encoding
+    return $.param(a);
+};
+
+/**
+ * Returns the value(s) of the element in the matched set.  For example, consider the following form:
+ *
+ *  <form><fieldset>
+ *      <input name="A" type="text" />
+ *      <input name="A" type="text" />
+ *      <input name="B" type="checkbox" value="B1" />
+ *      <input name="B" type="checkbox" value="B2"/>
+ *      <input name="C" type="radio" value="C1" />
+ *      <input name="C" type="radio" value="C2" />
+ *  </fieldset></form>
+ *
+ *  var v = $('input[type=text]').fieldValue();
+ *  // if no values are entered into the text inputs
+ *  v == ['','']
+ *  // if values entered into the text inputs are 'foo' and 'bar'
+ *  v == ['foo','bar']
+ *
+ *  var v = $('input[type=checkbox]').fieldValue();
+ *  // if neither checkbox is checked
+ *  v === undefined
+ *  // if both checkboxes are checked
+ *  v == ['B1', 'B2']
+ *
+ *  var v = $('input[type=radio]').fieldValue();
+ *  // if neither radio is checked
+ *  v === undefined
+ *  // if first radio is checked
+ *  v == ['C1']
+ *
+ * The successful argument controls whether or not the field element must be 'successful'
+ * (per http://www.w3.org/TR/html4/interact/forms.html#successful-controls).
+ * The default value of the successful argument is true.  If this value is false the value(s)
+ * for each element is returned.
+ *
+ * Note: This method *always* returns an array.  If no valid value can be determined the
+ *    array will be empty, otherwise it will contain one or more values.
+ */
+$.fn.fieldValue = function(successful) {
+    for (var val=[], i=0, max=this.length; i < max; i++) {
+        var el = this[i];
+        var v = $.fieldValue(el, successful);
+        if (v === null || typeof v == 'undefined' || (v.constructor == Array && !v.length)) {
+            continue;
+        }
+        if (v.constructor == Array) {
+            $.merge(val, v);
+        }
+        else {
+            val.push(v);
+        }
+    }
+    return val;
+};
+
+/**
+ * Returns the value of the field element.
+ */
+$.fieldValue = function(el, successful) {
+    var n = el.name, t = el.type, tag = el.tagName.toLowerCase();
+    if (successful === undefined) {
+        successful = true;
+    }
+
+    if (successful && (!n || el.disabled || t == 'reset' || t == 'button' ||
+        (t == 'checkbox' || t == 'radio') && !el.checked ||
+        (t == 'submit' || t == 'image') && el.form && el.form.clk != el ||
+        tag == 'select' && el.selectedIndex == -1)) {
+            return null;
+    }
+
+    if (tag == 'select') {
+        var index = el.selectedIndex;
+        if (index < 0) {
+            return null;
+        }
+        var a = [], ops = el.options;
+        var one = (t == 'select-one');
+        var max = (one ? index+1 : ops.length);
+        for(var i=(one ? index : 0); i < max; i++) {
+            var op = ops[i];
+            if (op.selected) {
+                var v = op.value;
+                if (!v) { // extra pain for IE...
+                    v = (op.attributes && op.attributes.value && !(op.attributes.value.specified)) ? op.text : op.value;
+                }
+                if (one) {
+                    return v;
+                }
+                a.push(v);
+            }
+        }
+        return a;
+    }
+    return $(el).val();
+};
+
+/**
+ * Clears the form data.  Takes the following actions on the form's input fields:
+ *  - input text fields will have their 'value' property set to the empty string
+ *  - select elements will have their 'selectedIndex' property set to -1
+ *  - checkbox and radio inputs will have their 'checked' property set to false
+ *  - inputs of type submit, button, reset, and hidden will *not* be effected
+ *  - button elements will *not* be effected
+ */
+$.fn.clearForm = function(includeHidden) {
+    return this.each(function() {
+        $('input,select,textarea', this).clearFields(includeHidden);
+    });
+};
+
+/**
+ * Clears the selected form elements.
+ */
+$.fn.clearFields = $.fn.clearInputs = function(includeHidden) {
+    var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i; // 'hidden' is not in this list
+    return this.each(function() {
+        var t = this.type, tag = this.tagName.toLowerCase();
+        if (re.test(t) || tag == 'textarea') {
+            this.value = '';
+        }
+        else if (t == 'checkbox' || t == 'radio') {
+            this.checked = false;
+        }
+        else if (tag == 'select') {
+            this.selectedIndex = -1;
+        }
+        else if (t == "file") {
+            if (/MSIE/.test(navigator.userAgent)) {
+                $(this).replaceWith($(this).clone(true));
+            } else {
+                $(this).val('');
+            }
+        }
+        else if (includeHidden) {
+            // includeHidden can be the value true, or it can be a selector string
+            // indicating a special test; for example:
+            //  $('#myForm').clearForm('.special:hidden')
+            // the above would clean hidden inputs that have the class of 'special'
+            if ( (includeHidden === true && /hidden/.test(t)) ||
+                 (typeof includeHidden == 'string' && $(this).is(includeHidden)) ) {
+                this.value = '';
+            }
+        }
+    });
+};
+
+/**
+ * Resets the form data.  Causes all form elements to be reset to their original value.
+ */
+$.fn.resetForm = function() {
+    return this.each(function() {
+        // guard against an input with the name of 'reset'
+        // note that IE reports the reset function as an 'object'
+        if (typeof this.reset == 'function' || (typeof this.reset == 'object' && !this.reset.nodeType)) {
+            this.reset();
+        }
+    });
+};
+
+/**
+ * Enables or disables any matching elements.
+ */
+$.fn.enable = function(b) {
+    if (b === undefined) {
+        b = true;
+    }
+    return this.each(function() {
+        this.disabled = !b;
+    });
+};
+
+/**
+ * Checks/unchecks any matching checkboxes or radio buttons and
+ * selects/deselects and matching option elements.
+ */
+$.fn.selected = function(select) {
+    if (select === undefined) {
+        select = true;
+    }
+    return this.each(function() {
+        var t = this.type;
+        if (t == 'checkbox' || t == 'radio') {
+            this.checked = select;
+        }
+        else if (this.tagName.toLowerCase() == 'option') {
+            var $sel = $(this).parent('select');
+            if (select && $sel[0] && $sel[0].type == 'select-one') {
+                // deselect all other options
+                $sel.find('option').selected(false);
+            }
+            this.selected = select;
+        }
+    });
+};
+
+// expose debug var
+$.fn.ajaxSubmit.debug = false;
+
+// helper fn for console logging
+function log() {
+    if (!$.fn.ajaxSubmit.debug) {
+        return;
+    }
+    var msg = '[jquery.form] ' + Array.prototype.join.call(arguments,'');
+    if (window.console && window.console.log) {
+        window.console.log(msg);
+    }
+    else if (window.opera && window.opera.postError) {
+        window.opera.postError(msg);
+    }
+}
+
+}));
+
+;/*!
  * BootstrapValidator (http://bootstrapvalidator.com)
  * The best jQuery plugin to validate form fields. Designed to use with Bootstrap 3
  *
- * @version     v0.5.3, built on 2015-07-15 5:19:44 PM
+ * @version     v0.5.3, built on 2015-07-27 10:18:35 AM
  * @author      https://twitter.com/nghuuphuoc
  * @copyright   (c) 2013 - 2015 Nguyen Huu Phuoc
  * @license     Commercial: http://bootstrapvalidator.com/license/
@@ -8422,114 +10171,114 @@ if (typeof jQuery === 'undefined') {
         //     return this;
         // },
 
-        // /**
-        //  * Add a new field
-        //  *
-        //  * @param {String|jQuery} field The field name or field element
-        //  * @param {Object} [options] The validator rules
-        //  * @returns {BootstrapValidator}
-        //  */
-        // addField: function(field, options) {
-        //     var fields = $([]);
-        //     switch (typeof field) {
-        //         case 'object':
-        //             fields = field;
-        //             field  = field.attr('data-bv-field') || field.attr('name');
-        //             break;
-        //         case 'string':
-        //             delete this._cacheFields[field];
-        //             fields = this.getFieldElements(field);
-        //             break;
-        //         default:
-        //             break;
-        //     }
+        /**
+         * Add a new field
+         *
+         * @param {String|jQuery} field The field name or field element
+         * @param {Object} [options] The validator rules
+         * @returns {BootstrapValidator}
+         */
+        addField: function(field, options) {
+            var fields = $([]);
+            switch (typeof field) {
+                case 'object':
+                    fields = field;
+                    field  = field.attr('data-bv-field') || field.attr('name');
+                    break;
+                case 'string':
+                    delete this._cacheFields[field];
+                    fields = this.getFieldElements(field);
+                    break;
+                default:
+                    break;
+            }
 
-        //     fields.attr('data-bv-field', field);
+            fields.attr('data-bv-field', field);
 
-        //     var type  = fields.attr('type'),
-        //         total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+            var type  = fields.attr('type'),
+                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
-        //     for (var i = 0; i < total; i++) {
-        //         var $field = fields.eq(i);
+            for (var i = 0; i < total; i++) {
+                var $field = fields.eq(i);
 
-        //         // Try to parse the options from HTML attributes
-        //         var opts = this._parseOptions($field);
-        //         opts = (opts === null) ? options : $.extend(true, options, opts);
+                // Try to parse the options from HTML attributes
+                var opts = this._parseOptions($field);
+                opts = (opts === null) ? options : $.extend(true, options, opts);
 
-        //         this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
+                this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
-        //         // Update the cache
-        //         this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
+                // Update the cache
+                this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
 
-        //         // Init the element
-        //         this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
-        //     }
+                // Init the element
+                this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
+            }
 
-        //     this.disableSubmitButtons(false);
-        //     // Trigger an event
-        //     this.$form.trigger($.Event(this.options.events.fieldAdded), {
-        //         field: field,
-        //         element: fields,
-        //         options: this.options.fields[field]
-        //     });
+            this.disableSubmitButtons(false);
+            // Trigger an event
+            this.$form.trigger($.Event(this.options.events.fieldAdded), {
+                field: field,
+                element: fields,
+                options: this.options.fields[field]
+            });
 
-        //     return this;
-        // },
+            return this;
+        },
 
-        // /**
-        //  * Remove a given field
-        //  *
-        //  * @param {String|jQuery} field The field name or field element
-        //  * @returns {BootstrapValidator}
-        //  */
-        // removeField: function(field) {
-        //     var fields = $([]);
-        //     switch (typeof field) {
-        //         case 'object':
-        //             fields = field;
-        //             field  = field.attr('data-bv-field') || field.attr('name');
-        //             fields.attr('data-bv-field', field);
-        //             break;
-        //         case 'string':
-        //             fields = this.getFieldElements(field);
-        //             break;
-        //         default:
-        //             break;
-        //     }
+        /**
+         * Remove a given field
+         *
+         * @param {String|jQuery} field The field name or field element
+         * @returns {BootstrapValidator}
+         */
+        removeField: function(field) {
+            var fields = $([]);
+            switch (typeof field) {
+                case 'object':
+                    fields = field;
+                    field  = field.attr('data-bv-field') || field.attr('name');
+                    fields.attr('data-bv-field', field);
+                    break;
+                case 'string':
+                    fields = this.getFieldElements(field);
+                    break;
+                default:
+                    break;
+            }
 
-        //     if (fields.length === 0) {
-        //         return this;
-        //     }
+            if (fields.length === 0) {
+                return this;
+            }
 
-        //     var type  = fields.attr('type'),
-        //         total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+            var type  = fields.attr('type'),
+                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
-        //     for (var i = 0; i < total; i++) {
-        //         var $field = fields.eq(i);
+            for (var i = 0; i < total; i++) {
+                var $field = fields.eq(i);
 
-        //         // Remove from the list of invalid fields
-        //         this.$invalidFields = this.$invalidFields.not($field);
+                // Remove from the list of invalid fields
+                this.$invalidFields = this.$invalidFields.not($field);
 
-        //         // Update the cache
-        //         this._cacheFields[field] = this._cacheFields[field].not($field);
-        //     }
+                // Update the cache
+                this._cacheFields[field] = this._cacheFields[field].not($field);
+            }
 
-        //     if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
-        //         delete this.options.fields[field];
-        //     }
-        //     if ('checkbox' === type || 'radio' === type) {
-        //         this._initField(field);
-        //     }
+            if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
+                delete this.options.fields[field];
+            }
+            if ('checkbox' === type || 'radio' === type) {
+                this._initField(field);
+            }
 
-        //     this.disableSubmitButtons(false);
-        //     // Trigger an event
-        //     this.$form.trigger($.Event(this.options.events.fieldRemoved), {
-        //         field: field,
-        //         element: fields
-        //     });
+            this.disableSubmitButtons(false);
+            // Trigger an event
+            this.$form.trigger($.Event(this.options.events.fieldRemoved), {
+                field: field,
+                element: fields
+            });
 
-        //     return this;
-        // },
+            return this;
+        },
 
         /**
          * Reset given field
@@ -8636,49 +10385,49 @@ if (typeof jQuery === 'undefined') {
         //     return this;
         // },
 
-        // /**
-        //  * Some validators have option which its value is dynamic.
-        //  * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
-        //  *
-        //  * @param {jQuery|String} field The field name or element
-        //  * @param {String|Function} option The option which can be determined by:
-        //  * - a string
-        //  * - name of field which defines the value
-        //  * - name of function which returns the value
-        //  * - a function returns the value
-        //  *
-        //  * The callback function has the format of
-        //  *      callback: function(value, validator, $field) {
-        //  *          // value is the value of field
-        //  *          // validator is the BootstrapValidator instance
-        //  *          // $field is the field element
-        //  *      }
-        //  *
-        //  * @returns {String}
-        //  */
-        // getDynamicOption: function(field, option) {
-        //     var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
-        //         value  = $field.val();
+        /**
+         * Some validators have option which its value is dynamic.
+         * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
+         *
+         * @param {jQuery|String} field The field name or element
+         * @param {String|Function} option The option which can be determined by:
+         * - a string
+         * - name of field which defines the value
+         * - name of function which returns the value
+         * - a function returns the value
+         *
+         * The callback function has the format of
+         *      callback: function(value, validator, $field) {
+         *          // value is the value of field
+         *          // validator is the BootstrapValidator instance
+         *          // $field is the field element
+         *      }
+         *
+         * @returns {String}
+         */
+        getDynamicOption: function(field, option) {
+            var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
+                value  = $field.val();
 
-        //     // Option can be determined by
-        //     // ... a function
-        //     if ('function' === typeof option) {
-        //         return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]);
-        //     }
-        //     // ... value of other field
-        //     else if ('string' === typeof option) {
-        //         var $f = this.getFieldElements(option);
-        //         if ($f.length) {
-        //             return $f.val();
-        //         }
-        //         // ... return value of callback
-        //         else {
-        //             return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]) || option;
-        //         }
-        //     }
+            // Option can be determined by
+            // ... a function
+            if ('function' === typeof option) {
+                return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]);
+            }
+            // ... value of other field
+            else if ('string' === typeof option) {
+                var $f = this.getFieldElements(option);
+                if ($f.length) {
+                    return $f.val();
+                }
+                // ... return value of callback
+                else {
+                    return $.fn.bootstrapValidator.helpers.call(option, [value, this, $field]) || option;
+                }
+            }
 
-        //     return null;
-        // },
+            return null;
+        },
 
         /**
          * Destroy the plugin
@@ -11477,9 +13226,9 @@ if (typeof jQuery === 'undefined') {
       throw new Error("Please supply an object of options");
     }
 
-    if (!options.message) {
-      throw new Error("Please specify a message");
-    }
+    // if (!options.message) {
+    //   throw new Error("Please specify a message");
+    // }
 
     // make sure any supplied options take precedence over defaults
     options = $.extend({}, defaults, options);
@@ -33571,7 +35320,7 @@ if (typeof jQuery === 'undefined') {
 }(jQuery));
 }));
 ;/*!
- * mower - v1.1.1 - 2015-07-15
+ * mower - v1.1.1 - 2015-07-27
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -33595,7 +35344,7 @@ var UniqueId = (function() {
     };
 })();
 
-//����һ�����εĸ����ϣ���ԭ�е�����˳�򲻸ı䣬��������parent��children��������
+//返回一个树形的根集合，对原有的数组顺序不改变，但会增加parent和children两个属性
 Array.prototype.makeLevelTree = function(option) {
     var o = option || {},
         id = o.id || 'id',
@@ -33741,12 +35490,12 @@ Date.prototype.setISO8601 = function(string) {
     this.setTime(Number(time));
 };
 
-/** ��ȡ����֮������ֵ */
+/** 获取介于之间的数值 */
 Number.prototype.limit = function(min, max) {
     return (this < min) ? min : (this > max ? max : this);
 };
 
-/** ƥ�����ַ�����ͬ��split���� */
+/** 匹配与字符串相同的split方法 */
 Number.prototype.split = function() {
     return [this];
 };
@@ -33822,7 +35571,7 @@ Number.prototype.split = function() {
     };
 
     $.fn.extend({
-        /** ��ȡ��Ԫ����������Ӧ����������Ϣ */
+        /** 获取该元素所隶属的应用上下文信息 */
         getContextPath: function() {
             if (typeof base == "undefined") {
                 var base = '/';
@@ -33838,19 +35587,19 @@ Number.prototype.split = function() {
                 return base;
             }
         },
-        /** �����Ƿ����� */
+        /** 检测是否存在 */
         exists: function() {
             return $(this) && $(this).size() > 0;
         },
-        /** ��ȡ(padding+border+margin)�߶� */
+        /** 获取(padding+border+margin)高度 */
         patchHeight: function() {
             return $(this).outerHeight(true) - $(this).height();
         },
-        /** ��ȡ(padding+border+margin)���� */
+        /** 获取(padding+border+margin)宽度 */
         patchWidth: function() {
             return $(this).outerWidth(true) - $(this).width();
         },
-        /** ��ȡԪ�ص�scrollHeight */
+        /** 获取元素的scrollHeight */
         scrollHeight: function() {
             return $(this)[0].scrollHeight;
         },
@@ -33867,21 +35616,21 @@ Number.prototype.split = function() {
                 'left': (calWidth > 20 ? calWidth : 0)
             });
         },
-        /** ��ʾԪ�� */
+        /** 显示元素 */
         showme: function() {
             return $(this).css({
                 'display': 'block',
                 'visibility': 'visible'
             });
         },
-        /** ����Ԫ�� */
+        /** 隐藏元素 */
         hideme: function() {
             return $(this).css({
                 'display': 'none',
                 'visibility': 'hidden'
             });
         },
-        /** ����Ԫ��Ϊ��ͬ�߶ȣ��߶Ȱ�ָ����Ԫ���������߶�Ϊ׼ */
+        /** 设置元素为相同高度，高度按指定或元素中最大高度为准 */
         sameHeight: function(height) {
             var max = height || -1;
             if (max < 0) {
@@ -33891,7 +35640,7 @@ Number.prototype.split = function() {
             }
             return $(this).css('min-height', max);
         },
-        /** ����Ԫ��Ϊ��ͬ���ȣ����Ȱ�ָ����Ԫ������������Ϊ׼ */
+        /** 设置元素为相同宽度，宽度按指定或元素中最大宽度为准 */
         sameWidth: function(width) {
             var max = width || -1;
             if (max < 0) {
@@ -34058,7 +35807,7 @@ Number.prototype.split = function() {
             });
 
             //process call back
-            if (callback && $.isFunction(callback)) {
+            if ($.isFunction(callback)) {
                 callback.apply(self, [true,data]);
             }
 
@@ -34078,7 +35827,7 @@ Number.prototype.split = function() {
                 dataType: 'html',
                 beforeSend: function() {
                     self.children().addClass('hidden');
-                    self.append('<h3 class="_loadmask"><i class="fa fa-cog fa-spin"></i> Loading...</h3>');
+                    self.append('<h2 class="_loadmask"><i class="fa fa-spinner fa-pulse"></i></h2>');
                     if (isScrollTop === true) {
                         // scroll up
                         $("html").animate({
@@ -34109,7 +35858,7 @@ Number.prototype.split = function() {
                     handleError();
                 },
                 complete:function( xhr, status){
-                    self.find('h3._loadmask').remove();
+                    self.find('h2._loadmask').remove();
                     self.children().removeClass('hidden');
                 }
             }, ajaxOptions || {});
@@ -34291,6 +36040,7 @@ var Utils = (function($, window, document, undefined) {
         }
     };
 
+
     // public functions
     return {
 
@@ -34301,14 +36051,23 @@ var Utils = (function($, window, document, undefined) {
             handleInit(); // initialize core variables
             handleOnResize(); // set and handle responsive    
         },
-        executeFunctionByName: function(functionName, context /*, args */ ) {
-            var args = Array.prototype.slice.call(arguments, 2);
-            var namespaces = functionName.split(".");
-            var func = namespaces.pop();
-            for (var i = 0; i < namespaces.length; i++) {
-                context = context[namespaces[i]];
+        executeFunction: function(functionName /*, args */ ) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            if ('function' === typeof functionName) {
+                return functionName.apply(this, args);
+            } else if ('string' === typeof functionName) {
+                if ('()' === functionName.substring(functionName.length - 2)) {
+                    functionName = functionName.substring(0, functionName.length - 2);
+                }
+                var ns      = functionName.split('.'),
+                    func    = ns.pop(),
+                    context = window;
+                for (var i = 0; i < ns.length; i++) {
+                    context = context[ns[i]];
+                }
+
+                return (typeof context[func] === 'undefined') ? null : context[func].apply(this, args);
             }
-            return context[func].apply(context, args);
         },
         getAbsoluteUrl: function(url, contextPath) {
             if (url.indexOf('://') >= 0) {
@@ -34438,12 +36197,6 @@ var Utils = (function($, window, document, undefined) {
             return !!result;
         },
         mixin: $.extend,
-        getUniqueId: function() {
-            var counter = 0;
-            return function() {
-                return counter++;
-            };
-        }(),
         templatify: function templatify(obj) {
             return $.isFunction(obj) ? obj : template;
 
@@ -34947,7 +36700,7 @@ $(function() {
     if (typeof module !== 'undefined' && module.exports) { //Node
         module.exports = factory(require('jquery'), require('uniqueId'));
     } else {
-        window['alertbox'] = factory(window['jQuery'], window['UniqueId']);
+        window['AlertBox'] = factory(window['jQuery'], window['UniqueId']);
     }
 }));;/** ========================================================================
  * Mower: breadcrumb.mower.js - v1.0.0
@@ -35052,13 +36805,13 @@ $(function() {
 
                 var that = this;
                 this.$element.children('li').filter(':last')
-                .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
-                    event.preventDefault();
-                    /* Act on the event */
-                    var index = path.length - 1;
-                    var popCount = that.$element.children('li').length - index;
-                    that.pop(popCount);
-                });
+                    .on('click.mu.breadcrumb', '[data-toggle="breadcrumb"]', function(event) {
+                        event.preventDefault();
+                        /* Act on the event */
+                        var index = path.length - 1;
+                        var popCount = that.$element.children('li').length - index;
+                        that.pop(popCount);
+                    });
             }
 
             path.push(label);
@@ -35074,7 +36827,7 @@ $(function() {
             ].join('');
 
             this.$element.append(li);
-            return ;
+            return;
         },
         _pushContent: function(panelId, url, _callback) {
             if (url) {
@@ -35109,9 +36862,9 @@ $(function() {
             var targetId = this.options.prefix + this.panelSeq++;
 
             var that = this;
-            var callback = function(isSuccessLoaded,data) {
+            var callback = function(isSuccessLoaded, data) {
 
-                if(isSuccessLoaded){
+                if (isSuccessLoaded) {
                     //move forward
                     that.current++;
 
@@ -35141,7 +36894,7 @@ $(function() {
                     $panel.prev().removeClass('hidden');
                     $panel.remove();
                     //hide siblings
-                    
+
                 }
             };
 
@@ -35199,7 +36952,7 @@ $(function() {
                 .children('[data-panel="' + showPanelId + '"]')
                 .removeClass('hidden');
         },
-        pop: function(popCount,relatedTarget) {
+        pop: function(popCount, relatedTarget) {
             if (parseInt(popCount) <= 0) return;
 
             //update header in breadcrumb
@@ -35286,44 +37039,42 @@ $(function() {
     /* BREADCRUMB DATA-API
      * ============== */
     $(document)
+        .on(BreadCrumb.DEFAULTS.events.push, 'a,button,input[type="button"]', function(event) {
+            var $target = $(event.target),
+                $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
+                option = $.extend({}, $breadcrumb.data(), $target.data(), ((typeof event.page != 'undefined') && {
+                    'page': event.page
+                }));
+
+            var page = option.page;
+            if ($.isFunction(page)) {
+                page = utils.executeFunction(page, $target);
+            }
+
+            page = (page && page.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
+
+            if (page) {
+                $breadcrumb
+                    .breadcrumb(option)
+                    .breadcrumb("push", option.label, page);
+            }
+        })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="pushBreadcrumb"]', function(event) {
             var $this = $(this);
             if ($this.is('a')) event.preventDefault();
 
             var e = $.Event(BreadCrumb.DEFAULTS.events.push);
             $this.trigger(e);
+        })
+        .on(BreadCrumb.DEFAULTS.events.pop, 'a,button,input[type="button"]', function(event) {
 
-            if (e.isDefaultPrevented()) return;
+            var $target = $(event.target),
+                $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
+                option = $.extend({}, $breadcrumb.data(), $target.data());
 
-            var push = function() {
-                var href = $this.attr('data-href') || $this.attr('href');
-                href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
-                var label = $this.attr('data-label');
-                var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
-                var option = $.extend({}, $target.data(), $this.data());
-                $target
-                    .breadcrumb(option)
-                    .breadcrumb("push", label, href)
-                    .one('hide', function() {
-                        $this.is(':visible') && $this.focus();
-                    });
-            };
-
-            if ($this.attr('data-process')) {
-                var that = this;
-                var wait = function() {
-                    var dtd = $.Deferred();
-                    utils.executeFunctionByName($this.attr('data-process'), window, dtd, that);
-                    return dtd.promise();
-                };
-
-                $.when(wait())
-                    .done(function() {
-                        push();
-                    });
-            } else {
-                push();
-            }
+            $breadcrumb
+                .breadcrumb(option)
+                .breadcrumb("pop", 1);
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="popBreadcrumb"]', function(event) {
             var $this = $(this);
@@ -35331,79 +37082,8 @@ $(function() {
 
             var e = $.Event(BreadCrumb.DEFAULTS.events.pop);
             $this.trigger(e);
-
-            if (e.isDefaultPrevented()) return;
-
-            var pop = function() {
-                var $target = ($this.attr('data-target') && $($this.attr('data-target'))) || $(document.body).find('.breadcrumb:first'); //breadcrumb id
-                var option = $.extend({}, $target.data(), $this.data());
-                $target
-                    .breadcrumb(option)
-                    .breadcrumb("pop", 1)
-                    .one('hide', function() {
-                        $this.is(':visible') && $this.focus();
-                    });
-            };
-
-            if ($this.attr('data-process')) {
-                var that = this;
-                var wait = function() {
-                    var dtd = $.Deferred();
-                    utils.executeFunctionByName($this.attr('data-process'), window, dtd, that);
-                    return dtd.promise();
-                };
-
-                $.when(wait())
-                    .done(function() {
-                        pop();
-                    });
-            } else {
-                pop();
-            }
-
-        })
-        .on('click.mu.breadcrumb.data-api', '[data-toggle^="commandBreadcrumb"]', function(event) {
-            var $this = $(this);
-            if ($this.is('a')) event.preventDefault();
-
-            var e = $.Event(BreadCrumb.DEFAULTS.events.command);
-            $this.trigger(e);
-
-            if (e.isDefaultPrevented()) return;
-
-            var command = function() {
-                var href = $this.attr('data-href') || $this.attr('href');
-                href = (href && href.replace(/.*(?=#[^\s]+$)/, '')); // strip for ie7
-
-                if(href){
-                    $.ajax({
-                        url: utils.getAbsoluteUrl(href, $this.getContextPath()),
-                        type: 'post',
-                        dataType: 'json',
-                        success: function(data) {
-                            var e = $.Event(BreadCrumb.DEFAULTS.events.commanded);
-                            $this.trigger(e, data);
-                        }
-                    });
-                }
-            };
-
-            if ($this.attr('data-process')) {
-                var that = this;
-                var wait = function() {
-                    var dtd = $.Deferred();
-                    utils.executeFunctionByName($this.attr('data-process'), window, dtd, that);
-                    return dtd.promise();
-                };
-
-                $.when(wait())
-                    .done(function() {
-                        command();
-                    });
-            } else {
-                command();
-            }
         });
+
 })(JSON || {}, Utils || {}, jQuery, window, document);
 ;/** ========================================================================
  * Mower: chosen.mower.js - v1.0.0
@@ -35477,7 +37157,6 @@ $(function() {
 
   //you can put your plugin defaults in here.
   RemoteChosen.DEFAULTS = {
-    server :false,
     url        :'',
     datasource :false,
     callback   :null,
@@ -35570,8 +37249,7 @@ $(function() {
           ajaxurl = (ajaxurl && ajaxurl.replace(/.*(?=#[^\s]+$)/, '')),
           ajaxOption;
 
-      if (this.options.server === true && ajaxurl) {
-
+      if (ajaxurl) {
           ajaxOption = $.extend({}, {
               'url': ajaxurl,
               dataType: 'json',
@@ -35580,6 +37258,7 @@ $(function() {
           ajaxOption.success = function(data) {
               that._construct(data);
           };
+          
           $.ajax(ajaxOption); 
       } else {
           var data = this.options.datasource;
@@ -35821,7 +37500,7 @@ $(function() {
 
                 var container = $(this.s.dt.nTable).closest('.dataTables_scrollBody');
                 var scrollTo = $(this.s.dt.nTable).find(selector);
-                if (scrollTo.length) {
+                if (scrollTo.length && container.length){
                     container.scrollTop(0);
                     container.scrollTop(scrollTo.offset().top - container.offset().top);
                 }
@@ -38400,16 +40079,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 url: options.url,
                 dataType: 'json',
                 success: function(data) {
-                    if (options.processData) {
-                        if (typeof options.processData === 'string') {
-                            utils.executeFunctionByName(options.processData, window, data, this);
-                        }
-
-                        if ($.isFunction(options.processData)) {
-                            options.processData.call(this, data);
-                        }
-                    }
-
+                    utils.executeFunction(options.processData,data);
                     cb.call(this, data);
                 }
             };
@@ -40191,406 +41861,271 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     });
 
 })(JSON || {}, Utils || {}, jQuery, window, document);
-;/* ========================================================================
- * ZUI: modal.trigger.js v1.2.0
- * http://zui.sexy/docs/javascript.html#modals
- * Licensed under MIT
- * ======================================================================== 
- * Updates in Mower：
- * 1. changed event namespace to *.mower.modal
- * 2. changed plugin name ModalTrigger to RemoteModal
- * 3. remove modal position
- * ======================================================================== */
+;(function(root, factory) {
 
-;
-(function(uuid, $, window, document, undefined) {
-     'use strict';
+    "use strict";
+    if (typeof define === "function" && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(["jquery"], factory);
+    } else if (typeof exports === "object") {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory(require("jquery"));
+    } else {
+        // Browser globals (root is window)
+        root.ModalBox = factory(root.jQuery, window, document);
+    }
 
-     if (!$.fn.modal) throw new Error('remote modal requires bootstrap modal.');
+}(this, function init($, window, document, undefined) {
 
-     var NAME = 'mower.remotemodal';
+    if (!window.bootbox) throw new Error('ModalBox requires bootbox.js');
 
-     // REMOTE MODAL CLASS DEFINITION
-     // ======================
-     var RemoteModal = function(options)
-     {
-        options = $.extend(
-        {}, RemoteModal.DEFAULTS, $.RemoteModalDefaults, options);
-        this.options = options;
-        this.isShown = false;
-        this.id = uuid(this.options.prefix);
+    if (!$.fn.slimScroll) throw new Error('ModalBox requires slimScroll.js');
 
-         // todo: handle when: options.show = true
-     };
+    function _init(options) {
+        if (options.url) {
+            if (!options.type || (options.type != 'ajax' && options.type != 'iframe')) {
+                options.type = 'ajax';
+            }
+        }
+        if (options.remote) {
+            options.type = 'ajax';
+            if (typeof options.remote === 'string') options.url = options.remote;
+        } else if (options.iframe) {
+            options.type = 'iframe';
+            if (typeof options.iframe === 'string') options.url = options.iframe;
+        } else if (options.custom) {
+            options.type = 'custom';
+            if (typeof options.custom === 'string') {
+                var $doms;
+                try {
+                    $doms = $(options.custom);
+                } catch (e) {}
 
-     RemoteModal.DEFAULTS = {
-         type: 'custom',
-         width: null, // number, css definition
-         size: null, // 'md', 'sm', 'lg', 'fullscreen'
-         height: 'auto',
-         icon: null,
-         name: 'remoteModal',
-         fade: true,
-         showHeader: true,
-         delay: 0,
-         backdrop: true,
-         keyboard: true
-     };
+                if ($doms && $doms.length) {
+                    options.custom = $doms;
+                } else if ($.isFunction(window[options.custom])) {
+                    options.custom = window[options.custom];
+                }
+            }
+        }
+    }
 
-     RemoteModal.prototype.init = function(options)
-     {
-         var that = this;
-         if (options.url)
-         {
-             if (!options.type || (options.type != 'ajax' && options.type != 'iframe'))
-             {
-                 options.type = 'ajax';
-             }
-         }
-         if (options.remote)
-         {
-             options.type = 'ajax';
-             if (typeof options.remote === 'string') options.url = options.remote;
-         }
-         else if (options.iframe)
-         {
-             options.type = 'iframe';
-             if (typeof options.iframe === 'string') options.url = options.iframe;
-         }
-         else if (options.custom)
-         {
-             options.type = 'custom';
-             if (typeof options.custom === 'string')
-             {
-                 var $doms;
-                 try
-                 {
-                     $doms = $(options.custom);
-                 }
-                 catch (e)
-                 {}
+    var NAME = 'mower.modalbox';
 
-                 if ($doms && $doms.length)
-                 {
-                     options.custom = $doms;
-                 }
-                 else if ($.isFunction(window[options.custom]))
-                 {
-                     options.custom = window[options.custom];
-                 }
-             }
-         }
+    var defaults = {
+        type: 'custom',
+        width: null, // number, css definition
+        size: null, // 'md', 'sm', 'lg', 'fullscreen'
+        height: 'auto',
+        name: 'remoteModal',
+        spinner: '<div class="fa fa-spinner fa-pulse loader"></div>',
+        delay: 0
+    };
 
-         var $modal = $('#' + options.name);
-         if ($modal.length)
-         {
-             if (!that.isShown) $modal.off('.mower.modal');
-             $modal.remove();
-         }
-         $modal = $('<div id="' + options.name + '" class="modal modal-remote"><div class="fa fa-spinner fa-pulse loader"></div><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button class="close" data-dismiss="modal">×</button><h4 class="modal-title"><i class="modal-icon"></i> <span class="modal-title-name"></span></h4></div><div class="modal-body"></div></div></div></div>').appendTo('body').data(NAME, that);
+    var templates = {
+      dialog:
+        "<div class='bootbox modal' tabindex='-1' role='dialog' aria-hidden='true'>" +
+          "<div class='modal-dialog'>" +
+            "<div class='modal-content'>" +
+              "<div class='modal-body'><div class='bootbox-body'></div></div>" +
+            "</div>" +
+          "</div>" +
+        "</div>",
+      header:
+        "<div class='modal-header'>" +
+          "<h4 class='modal-title'></h4>" +
+        "</div>",
+      footer:
+        "<div class='modal-footer'></div>"
+    };
 
-         var bindEvent = function(optonName, eventName)
-         {
-             var handleFunc = options[optonName];
-             if ($.isFunction(handleFunc)) $modal.on(eventName + '.mower.modal', handleFunc);
-         };
-         bindEvent('onShow', 'show');
-         bindEvent('shown', 'shown');
-         bindEvent('onHide', 'hide');
-         bindEvent('hidden', 'hidden');
-         bindEvent('loaded', 'loaded');
+    // our public object; augmented after our private API
+    var exports = bootbox;
 
-         $modal.on('shown.mower.modal', function()
-         {
-             that.isShown = true;
-         }).on('hidden.mower.modal', function()
-         {
-             that.isShown = false;
-         });
+    exports.ajaxDialog = function(option) {
+        var options = $.extend({}, defaults, option);
 
-         this.$modal = $modal;
-         this.$dialog = $modal.find('.modal-dialog');
-     };
+        _init(options);
+        // capture the user's show value; we always set this to false before
+        // spawning the dialog to give us a chance to attach some handlers to
+        // it, but we need to make sure we respect a preference not to show it
+        var shouldShow = (options.show === undefined) ? true : options.show;
 
-     RemoteModal.prototype.show = function(option)
-     {
-         var options = $.extend(
-         {}, this.options, option);
-         this.init(options);
-         var that = this,
-             $modal = this.$modal,
-             $dialog = this.$dialog,
-             custom = options.custom;
-         var $body = $dialog.find('.modal-body').css('padding', ''),
-             $header = $dialog.find('.modal-header'),
-             $content = $dialog.find('.modal-content');
+        options.show = false;
+        var that = this,
+            $modal = exports.dialog(options),
+            $dialog = $modal.find('.modal-dialog'),
+            custom = options.custom,
+            $body = $dialog.find('.modal-body').css('padding', ''),
+            $header = $dialog.find('.modal-header'),
+            $content = $dialog.find('.modal-content');
 
-         $modal.toggleClass('fade', options.fade)
-             .addClass(options.cssClass)
-             .toggleClass('modal-md', options.size === 'md')
-             .toggleClass('modal-sm', options.size === 'sm')
-             .toggleClass('modal-lg', options.size === 'lg')
-             .toggleClass('modal-loading', !this.isShown);
-         $header.toggle(options.showHeader);
-         $header.find('.modal-icon').attr('class', 'modal-icon ' + options.icon);
-         $header.find('.modal-title-name').html(options.title || '');
-         if (options.size)
-         {
-             options.width = '';
-             options.height = '';
-         }
+        $modal.toggleClass('modal-loading', true);
+        if (options.size) {
+            options.width = '';
+            options.height = '';
+        }
 
-         var readyToShow = function(delay)
-         {
-             if (typeof delay === 'undefined') delay = 300;
-             setTimeout(function()
-             {
-                 $dialog = $modal.find('.modal-dialog');
-                 if (options.width && options.width != 'auto')
-                 {
-                     $dialog.css('width', options.width);
-                 }
-                 if (options.height && options.height != 'auto')
-                 {
-                     $dialog.css('height', options.height);
-                     if(options.type === 'iframe') $body.css('height', $dialog.height() - $header.outerHeight());
-                 }
-                 $modal.removeClass('modal-loading');
-             }, delay);
-         };
+        var readyToShow = function(delay) {
+            if (typeof delay === 'undefined') delay = 300;
+            setTimeout(function() {
+                $dialog = $modal.find('.modal-dialog');
+                if (options.width && options.width != 'auto') {
+                    $dialog.css('width', options.width);
+                }
+                if (options.height && options.height != 'auto') {
+                    $body.slimScroll({
+                        height: options.height
+                    });
+                }
+                $modal.removeClass('modal-loading');
+            }, delay);
+        };
 
-         if (options.type === 'custom' && custom)
-         {
-             if ($.isFunction(custom))
-             {
-                 var customContent = custom(
-                 {
-                     modal: $modal,
-                     options: options,
-                     modalTrigger: that,
-                     ready: readyToShow
-                 });
-                 if (typeof customContent === 'string')
-                 {
-                     $body.html(customContent);
-                     readyToShow();
-                 }
-             }
-             else if (custom instanceof $)
-             {
-                 $body.html($('<div>').append(custom.clone()).html());
-                 readyToShow();
-             }
-             else
-             {
-                 $body.html(custom);
-                 readyToShow();
-             }
-         }
-         else if (options.url)
-         {
-             $modal.attr('ref', options.url);
-             if (options.type === 'iframe')
-             {
-                 $modal.addClass('modal-iframe');
-                 this.firstLoad = true;
-                 var iframeName = 'iframe-' + options.name;
-                 $header.detach();
-                 $body.detach();
-                 $content.empty().append($header).append($body);
-                 $body.css('padding', 0)
-                     .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
+        if (options.type === 'custom' && custom) {
+            if ($.isFunction(custom)) {
+                var customContent = custom({
+                    modal: $modal,
+                    options: options,
+                    ready: readyToShow
+                });
+                if (typeof customContent === 'string') {
+                    $body.html(customContent);
+                    readyToShow();
+                }
+            } else if (custom instanceof $) {
+                $body.html($('<div>').append(custom.clone()).html());
+                readyToShow();
+            } else {
+                $body.html(custom);
+                readyToShow();
+            }
+        } else if (options.url) {
+            $modal.attr('ref', options.url);
+            if (options.type === 'iframe') {
+                $modal.addClass('modal-iframe');
+                this.firstLoad = true;
+                var iframeName = 'iframe-' + options.name;
+                $header.detach();
+                $body.detach();
+                $content.empty().append($header).append($body);
+                $body.css('padding', 0)
+                    .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
 
-                 if (options.waittime > 0)
-                 {
-                     that.waitTimeout = setTimeout(readyToShow, options.waittime);
-                 }
+                if (options.waittime > 0) {
+                    that.waitTimeout = setTimeout(readyToShow, options.waittime);
+                }
 
-                 var frame = document.getElementById(iframeName);
-                 frame.onload = frame.onreadystatechange = function()
-                 {
-                     if (that.firstLoad) $modal.addClass('modal-loading');
-                     if (this.readyState && this.readyState != 'complete') return;
-                     that.firstLoad = false;
+                var frame = document.getElementById(iframeName);
+                frame.onload = frame.onreadystatechange = function() {
+                    if (that.firstLoad) $modal.addClass('modal-loading');
+                    if (this.readyState && this.readyState != 'complete') return;
+                    that.firstLoad = false;
 
-                     if (options.waittime > 0)
-                     {
-                         clearTimeout(that.waitTimeout);
-                     }
+                    if (options.waittime > 0) {
+                        clearTimeout(that.waitTimeout);
+                    }
 
-                     try
-                     {
-                         $modal.attr('ref', frame.contentWindow.location.href);
-                         var frame$ = window.frames[iframeName].$;
-                         if (frame$ && options.height === 'auto')
-                         {
-                             // todo: update iframe url to ref attribute
-                             var $framebody = frame$('body').addClass('body-modal');
-                             var ajustFrameSize = function()
-                             {
-                                 $modal.removeClass('fade');
-                                 var height = $framebody.outerHeight();
-                                 $body.css('height', height);
-                                 if (options.fade) $modal.addClass('fade');
-                                 readyToShow();
-                             };
+                    try {
+                        $modal.attr('ref', frame.contentWindow.location.href);
+                        var frame$ = window.frames[iframeName].$;
+                        if (frame$ && options.height === 'auto') {
+                            // todo: update iframe url to ref attribute
+                            var $framebody = frame$('body').addClass('body-modal');
+                            var ajustFrameSize = function() {
+                                $modal.removeClass('fade');
+                                var height = $framebody.outerHeight();
+                                $body.css('height', height);
+                                if (options.fade) $modal.addClass('fade');
+                                readyToShow();
+                            };
 
-                             $modal.callEvent('loaded.mower.modal',
-                             {
-                                 modalType: 'iframe'
-                             });
+                            $modal.callEvent('loaded.mower.modal', {
+                                modalType: 'iframe'
+                            });
 
-                             setTimeout(ajustFrameSize, 100);
+                            setTimeout(ajustFrameSize, 100);
 
-                             $framebody.off('resize.' + NAME).on('resize.' + NAME, ajustFrameSize);
-                         }
+                            $framebody.off('resize.' + NAME).on('resize.' + NAME, ajustFrameSize);
+                        }
 
-                         frame$.extend(
-                         {
-                             closeModal: window.closeModal
-                         });
-                     }
-                     catch (e)
-                     {
-                         readyToShow();
-                     }
-                 };
-             }
-             else
-             {
-                 $.get(options.url, function(data)
-                 {
-                     try
-                     {
-                         var $data = $(data);
-                         if ($data.hasClass('modal-dialog'))
-                         {
-                             $dialog.replaceWith($data);
-                         }
-                         else if ($data.hasClass('modal-content'))
-                         {
-                             $dialog.find('.modal-content').replaceWith($data);
-                         }
-                         else
-                         {
-                             $body.wrapInner($data);
-                         }
-                     }
-                     catch(e)
-                     {
-                         $modal.html(data);
-                     }
-                     $modal.callEvent('loaded.mower.modal',
-                     {
-                         modalType: 'ajax'
-                     });
-                     readyToShow();
-                 });
-             }
-         }
+                        frame$.extend({
+                            closeModal: window.closeModal
+                        });
+                    } catch (e) {
+                        readyToShow();
+                    }
+                };
+            } else {
+                $.get(options.url, function(data) {
+                    try {
+                        var $html = $(data);
 
-         $modal.modal(
-         {
-             show: 'show',
-             backdrop: options.backdrop,
-             keyboard: options.keyboard
-         });
-     };
+                        //update version
+                        var version = $html.filter('meta');
+                        if (version.exists()) {
+                            $('meta[name=version]', document).attr('content', version.attr('content'));
+                        }
 
-     RemoteModal.prototype.close = function(callback, redirect)
-     {
-         if(callback || redirect)
-         {
-             this.$modal.on('hidden.mower.modal', function()
-             {
-                 if ($.isFunction(callback)) callback();
+                        var exclude = ':not(meta)';
+                        //update content
+                        $($.parseHTML(data)).filter(exclude).each(function() {
+                            var $data = $(this);
+                            if ($data.hasClass('modal-dialog')) {
+                                $dialog.replaceWith($data);
+                            } else if ($data.hasClass('modal-content')) {
+                                $dialog.find('.modal-content').replaceWith($data);
+                            } else if ($data.hasClass('modal-title')) {
+                                $dialog.find('.modal-title').replaceWith($data);
+                            } else if ($data.hasClass('modal-body')) {
+                                $dialog.find('.modal-body').replaceWith($data);
+                            } else {
+                                $body.wrapInner($data);
+                            }
+                        });
 
-                 if (typeof redirect === 'string')
-                 {
-                     if (redirect === 'this') window.location.reload();
-                     else window.location = redirect;
-                 }
-             });
-         }
-         this.$modal.modal('hide');
-     };
+                        //reinit document ready function in the new fragment 
+                        $(document).triggerHandler('update', $modal[0]);
 
-     RemoteModal.prototype.toggle = function(options)
-     {
-         if (this.isShown) this.close();
-         else this.show(options);
-     };
+                        //update javascript 
+                        $html.filter('script').each(function() {
+                            var $script = $(this);
+                            $modal.append($script);
+                        });
 
-    var old = $.fn.remoteModal;
+                    } catch (e) {
+                        $modal.html(data);
+                    }
+                    $modal.callEvent('loaded.mower.modal', {
+                        modalType: 'ajax'
+                    });
+                    readyToShow();
+                });
+            }
+        }
 
-     $.fn.remoteModal = function(option, settings)
-     {
-         return $(this).each(function()
-         {
-             var $this = $(this);
-             var data = $this.data(NAME),
-                 options = $.extend(
-                 {
-                     title: $this.attr('title') || $this.text(),
-                     url: $this.attr('href'),
-                     type: $this.hasClass('iframe') ? 'iframe' : ''
-                 }, $this.data(), $.isPlainObject(option) && option);
-             if (!data) $this.data(NAME, (data = new RemoteModal(options)));
-             if (typeof option == 'string') data[option](settings);
-             else if (options.show) data.show(settings);
-
-             $this.on((options.trigger || 'click') + '.toggle.' + NAME, function(e)
-             {
-                 data.toggle(options);
-                 if ($this.is('a')) e.preventDefault();
-             });
-         });
-     };
-     
-     $.fn.remoteModal.Constructor = RemoteModal;
+        //modal show 
+        if (shouldShow === true) {
+            //add loading spinner
+            $modal.prepend(options.spinner);
+            $modal.modal("show");
+        }
+    };
 
 
-     /* RemoteModal NO CONFLICT
-      * ================= */
+    $(document).on('click.' + NAME + '.data-api', '[data-toggle="modalbox"]', function(e) {
+        var $this = $(this);
+        exports.ajaxDialog($.extend({}, $this.data()));
 
-     $.fn.remoteModal.noConflict = function() {
-         $.fn.remoteModal = old;
-         return this;
-     };
+        if ($this.is('a')) {
+            e.preventDefault();
+        }
+    });
 
-
-     $(document).on('click.' + NAME + '.data-api', '[data-toggle="modal"]', function(e)
-     {
-         var $this = $(this);
-         var href = $this.attr('href');
-         var $target = null;
-         try
-         {
-             $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, '')));
-         }
-         catch (ex)
-         {}
-         if (!$target || !$target.length)
-         {
-             if (!$this.data(NAME))
-             {
-                 $this.remoteModal(
-                 {
-                     show: true
-                 });
-             }
-             else
-             {
-                 $this.trigger('.toggle.' + NAME);
-             }
-         }
-         if ($this.is('a'))
-         {
-             e.preventDefault();
-         }
-     });
-
-})(UniqueId || {}, jQuery, window, document);
+    return exports;
+}));
 ;/** ========================================================================
  * Mower: popover.mower.js - v1.0.0
  *
@@ -40897,39 +42432,89 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  * ======================================================================== */
 
-(function($, base, window, document, undefined) {
+(function($, utils, base, window, document, undefined) {
 
     'use strict';
 
-    // private functions & variables
-    
-    // Apply tooltip to all elements with the rel="validate-form" attribute
-    // ===================================
-    $(document).on('ready update',function(event, updatedFragment) {
-        /* Act on the event */
-        var $root = $(updatedFragment || 'html');
+    // Prepare the events
+    var FORM_ERROR_EVENT = 'error.form.bv',
+        FORM_SUCCESS_EVENT = 'success.form.bv',
+        FORM_SUBMIT_SVENT = 'submit.bv',
+        POP_BREADCRUMB_EVENT = 'pop.mu.breadcrumb';
 
-        $root.find('[rel="validate-form"]').each(function(index, el) {
-            var $this = $(this);
 
-            if (!$this.data('bootstrapValidator')) {
+    $.fn.ajaxValidForm = function(options) {
+        var $form = $(this);
 
-                $this.bootstrapValidator({
-                    excluded: [':disabled'],
-                    message: '请输入合法的数值',
-                    feedbackIcons: {
-                        valid: 'fa fa-check',
-                        invalid: 'fa fa-times',
-                        validating: 'fa fa-refresh'
+        $form
+            .off(FORM_SUCCESS_EVENT)
+            .off(FORM_ERROR_EVENT)
+            .on(FORM_SUCCESS_EVENT, this.selector, options, doFormSuccess)
+            .on(FORM_ERROR_EVENT, this.selector, options, doFormError);
+
+        $form.triggerHandler(FORM_SUBMIT_SVENT);
+
+        return this;
+    };
+
+    function doFormSuccess(e) {
+        var $form = $(e.target),
+            options = e.data.options;
+
+        $form.ajaxSubmit({
+            success: function(data) {
+                if (data.success) {
+                    utils.executeFunction(options.success,data);
+                } else {
+                    data.exceptionMessage && AlertBox.error(data.exceptionMessage);
+                    var $formValidator = $form.data('bootstrapValidator');
+                    if ($formValidator.length) {
+                        $(data.validateErrors).each(function() {
+                            $formValidator
+                                .updateMessage(this.element, 'blank', this.message)
+                                .updateStatus(this.element, 'INVALID', 'blank');
+                        });
                     }
-                });
-                
+
+                    utils.executeFunction(options.error,data);
+                }
             }
         });
-    });
+    }
 
-}(jQuery, Base || {}, window, document));
+    function doFormError(e) {
+        
+    }
 
+    // private functions & variables
+    var SELECTOR = '[rel="validate-form"]';
+
+    // Apply tooltip to all elements with the rel="validate-form" attribute
+    // ===================================
+    $(document)
+        .on('ready update', function(event, updatedFragment) {
+            /* Act on the event */
+            var $root = $(updatedFragment || 'html');
+
+            $root.find(SELECTOR).each(function(index, el) {
+                var $this = $(this);
+
+                if (!$this.data('bootstrapValidator')) {
+
+                    $this.bootstrapValidator({
+                        excluded: [':disabled'],
+                        message: '请输入合法的数值',
+                        feedbackIcons: {
+                            valid: 'fa fa-check',
+                            invalid: 'fa fa-times',
+                            validating: 'fa fa-refresh'
+                        }
+                    });
+                }
+            });
+        });
+
+}(jQuery, Utils || {}, Base || {}, window, document));
 ;/** ========================================================================
  * Mower: messagebox.mower.js - v1.0.0
  *
