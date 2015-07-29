@@ -223,7 +223,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 for (var name in data)
                     delete data[name];
 
-                $.extend(data, pageData, orderData,filterData);
+                $.extend(data, pageData, orderData, filterData);
             } catch (e) {
                 //NoOPS
             }
@@ -249,7 +249,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             }
         },
         //parse table options and apply table
-        applyDataTable: function(tableSelector,dtOptions) {
+        applyDataTable: function(tableSelector, dtOptions) {
             var table = tableSelector,
                 $table = $(tableSelector),
                 rowDataSelector = '> thead > tr:last-child, > thead > tr:last-child',
@@ -279,7 +279,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 this.processOption(this, option);
 
                 option = $.extend(true, option, dtOptions || {});
-                 
+
                 //apply datatables
                 var instance = $table
                     .on('init.dt', function(e, settings, json) {
@@ -309,9 +309,62 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 }(Base || {}, Utils || {}, jQuery, window, document));
 
 ;
-(function(base, adapter, $, window, document, undefined) {
+(function(adapter, $, window, document, undefined) {
 
     'use strict';
+
+    $.fn.dataTable.Api.register('selectedRowIds()', function() {
+        var sr = this.settings()[0]._oSelectRows;
+        return sr.fnSelectedRowIds();
+    });
+
+    $.fn.dataTable.Api.register('selectedRows()', function() {
+        var sr = this.settings()[0]._oSelectRows;
+        return sr.fnSelectedRows();
+    });
+
+    $.fn.dataTable.Api.register('selectRowById()', function(id) {
+        var sr = this.settings()[0]._oSelectRows;
+        return sr.fnSelectRowsById(id);
+    });
+
+    $.fn.dataTable.Api.register('ajax.setParams()', function(parameters) {
+        return this.iterator('table', function(settings) {
+            if (typeof parameters === 'string') {
+                var obj = {};
+                parameters.replace(/([^=&]+)=([^&]*)/g, function(m, key, value) {
+                    obj[decodeURIComponent(key)] = decodeURIComponent(value);
+                });
+
+                parameters = obj;
+            }
+
+            if ($.isPlainObject(parameters)) {
+                settings.oInit.oAjaxParams = parameters;
+            }
+        });
+    });
+
+    $.fn.dataTable.Api.register('selectRow()', function(rowSelector) {
+        var sr = this.settings()[0]._oSelectRows;
+        return sr.fnSelectRow(rowSelector);
+    });
+
+
+    $.fn.dataTable.Api.register('unSelectRow()', function(rowSelector) {
+        var sr = this.settings()[0]._oSelectRows;
+        return sr.fnUnSelectRow(rowSelector);
+    });
+
+    $.fn.dataTable.Api.register('adjustColumn()', function() {
+        this.columns.adjust().draw();
+    });
+
+    $.fn.dataTable.Api.register('searchColumn()', function(columnSelector, value) {
+        this.column(columnSelector)
+        .search(value)
+        .draw();
+    });
 
     // Apply datatables to all elements with the rel="datatables" attribute
     // ====================================================================
@@ -324,97 +377,4 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         });
     });
 
-})(Base || {}, DTAdapter || {}, jQuery, window, document);
-
-
-;
-(function(define) {
-
-    'use strict';
-
-    define(['jquery'], function($) {
-        return (function() {
-            return {
-                //return datatables api instance
-                getInstance: function(tableSelector) {
-                    return $(tableSelector).DataTable();
-                },
-                //return datatables jQuery object
-                getObject: function(tableSelector) {
-                    return $(tableSelector).dataTable();
-                },
-                getSelectedRowIds: function(tableSelector) {
-                    var instance = this.getInstance(tableSelector);
-                    var sr = instance.settings()[0]._oSelectRows;
-                    return sr.fnGetSelectedRowIds();
-                },
-                getSelectedRows: function(tableSelector) {
-                    var instance = this.getInstance(tableSelector);
-                    var sr = instance.settings()[0]._oSelectRows;
-                    return sr.fnGetSelectedRows();
-                },
-                setAjaxParams:function(tableSelector,parameters){
-                    //save data in oinit object temporary
-                    if(typeof parameters === 'string')
-                    {
-                        var obj = {}; 
-                        parameters.replace(/([^=&]+)=([^&]*)/g, function(m, key, value) {
-                            obj[decodeURIComponent(key)] = decodeURIComponent(value);
-                        });
-
-                        parameters = obj; 
-                    } 
-
-                    if ($.isPlainObject(parameters)){
-                        this.getInstance(tableSelector).settings()[0].oInit.oAjaxParams = parameters;
-                    }
-                    return this;
-                },
-                getAjaxParams:function(tableSelector){
-                    return this.getInstance(tableSelector).ajax.params();
-                },
-                reload: function(tableSelector, resetPaging) {
-                    var that = this;
-                    this.getInstance(tableSelector).ajax.reload((resetPaging === true));
-                    $(tableSelector).on('draw.dt', function() {
-                        that.selectRow(tableSelector);
-                    });
-                },
-                selectRow: function(tableSelector, rowSelector) {
-                    var instance = this.getInstance(tableSelector);
-                    var sr = instance.settings()[0]._oSelectRows;
-                    return sr.fnSelectRow(rowSelector);
-                },
-                selectRowById: function(tableSelector, id) {
-                    var instance = this.getInstance(tableSelector);
-                    var sr = instance.settings()[0]._oSelectRows;
-                    return sr.fnSelectRowsById(id);
-                },
-                adjustColumn: function(tableSelector) {
-                    var instance = this.getInstance(tableSelector);
-                    instance.columns.adjust().draw();
-                },
-                searchColumn: function(tableSelector, columnSelector, value) {
-                    var instance = this.getInstance(tableSelector);
-                    instance
-                        .column(columnSelector)
-                        .search(value)
-                        .draw();
-                },
-                unSelectRow: function(tableSelector, rowSelector) {
-                    var instance = this.getInstance(tableSelector);
-                    var sr = instance.settings()[0]._oSelectRows;
-                    sr.fnUnSelectRow(rowSelector);
-                }
-            };
-
-        })();
-    });
-
-}(typeof define === 'function' && define.amd ? define : function(deps, factory) {
-    if (typeof module !== 'undefined' && module.exports) { //Node
-        module.exports = factory(require('jquery'));
-    } else {
-        window['TableUtils'] = factory(window['jQuery']);
-    }
-}));
+})(DTAdapter || {}, jQuery, window, document);

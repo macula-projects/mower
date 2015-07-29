@@ -11,7 +11,7 @@
  * ======================================================================== */
 
 ;
-(function(adapter, tableUtils, utils, $, window, document, undefined) {
+(function(adapter, utils, $, window, document, undefined) {
 
     "use strict";
 
@@ -75,12 +75,12 @@
                     if (event.keyCode == 13) return;
 
                     if (that.isLoaded)
-                        tableUtils.unSelectRow(that.$table);
+                        that.$table.DataTable().unSelectRow();
 
                     that._getRealInput().val(that.$input.val());
 
                     that.show();
-                    tableUtils.searchColumn(that.$table, '[data-name=' + that.options.textField + ']', that.$input.val());
+                    that.$table.DataTable().searchColumn('[data-name=' + that.options.textField + ']', that.$input.val());
                     that.place();
                 });
             }
@@ -222,9 +222,8 @@
         },
         _show: function() {
             this.$tableContainer.show();
-            tableUtils.adjustColumn(this.$table);
 
-            tableUtils.selectRowById(this.$table, this.getValue());
+            this.$table.DataTable().selectRowById(this.getValue());
 
             this.place();
 
@@ -245,6 +244,9 @@
         _resize: function() {
             var width = this.$element.outerWidth(true);
             this.$tableContainer.css('width', width);
+
+            this.$table.DataTable().adjustColumn();
+
         },
         construct: function() {
             //make columns
@@ -333,7 +335,7 @@
                 this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
             }
 
-            var data = tableUtils.selectRowById(this.$table, this.getValue());
+            var data = this.$table.DataTable().selectRowById(this.getValue());
             var text = [];
 
             if ($.isArray(data)) {
@@ -349,7 +351,7 @@
         click: function() {
             this.clear();
 
-            var selectrows = tableUtils.getSelectedRows(this.$table);
+            var selectrows = this.$table.DataTable().selectedRows();
             if (selectrows.length > 0) {
                 var texts = [];
 
@@ -529,4 +531,4 @@
         });
     });
 
-})(DTAdapter, TableUtils, Utils, jQuery, window, document);
+})(DTAdapter, Utils, jQuery, window, document);

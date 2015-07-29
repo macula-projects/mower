@@ -242,57 +242,6 @@
 
 /* loading container.
  ========================================================================== */
-@-webkit-keyframes typing {
-    0% {
-        background-color: rgba(255,255,255, 1);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,0.2);
-    }
-
-    25% {
-        background-color: rgba(255,255,255, 0.4);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,2), 24px 0px 0px 0px rgba(255,255,255,0.2);
-    }
-
-    75% {
-        background-color: rgba(255,255,255, 0.4);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,1);
-    }
-}
-
-@-moz-keyframes typing {
-    0% {
-        background-color: rgba(255,255,255, 1);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,0.2);
-    }
-
-    25% {
-        background-color: rgba(255,255,255, 0.4);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,2), 24px 0px 0px 0px rgba(255,255,255,0.2);
-    }
-
-    75% {
-        background-color: rgba(255,255,255, 0.4);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,1);
-    }
-}
-
-@keyframes typing {
-    0% {
-        background-color: rgba(255,255,255, 1);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,0.2);
-    }
-
-    25% {
-        background-color: rgba(255,255,255, 0.4);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,2), 24px 0px 0px 0px rgba(255,255,255,0.2);
-    }
-
-    75% {
-        background-color: rgba(255,255,255, 0.4);
-        box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,1);
-    }
-}
-
 .loading-container {
     z-index: 2000;
     position: fixed;
@@ -303,24 +252,22 @@
     opacity: 0.7;
     filter: alpha(opacity=70);
     background: #333;
-
     &.loading-inactive {
         display: none;
-
         .loader {
             display: none;
         }
     }
 
     .loader {
-        width: 6px;
-        height: 6px;
-        border-radius: 50% !important;
-        -webkit-animation: typing 1s linear infinite alternate;
-        -moz-animation: Typing 1s linear infinite alternate;
-        animation: typing 1s linear infinite alternate;
-        margin: 50vh auto; /* Not necessary- its only for layouting*/
-        position: relative;
-        left: -12px;
+        position: absolute;
+        display: block;
+        text-align: center;
+        font-size: 42px;
+        color: #fff;
+        top: 35%;
+        width: 80px;
+        left: 50%;
+        margin-left: -40px;
     }
 }

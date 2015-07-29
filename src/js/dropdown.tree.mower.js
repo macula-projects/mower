@@ -36,22 +36,16 @@
         height: 200,
         initValue: '',
         orientation: "auto",
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>',
+        tree: false,
+        data:false
     };
 
-    DropDownTree.DEFAULTS.JSTREE_CORE = {
-        data: false,
+    DropDownTree.DEFAULTS.TREE_ASYNC = {
+        enable: false,
         multiple: false
     };
 
-    DropDownTree.DEFAULTS.JSTREE_CHECKBOX = {
-        whole_node: false,
-        keep_selected_style: false
-    };
-
-    DropDownTree.DEFAULTS.JSTREE_SEARCH = {
-        show_only_matches: false
-    };
 
     DropDownTree.prototype = {
 
@@ -105,18 +99,14 @@
         _process_options: function() {
             var o = this.options;
 
-            var jtCoreOpt = $.extend({},
-                DropDownTree.DEFAULTS.JSTREE_CORE, {
-                    'data': this.populate,
-                    'multiple': this.options.multiple,
-                    'instance': this
-                });
+            var treeAsync = $.extend({},
+                DropDownTree.DEFAULTS.TREE_ASYNC, {
+                    'url': o.url,
+                    'multiple': o.multiple
+                }, (typeof o.tree == 'object' ? o.tree.async : {}));
 
-            this.options.jtOpt = {
-                'core': jtCoreOpt,
-                'checkbox': DropDownTree.DEFAULTS.JSTREE_CHECKBOX,
-                'search': DropDownTree.DEFAULTS.JSTREE_SEARCH,
-                "plugins": ["checkbox", "search"]
+            this.options.treeOpt = {
+                'async': treeAsync
             };
 
             var plc = String(o.orientation).toLowerCase().split(/\s+/g),
@@ -315,7 +305,7 @@
                 url: options.url,
                 dataType: 'json',
                 success: function(data) {
-                    utils.executeFunction(options.processData,data);
+                    utils.executeFunction(options.processData, data);
                     cb.call(this, data);
                 }
             };

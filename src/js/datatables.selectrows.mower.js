@@ -74,7 +74,6 @@
             } else {
                 this._fnConstruct(init);
             }
-
         };
 
         SelectRows.prototype = /** @lends SelectRows.prototype */ {
@@ -94,7 +93,7 @@
              *      // at some later point when the table has been manipulated....
              *      fc.fnGetSelectedRowIds();
              */
-            "fnGetSelectedRowIds": function() {
+            "fnSelectedRowIds": function() {
                 var ids = [],
                     that = this;
                 var data = this.s.dt.oInstance.api().rows('tr.selected').data();
@@ -105,7 +104,7 @@
                 });
                 return ids;
             },
-            "fnGetSelectedRows": function() {
+            "fnSelectedRows": function() {
                 return this.s.dt.oInstance.api().rows('tr.selected').data();
             },
             "fnSelectRow": function(selector) {
