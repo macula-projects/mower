@@ -94,23 +94,23 @@ module.exports = function(grunt) {
                 files: {
                     'dist/admin/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
-                        'dist/admin/css/<%= pkg.name %>.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'plugins/toastr/css/toastr.css',
                         'plugins/jquery-treetable/css/jquery.treetable.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css',
                         'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
-                        'plugins/jstree/css/style.css'
+                        'plugins/jstree/css/style.css',
+                        'dist/admin/css/<%= pkg.name %>.css'
                     ],
                     'dist/admin/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
-                        'dist/admin/css/<%= pkg.name %>.min.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'plugins/toastr/css/toastr.min.css',
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css',
                         'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css',
-                        'plugins/jstree/css/style.min.css'
+                        'plugins/jstree/css/style.min.css',
+                        'dist/admin/css/<%= pkg.name %>.min.css'
                     ]
                 }
             },
@@ -202,10 +202,14 @@ module.exports = function(grunt) {
                 files: {
                     'dist/front/js/<%= pkg.name %>.js': [
                         'plugins/chosen/js/chosen.jquery.js',
+                        'plugins/bootstrapValidator/js/bootstrapValidator.js',
+                        'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
                         'dist/front/js/<%= pkg.name %>.js'
                     ],
                     'dist/front/js/<%= pkg.name %>.min.js': [
                         'plugins/chosen/js/chosen.jquery.min.js',
+                        'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
+                        'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
                         'dist/front/js/<%= pkg.name %>.min.js'
                     ]
                 }

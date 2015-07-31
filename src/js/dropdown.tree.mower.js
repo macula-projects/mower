@@ -36,16 +36,18 @@
         height: 200,
         initValue: '',
         orientation: "auto",
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>',
-        tree: false,
-        data:false
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
     };
 
-    DropDownTree.DEFAULTS.TREE_ASYNC = {
-        enable: false,
+    DropDownTree.DEFAULTS.JSTREE_CORE = {
+        data: false,
         multiple: false
     };
 
+
+    // DropDownTree.DEFAULTS.JSTREE_SEARCH = {
+    //     show_only_matches: false
+    // };
 
     DropDownTree.prototype = {
 
@@ -99,14 +101,17 @@
         _process_options: function() {
             var o = this.options;
 
-            var treeAsync = $.extend({},
-                DropDownTree.DEFAULTS.TREE_ASYNC, {
-                    'url': o.url,
-                    'multiple': o.multiple
-                }, (typeof o.tree == 'object' ? o.tree.async : {}));
+            var jtCoreOpt = $.extend({},
+                DropDownTree.DEFAULTS.JSTREE_CORE, {
+                    'data': this.populate,
+                    'multiple': this.options.multiple,
+                    'instance': this
+                });
 
-            this.options.treeOpt = {
-                'async': treeAsync
+            this.options.jtOpt = {
+                'core': jtCoreOpt,
+                // 'search': DropDownTree.DEFAULTS.JSTREE_SEARCH,
+                // "plugins": ["wholerow"]
             };
 
             var plc = String(o.orientation).toLowerCase().split(/\s+/g),
@@ -262,7 +267,7 @@
         _show: function() {
             this.$treeContainer.show();
             //clear search result previously
-            $.jstree.reference(this.$tree).clear_search();
+            //$.jstree.reference(this.$tree).clear_search();
 
             this._scrollTo();
             this.place();
@@ -354,7 +359,7 @@
                 for (var i = 0; i < value.length; i++) {
                     if (!this._isExisted(value[i])) {
                         this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value[i] + '"/>');
-                        $.jstree.reference(this.$tree).check_node('#' + value[i]);
+                        $.jstree.reference(this.$tree).select_node('#' + value[i]);
 
                         var selectNode = $.jstree.reference(this.$tree).get_node('#' + value[i]);
                         selectNode && text.push(selectNode.text);
@@ -363,7 +368,7 @@
                 }
             } else if (value && !this._isExisted(value)) {
                 this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
-                $.jstree.reference(this.$tree).check_node('#' + value);
+                $.jstree.reference(this.$tree).select_node('#' + value);
 
                 var selectNode = $.jstree.reference(this.$tree).get_node('#' + value);
                 selectNode && text.push(selectNode.text);
@@ -371,10 +376,15 @@
 
             this.$input.val(text.join(this.options.separator));
         },
-        click: function() {
+        click: function(event) {
+
+            event.preventDefault();
+
+            if ($(event.target).hasClass('jstree-ocl')) return;
+
             this.clear();
 
-            var selectNodes = $.jstree.reference(this.$tree).get_checked(true);
+            var selectNodes = $.jstree.reference(this.$tree).get_selected(true);
             if (selectNodes.length > 0) {
                 var texts = [];
 
