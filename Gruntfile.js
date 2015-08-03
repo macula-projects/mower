@@ -170,7 +170,6 @@ module.exports = function(grunt) {
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
                         'src/js/vertival.menu.<%= pkg.name %>.js',
-                        'src/js/modalbox.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
