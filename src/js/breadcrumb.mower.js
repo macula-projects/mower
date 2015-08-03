@@ -332,15 +332,13 @@
         return this;
     };
 
-    /* BREADCRUMB DATA-API
-     * ============== */
-    $(document)
-        .on(BreadCrumb.DEFAULTS.events.push, 'a,button,input[type="button"]', function(event) {
-            var $target = $(event.target),
+    $.fn.extend({
+        pushBreadcrumb: function(page) {
+            var $target = $(this),
                 $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
-                option = $.extend({}, $breadcrumb.data(), $target.data(), ((typeof event.page != 'undefined') && {
-                    'page': event.page
-                }));
+                option = $.extend({}, $breadcrumb.data(), $target.data(), ((typeof page !== 'undefined') && {
+                    'page': page
+                }) || {});
 
             var page = option.page;
             if ($.isFunction(page)) {
@@ -354,6 +352,23 @@
                     .breadcrumb(option)
                     .breadcrumb("push", option.label, page);
             }
+        },
+        popBreadcrumb: function() {
+            var $target = $(this),
+                $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
+                option = $.extend({}, $breadcrumb.data(), $target.data());
+
+            $breadcrumb
+                .breadcrumb(option)
+                .breadcrumb("pop", 1);
+        }
+    });
+
+    /* BREADCRUMB DATA-API
+     * ============== */
+    $(document)
+        .on(BreadCrumb.DEFAULTS.events.push, 'a,button,input[type="button"]', function(event) {
+            $(this).pushBreadcrumb(event.page);
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="pushBreadcrumb"]', function(event) {
             var $this = $(this);
@@ -363,14 +378,7 @@
             $this.trigger(e);
         })
         .on(BreadCrumb.DEFAULTS.events.pop, 'a,button,input[type="button"]', function(event) {
-
-            var $target = $(event.target),
-                $breadcrumb = ($target.attr('data-target') && $($target.attr('data-target'))) || $(document.body).find('.breadcrumb:first'), //breadcrumb id
-                option = $.extend({}, $breadcrumb.data(), $target.data());
-
-            $breadcrumb
-                .breadcrumb(option)
-                .breadcrumb("pop", 1);
+            $(this).popBreadcrumb();
         })
         .on('click.mu.breadcrumb.data-api', '[data-toggle^="popBreadcrumb"]', function(event) {
             var $this = $(this);
