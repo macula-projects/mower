@@ -333,8 +333,8 @@ module.exports = function(grunt) {
               files: [
                 // Each of the files in the src/ folder will be output to
                 // the dist/ folder each with the extension .gz.js
-                {expand: true, src: ['dist/*/js/*.min.js'], dest: '.', ext: '.gz.min.js'},
-                {expand: true, src: ['dist/*/css/*.min.css'], dest: '.', ext: '.gz.min.css'}
+                {expand: true, src: ['dist/*/js/*.min.js'], dest: '.', ext: '.min.js.gz'},
+                {expand: true, src: ['dist/*/css/*.min.css'], dest: '.', ext: '.min.css.gz'}
               ]
             }
         },
