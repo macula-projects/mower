@@ -327,15 +327,15 @@ module.exports = function(grunt) {
         },
         compress: {
             build: {
-                options: {
-                    archive: '<%= pkg.name %>_' + '<%= meta.version_string %>_<%= meta.build_date %>' + '.zip'
-                },
-                files: [{
-                    expand: true,
-                    cwd: 'dist/',
-                    src: ['**'],
-                    dest: 'dist/'
-                }]
+              options: {
+                mode: 'gzip'
+              },
+              files: [
+                // Each of the files in the src/ folder will be output to
+                // the dist/ folder each with the extension .gz.js
+                {expand: true, src: ['dist/*/js/*.min.js'], dest: '.', ext: '.gz.min.js'},
+                {expand: true, src: ['dist/*/css/*.min.css'], dest: '.', ext: '.gz.min.css'}
+              ]
             }
         },
         copy: { //copy files to dist
@@ -490,10 +490,9 @@ module.exports = function(grunt) {
     grunt.registerTask('front', ['clean:build_front', 'less:build_front',  'concat:buildjs_front', 'csscomb:front', 'uglify:minify', 'cssmin:minify_front', 'concat:mergecss_front', 'concat:mergejs_front', 'copy:build_front','copy:build_docs']);
 
     // grunt release admin
-    grunt.registerTask('admin-with-compress', ['compress', 'admin']);
+    grunt.registerTask('admin-compress', ['admin','compress']);
 
-    // grunt release
-    grunt.registerTask('front-with-compress', ['compress', 'front']);
+    grunt.registerTask('front-compress', ['front','compress']);
 
     // grunt
     grunt.registerTask('default', ['svradmin']);
