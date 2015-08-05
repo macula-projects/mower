@@ -72,6 +72,7 @@ module.exports = function(grunt) {
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.table.<%= pkg.name %>.js',
                         'src/js/dropdown.tree.<%= pkg.name %>.js',
+                        'src/js/dropdown.lookup.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/tagsselect.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
