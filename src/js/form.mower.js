@@ -73,14 +73,14 @@
                 var $this = $(this);
 
                 if (!$this.data('bootstrapValidator')) {
-
                     $this.bootstrapValidator({
                         excluded: [':disabled'],
                         message: '请输入合法的数值',
                         feedbackIcons: {
                             valid: 'fa fa-check',
                             invalid: 'fa fa-times',
-                            validating: 'fa fa-refresh'
+                            validating: 'fa fa-refresh',
+                            required: 'fa fa-asterisk'
                         }
                     });
                 }

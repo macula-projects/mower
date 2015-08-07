@@ -2,7 +2,7 @@
  * BootstrapValidator (http://bootstrapvalidator.com)
  * The best jQuery plugin to validate form fields. Designed to use with Bootstrap 3
  *
- * @version     v0.5.3, built on 2015-07-27 10:18:35 AM
+ * @version     v0.5.3, built on 2015-08-07 5:01:19 PM
  * @author      https://twitter.com/nghuuphuoc
  * @copyright   (c) 2013 - 2015 Nguyen Huu Phuoc
  * @license     Commercial: http://bootstrapvalidator.com/license/
@@ -274,14 +274,15 @@ if (typeof jQuery === 'undefined') {
                 return;
             }
 
-            if (this.options.fields[field] === null || this.options.fields[field].validators === null) {
+            var fieldValidators = this.options.fields[field].validators;
+            if (this.options.fields[field] === null ||  fieldValidators=== null) {
                 return;
             }
 
             var validatorName;
-            for (validatorName in this.options.fields[field].validators) {
+            for (validatorName in fieldValidators) {
                 if (!$.fn.bootstrapValidator.validators[validatorName]) {
-                    delete this.options.fields[field].validators[validatorName];
+                    delete fieldValidators[validatorName];
                 }
             }
             if (this.options.fields[field].enabled === null) {
@@ -321,7 +322,7 @@ if (typeof jQuery === 'undefined') {
                 
                 // Create help block elements for showing the error messages
                 $field.data('bv.messages', $message);
-                for (validatorName in this.options.fields[field].validators) {
+                for (validatorName in fieldValidators) {
                     $field.data('bv.result.' + validatorName, this.STATUS_NOT_VALIDATED);
 
                     if (!updateAll || i === total - 1) {
@@ -337,15 +338,17 @@ if (typeof jQuery === 'undefined') {
 
                     // Init the validator
                     if ('function' === typeof $.fn.bootstrapValidator.validators[validatorName].init) {
-                        $.fn.bootstrapValidator.validators[validatorName].init(this, $field, this.options.fields[field].validators[validatorName]);
+                        $.fn.bootstrapValidator.validators[validatorName].init(this, $field, fieldValidators[validatorName]);
                     }
                 }
 
                 // Prepare the feedback icons
                 // Available from Bootstrap 3.1 (http://getbootstrap.com/css/#forms-control-validation)
-                if (this.options.fields[field].feedbackIcons !== false && this.options.fields[field].feedbackIcons !== 'false'
-                    && this.options.feedbackIcons
-                    && this.options.feedbackIcons.validating && this.options.feedbackIcons.invalid && this.options.feedbackIcons.valid
+                var fieldFeedbackIcons  = this.options.fields[field].feedbackIcons,
+                    feedbackIcons = this.options.feedbackIcons;
+                if (fieldFeedbackIcons !== false && fieldFeedbackIcons !== 'false'
+                    && feedbackIcons
+                    && feedbackIcons.validating && feedbackIcons.invalid && feedbackIcons.valid
                     && (!updateAll || i === total - 1))
                 {
                     // $parent.removeClass('has-success').removeClass('has-error').addClass('has-feedback');
@@ -356,6 +359,12 @@ if (typeof jQuery === 'undefined') {
                                     .addClass('form-control-feedback')
                                     .attr('data-bv-icon-for', field)
                                     .insertAfter($field);
+
+                    if (fieldValidators.notEmpty && feedbackIcons.required) {
+                        // The field uses notEmpty validator
+                        // Add required icon
+                        $icon.addClass(feedbackIcons.required).show();
+                    }
 
                     // Place it after the container of checkbox/radio
                     // so when clicking the icon, it doesn't effect to the checkbox/radio element
@@ -1024,7 +1033,9 @@ if (typeof jQuery === 'undefined') {
             var that  = this,
                 type  = fields.attr('type'),
                 group = this.options.fields[field].group || this.options.group,
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
+                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length,
+                feedbackIcons = this.options.feedbackIcons,
+                fieldValidators = this.options.fields[field].validators;
 
             for (var i = 0; i < total; i++) {
                 var $field       = fields.eq(i);
@@ -1039,7 +1050,7 @@ if (typeof jQuery === 'undefined') {
                     $icon        = $field.data('bv.icon'),
                     container    = ('function' === typeof (this.options.fields[field].container || this.options.container)) ? (this.options.fields[field].container || this.options.container).call(this, $field, this) : (this.options.fields[field].container || this.options.container),
                     isValidField = null;
-
+                    
                 // Update status
                 if (validatorName) {
                     $field.data('bv.result.' + validatorName, status);
@@ -1065,11 +1076,12 @@ if (typeof jQuery === 'undefined') {
                         this.disableSubmitButtons(true);
                         $parent.removeClass('has-success').removeClass('has-error');
                         if ($icon) {
-                            $icon.removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.invalid).addClass(this.options.feedbackIcons.validating).show();
+                            $icon.removeClass(feedbackIcons.required).removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.invalid).addClass(this.options.feedbackIcons.validating).show();
                         }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').removeClass('bv-tab-error');
                         }
+
                         break;
 
                     case this.STATUS_INVALID:
@@ -1077,11 +1089,12 @@ if (typeof jQuery === 'undefined') {
                         this.disableSubmitButtons(true);
                         $parent.removeClass('has-success').addClass('has-error');
                         if ($icon) {
-                            $icon.removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.validating).addClass(this.options.feedbackIcons.invalid).show();
+                            $icon.removeClass(feedbackIcons.required).removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.validating).addClass(this.options.feedbackIcons.invalid).show();
                         }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').addClass('bv-tab-error');
                         }
+
                         break;
 
                     case this.STATUS_VALID:
@@ -1093,9 +1106,9 @@ if (typeof jQuery === 'undefined') {
                             this.disableSubmitButtons(this.$submitButton ? !this.isValid() : !isValidField);
                             if ($icon) {
                                 $icon
-                                    .removeClass(this.options.feedbackIcons.invalid).removeClass(this.options.feedbackIcons.validating).removeClass(this.options.feedbackIcons.valid)
+                                    .removeClass(feedbackIcons.required).removeClass(this.options.feedbackIcons.invalid).removeClass(this.options.feedbackIcons.validating).removeClass(this.options.feedbackIcons.valid)
                                     .addClass(isValidField ? this.options.feedbackIcons.valid : this.options.feedbackIcons.invalid)
-                                    .show();
+                                    .show(); 
                             }
                         }
 
@@ -1113,10 +1126,17 @@ if (typeof jQuery === 'undefined') {
                         $parent.removeClass('has-success').removeClass('has-error');
                         if ($icon) {
                             $icon.removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.invalid).removeClass(this.options.feedbackIcons.validating).hide();
+                            if (fieldValidators.notEmpty && feedbackIcons.required) {
+                                // The field uses notEmpty validator
+                                // Add required icon
+                                $icon.addClass(feedbackIcons.required).show();
+                            }
                         }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').removeClass('bv-tab-error');
                         }
+
+
                         break;
                 }
 

@@ -29,6 +29,11 @@
     z-index: 100;
 }
 
+.bv-form .has-feedback .fa-asterisk {
+	color: #a94442;
+	font-size: 12px;
+}
+
 
 
 
