@@ -16,8 +16,30 @@
 
     var backdrop = '.dropdown-backdrop';
     var toggle = '[data-toggle="lookup"]';
-    var DropdownLookup = function(element) {
-        $(element).on('click.bs.dropdown', this.toggle);
+    var DropdownLookup = function(element, options) {
+        this.element = element;
+        this.$element = $(element);
+        this.options = options;
+
+        $(toggle).on('click.bs.dropdown', this.toggle);
+    };
+
+    DropdownLookup.DEFAULTS = {
+        url: false,
+        codeField: '',
+        template: '<div class="dropdown-menu"></div>'
+    };
+
+
+    DropdownLookup.prototype._init = function(element, options) {
+        var $element = $(element);
+        this.options = $.extend({}, DropdownLookup.DEFAULTS, $element.data(), typeof options === 'object' && options);
+
+        this.$input = this.$element.find('.form-control:first');
+
+        if (this.options.url) {
+
+        }
     };
 
     DropdownLookup.prototype.toggle = function(e) {
@@ -71,7 +93,7 @@
                 $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget);
             }
         });
-    };
+    }
 
     function getParent($this) {
         var selector = $this.attr('data-target');
@@ -120,9 +142,6 @@
 
     $(document)
         .on('click.bs.dropdown.data-api', clearMenus)
-        .on('click.bs.dropdown.data-api', '.dropdown form', function(e) {
-            e.stopPropagation();
-        })
         .on('click.bs.dropdown.data-api', toggle, DropdownLookup.prototype.toggle);
 
 })(jQuery, window, document);
