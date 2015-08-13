@@ -11,6 +11,8 @@
 (function($, window, document, undefined) {
     'use strict';
 
+    if (!$.fn.slimScroll) throw new Error('DropdownLookup requires slimScroll.js');
+
     // DROPDOWN CLASS DEFINITION
     // =========================
 
@@ -21,25 +23,208 @@
         this.$element = $(element);
         this.options = options;
 
-        $(toggle).on('click.bs.dropdown', this.toggle);
+        this.isLoaded = false;
     };
 
     DropdownLookup.DEFAULTS = {
-        url: false,
-        codeField: '',
+        type: 'static',
+        width: null, // number, css definition
+        height: 'auto',
+        multiple: false,
+        separator: ',',
         template: '<div class="dropdown-menu"></div>'
     };
 
-
     DropdownLookup.prototype._init = function(element, options) {
         var $element = $(element);
+        this.$input = $element.find('.form-control:first');
         this.options = $.extend({}, DropdownLookup.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
-        this.$input = this.$element.find('.form-control:first');
+        if (this.options.type === 'static') return; //html 
 
-        if (this.options.url) {
+        this.$lkContainer = $(this.options.template);
+        this.$lkContainer.append('<div></div');
+        this.$lkContent = this.$lkContainer.find('div:first');
 
+        $element.find(toggle).after(this.$lkContainer);
+
+        this._parseOptions();
+        this._constructContent();
+    };
+
+    DropdownLookup.prototype._parseOptions = function() {
+        var options = this.options;
+
+        if (options.url) {
+            if (!options.type || (options.type != 'ajax' && options.type != 'iframe')) {
+                options.type = 'ajax';
+            }
         }
+        if (options.remote) {
+            options.type = 'ajax';
+            if (typeof options.remote === 'string') options.url = options.remote;
+        } else if (options.iframe) {
+            options.type = 'iframe';
+            if (typeof options.iframe === 'string') options.url = options.iframe;
+        } else if (options.custom) {
+            options.type = 'custom';
+            if (typeof options.custom === 'string') {
+                var $doms;
+                try {
+                    $doms = $(options.custom);
+                } catch (e) {}
+
+                if ($doms && $doms.length) {
+                    options.custom = $doms;
+                } else if ($.isFunction(window[options.custom])) {
+                    options.custom = window[options.custom];
+                }
+            }
+        }
+    };
+
+    DropdownLookup.prototype._constructContent = function() {
+        var that = this,
+            options = this.options;
+
+        var readyToShow = function(delay) {
+            if (typeof delay === 'undefined') delay = 300;
+            setTimeout(function() {
+                if (options.type !== 'iframe') {
+                    that.$lkContent.slimScroll({
+                        height: options.height || 'auto',
+                        width: options.width || 'auto'
+                    });
+                } else {
+                    if (options.width && options.width != 'auto') {
+                        that.$lkContent.css('width', options.width);
+                    }
+                    if (options.height && options.height != 'auto') {
+                        that.$lkContent.css('height', options.height);
+                    }
+                }
+                this.isLoaded = true;
+            }, delay);
+        };
+
+        var custom = options.custom;
+        if (options.type === 'custom' && custom) {
+            if ($.isFunction(custom)) {
+                var customContent = custom({
+                    container: that.$lkContent,
+                    options: options,
+                    ready: readyToShow
+                });
+                if (typeof customContent === 'string') {
+                    this.$lkContent.html(customContent);
+                    readyToShow();
+                }
+            } else if (custom instanceof $) {
+                this.$lkContent.html($('<div>').append(custom.clone()).html());
+                readyToShow();
+            } else {
+                this.$lkContent.html(custom);
+                readyToShow();
+            }
+        } else if (options.url) {
+            this.$lkContent.attr('ref', options.url);
+            if (options.type === 'iframe') {
+                var iframeName = 'iframe-' + (options.name || '');
+                this.$lkContent.css('padding', 0)
+                    .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
+
+                if (options.waittime > 0) {
+                    that.waitTimeout = setTimeout(readyToShow, options.waittime);
+                }
+
+                var frame = document.getElementById(iframeName);
+                frame.onload = frame.onreadystatechange = function() {
+                    if (this.readyState && this.readyState != 'complete') return;
+                    if (options.waittime > 0) {
+                        clearTimeout(that.waitTimeout);
+                    }
+
+                    try {
+                        that.$lkContent.attr('ref', frame.contentWindow.location.href);
+                        var frame$ = window.frames[iframeName].$;
+                        if (frame$ && options.height === 'auto') {
+                            // todo: update iframe url to ref attribute
+                            var $framebody = frame$('body');
+                            var ajustFrameSize = function() {
+                                var height = $framebody.outerHeight();
+                                that.$lkContent.css('height', height);
+                                readyToShow();
+                            };
+
+                            setTimeout(ajustFrameSize, 100);
+                            $framebody.off('resize.mower.lookup').on('resize.mower.lookup', ajustFrameSize);
+                        } else {
+                            readyToShow();
+                        }
+                    } catch (e) {
+                        readyToShow();
+                    }
+                };
+            } else {
+                that.$lkContent.load(options.url, function() {
+                    readyToShow();
+                });
+            }
+        }
+    };
+
+    DropdownLookup.prototype._isExisted = function(val) {
+        var existed = false;
+        $.each(this.$element.find('._value'), function() {
+            if ($(this).value == val) {
+                existed = true;
+                return false;
+            }
+        });
+
+        return existed;
+    };
+
+    DropdownLookup.prototype.getValue = function() {
+        var $inputs = this.$element.find('._value');
+        if (this.options.multiple === true) {
+            var selectedValues = [];
+            $.each($inputs, function(index, val) {
+                selectedValues.push($(this).val());
+            });
+            return selectedValues.length ? selectedValues : "";
+        } else {
+            return $inputs.val();
+        }
+    };
+
+    //value contains item = {label:"xxxx",value:"xxxxx"} or item = {value}
+    DropdownLookup.prototype.setValue = function(value) {
+        var labels = [];
+
+        if ($.isArray(value)) {
+            for (var i = 0; i < value.length; i++) {
+                var item = value[i];
+                if (typeof item === 'object') {
+                    if(item.value && !this._isExisted(item.value)){
+                        this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item.value + '"/>');
+                    }
+
+                    item.text && labels.push(item.text);
+                } else {
+                    if(!this._isExisted(item)){
+                        this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item + '"/>');
+                    }
+
+                    labels.push(item);
+                }
+            }
+        } else if (value && !this._isExisted(value)) {
+            this.$input.after(' <input class="_value" type="hidden" name="' + this.options.name + '" value="' + value + '"/>');
+            labels.push(value);
+        }
+
+        this.$input.val(labels.join(this.options.separator));
     };
 
     DropdownLookup.prototype.toggle = function(e) {
@@ -47,15 +232,15 @@
 
         if ($this.is('.disabled, :disabled')) return;
 
-        var $parent = getParent($this);
+        var $parent = _getParent($this);
         var isActive = $parent.hasClass('open');
 
-        clearMenus();
+        _clearMenus();
 
         if (!isActive) {
             if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
                 // if mobile we use a backdrop because click events don't delegate
-                $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', clearMenus);
+                $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', _clearMenus);
             }
 
             var relatedTarget = {
@@ -75,12 +260,11 @@
         return false;
     };
 
-
-    function clearMenus(e) {
+    function _clearMenus(e) {
         if (e && e.which === 3) return;
         $(backdrop).remove();
         $(toggle).each(function() {
-            var $parent = getParent($(this))
+            var $parent = _getParent($(this))
             if (e && $.contains($parent[0], e.target)) {
                 e.preventDefault();
             } else {
@@ -95,7 +279,7 @@
         });
     }
 
-    function getParent($this) {
+    function _getParent($this) {
         var selector = $this.attr('data-target');
 
         if (!selector) {
@@ -112,27 +296,56 @@
     // DROPDOWN PLUGIN DEFINITION
     // ==========================
 
-    function Plugin(option) {
-        return this.each(function() {
-            var $this = $(this);
-            var data = $this.data('bs.dropdown');
+    function Plugin(options) {
+        // slice arguments to leave only arguments after function name.
+        var args = Array.prototype.slice.call(arguments, 1);
 
-            if (!data) $this.data('bs.dropdown', (data = new DropdownLookup(this)));
-            if (typeof option == 'string') data[option].call($this);
+        // Cache any plugin method call, to make it possible to return a value
+        var results;
+
+        this.each(function() {
+            var element = this,
+                $element = $(element),
+                pluginKey = 'mu.dropdownlookup',
+                instance = $.data(element, pluginKey);
+
+
+            // if there's no plugin instance for this element, create a new one, calling its "init" method, if it exists.
+            if (!instance) {
+                instance = $.data(element, pluginKey, new DropdownLookup(element, options));
+                if (instance && typeof DropdownLookup.prototype['_init'] === 'function')
+                    DropdownLookup.prototype['_init'].apply(instance, [element, options]);
+            }
+
+            // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
+            if (instance && typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+
+                var methodName = (options == 'destroy' ? '_destroy' : options);
+                if (typeof DropdownLookup.prototype[methodName] === 'function')
+                    results = DropdownLookup.prototype[methodName].apply(instance, args);
+
+                // Allow instances to be destroyed via the 'destroy' method
+                if (options === 'destroy') {
+                    $.data(element, pluginKey, null);
+                }
+            }
         });
+
+        // If the earlier cached method gives a value back, return the resulting value, otherwise return this to preserve chainability.
+        return results !== undefined ? results : this;
     }
 
-    var old = $.fn.dropdownLookup;
+    var old = $.fn.dropdownlookup;
 
-    $.fn.dropdownLookup = Plugin;
-    $.fn.dropdownLookup.Constructor = DropdownLookup;
+    $.fn.dropdownlookup = Plugin;
+    $.fn.dropdownlookup.Constructor = DropdownLookup;
 
 
     // DROPDOWN NO CONFLICT
     // ====================
 
-    $.fn.dropdownLookup.noConflict = function() {
-        $.fn.dropdownLookup = old;
+    $.fn.dropdownlookup.noConflict = function() {
+        $.fn.dropdownlookup = old;
         return this;
     };
 
@@ -141,7 +354,17 @@
     // ===================================
 
     $(document)
-        .on('click.bs.dropdown.data-api', clearMenus)
-        .on('click.bs.dropdown.data-api', toggle, DropdownLookup.prototype.toggle);
+        .on('click.bs.dropdown.data-api', _clearMenus)
+        .on('click.bs.dropdown.data-api', toggle, DropdownLookup.prototype.toggle)
+        .on('ready update', function(event, updatedFragment) {
+            var $root = $(updatedFragment || 'html');
 
+            $root.find('[rel="dropdownlookup"]').each(function(index, el) {
+                var $this = $(this);
+                if ($this.data('mu.dropdownlookup'))
+                    return;
+                // component click requires us to explicitly show it
+                $this.dropdownlookup();
+            });
+        });
 })(jQuery, window, document);

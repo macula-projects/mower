@@ -29,10 +29,19 @@
     z-index: 100;
 }
 
-.bv-form .has-feedback .fa-asterisk {
-	color: #a94442;
-	font-size: 12px;
+.bv-form .has-feedback i.required:before {
+	content:"*";
+	color: #e02222;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 18px;
+	text-decoration: inherit;
+	position: absolute;
+	top: 5px;
+	right: 15px;
 }
+
+
 
 
 

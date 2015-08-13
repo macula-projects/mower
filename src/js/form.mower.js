@@ -80,7 +80,7 @@
                             valid: 'fa fa-check',
                             invalid: 'fa fa-times',
                             validating: 'fa fa-refresh',
-                            required: 'fa fa-asterisk'
+                            required: 'required'
                         }
                     });
                 }

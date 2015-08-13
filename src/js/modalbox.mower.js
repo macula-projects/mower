@@ -62,20 +62,17 @@
     };
 
     var templates = {
-      dialog:
-        "<div class='bootbox modal' tabindex='-1' role='dialog' aria-hidden='true'>" +
-          "<div class='modal-dialog'>" +
+        dialog: "<div class='bootbox modal' tabindex='-1' role='dialog' aria-hidden='true'>" +
+            "<div class='modal-dialog'>" +
             "<div class='modal-content'>" +
-              "<div class='modal-body'><div class='bootbox-body'></div></div>" +
+            "<div class='modal-body'><div class='bootbox-body'></div></div>" +
             "</div>" +
-          "</div>" +
-        "</div>",
-      header:
-        "<div class='modal-header'>" +
-          "<h4 class='modal-title'></h4>" +
-        "</div>",
-      footer:
-        "<div class='modal-footer'></div>"
+            "</div>" +
+            "</div>",
+        header: "<div class='modal-header'>" +
+            "<h4 class='modal-title'></h4>" +
+            "</div>",
+        footer: "<div class='modal-footer'></div>"
     };
 
     // our public object; augmented after our private API
@@ -112,10 +109,17 @@
                 if (options.width && options.width != 'auto') {
                     $dialog.css('width', options.width);
                 }
-                if (options.height && options.height != 'auto') {
-                    $body.slimScroll({
-                        height: options.height
-                    });
+                if (options.height && options.height !== 'auto') {
+
+                    $dialog.css('height', options.height);
+
+                    if (options.type === 'iframe') {
+                        $body.css('height', $dialog.height() - $header.outerHeight());
+                    } else {
+                        $body.slimScroll({
+                            height: $dialog.height() - $header.outerHeight()
+                        });
+                    }
                 }
                 $modal.removeClass('modal-loading');
             }, delay);
@@ -186,11 +190,13 @@
                             setTimeout(ajustFrameSize, 100);
 
                             $framebody.off('resize.' + NAME).on('resize.' + NAME, ajustFrameSize);
-                        }
 
-                        frame$.extend({
-                            closeModal: window.closeModal
-                        });
+                            frame$.extend({
+                                closeModal: window.closeModal
+                            });
+                        } else {
+                            readyToShow();
+                        }
                     } catch (e) {
                         readyToShow();
                     }
@@ -231,10 +237,10 @@
                             var $script = $(this);
                             $modal.append($script);
                         });
-
                     } catch (e) {
-                        $modal.html(data);
+                        $body.wrapInner(data);
                     }
+
                     $modal.callEvent('loaded.mower.modal', {
                         modalType: 'ajax'
                     });
