@@ -176,7 +176,10 @@ module.exports = function(grunt) {
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
-                        'src/js/form.<%= pkg.name %>.js'
+                        'src/js/form.<%= pkg.name %>.js',
+                        'src/js/modalbox.<%= pkg.name %>.js',
+                        'src/js/messagebox.<%= pkg.name %>.js'
+
                     ]
                 }
             },
@@ -207,6 +210,8 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
                         'plugins/form/js/form.jquery.js',
+                        'plugins/bootbox/js/bootbox.js',
+                        'plugins/toastr/js/toastr.js',
                         'dist/front/js/<%= pkg.name %>.js'
                     ],
                     'dist/front/js/<%= pkg.name %>.min.js': [
@@ -214,6 +219,8 @@ module.exports = function(grunt) {
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
                         'plugins/form/js/form.jquery.min.js',
+                        'plugins/bootbox/js/bootbox.min.js',
+                        'plugins/toastr/js/toastr.min.js',
                         'dist/front/js/<%= pkg.name %>.min.js'
                     ]
                 }
