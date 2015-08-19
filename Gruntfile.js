@@ -212,6 +212,7 @@ module.exports = function(grunt) {
                         'plugins/form/js/form.jquery.js',
                         'plugins/bootbox/js/bootbox.js',
                         'plugins/toastr/js/toastr.js',
+                        'plugins/bootpag/js/jquery.bootpag.js',
                         'dist/front/js/<%= pkg.name %>.js'
                     ],
                     'dist/front/js/<%= pkg.name %>.min.js': [
@@ -221,6 +222,7 @@ module.exports = function(grunt) {
                         'plugins/form/js/form.jquery.min.js',
                         'plugins/bootbox/js/bootbox.min.js',
                         'plugins/toastr/js/toastr.min.js',
+                        'plugins/bootpag/js/jquery.bootpag.min.js',
                         'dist/front/js/<%= pkg.name %>.min.js'
                     ]
                 }
