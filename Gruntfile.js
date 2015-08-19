@@ -206,6 +206,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/front/js/<%= pkg.name %>.js': [
+                        'plugins/slimScroll/js/slimscroll.js',
                         'plugins/chosen/js/chosen.jquery.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
@@ -216,6 +217,7 @@ module.exports = function(grunt) {
                         'dist/front/js/<%= pkg.name %>.js'
                     ],
                     'dist/front/js/<%= pkg.name %>.min.js': [
+                        'plugins/slimScroll/js/slimscroll.min.js',
                         'plugins/chosen/js/chosen.jquery.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
