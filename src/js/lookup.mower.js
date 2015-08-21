@@ -1,7 +1,7 @@
 /** ========================================================================
- * Mower: dropdown.lookup.mower.js - v1.0.0
+ * Mower: lookup.mower.js - v1.0.0
  *
- *  dropdown custom container.
+ *  lookup custom container.
  *
  * Copyright 2011-2014 Infinitus, Inc
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
@@ -11,14 +11,17 @@
 (function($, window, document, undefined) {
     'use strict';
 
-    if (!$.fn.slimScroll) throw new Error('DropdownLookup requires slimScroll.js');
+    if (!$.fn.slimScroll) throw new Error('Lookup requires slimScroll.js');
 
     // DROPDOWN CLASS DEFINITION
     // =========================
 
     var backdrop = '.dropdown-backdrop';
-    var toggle = '[data-toggle="lookup"]';
-    var DropdownLookup = function(element, options) {
+    var toggledropdown = '[data-toggle="dropdownlookup"]';
+    var togglemodal = '[data-toggle="popmodal"]';
+    var PLUGIN_NAME = "mu.lookup";
+
+    var Lookup = function(element, options) {
         this.element = element;
         this.$element = $(element);
         this.options = options;
@@ -26,7 +29,7 @@
         this.isLoaded = false;
     };
 
-    DropdownLookup.DEFAULTS = {
+    Lookup.DEFAULTS = {
         type: 'static',
         width: null, // number, css definition
         height: 'auto',
@@ -35,24 +38,24 @@
         template: '<div class="dropdown-menu"></div>'
     };
 
-    DropdownLookup.prototype._init = function(element, options) {
+    Lookup.prototype._init = function(element, options) {
         var $element = $(element);
         this.$input = $element.find('.form-control:first');
-        this.options = $.extend({}, DropdownLookup.DEFAULTS, $element.data(), typeof options === 'object' && options);
+        this.options = $.extend({}, Lookup.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
-        if (this.options.type === 'static') return; //html 
+        if (this.options.type === 'static' || this.options.type.indexOf('modal') >= 0) return; //html
 
         this.$lkContainer = $(this.options.template);
         this.$lkContainer.append('<div></div');
         this.$lkContent = this.$lkContainer.find('div:first');
 
-        $element.find(toggle).after(this.$lkContainer);
+        $element.find(toggledropdown).after(this.$lkContainer);
 
         this._parseOptions();
         this._constructContent();
     };
 
-    DropdownLookup.prototype._parseOptions = function() {
+    Lookup.prototype._parseOptions = function() {
         var options = this.options;
 
         if (options.url) {
@@ -83,7 +86,7 @@
         }
     };
 
-    DropdownLookup.prototype._constructContent = function() {
+    Lookup.prototype._constructContent = function() {
         var that = this,
             options = this.options;
 
@@ -173,7 +176,7 @@
         }
     };
 
-    DropdownLookup.prototype._isExisted = function(val) {
+    Lookup.prototype._isExisted = function(val) {
         var existed = false;
         $.each(this.$element.find('._value'), function() {
             if ($(this).value == val) {
@@ -185,7 +188,7 @@
         return existed;
     };
 
-    DropdownLookup.prototype.getValue = function() {
+    Lookup.prototype.getValue = function() {
         var $inputs = this.$element.find('._value');
         if (this.options.multiple === true) {
             var selectedValues = [];
@@ -199,20 +202,20 @@
     };
 
     //value contains item = {label:"xxxx",value:"xxxxx"} or item = {value}
-    DropdownLookup.prototype.setValue = function(value) {
+    Lookup.prototype.setValue = function(value) {
         var labels = [];
 
         if ($.isArray(value)) {
             for (var i = 0; i < value.length; i++) {
                 var item = value[i];
                 if (typeof item === 'object') {
-                    if(item.value && !this._isExisted(item.value)){
+                    if (item.value && !this._isExisted(item.value)) {
                         this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item.value + '"/>');
                     }
 
                     item.text && labels.push(item.text);
                 } else {
-                    if(!this._isExisted(item)){
+                    if (!this._isExisted(item)) {
                         this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item + '"/>');
                     }
 
@@ -227,7 +230,7 @@
         this.$input.val(labels.join(this.options.separator));
     };
 
-    DropdownLookup.prototype.toggle = function(e) {
+    Lookup.prototype.toggleDropdown = function(e) {
         var $this = $(this);
 
         if ($this.is('.disabled, :disabled')) return;
@@ -260,10 +263,35 @@
         return false;
     };
 
+    Lookup.prototype.popModal = function(e) {
+        var $this = $(this);
+
+        if ($this.is('.disabled, :disabled')) return;
+
+        var $parent = _getParent($this),
+            lookup = $parent.data(PLUGIN_NAME),
+            options;
+
+        if (lookup) {
+            options = lookup.options;
+        } else {
+            options = $parent.data();
+        }
+
+        if (options.type && options.type.indexOf('modal') >= 0) {
+            var index = options.type.indexOf('modal-');
+            options.type = options.type.substring(index + 'modal-'.length);
+        }
+
+        if (typeof window.ModalBox !== 'undefined') ModalBox.ajaxDialog(options);
+
+        return false;
+    };
+
     function _clearMenus(e) {
         if (e && e.which === 3) return;
         $(backdrop).remove();
-        $(toggle).each(function() {
+        $(toggledropdown).each(function() {
             var $parent = _getParent($(this))
             if (e && $.contains($parent[0], e.target)) {
                 e.preventDefault();
@@ -306,23 +334,23 @@
         this.each(function() {
             var element = this,
                 $element = $(element),
-                pluginKey = 'mu.dropdownlookup',
+                pluginKey = PLUGIN_NAME,
                 instance = $.data(element, pluginKey);
 
 
             // if there's no plugin instance for this element, create a new one, calling its "init" method, if it exists.
             if (!instance) {
-                instance = $.data(element, pluginKey, new DropdownLookup(element, options));
-                if (instance && typeof DropdownLookup.prototype['_init'] === 'function')
-                    DropdownLookup.prototype['_init'].apply(instance, [element, options]);
+                instance = $.data(element, pluginKey, new Lookup(element, options));
+                if (instance && typeof Lookup.prototype['_init'] === 'function')
+                    Lookup.prototype['_init'].apply(instance, [element, options]);
             }
 
             // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
             if (instance && typeof options === 'string' && options[0] !== '_' && options !== 'init') {
 
                 var methodName = (options == 'destroy' ? '_destroy' : options);
-                if (typeof DropdownLookup.prototype[methodName] === 'function')
-                    results = DropdownLookup.prototype[methodName].apply(instance, args);
+                if (typeof Lookup.prototype[methodName] === 'function')
+                    results = Lookup.prototype[methodName].apply(instance, args);
 
                 // Allow instances to be destroyed via the 'destroy' method
                 if (options === 'destroy') {
@@ -335,17 +363,17 @@
         return results !== undefined ? results : this;
     }
 
-    var old = $.fn.dropdownlookup;
+    var old = $.fn.lookup;
 
-    $.fn.dropdownlookup = Plugin;
-    $.fn.dropdownlookup.Constructor = DropdownLookup;
+    $.fn.lookup = Plugin;
+    $.fn.lookup.Constructor = Lookup;
 
 
     // DROPDOWN NO CONFLICT
     // ====================
 
-    $.fn.dropdownlookup.noConflict = function() {
-        $.fn.dropdownlookup = old;
+    $.fn.lookup.noConflict = function() {
+        $.fn.lookup = old;
         return this;
     };
 
@@ -355,16 +383,18 @@
 
     $(document)
         .on('click.bs.dropdown.data-api', _clearMenus)
-        .on('click.bs.dropdown.data-api', toggle, DropdownLookup.prototype.toggle)
+        .on('click.bs.dropdown.data-api', toggledropdown, Lookup.prototype.toggleDropdown)
+        .on('click.bs.dropdown.data-api', togglemodal, Lookup.prototype.popModal)
         .on('ready update', function(event, updatedFragment) {
             var $root = $(updatedFragment || 'html');
 
-            $root.find('[rel="dropdownlookup"]').each(function(index, el) {
+            $root.find('[rel="lookup"]').each(function(index, el) {
                 var $this = $(this);
-                if ($this.data('mu.dropdownlookup'))
+                if ($this.data(PLUGIN_NAME))
                     return;
                 // component click requires us to explicitly show it
-                $this.dropdownlookup();
+                $this.lookup();
             });
         });
+
 })(jQuery, window, document);

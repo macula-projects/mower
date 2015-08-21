@@ -1474,15 +1474,14 @@ $(select).chosen(options);
             <h3 class="item-header">类型</h3>
             <h4 class="subitem-header">日期选择</h4>
             <div class="bs-example">
-              <div class="form-group">
-                  <div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD">
-                    <input type='text' class="form-control" />
-                    <span class="input-group-addon">
-                        <span class="fa fa-calendar">
-                        </span>
-                    </span>
+                <div class="form-group">
+                  <div class='input-group date'  rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
                   </div>
-              </div>
+                </div>
             </div>
             <div class="highlight">
               <pre class="prettyprint">
@@ -1680,10 +1679,12 @@ $(select).chosen(options);
   <script src="assets/plugins/google-code-prettify/prettify.js"></script>
   <script src="assets/js/docs.min.js"></script>
   <script>
-  $('#modalTriggerByFunc').remoteModal({custom: function()
-  {
-      return "当模态框显示时，时间是：" + (new Date).toString();
-  }});
+    $('#modalTriggerByFunc').click(function(event) {
+      /* Act on the event */
+      ModalBox.ajaxDialog({custom: function(){
+        return "当模态框显示时，时间是：" + (new Date).toString();
+      }});
+    });
   </script>
 
   </body>
