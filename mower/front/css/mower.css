@@ -1,5 +1,5 @@
 /*!
- * mower - v1.1.1 - 2015-07-24
+ * mower - v1.1.1 - 2015-08-21
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -4922,7 +4922,7 @@ Input icons
 }
 .input-group.mu-dropdowntable .input-group-addon i,
 .input-group.mu-dropdowntree .input-group-addon i,
-.input-group.mu-remotemodal .input-group-addon i {
+.input-group.mu-dropdownlookup .input-group-addon i {
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -4967,12 +4967,12 @@ Input icons
   border: 1px solid #afafb6;
 }
 .mu-tagsselect .tag-facet-category {
-  padding: 2px;
+  padding: 3px;
   color: #fff;
   background: none repeat scroll 0 0 #aaa;
 }
 .mu-tagsselect .tag-facet-value {
-  padding: 2px;
+  padding: 3px;
   color: #4c4c4c;
   text-shadow: 0 1px 1px white;
   border-left: 1px solid #afafb6;
@@ -4995,6 +4995,9 @@ Input icons
 .mu-dropdownquery .dropdown-menu {
   width: 100%;
 }
+.mu-dropdownlookup .input-group-addon {
+  border-left: 0;
+}
 /* remote modal 
  ========================================================================== */
 .modal > .loader {
@@ -5010,7 +5013,7 @@ Input icons
   display: block;
   width: 80px;
   margin-left: -40px;
-  font-size: 56px;
+  font-size: 42px;
   color: #fff;
   text-align: center;
 }
@@ -5210,48 +5213,6 @@ Input icons
 }
 /* loading container.
  ========================================================================== */
-@-webkit-keyframes typing {
-  0% {
-    background-color: #fff;
-    box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 rgba(255, 255, 255, .2);
-  }
-  25% {
-    background-color: rgba(255, 255, 255, .4);
-    box-shadow: 12px 0 0 0 #fff, 24px 0 0 0 rgba(255, 255, 255, .2);
-  }
-  75% {
-    background-color: rgba(255, 255, 255, .4);
-    box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 #fff;
-  }
-}
-@-moz-keyframes typing {
-  0% {
-    background-color: #fff;
-    box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 rgba(255, 255, 255, .2);
-  }
-  25% {
-    background-color: rgba(255, 255, 255, .4);
-    box-shadow: 12px 0 0 0 #fff, 24px 0 0 0 rgba(255, 255, 255, .2);
-  }
-  75% {
-    background-color: rgba(255, 255, 255, .4);
-    box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 #fff;
-  }
-}
-@keyframes typing {
-  0% {
-    background-color: #fff;
-    box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 rgba(255, 255, 255, .2);
-  }
-  25% {
-    background-color: rgba(255, 255, 255, .4);
-    box-shadow: 12px 0 0 0 #fff, 24px 0 0 0 rgba(255, 255, 255, .2);
-  }
-  75% {
-    background-color: rgba(255, 255, 255, .4);
-    box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 #fff;
-  }
-}
 .loading-container {
   position: fixed;
   top: 0;
@@ -5270,16 +5231,15 @@ Input icons
   display: none;
 }
 .loading-container .loader {
-  /* Not necessary- its only for layouting*/
-  position: relative;
-  left: -12px;
-  width: 6px;
-  height: 6px;
-  margin: 50vh auto;
-  border-radius: 50% !important;
-  -webkit-animation: typing 1s linear infinite alternate;
-     -moz-animation: Typing 1s linear infinite alternate;
-          animation: typing 1s linear infinite alternate;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  display: block;
+  width: 80px;
+  margin-left: -40px;
+  font-size: 42px;
+  color: #fff;
+  text-align: center;
 }
 /* mower header.styles for mu-header.
  ========================================================================== */

@@ -14,18 +14,19 @@ var Form = (function($) {
         init: function() {
             $('#saveForm').on('click',function(e){
                 var $button  = $(this);
-                $('#form_sample_1').ajaxValidSubmit({
-                    success: function(data) {
-                        MessageBox.success('保存成功');
+                // $('#form_sample_1').ajaxValidSubmit({
+                //     success: function(data) {
+                //         MessageBox.success('保存成功');
 
-                         //TODO
+                //          //TODO
 
-                        $button.trigger(POP_BREADCRUMB_EVENT);
-                    },
-                    error: function() {
+                //         $button.trigger(POP_BREADCRUMB_EVENT);
+                //     },
+                //     error: function() {
 
-                    }
-                });
+                //     }
+                // });
+                $button.trigger('pop.mu.breadcrumb');
             });
 
             this.initTagsSelect();

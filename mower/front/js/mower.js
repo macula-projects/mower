@@ -1,5 +1,5 @@
 /*!
- * mower - v1.1.1 - 2015-07-24
+ * mower - v1.1.1 - 2015-08-21
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -1050,7 +1050,339 @@ $(function() {
     };
 
 })();
-;/** ========================================================================
+;(function($) {
+	$.date = (function() {
+		function strDay(value) {
+			switch (parseInt(value)) {
+			case 0:
+				return "Sunday";
+			case 1:
+				return "Monday";
+			case 2:
+				return "Tuesday";
+			case 3:
+				return "Wednesday";
+			case 4:
+				return "Thursday";
+			case 5:
+				return "Friday";
+			case 6:
+				return "Saturday";
+			default:
+				return value;
+			}
+		}
+
+		function strMonth(value) {
+			switch (parseInt(value)) {
+			case 1:
+				return "Jan";
+			case 2:
+				return "Feb";
+			case 3:
+				return "Mar";
+			case 4:
+				return "Apr";
+			case 5:
+				return "May";
+			case 6:
+				return "Jun";
+			case 7:
+				return "Jul";
+			case 8:
+				return "Aug";
+			case 9:
+				return "Sep";
+			case 10:
+				return "Oct";
+			case 11:
+				return "Nov";
+			case 12:
+				return "Dec";
+			default:
+				return value;
+			}
+		}
+
+		var parseMonth = function(value) {
+			switch (value) {
+			case "Jan":
+				return "01";
+			case "Feb":
+				return "02";
+			case "Mar":
+				return "03";
+			case "Apr":
+				return "04";
+			case "May":
+				return "05";
+			case "Jun":
+				return "06";
+			case "Jul":
+				return "07";
+			case "Aug":
+				return "08";
+			case "Sep":
+				return "09";
+			case "Oct":
+				return "10";
+			case "Nov":
+				return "11";
+			case "Dec":
+				return "12";
+			default:
+				return value;
+			}
+		};
+
+		var parseTime = function(value) {
+			var retValue = value;
+			var millis = "";
+			if (retValue.indexOf(".") !== -1) {
+				var delimited = retValue.split('.');
+				retValue = delimited[0];
+				millis = delimited[1];
+			}
+
+			var values3 = retValue.split(":");
+
+			if (values3.length === 3) {
+				hour = values3[0];
+				minute = values3[1];
+				second = values3[2];
+
+				return {
+					time : retValue,
+					hour : hour,
+					minute : minute,
+					second : second,
+					millis : millis
+				};
+			} else {
+				return {
+					time : "",
+					hour : "",
+					minute : "",
+					second : "",
+					millis : ""
+				};
+			}
+		};
+
+		var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" + "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" + "(Z|(([-+])([0-9]{2}):?([0-9]{2})))?)?)?)?";
+
+		var setISO8601 = function(string) {
+			var d = string.match(new RegExp(regexp));
+
+			var offset = 0;
+			var date = new Date(d[1], 0, 1);
+
+			if (d[3]) {
+				date.setMonth(d[3] - 1);
+			}
+			if (d[5]) {
+				date.setDate(d[5]);
+			}
+			if (d[7]) {
+				date.setHours(d[7]);
+			}
+			if (d[8]) {
+				date.setMinutes(d[8]);
+			}
+			if (d[10]) {
+				date.setSeconds(d[10]);
+			}
+			if (d[12]) {
+				date.setMilliseconds(Number("0." + d[12]) * 1000);
+			}
+			if (d[14]) {
+				offset = (Number(d[16]) * 60) + Number(d[17]);
+				offset *= ((d[15] == '-') ? 1 : -1);
+			}
+
+			offset -= date.getTimezoneOffset();
+			var time = (Number(date) + (offset * 60 * 1000));
+			date.setTime(Number(time));
+			return date;
+		};
+		return {
+			format : function(value, format) {
+				if (value == null) {
+					return '';
+				}
+				// value = new java.util.Date()
+				// 2009-12-18 10:54:50.546
+				try {
+					var date = null;
+					var year = null;
+					var month = null;
+					var dayOfMonth = null;
+					var dayOfWeek = null;
+					var time = null; // json, time, hour, minute, second
+					if (typeof value.getFullYear === "function") {
+						year = value.getFullYear();
+						month = value.getMonth() + 1;
+						dayOfMonth = value.getDate();
+						dayOfWeek = value.getDay();
+						time = parseTime(value.toTimeString());
+					} else if (value.search(regexp) != -1) { // 2009-04-19T16:11:05+02:00
+						var iso = setISO8601(value);
+						year = iso.getFullYear();
+						month = iso.getMonth() + 1;
+						dayOfMonth = iso.getDate();
+						dayOfWeek = iso.getDay();
+						time = parseTime(iso.toTimeString());
+					} else {
+						var values = value.split(" ");
+						switch (values.length) {
+						case 6:
+							// Wed Jan 13 10:43:41 CET 2010
+							year = values[5];
+							month = parseMonth(values[1]);
+							dayOfMonth = values[2];
+							time = parseTime(values[3]);
+							date = new Date(year, month - 1, dayOfMonth);
+							dayOfWeek = date.getDay();
+							break;
+						case 2:
+							// 2009-12-18 10:54:50.546
+							var values2 = values[0].split("-");
+							year = values2[0];
+							month = values2[1];
+							dayOfMonth = values2[2];
+							time = parseTime(values[1]);
+							date = new Date(year, month - 1, dayOfMonth);
+							dayOfWeek = date.getDay();
+							break;
+						case 7:
+							// Tue Mar 01 2011 12:01:42 GMT-0800 (PST)
+						case 9:
+							// added by Larry, for Fri Apr 08 2011 00:00:00
+							// GMT+0800 (China Standard Time)
+						case 10:
+							// added by Larry, for Fri Apr 08 2011 00:00:00
+							// GMT+0200 (W. Europe Daylight Time)
+							year = values[3];
+							month = parseMonth(values[1]);
+							dayOfMonth = values[2];
+							time = parseTime(values[4]);
+							date = new Date(year, month - 1, dayOfMonth);
+							dayOfWeek = date.getDay();
+							break;
+						/*
+						 * case 7: // Tue Mar 01 2011 12:01:42 GMT-0800 (PST)
+						 * year = values[3]; month = parseMonth(values[1]);
+						 * dayOfMonth = values[2]; time = parseTime(values[4]);
+						 * break;
+						 */
+						default:
+							return value;
+						}
+					}
+
+					var pattern = "";
+					var retValue = "";
+					// Issue 1 - variable scope issue in format.date
+					// Thanks jakemonO
+					for ( var i = 0; i < format.length; i++) {
+						var currentPattern = format.charAt(i);
+						pattern += currentPattern;
+						switch (pattern) {
+						case "ddd":
+							retValue += strDay(dayOfWeek);
+							pattern = "";
+							break;
+						case "dd":
+							if (format.charAt(i + 1) == "d") {
+								break;
+							}
+							if (String(dayOfMonth).length === 1) {
+								dayOfMonth = '0' + dayOfMonth;
+							}
+							retValue += dayOfMonth;
+							pattern = "";
+							break;
+						case "MMM":
+							retValue += strMonth(month);
+							pattern = "";
+							break;
+						case "MM":
+							if (format.charAt(i + 1) == "M") {
+								break;
+							}
+							if (String(month).length === 1) {
+								month = '0' + month;
+							}
+							retValue += month;
+							pattern = "";
+							break;
+						case "yyyy":
+							retValue += year;
+							pattern = "";
+							break;
+						case "HH":
+							retValue += time.hour;
+							pattern = "";
+							break;
+						case "hh":
+							// time.hour is "00" as string == is used instead of
+							// ===
+							retValue += (time.hour == 0 ? 12 : time.hour < 13 ? time.hour : time.hour - 12);
+							pattern = "";
+							break;
+						case "mm":
+							retValue += time.minute;
+							pattern = "";
+							break;
+						case "ss":
+							// ensure only seconds are added to the return
+							// string
+							retValue += time.second.substring(0, 2);
+							pattern = "";
+							break;
+						// case "tz":
+						// //parse out the timezone information
+						// retValue += time.second.substring(3,
+						// time.second.length);
+						// pattern = "";
+						// break;
+						case "SSS":
+							retValue += time.millis.substring(0, 3);
+							pattern = "";
+							break;
+						case "a":
+							retValue += time.hour >= 12 ? "PM" : "AM";
+							pattern = "";
+							break;
+						case " ":
+							retValue += currentPattern;
+							pattern = "";
+							break;
+						case "/":
+							retValue += currentPattern;
+							pattern = "";
+							break;
+						case ":":
+							retValue += currentPattern;
+							pattern = "";
+							break;
+						default:
+							if (pattern.length === 2 && pattern.indexOf("y") !== 0 && pattern != "SS") {
+								retValue += pattern.substring(0, 1);
+								pattern = pattern.substring(1, 2);
+							} else if ((pattern.length === 3 && pattern.indexOf("yyy") === -1)) {
+								pattern = "";
+							}
+						}
+					}
+					return retValue;
+				} catch (e) {
+					return value;
+				}
+			}
+		};
+	}());
+}(jQuery));;/** ========================================================================
  * Mower: base.mower.js - v1.0.0
  *
  *  base script to handle utility methodes
@@ -2293,14 +2625,14 @@ $(function() {
         POP_BREADCRUMB_EVENT = 'pop.mu.breadcrumb';
 
 
-    $.fn.ajaxValidForm = function(options) {
+    $.fn.ajaxValidSubmit = function(options) {
         var $form = $(this);
 
         $form
             .off(FORM_SUCCESS_EVENT)
             .off(FORM_ERROR_EVENT)
-            .on(FORM_SUCCESS_EVENT, this.selector, options, doFormSuccess)
-            .on(FORM_ERROR_EVENT, this.selector, options, doFormError);
+            .on(FORM_SUCCESS_EVENT, options, doFormSuccess)
+            .on(FORM_ERROR_EVENT, options, doFormError);
 
         $form.triggerHandler(FORM_SUBMIT_SVENT);
 
@@ -2309,14 +2641,15 @@ $(function() {
 
     function doFormSuccess(e) {
         var $form = $(e.target),
-            options = e.data.options;
+            options = e.data;
 
         $form.ajaxSubmit({
             success: function(data) {
                 if (data.success) {
-                    utils.executeFunction(options.success,data);
+                    utils.executeFunction(options.success, data);
                 } else {
-                    data.exceptionMessage && AlertBox.error(data.exceptionMessage);
+                    if(typeof window.AlertBox != 'undefined' && data.exceptionMessage) AlertBox.error(data.exceptionMessage);
+
                     var $formValidator = $form.data('bootstrapValidator');
                     if ($formValidator.length) {
                         $(data.validateErrors).each(function() {
@@ -2326,15 +2659,13 @@ $(function() {
                         });
                     }
 
-                    utils.executeFunction(options.error,data);
+                    utils.executeFunction(options.error, data);
                 }
             }
         });
     }
 
-    function doFormError(e) {
-        
-    }
+    function doFormError(e) {}
 
     // private functions & variables
     var SELECTOR = '[rel="validate-form"]';
@@ -2350,14 +2681,14 @@ $(function() {
                 var $this = $(this);
 
                 if (!$this.data('bootstrapValidator')) {
-
                     $this.bootstrapValidator({
                         excluded: [':disabled'],
                         message: '请输入合法的数值',
                         feedbackIcons: {
                             valid: 'fa fa-check',
                             invalid: 'fa fa-times',
-                            validating: 'fa fa-refresh'
+                            validating: 'fa fa-refresh',
+                            required: 'required'
                         }
                     });
                 }
@@ -2365,3 +2696,325 @@ $(function() {
         });
 
 }(jQuery, Utils || {}, Base || {}, window, document));
+;(function(root, factory) {
+
+    "use strict";
+    if (typeof define === "function" && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(["jquery"], factory);
+    } else if (typeof exports === "object") {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory(require("jquery"));
+    } else {
+        // Browser globals (root is window)
+        root.ModalBox = factory(root.jQuery, window, document);
+    }
+
+}(this, function init($, window, document, undefined) {
+
+    if (!window.bootbox) throw new Error('ModalBox requires bootbox.js');
+
+    if (!$.fn.slimScroll) throw new Error('ModalBox requires slimScroll.js');
+
+    function _init(options) {
+        if (options.url) {
+            if (!options.type || (options.type != 'ajax' && options.type != 'iframe')) {
+                options.type = 'ajax';
+            }
+        }
+        if (options.remote) {
+            options.type = 'ajax';
+            if (typeof options.remote === 'string') options.url = options.remote;
+        } else if (options.iframe) {
+            options.type = 'iframe';
+            if (typeof options.iframe === 'string') options.url = options.iframe;
+        } else if (options.custom) {
+            options.type = 'custom';
+            if (typeof options.custom === 'string') {
+                var $doms;
+                try {
+                    $doms = $(options.custom);
+                } catch (e) {}
+
+                if ($doms && $doms.length) {
+                    options.custom = $doms;
+                } else if ($.isFunction(window[options.custom])) {
+                    options.custom = window[options.custom];
+                }
+            }
+        }
+    }
+
+    var NAME = 'mower.modalbox';
+
+    var defaults = {
+        type: 'custom',
+        width: null, // number, css definition
+        size: null, // 'md', 'sm', 'lg', 'fullscreen'
+        height: 'auto',
+        name: 'remoteModal',
+        spinner: '<div class="fa fa-spinner fa-pulse loader"></div>',
+        delay: 0
+    };
+
+    var templates = {
+        dialog: "<div class='bootbox modal' tabindex='-1' role='dialog' aria-hidden='true'>" +
+            "<div class='modal-dialog'>" +
+            "<div class='modal-content'>" +
+            "<div class='modal-body'><div class='bootbox-body'></div></div>" +
+            "</div>" +
+            "</div>" +
+            "</div>",
+        header: "<div class='modal-header'>" +
+            "<h4 class='modal-title'></h4>" +
+            "</div>",
+        footer: "<div class='modal-footer'></div>"
+    };
+
+    // our public object; augmented after our private API
+    var exports = bootbox;
+
+    exports.ajaxDialog = function(option) {
+        var options = $.extend({}, defaults, option);
+
+        _init(options);
+        // capture the user's show value; we always set this to false before
+        // spawning the dialog to give us a chance to attach some handlers to
+        // it, but we need to make sure we respect a preference not to show it
+        var shouldShow = (options.show === undefined) ? true : options.show;
+
+        options.show = false;
+        var that = this,
+            $modal = exports.dialog(options),
+            $dialog = $modal.find('.modal-dialog'),
+            custom = options.custom,
+            $body = $dialog.find('.modal-body').css('padding', ''),
+            $header = $dialog.find('.modal-header'),
+            $content = $dialog.find('.modal-content');
+
+        $modal.toggleClass('modal-loading', true);
+        if (options.size) {
+            options.width = '';
+            options.height = '';
+        }
+
+        var readyToShow = function(delay) {
+            if (typeof delay === 'undefined') delay = 300;
+            setTimeout(function() {
+                $dialog = $modal.find('.modal-dialog');
+                if (options.width && options.width != 'auto') {
+                    $dialog.css('width', options.width);
+                }
+                if (options.height && options.height !== 'auto') {
+
+                    $dialog.css('height', options.height);
+
+                    if (options.type === 'iframe') {
+                        $body.css('height', $dialog.height() - $header.outerHeight());
+                    } else {
+                        $body.slimScroll({
+                            height: $dialog.height() - $header.outerHeight()
+                        });
+                    }
+                }
+                $modal.removeClass('modal-loading');
+            }, delay);
+        };
+
+        if (options.type === 'custom' && custom) {
+            if ($.isFunction(custom)) {
+                var customContent = custom({
+                    modal: $modal,
+                    options: options,
+                    ready: readyToShow
+                });
+                if (typeof customContent === 'string') {
+                    $body.html(customContent);
+                    readyToShow();
+                }
+            } else if (custom instanceof $) {
+                $body.html($('<div>').append(custom.clone()).html());
+                readyToShow();
+            } else {
+                $body.html(custom);
+                readyToShow();
+            }
+        } else if (options.url) {
+            $modal.attr('ref', options.url);
+            if (options.type === 'iframe') {
+                $modal.addClass('modal-iframe');
+                this.firstLoad = true;
+                var iframeName = 'iframe-' + options.name;
+                $header.detach();
+                $body.detach();
+                $content.empty().append($header).append($body);
+                $body.css('padding', 0)
+                    .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
+
+                if (options.waittime > 0) {
+                    that.waitTimeout = setTimeout(readyToShow, options.waittime);
+                }
+
+                var frame = document.getElementById(iframeName);
+                frame.onload = frame.onreadystatechange = function() {
+                    if (that.firstLoad) $modal.addClass('modal-loading');
+                    if (this.readyState && this.readyState != 'complete') return;
+                    that.firstLoad = false;
+
+                    if (options.waittime > 0) {
+                        clearTimeout(that.waitTimeout);
+                    }
+
+                    try {
+                        $modal.attr('ref', frame.contentWindow.location.href);
+                        var frame$ = window.frames[iframeName].$;
+                        if (frame$ && options.height === 'auto') {
+                            // todo: update iframe url to ref attribute
+                            var $framebody = frame$('body').addClass('body-modal');
+                            var ajustFrameSize = function() {
+                                $modal.removeClass('fade');
+                                var height = $framebody.outerHeight();
+                                $body.css('height', height);
+                                if (options.fade) $modal.addClass('fade');
+                                readyToShow();
+                            };
+
+                            $modal.callEvent('loaded.mower.modal', {
+                                modalType: 'iframe'
+                            });
+
+                            setTimeout(ajustFrameSize, 100);
+
+                            $framebody.off('resize.' + NAME).on('resize.' + NAME, ajustFrameSize);
+
+                            frame$.extend({
+                                closeModal: window.closeModal
+                            });
+                        } else {
+                            readyToShow();
+                        }
+                    } catch (e) {
+                        readyToShow();
+                    }
+                };
+            } else {
+                $.get(options.url, function(data) {
+                    try {
+                        var $html = $(data);
+
+                        //update version
+                        var version = $html.filter('meta');
+                        if (version.exists()) {
+                            $('meta[name=version]', document).attr('content', version.attr('content'));
+                        }
+
+                        var exclude = ':not(meta)';
+                        //update content
+                        $($.parseHTML(data)).filter(exclude).each(function() {
+                            var $data = $(this);
+                            if ($data.hasClass('modal-dialog')) {
+                                $dialog.replaceWith($data);
+                            } else if ($data.hasClass('modal-content')) {
+                                $dialog.find('.modal-content').replaceWith($data);
+                            } else if ($data.hasClass('modal-title')) {
+                                $dialog.find('.modal-title').replaceWith($data);
+                            } else if ($data.hasClass('modal-body')) {
+                                $dialog.find('.modal-body').replaceWith($data);
+                            } else {
+                                $body.wrapInner($data);
+                            }
+                        });
+
+                        //reinit document ready function in the new fragment 
+                        $(document).triggerHandler('update', $modal[0]);
+
+                        //update javascript 
+                        $html.filter('script').each(function() {
+                            var $script = $(this);
+                            $modal.append($script);
+                        });
+                    } catch (e) {
+                        $body.wrapInner(data);
+                    }
+
+                    $modal.callEvent('loaded.mower.modal', {
+                        modalType: 'ajax'
+                    });
+                    readyToShow();
+                });
+            }
+        }
+
+        //modal show 
+        if (shouldShow === true) {
+            //add loading spinner
+            $modal.prepend(options.spinner);
+            $modal.modal("show");
+        }
+    };
+
+
+    $(document).on('click.' + NAME + '.data-api', '[data-toggle="modalbox"]', function(e) {
+        var $this = $(this);
+        exports.ajaxDialog($.extend({}, $this.data()));
+
+        if ($this.is('a')) {
+            e.preventDefault();
+        }
+    });
+
+    return exports;
+}));
+;/** ========================================================================
+ * Mower: messagebox.mower.js - v1.0.0
+ *
+ *  messagebox show message alter window alert with status,ie:success,warning and so on.
+ *
+ * Dependencies :
+ *                toastr plugin
+ * Copyright 2011-2014 Infinitus, Inc
+ * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
+ * ======================================================================== */
+
+var MessageBox = (function($, toastr) {
+
+    var DEFAULTS = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-top-center",
+        "onclick": null,
+        "showDuration": "1000",
+        "hideDuration": "1000",
+        "timeOut": "2000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    return {
+        init: function() {
+            toastr.options = $.extend({}, toastr.options, DEFAULTS);
+        },
+        success: function(message, title, options) {
+            toastr.success(message, title, options);
+        },
+        warning: function(message, title, options) {
+            toastr.warning(message, title, options);
+        },
+        info: function(message, title, options) {
+            toastr.info(message, title, options);
+        },
+        error: function(message, title, options) {
+            toastr.error(message, title, options);
+        }
+    };
+
+}(jQuery, toastr || {}));
+
+jQuery(function() {
+    MessageBox.init();
+});
