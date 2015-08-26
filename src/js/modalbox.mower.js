@@ -96,7 +96,11 @@
             $header = $dialog.find('.modal-header'),
             $content = $dialog.find('.modal-content');
 
-        $modal.toggleClass('modal-loading', true);
+        $modal.addClass(options.cssClass)
+            .toggleClass('modal-md', options.size === 'md')
+            .toggleClass('modal-sm', options.size === 'sm')
+            .toggleClass('modal-lg', options.size === 'lg')
+            .toggleClass('modal-loading', true);
         if (options.size) {
             options.width = '';
             options.height = '';

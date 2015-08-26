@@ -8,7 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, bootstrap, front-end, frontend, web development">
 
-    <title>Mower</title>
+    <title>
+
+        视图 &middot; Mower-前端开发框架
+
+    </title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -16,27 +20,27 @@
 
     <!-- Documentation extras -->
     <link href="assets/css/docs.css" rel="stylesheet">
-    <!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!--[if lt IE 9]><script src="assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src="assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="../favicon.ico">
 </head>
 
-<body class="bs-docs-home">
+<body>
     <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
     <!-- Docs master nav -->
-    <header class="navbar navbar-fixed-top bs-docs-nav" id="top" role="banner">
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
         <div class="container">
             <div class="navbar-header">
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -45,14 +49,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="index.html" class="navbar-brand">Mower</a>
+                <a href="../index.html" class="navbar-brand">Mower</a>
             </div>
             <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li>
+                    <li >
                         <a href="getting-started.html">开始</a>
                     </li>
-                    <li>
+                    <li >
                         <a href="css.html">基础</a>
                     </li>
                     <li>
@@ -64,7 +68,7 @@
                     <li>
                         <a href="javascript.html">Javascript插件</a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="view.html">视图</a>
                     </li>
                 </ul>
@@ -73,22 +77,30 @@
     </header>
 
 
-    <!-- Page content of course! -->
-    <main class="bs-docs-masthead" id="content" role="main">
+    <!-- Docs page layout -->
+    <div class="bs-docs-header" id="content">
         <div class="container">
-            <span class="bs-docs-booticon bs-docs-booticon-lg bs-docs-booticon-outline bordered-radius-6">M</span>
-            <p class="lead">简洁、直观、轻量的前端开发框架，让web开发更简单、迅速。</p>
-            <p class="lead">
-                <a href="getting-started.html" class="btn btn-outline-inverse btn-lg bordered-radius-6">开始</a>
-            </p>
-            <p class="version">Currently v1.1.2</p>
-        </div>
-    </main>
+            <h1>视图</h1>
+            <p>主要介绍数据表格、菜单、前后端布局界面等等。</p>
 
-    <div class="bs-docs-featurette">
-        <div class="container">
-            <p class="lead">Mower 是完全开源的。它的代码托管、开发、维护都依赖 GitHub 平台。</p>
-            <a href="https://github.com/macula-projects/mower" class="btn btn-outline btn-lg bordered-radius-6">查看项目</a>
+
+
+        </div>
+    </div>
+
+    <div class="container bs-docs-container">
+
+        <div class="row">
+            <div class="col-md-9" role="main">
+                
+            </div>
+
+            <div class="col-md-3">
+                <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
+                    <ul class="nav bs-docs-sidenav">
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -99,7 +111,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
     <script src="assets/plugins/google-code-prettify/prettify.js"></script>
-    
+
     <script src="assets/js/docs.min.js"></script>
 </body>
 

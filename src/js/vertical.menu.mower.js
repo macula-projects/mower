@@ -75,6 +75,7 @@
                 }
             });
 
+
             this.renderMenu(datasource.tree);
 
             var that = this;
@@ -200,7 +201,7 @@
                             "data": data
                         });
                         that.$element.trigger(e);
-                    } else {
+                    } else if (data.length) {
                         that.constructTree(data);
 
                         e = $.Event(VMMenu.DEFAULTS.events.populateSuccess, {

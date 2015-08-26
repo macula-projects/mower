@@ -190,7 +190,7 @@
                             "data": data
                         });
                         that.$element.trigger(e);
-                    } else {
+                    } else if (data.length) {
                         that.constructTree(data);
 
                         e = $.Event(NBMenu.DEFAULTS.events.populateSuccess, {

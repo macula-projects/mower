@@ -59,6 +59,9 @@
         <li class="active">
             <a href="javascript.html">Javascript插件</a>
         </li>
+        <li>
+            <a href="view.html">视图</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -480,352 +483,1087 @@ $('#myModal').modal('handleUpdate')
               </ul>
           </div>
           <div class="bs-docs-section">
-            <h2 id="remote-modals" class="page-header">远程模态框 <small>modal.remote.mower.js</small></h2>
-            <p>远程模态框允许你不需要书写静态模态框HTML，直接使用触发按钮或者一行Javascript代码即可让一个全新的模态框展现。支持使用Ajax从远程获取内容，当然不使用远程内容，直接使用本地内容也是很方便。</p>
-            <h3 class="item-header" id="remote-modals-examples">实例</h3>
-            <h4 class="subitem-header" id="remote-modals-type">加载远程内容</h4>
-            <p>这里提供两种方法（Ajax和iframe）来加载远程内容，使用起来几乎似乎没有任何区别，你只需要确保远程地址所提供的内容是正确的类型。</p>
-            <p>在获取远程内容到显示的过程中，会显示正在加载的图标动画。</p>
-            <h5 class="text-bold">使用Ajax</h5>
-            <p>使用<code>data-remote="(ajax get url)"</code>属性来指定ajax片段获取地址。或者同时指定<code>data-type="ajax"</code>和<code>data-url="(ajax get url)"</code>属性。</p>
-            <div class="bs-example">
-              <button type="button" class="btn btn-primary" data-remote="partial/remote-modal.html" data-toggle="modal">Ajax模态框</button>
+            <h2 id="modalbox" class="page-header">ModalBox <small>modalbox.mower.js</small></h2>
+             <p>Mower为了增强模态框，引入第三方插件<a target="_blank" href="http://bootboxjs.com/" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i>bootbox</a>基础上，增加远程动态加载数据功能。</p>
+            <h3 class="item-header" id="modalbox-examples">实例</h3>
+            <h4 class="subitem-header" id="modalbox-alert">提示</h4>
+            <div class="bs-example bs-example-padded-bottom">
+              <button id="btn-modalbox-tip" type="button" class="btn btn-primary btn-lg">提示框</button>
             </div>
-            <div class="highlight">
-              <pre class="prettyprint">
-&lt;!-- 使用data-remote属性 --&gt;
-&lt;button type="button" class="btn btn-primary" data-remote="partial/remote-modal.html" data-toggle="modal"&gt;Ajax模态框&lt;/button&gt;
-
-&lt;!-- 使用data-type 和data-url属性 --&gt;
-&lt;button type="button" class="btn btn-primary" data-type="ajax" data-url="partial/remote-modal.html" data-toggle="modal"&gt;Ajax模态框&lt;/button&gt;
-              </pre>
-            </div>
-            <p>在返回的ajax片段中，你可以包含一个完整的<code>.modal-dialog</code>内容，或者仅包含<code>.modal-content</code>，甚至不是任何静态modal结构，远端模态框会根据所包含的内容自动补全对话框的缺失部分。</p>
-
-            <h5 class="text-bold">使用iframe（内嵌框架）</h5>
-            <p>使用<code>data-iframe="(iframe url)"</code>属性来指定远程页面内容获取地址。或者同时指定<code>data-type="iframe"</code>和<code>data-url="(iframe url)"</code>属性。</p>
-            <div class="bs-example">
-              <button type="button" class="btn btn-primary" data-iframe="partial/iframe-modal.html" data-toggle="modal">iframe模态框</button>
-            </div>
-            <h4 class="subitem-header" id="remote-modals-custom">加载自定义内容</h4>
-            <p>通过定义<code>custom</code>属性可以更灵活的为模态框更新内容。</p>
-            <h5 class="text-bold">指定内容文本</h5>
-            <p>最简单的方法是为custom指定内容文本即可。同样可以使用<code>data-custom</code>属性。</p>
-            <div class="bs-example">
-              <button type="button" class="btn btn-primary" data-custom="<h1>此内容是自定义的</h1><p>哈哈:)</p>" data-toggle="modal">指定内容文本</button>
-            </div>
-            <div class="highlight">
-<pre class='prettyprint'><code>&lt;!-- 使用data-custom 属性 --&gt;
-&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-custom=&quot;此内容是自定义的:)&quot; data-toggle=&quot;modal&quot;&gt;指定内容文本&lt;/button&gt;</code></pre>
-
-<pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
-$('#triggerButton').remoteModal({custom: '&lt;h1&gt;此内容是自定义的&lt;/h1&gt;&lt;p&gt;哈哈:)&lt;/p&gt;'});
-</code>
-</pre>              
-            </div>
-
-            <h5 class="text-bold">指定页面元素作为内容</h5>
-            <p>通过指定一个jQuery选择器名称来获取其内容作为模态框的内容。</p>
-            <div class="bs-example">
-              <div id="myModalAlert" class="alert alert-success alert-icon">
-                <i class="fa fa-check"></i>
-                <div class="content">我希望能够在对话框看到此消息。</div>
-              </div>
-              <button type="button" class="btn btn-primary" data-custom="#myModalAlert" data-toggle="modal">指定页面元素的内容</button>
-            </div>
-            <div class="highlight">
-      <pre class='prettyprint'><code>&lt;!-- 使用data-custom 属性 --&gt;
-&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-custom=&quot;#myModalAlert&quot; data-toggle=&quot;modal&quot;&gt;指定页面元素的内容&lt;/button&gt;</code></pre>
-      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
-$('#triggerButton').remoteModal({custom: '#myModalAlert'});</code></pre>              
-            </div>
-
-            <h5 class="text-bold">使用jQuery对象作为内容</h5>
-            <p>直接为custom参数赋值为一个jQuery对象，此对象的内容将显示在对话框中。此方式无法使用data属性调用。</p>
-            <div class="highlight">
-      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
-$('#triggerButton').remoteModal({custom: $('#myModalAlert')});</code></pre>              
-            </div>
-
-            <h5 class="text-bold">使用回调函数动态生成内容</h5>
-            <p>将一个回调函数赋值给custom参数，触发器对象会自动调用此函数来实时获得动态内容并显示在模态框中。</p>
-            <p>回调函数提供一个参数对象，可以在生成内容时灵活运用。如果生成的内容是异步的时候，需要在内容准备就绪时调用参数提供的<code>.ready()</code>方法来显示模态框。</p>
-
-            <div class="bs-example">
-              <button type="button" class="btn btn-primary" id="modalTriggerByFunc">使用函数生成内容</button>
-            </div>
-      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
-$('#triggerButton').remoteModal({custom: function()
-{
-    return "当模态框显示时，时间是：" + (new Date).toString();
-}});</code>
-</pre>
-            <p>如果你的回调函数是全局的，则只需要将custom参数指定为该函数的名称的字符串。</p>
-            <h4 class="subitem-header" id="remote-modals-custom-head">自定义头部</h4>
-
-            <h5 class="text-bold">不显示头部</h5>
-            <p>不显示头部需要指定参数<code>showHeader</code>为<code>false</code>。</p>
-            <div class="bs-example">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-custom="这个模态框不显示头部" data-show-header="false" id="modalTriggerByFunc">不显示头部</button>
-            </div>
-            <div class="highlight">
-      <pre class='prettyprint'><code>&lt;!-- 使用data-showHeader 属性 --&gt;
-&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-show-header=&quot;false&quot; data-toggle=&quot;modal&quot;&gt;不显示头部&lt;/button&gt;</code></pre>
-      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
-$('#triggerButton').remoteModal({showHeader: false});</code></pre>
-            </div>
-           <h5 class="text-bold">自定义模态框标题</h5>
-          <p>如果不指定模态框的标题，会自动使用触发按钮的title属性或文本作为模态框的标题。</p>
-          <div class="bs-example"><button type="button" class="btn btn-primary" data-toggle="modal" data-custom="此模态框的标题是新的" data-title="新的标题很重要" id="modalTriggerByFunc">自定义标题</button></div>
           <div class="highlight">
- <pre class='prettyprint'><code>&lt;!-- 使用data-title 属性 --&gt;
- &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-title=&quot;新的标题&quot; data-toggle=&quot;modal&quot;&gt;不显示头部&lt;/button&gt;</code></pre>
- <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
- $('#triggerButton').modalTrigger({title: '新的标题'});</code></pre>           
+            <pre class="prettyprint">
+&lt;button id="modalbox-tip" type="button" class="btn btn-primary btn-lg"&gt;提示框&lt;/button&gt;
+&lt;script&gt;
+$('#btn-modalbox-tip').click(function(event) {
+  ModalBox.alert("Hello world!", function() {
+   //TODO
+ });
+});
+&lt;/script&gt;
+            </pre>
           </div>
+          <h4 class="subitem-header" id="modalbox-comfirm">确认</h4>
+          <div class="bs-example bs-example-padded-bottom">
+            <button id="btn-modalbox-comfirm" type="button" class="btn btn-primary btn-lg">确认框</button>
+          </div>
+        <div class="highlight">
+          <pre class="prettyprint">
+&lt;button id="modalbox-comfirm" type="button" class="btn btn-primary btn-lg"&gt;确认框&lt;/button&gt;
+&lt;script&gt;
+$('#btn-modalbox-comfirm').click(function(event) {
+  MessageBox.confirm("Are you sure?", function(result) {
+    //TODO
+  }); 
+});
+&lt;/script&gt;
+          </pre>
+        </div>
+        <h4 class="subitem-header" id="modalbox-custom-dialog">自定义模态框</h4>
+        <div class="bs-example bs-example-padded-bottom">
+          <button id="btn-modalbox-custom-dialog" type="button" class="btn btn-primary btn-lg">自定义框</button>
+        </div>
+      <div class="highlight">
+        <pre class="prettyprint">
+&lt;button id="btn-modalbox-custom-dialog" type="button" class="btn btn-primary btn-lg"&gt;自定义框&lt;/button&gt;
+&lt;script&gt;
+ModalBox.dialog({
+  message: "I am a custom dialog",
+  title: "Custom title",
+  buttons: {
+    success: {
+      label: "Success!",
+      className: "btn-success",
+      callback: function() {
+        Example.show("great success");
+      }
+    },
+    danger: {
+      label: "Danger!",
+      className: "btn-danger",
+      callback: function() {
+        Example.show("uh oh, look out!");
+      }
+    },
+    main: {
+      label: "Click ME!",
+      className: "btn-primary",
+      callback: function() {
+        Example.show("Primary button");
+      }
+    }
+  }
+});
+&lt;/script&gt;
+        </pre>
+      </div>
+      <h4 class="subitem-header" id="modalbox-custom-html">自定义HTML内容</h4>
+      <div class="bs-example bs-example-padded-bottom">
+        <button id="btn-modalbox-custom-html" type="button" class="btn btn-primary btn-lg">自定义HTML内容</button>
+      </div>
+      <div class="highlight">
+      <pre class="prettyprint">
+&lt;button id="btn-modalbox-custom-html" type="button" class="btn btn-primary btn-lg"&gt;自定义HTML内容&lt;/button&gt;
+&lt;script&gt;
+ModalBox.dialog({
+  title: &quot;This is a form in a modal.&quot;,
+  message: '&lt;div class=&quot;row&quot;&gt;  ' +
+      '&lt;div class=&quot;col-md-12&quot;&gt; ' +
+      '&lt;form class=&quot;form-horizontal&quot;&gt; ' +
+      '&lt;div class=&quot;form-group&quot;&gt; ' +
+      '&lt;label class=&quot;col-md-4 control-label&quot; for=&quot;name&quot;&gt;Name&lt;/label&gt; ' +
+      '&lt;div class=&quot;col-md-4&quot;&gt; ' +
+      '&lt;input id=&quot;name&quot; name=&quot;name&quot; type=&quot;text&quot; placeholder=&quot;Your name&quot; class=&quot;form-control input-md&quot;&gt; ' +
+      '&lt;span class=&quot;help-block&quot;&gt;Here goes your name&lt;/span&gt; &lt;/div&gt; ' +
+      '&lt;/div&gt; ' +
+      '&lt;div class=&quot;form-group&quot;&gt; ' +
+      '&lt;label class=&quot;col-md-4 control-label&quot; for=&quot;awesomeness&quot;&gt;How awesome is this?&lt;/label&gt; ' +
+      '&lt;div class=&quot;col-md-4&quot;&gt; &lt;div class=&quot;radio&quot;&gt; &lt;label for=&quot;awesomeness-0&quot;&gt; ' +
+      '&lt;input type=&quot;radio&quot; name=&quot;awesomeness&quot; id=&quot;awesomeness-0&quot; value=&quot;Really awesome&quot; checked=&quot;checked&quot;&gt; ' +
+      'Really awesome &lt;/label&gt; ' +
+      '&lt;/div&gt;&lt;div class=&quot;radio&quot;&gt; &lt;label for=&quot;awesomeness-1&quot;&gt; ' +
+      '&lt;input type=&quot;radio&quot; name=&quot;awesomeness&quot; id=&quot;awesomeness-1&quot; value=&quot;Super awesome&quot;&gt; Super awesome &lt;/label&gt; ' +
+      '&lt;/div&gt; ' +
+      '&lt;/div&gt; &lt;/div&gt;' +
+      '&lt;/form&gt; &lt;/div&gt;  &lt;/div&gt;',
+  buttons: {
+      success: {
+          label: &quot;Save&quot;,
+          className: &quot;btn-success&quot;,
+          callback: function () {
+              var name = $('#name').val();
+              var answer = $(&quot;input[name='awesomeness']:checked&quot;).val()
+              Example.show(&quot;Hello &quot; + name + &quot;. You've chosen &lt;b&gt;&quot; + answer + &quot;&lt;/b&gt;&quot;);
+          }
+      }
+  }
+}
+);  
+&lt;/script&gt;
+      </pre>
+      </div>
+      <h4 class="subitem-header" id="modalbox-custom-ajax">Ajax加载内容</h4>
+      <div class="bs-example bs-example-padded-bottom">
+        <button id="btn-modalbox-custom-html" type="button" data-url="partial/remote-modal.html" data-title="ajax" data-toggle="modalbox" class="btn btn-primary btn-lg">Ajax加载内容</button>
+      </div>
+      <div class="highlight">
+      <pre class="prettyprint">
+ &lt;button id="btn-modalbox-custom-html" type="button" data-url="partial/remote-modal.html" data-title="ajax" data-toggle="modalbox" class="btn btn-primary btn-lg"&gt;Ajax加载内容&lt;/button&gt;
+      </pre>
+      </div>
+      <h3 class="item-header" id="modalbox-usage">如何使用</h3>
+      <h4 class="subitem-header" id="modalbox-usage-data">使用data属性</h4>
+      <p>除了<code>Ajax远程加载</code>只需要在触发模态框的按钮或链接上增加两个额外的data属性即可：<code>data-toggle="modalbox"</code>和<code>data-url="[http url]"</code>。</p>
+      <p>其他类型只能通过javascript去调用。</p>
+ <div class="highlight">
+ <pre class="prettyprint">
 
+&lt;button id="btn-modalbox-custom-html" type="button" data-url="partial/remote-modal.html" data-title="ajax" data-toggle="modalbox" class="btn btn-primary btn-lg"&gt;Ajax加载内容&lt;/button&gt;
 
-          <h5 class="text-bold">使用图标</h5>
-          <p>通过指定<code>icon</code>属性来在标题前面增加一个图标。</p>
-          <p>图标的定义请参考“控件->图标”章节。</p>
-          <div class="bs-example"><button type="button" class="btn btn-primary" data-toggle="modal" data-custom="此模态框标题包含一个图标" data-icon="fa fa-heart" data-title="图标很重要" id="modalTriggerByFunc">看看图标是什么</button></div>
-          <div class="highlight">
-      <pre class='prettyprint'><code>&lt;!-- 使用data-title 属性 --&gt;
-&lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot; data-icon=&quot;heart&quot; data-toggle=&quot;modal&quot;&gt;不显示头部&lt;/button&gt;</code></pre>
-      <pre class='prettyprint'><code>/* 使用Javascript方法绑定在按钮上触发 */
-$('#triggerButton').modalTrigger({icon: 'heart'});</code></pre>
-          </div>
-          <h3 class="item-header">如何使用</h3>
-          <h4 class="subitem-header">使用data属性来调用</h4>
-          <p>使用在触发按钮上设置data属性即可使用。此方法与常规模态框触发按钮属性书写方式完全一致，只不过需要增加几个特殊属性，包括<code>data-remote</code>、<code>data-iframe</code>和<code>data-custom</code>。</p>
-          <p>使用data属性来调用请参考上面的实例章节。</p>
-          <h4 class="subitem-header">使用Javascript手动调用</h4>
-          <p>Javascript方法也十分灵活。</p>
-          <h5 class="text-bold">jQuery对象方法</h5>
-          <p>使得一个jquery对象能够监听事件（一般为点击）并启动模态框。</p>
-          <div class="highlight">
-<pre class='prettyprint'><code>$('#triggerButton').modalTrigger(options);</code></pre>
-          </div>
-          <h4 class="subitem-header">参数</h4>
-          <p>在初始化模态框或者显示时都能够使用参数来个性化你的模态框。</p>
-          <table class="table table-bordered">
+ </pre>
+ </div>
+      <h4 class="subitem-header" id="modalbox-usage-js">手动调用Javascript</h4>
+      <div class="highlight">
+        <pre class="prettyprint">
+&lt;script&gt;
+ModalBox.alert("Hello world!", function() {
+//TODO
+});
+ModalBox.comfirm("Hello world!", function() {
+//TODO
+});
+ModalBox.prompt("Hello world!", function() {
+//TODO
+});
+ModalBox.dialog("Hello world!", function() {
+//TODO
+});
+ModalBox.ajaxDialog({
+  "url":"xxx"
+});
+&lt;/script&gt;
+        </pre>
+      </div>
+      <h4 class="subitem-header" id="modalbox-usage-options">参数</h4>
+      <p>
+         这里仅罗列常用参数，更多参数请参考<a target="_blank" href="http://bootboxjs.com/" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i>bootbox</a>
+      </p>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <colgroup>
+                <col class="col-name">
+                <col class="col-type">
+                <col class="col-description">
+            </colgroup>
             <thead>
-              <tr>
-                <th>参数</th>
-                <th>名称</th>
-                <th>可选值</th>
-                <th>说明</th>
-              </tr>
+                <tr>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>描述</th>
+                </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>
+                        <p>message</p>
+                        <span class="label label-danger">
+                            必选
+                        </span>
+                    </td>
+                    <td>String | Element</td>
+                    <td>
+                        <p>
+                            模态框显示内容
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>title</td>
+                    <td>String | Element</td>
+                    <td>
+                        <p>
+                            模态框标题，把值填充在 in an <code>&lt;h4&gt;</code> 元素里面.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>callback</p>
+                        <span class="label label-danger">
+                            必选 *
+                        </span>
+                    </td>
+                    <td>Function</td>
+                    <td>
+                        <p class="bg-info">
+                            * 提示 callback事件非必选.
+                        </p>
+                        <pre class="prettyprint hljs css"><code><span class="hljs-tag">ModalBox</span><span class="hljs-class">.alert</span>(<span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">message</span>:<span class="hljs-value"> <span class="hljs-string">"I'm an alert!"</span>, callback: <span class="hljs-function">function</span>() {</span></span></span>} })</code></pre>
+                        <p>
+                            确认和提醒的回调事件必须包含返回值参数，例如确认返回
+                             <code>true</code> or <code>false</code> , 而提醒返回用户输入信息值。
+                        </p>
+                        <pre class="prettyprint linenums hljs javascript"><code>ModalBox.confirm(<span class="hljs-string">"Are you sure?"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> </span>{
+<span class="hljs-comment">// result will be true or false</span>
+}); </code></pre>
+                        <p>
+                            or
+                        </p>
+                        <pre class="prettyprint linenums hljs javascript"><code>ModalBox.prompt(<span class="hljs-string">"What is your name?"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> </span>{
+<span class="hljs-keyword">if</span> (result === <span class="hljs-literal">null</span>) {
+<span class="hljs-comment">// Prompt dismissed</span>
+} <span class="hljs-keyword">else</span> {
+<span class="hljs-comment">// result has a value</span>
+}
+}); </code></pre>
+                        <p>
+                            Default: <code>null</code>
+                        </p>
+                    </td>
+                </tr>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-info alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+          <p>Ajax加载内容额外参数</p>
+        </div>
+        <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>参数</th>
+                  <th>名称</th>
+                  <th>可选值</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>type</code></td>
+                  <td>模态框类型</td>
+                  <td>
+                    <ul>
+                      <li><code>'custom'</code>（默认），自定义类型</li>
+                      <li><code>'iframe'</code></li>
+                      <li><code>'ajax'</code></li>
+                    </ul>
+                  </td>
+                  <td>通常该参数和参数<code>url</code>一起使用，当指定了<code>custom</code>、<code>remote</code>和<code>iframe</code>参数时该参数可以忽略</td>
+                </tr>
+                <tr>
+                  <td><code>url</code></td>
+                  <td>远程内容地址</td>
+                  <td>
+                    远程地址字符串
+                  </td>
+                  <td>通常该参数和<code>type</code>一起似乎用，当指定了<code>custom</code>、<code>remote</code>和<code>iframe</code>参数时该参数可以忽略</td>
+                </tr>
+                <tr>
+                  <td><code>remote</code></td>
+                  <td>Ajax内容地址</td>
+                  <td>
+                    远程地址字符串
+                  </td>
+                  <td>如果使用该参数，则参数<code>type</code>和<code>url</code>可以忽略</td>
+                </tr>
+                <tr>
+                  <td><code>iframe</code></td>
+                  <td>iframe页面地址</td>
+                  <td>
+                    远程地址字符串
+                  </td>
+                  <td>如果使用该参数，则参数<code>type</code>和<code>url</code>可以忽略</td>
+                </tr>
+                <tr>
+                  <td><code>size</code></td>
+                  <td>模态框大小</td>
+                  <td>
+                    <ul>
+                      <li><code>''</code>（默认），默认大小</li>
+                      <li><code>'lg'</code>，大模态框</li>
+                      <li><code>'sm'</code>，小模态框</li>
+                      <li><code>'fullscreen'</code>，全屏显示</li>
+                    </ul>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><code>width</code></td>
+                  <td>模态框宽度</td>
+                  <td>
+                    <ul>
+                      <li><code>null</code>（默认），默认宽度</li>
+                      <li>其他表示宽度的CSS值字符串</li>
+                    </ul>
+                  </td>
+                  <td>如果使用<code>size</code>参数，则可以忽略该参数</td>
+                </tr>
+                <tr>
+                  <td><code>height</code></td>
+                  <td>模态框宽度</td>
+                  <td>
+                    <ul>
+                      <li><code>'auto'</code>（默认），自动根据内容调整</li>
+                      <li>其他表示高度的CSS值字符串</li>
+                    </ul>
+                  </td>
+                  <td>如果指定了高度不是<code>'auto'</code>则可能出现内容与高度不匹配的情况。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="bs-docs-section">
+          <h2 id="messagebox" class="page-header">消息框 <small>messagebox.mower.js</small></h2>
+           <p>Mower为了增强消息提醒体验和友好性，引入第三方插件<a target="_blank" href="https://github.com/CodeSeven/toastr" title="" data-original-title="这是一个第三方组件，点击访问网站">bootbox</a>。</p>
+          <h3 class="item-header" id="messagebox-examples">实例</h3>
+          <h4 class="subitem-header" id="messagebox-warning">警告提示消息</h4>
+          <div class="bs-example bs-example-padded-bottom">
+            <button id="btn-messagebox-warning" type="button" class="btn btn-primary btn-lg">警告</button>
+          </div>
+        <div class="highlight">
+          <pre class="prettyprint">
+&lt;button id="btn-messagebox-warning" type="button" class="btn btn-primary btn-lg"&gt;警告&lt;/button&gt;
+&lt;script&gt;
+$('#btn-messagebox-warning').click(function(event) {
+MessageBox.warning("Hello world!");
+});
+&lt;/script&gt;
+          </pre>
+        </div>
+        <h4 class="subitem-header" id="messagebox-success">成功提示消息</h4>
+        <div class="bs-example bs-example-padded-bottom">
+          <button id="btn-messagebox-success" type="button" class="btn btn-primary btn-lg">成功</button>
+        </div>
+      <div class="highlight">
+        <pre class="prettyprint">
+&lt;button id="btn-messagebox-success" type="button" class="btn btn-primary btn-lg"&gt;成功&lt;/button&gt;
+&lt;script&gt;
+$('#btn-messagebox-success').click(function(event) {
+MessageBox.success('Have fun storming the castle!', 'title-success'); 
+});
+&lt;/script&gt;
+        </pre>
+      </div>
+      <h4 class="subitem-header" id="messagebox-error">错误提示信息</h4>
+      <div class="bs-example bs-example-padded-bottom">
+        <button id="btn-messagebox-error" type="button" class="btn btn-primary btn-lg">错误</button>
+      </div>
+    <div class="highlight">
+      <pre class="prettyprint">
+&lt;button id="btn-messagebox-error" type="button" class="btn btn-primary btn-lg"&gt;错误&lt;/button&gt;
+&lt;script&gt;
+$('#btn-messagebox-error').click(function(event) {
+MessageBox.error('I do not think that word means what you think it means.', 'title-error!'); 
+});
+&lt;/script&gt;
+      </pre>
+    </div>
+    <h4 class="subitem-header" id="messagebox-info">提示信息</h4>
+    <div class="bs-example bs-example-padded-bottom">
+      <button id="btn-messagebox-info" type="button" class="btn btn-primary btn-lg">提示</button>
+    </div>
+    <div class="highlight">
+    <pre class="prettyprint">
+&lt;button id="btn-messagebox-info" type="button" class="btn btn-primary btn-lg"&gt;提示&lt;/button&gt;
+&lt;script&gt;
+$('#btn-messagebox-info').click(function(event) {
+ MessageBox.info('这里是提示信息内容.', '提示'); 
+});
+&lt;/script&gt;
+    </pre>
+    </div>
+    
+    <h3 class="item-header" id="messagebox-usage">如何使用</h3>
+    <h4 class="subitem-header" id="messagebox-usage-js">手动调用Javascript</h4>
+    <div class="highlight">
+      <pre class="prettyprint">
+&lt;script&gt;
+// Display a warning toast, with no title
+MessageBox.warning('My name is Inigo Montoya. You killed my father, prepare to die!')
+
+// Display a success toast, with a title
+MessageBox.success('Have fun storming the castle!', 'Miracle Max Says')
+
+// Display an error toast, with a title
+MessageBox.error('I do not think that word means what you think it means.', 'Inconceivable!')
+
+// Immediately remove current toasts without using animation
+MessageBox.remove()
+
+// Remove current toasts using animation
+MessageBox.clear()
+
+// Override global options
+MessageBox.success('We do have the Kapua suite available.', 'Turtle Bay Resort', {timeOut: 5000})
+&lt;/script&gt;
+      </pre>
+    </div>
+    <h4 class="subitem-header" id="messagebox-usage-options">参数</h4>
+    <p>
+       这里仅罗列常用参数，更多参数请参考<a target="_blank" href="https://github.com/CodeSeven/toastr" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i>toastr</a>
+    </p>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+          <colgroup>
+              <col class="col-name">
+              <col class="col-type">
+              <col class="col-description">
+          </colgroup>
+          <thead>
               <tr>
-                <td><code>type</code></td>
-                <td>模态框类型</td>
-                <td>
-                  <ul>
-                    <li><code>'custom'</code>（默认），自定义类型</li>
-                    <li><code>'iframe'</code></li>
-                    <li><code>'ajax'</code></li>
-                  </ul>
-                </td>
-                <td>通常该参数和参数<code>url</code>一起使用，当指定了<code>custom</code>、<code>remote</code>和<code>iframe</code>参数时该参数可以忽略</td>
+                  <th>名称</th>
+                  <th>类型</th>
+                  <th>描述</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>
+                      <p>closeButton</p>
+                  </td>
+                  <td>boolean</td>
+                  <td>
+                      <p>
+                          是否显示关闭按钮
+                      </p>
+                  </td>
               </tr>
               <tr>
-                <td><code>url</code></td>
-                <td>远程内容地址</td>
-                <td>
-                  远程地址字符串
-                </td>
-                <td>通常该参数和<code>type</code>一起似乎用，当指定了<code>custom</code>、<code>remote</code>和<code>iframe</code>参数时该参数可以忽略</td>
+                  <td>positionClass</td>
+                  <td>String</td>
+                  <td>
+                      <p>
+                          设置框位置样式，例如：toast-top-right、toast-buttom-left、toast-bottom-full-width、toast-top-center等等组合
+                      </p>
+                  </td>
               </tr>
               <tr>
-                <td><code>remote</code></td>
-                <td>Ajax内容地址</td>
-                <td>
-                  远程地址字符串
-                </td>
-                <td>如果使用该参数，则参数<code>type</code>和<code>url</code>可以忽略</td>
+                  <td>
+                      <p>timeOut</p>
+                  </td>
+                  <td>integer</td>
+                  <td>
+                      显示时长，单位毫秒。可以同时设置timeout和extendedTimeOut为0，消息框将不会自动消失。
+                  </td>
               </tr>
-              <tr>
-                <td><code>iframe</code></td>
-                <td>iframe页面地址</td>
-                <td>
-                  远程地址字符串
-                </td>
-                <td>如果使用该参数，则参数<code>type</code>和<code>url</code>可以忽略</td>
-              </tr>
-              <tr>
-                <td><code>size</code></td>
-                <td>模态框大小</td>
-                <td>
-                  <ul>
-                    <li><code>''</code>（默认），默认大小</li>
-                    <li><code>'lg'</code>，大模态框</li>
-                    <li><code>'sm'</code>，小模态框</li>
-                    <li><code>'fullscreen'</code>，全屏显示</li>
-                  </ul>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><code>width</code></td>
-                <td>模态框宽度</td>
-                <td>
-                  <ul>
-                    <li><code>null</code>（默认），默认宽度</li>
-                    <li>其他表示宽度的CSS值字符串</li>
-                  </ul>
-                </td>
-                <td>如果使用<code>size</code>参数，则可以忽略该参数</td>
-              </tr>
-              <tr>
-                <td><code>height</code></td>
-                <td>模态框宽度</td>
-                <td>
-                  <ul>
-                    <li><code>'auto'</code>（默认），自动根据内容调整</li>
-                    <li>其他表示高度的CSS值字符串</li>
-                  </ul>
-                </td>
-                <td>如果指定了高度不是<code>'auto'</code>则可能出现内容与高度不匹配的情况。</td>
-              </tr>
-              <tr>
-                <td><code>showHeader</code></td>
-                <td>是否显示标题</td>
-                <td>
-                  <ul>
-                    <li><code>true</code>（默认）</li>
-                    <li><code>false</code></li>
-                  </ul>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><code>title</code></td>
-                <td>模态框标题文本</td>
-                <td>
-                  字符串
-                </td>
-                <td>当参数<code>showHeader</code>为<code>false</code>则此参数无效。</td>
-              </tr>
-              <tr>
-                <td><code>icon</code></td>
-                <td>模态框标题图标</td>
-                <td>
-                  图标名称字符串
-                </td>
-                <td>当参数<code>showHeader</code>为<code>false</code>则此参数无效。</td>
-              </tr>
-              <tr>
-                <td><code>fade</code></td>
-                <td>是否使用淡入淡出动画</td>
-                <td>
-                  <ul>
-                    <li><code>true</code>（默认）</li>
-                    <li><code>false</code></li>
-                  </ul>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><code>backdrop</code></td>
-                <td>背景遮罩</td>
-                <td>
-                  <ul>
-                    <li><code>true</code>（默认）</li>
-                    <li><code>false</code></li>
-                    <li><code>'static'</code></li>
-                  </ul>
-                </td>
-                <td>使用布尔值来启用或禁用背景遮罩，如果指定为<code>'static'</code>则会启动背景遮罩，但点击背景遮罩时不会触发关闭模态框的过程。</td>
-              </tr>
-              <tr>
-                <td><code>keyboard</code></td>
-                <td>按键</td>
-                <td>
-                  <ul>
-                    <li><code>true</code>（默认）</li>
-                    <li><code>false</code></li>
-                  </ul>
-                </td>
-                <td>当为<code>ture</code>时，按下<code>esc</code>键会关闭模态框。</td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="bs-docs-section">
+          <h2 id="tooltip" class="item-header"   class="page-header">提示消息 </h2>
 
-          <h4 class="subitem-header">方法</h4>
-          <h5 class="text-bold">获取触发器对象实例</h5>
-          <p>要使用触发器方法，需要首先获取触发器对象的实例。</p>
-          <h6>通过触发按钮的data属性</h6>
-          <div class="highlight">
-<pre class='prettyprint'><code>var modalTrigger = $('#triggerButton').data('zui.modaltrigger');</code></pre>
+          <h3 class="item-header" id="tooltip-examples">实例</h3>
+          <h4 class="subitem-header">一般工具提示</h4>
+
+          <div class="bs-example tooltip-demo">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, cupiditate, eius, modi, veniam iure perspiciatis hic vitae quisquam ullam animi ipsum repellat temporibus
+              <a href="#" data-toggle="tooltip" title="This is a tooltip">have a</a>
+              officiis voluptatibus nostrum laborum debitis quidem illo deleniti iste! Minima, facilis aut explicabo debitis fugit dolor sint at soluta nulla omnis itaque
+              <a href="#" data-toggle="tooltip" title="Another tooltip">have a</a>
+              illum commodi numquam enim quod architecto molestias qui eveniet et amet
+              <a href="#" data-toggle="tooltip" title="Another tooltip">have a</a>
+              laborum quisquam quam provident esse beatae quas impedit voluptas nostrum
+              <a href="#" data-toggle="tooltip" title="Another tooltip">have a</a>
+              aspernatur deleniti suscipit blanditiis dignissimos temporibus eligendi quae corrupti
+              <a href="#" data-toggle="tooltip" title="Another tooltip">have a</a>
+              pariatur quo! Enim, ipsa, odio quasi laboriosam provident id nihil maxime architecto dolorum quas harum veniam perspiciatis tempora ducimus qui! Rem, obcaecati reiciendis officia quam.
+            </p>
           </div>
-          <h5  class="text-bold">显示模态框</h5>
-          <p>在显示模态框时，可以重新传入新的参数，而不影响触发器对象原来的参数。</p>
+          <h4 id="tooltip-examples-direction"class="subitem-header">不同方向的提示</h4>
+          <div class="bs-example tooltip-demo">
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="" data-original-title="Tooltip on left">左侧Tooltip</button>
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top">上方Tooltip</button>
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Tooltip on bottom">下方Tooltip</button>
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="" data-original-title="Tooltip on right">右侧Tooltip</button>
+          </div>
+
+          <h3>注意</h3>
+          <div class="alert alert-danger">
+            <h5>选择性加入的功能</h5>
+            <p>
+              出于性能方面的考虑，工具提示和弹框组件的data属性api是选择性加入的，也就是说 <strong>你必须自己初始化他们</strong>
+              。
+            </p>
+          </div>
+          <div class="alert alert-info">
+            <h5>工具提示与按钮组和输入框组联合使用时需要一些特殊设置</h5>
+            <p>
+              在
+              <code>.btn-group</code>
+              或
+              <code>.input-group</code>
+              内的元素上使用工具提示时，你需要指定
+              <code>container: 'body'</code>
+              选项以避免不需要的副作用（例如，当工具提示显示之后，与其合作的页面元素可能变得更宽或是去圆角）。
+            </p>
+          </div>
+          <div class="alert alert-info">
+            <h5>在禁止使用的页面元素上使用工具提示时需要额外增加一个元素将其包裹起来</h5>
+            <p>
+              为了给
+              <code>disabled</code>
+              或
+              <code>.disabled</code>
+              元素添加工具提示，将需要增加工具提示的页面元素包裹在一个
+              <code>&lt;div&gt;</code>
+              中，然后对这个
+              <code>&lt;div&gt;</code>
+              元素应用工具提示。
+            </p>
+          </div>
+
+          <h3 class="item-header" id="tooltips-usage">用法</h3>
+          <h4 class="subitem-header" id="tooltips-usage-rel">通过 <code>rel="tooltip"</code>激活工具提示</h4>
           <div class="highlight">
-          <pre class='prettyprint'><code>myModalTrigger.show(options);</code></pre>
+            <pre class="prettyprint">
+&lt;a href="#" data-toggle="tooltip" rel="tooltip" title="Some tooltip text!"&gt;Hover over me&lt;/a&gt;
+            </pre>
+          </div>
+          <h4 class="subitem-header" id="tooltips-usage-js">通过JavaScript激活工具提示</h4>
+          <div class="highlight">
+            <pre class="prettyprint">
+$(<span class="string">'#bs-example'</span>).tooltip(options)
+            </pre>
+          </div>
+
+          <h4 class="subitem-header">Markup</h4>
+          <p>
+            The generated markup of a tooltip is rather simple, though it does require a position (by default, set to
+            <code>top</code>
+            by the plugin).
+          </p>
+          <div class="highlight">
+            <pre class="prettyprint ">
+&lt;div class=&quot;tooltip&quot;&gt;
+&lt;div class=&quot;tooltip-inner&quot;&gt;
+  Tooltip!
+&lt;/div&gt;
+&lt;div class=&quot;tooltip-arrow&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+          </pre>
+          </div>
+
+          <h4 class="subitem-header" id="#tooltips-option">参数</h4>
+          <p>
+            可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
+            <code>data-</code>
+            之后，例如
+            <code>data-animation=""</code>
+            。
+          </p>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th style="width: 100px;">名称</th>
+                  <th style="width: 100px;">类型</th>
+                  <th style="width: 50px;">默认值</th>
+                  <th>描述</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>animation</td>
+                  <td>boolean</td>
+                  <td>true</td>
+                  <td>决定是否应用淡入淡出动画。</td>
+                </tr>
+                <tr>
+                  <td>html</td>
+                  <td>boolean</td>
+                  <td>false</td>
+                  <td>
+                    是否允许展示html标签。
+                  </td>
+                </tr>
+                <tr>
+                  <td>placement</td>
+                  <td>string | function</td>
+                  <td>'top'</td>
+                  <td>
+                    top | bottom | left | right | auto.
+                    <br>
+                    显示的位置。
+                  </td>
+                </tr>
+                <tr>
+                  <td>selector</td>
+                  <td>string</td>
+                  <td>false</td>
+                  <td>
+                    当需要为动态DOM应用工具提示，需要手动指定选择器。
+                  </td>
+                </tr>
+                <tr>
+                  <td>title</td>
+                  <td>string | function</td>
+                  <td>''</td>
+                  <td>
+                    标题。
+                  </td>
+                </tr>
+                <tr>
+                  <td>trigger</td>
+                  <td>string</td>
+                  <td>'hover focus'</td>
+                  <td>
+                    click | hover | focus | manual. 触发方式。
+                  </td>
+                </tr>
+                <tr>
+                  <td>delay</td>
+                  <td>number | object</td>
+                  <td>0</td>
+                  <td>
+                    <p>
+                      如果指定，则应用延迟。
+                    </p>
+                    <p>
+                      <code>delay: { show: 500, hide: 100 }</code>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>container</td>
+                  <td>string | false</td>
+                  <td>false</td>
+                  <td>
+                    <p>
+                      决定相对位置的父级容器。
+                      <code>container: 'body'</code>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.table-responsive -->
+          <div class="bs-callout bs-callout-info">
+            <h4>对单个工具提示使用data属性</h4>
+            <p>使用data属性可以为单个工具提示指定额外选项，如下所示。</p>
+          </div>
+
+          <h4 class="subitem-header">标记</h4>
+          <div class="highlight">
+<pre class="prettyprint">
+&lt;a href=&quot;#&quot; data-toggle=&quot;tooltip&quot; title=&quot;first tooltip&quot;&gt;Hover over me&lt;/a&gt;
+</pre>
+          </div>
+
+          <h4 class="subitem-header" id="tooltip-function">方法</h4>
+
+          <h4>$().tooltip(options)</h4>
+          <p>为一组元素应用工具提示。</p>
+
+          <h4>.tooltip('show')</h4>
+          <p>展示工具提示。</p>
+          <div class="highlight">
+            <pre class="prettyprint">
+$('#element').tooltip('show');
+            </pre>
+          </div>
+          <h4>.tooltip('hide')</h4>
+          <p>隐藏工具提示。</p>
+         <div class="highlight">
+          <pre class="prettyprint">
+$('#element').tooltip('hide');
+          </pre>
+         </div>
+
+          <h4>.tooltip('toggle')</h4>
+          <p>展示或隐藏工具提示。</p>
+         <div class="highlight">
+          <pre class="prettyprint">
+$('#element').tooltip('toggle');
+          </pre>
+         </div>
+          <h4>.tooltip('destroy')</h4>
+          <p>隐藏并销毁工具提示。</p>
+         <div class="highlight">
+          <pre class="prettyprint">
+$('#element').tooltip('destroy');
+          </pre>
+         </div>
+
+          <h4 class="subitem-header" id="tooltip-event">事件</h4>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th style="width: 150px;">事件类型</th>
+                  <th>描述</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>show.bs.tooltip</td>
+                  <td>
+                    当
+                    <code>show</code>
+                    方法被调用之后，此事件将被立即触发。
+                  </td>
+                </tr>
+                <tr>
+                  <td>shown.bs.tooltip</td>
+                  <td>当工具提示展示到用户面前之后（同时CSS过渡效果执行完之后）此事件被触发。</td>
+                </tr>
+                <tr>
+                  <td>hide.bs.tooltip</td>
+                  <td>
+                    当
+                    <code>hide</code>
+                    方法被调用之后，此事件被触发。
+                  </td>
+                </tr>
+                <tr>
+                  <td>hidden.bs.tooltip</td>
+                  <td>当工具提示被隐藏之后（同时CSS过渡效果执行完之后），此事件被触发。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight">
+            <pre class="prettyprint">
+$('#myTooltip').on('hidden.bs.tooltip', function () {
+  // do something…
+})    
+            </pre>
+          </div>
+      </div>
+      <div class="bs-docs-section">
+        <h3 id="popover" class="page-header">弹出框 </h3>
+        <div class="alert alert-danger">
+          <h4>插件依赖</h4>
+          <p>
+            弹出框依赖
+            <a href="#tooltips">工具提示插件</a>
+            ，因此需要先加载工具提示插件。
+          </p>
+        </div>
+        <div class="alert alert-danger">
+          <h4>选择性加入的功能</h4>
+          <p>
+            出于性能方面的考虑，工具提示和弹框组件的data属性api是选择性加入的，也就是说 <strong>你必须自己初始化他们</strong>
+            。
+          </p>
+        </div>
+        <div class="alert alert-info">
+          <h4>弹出框在按钮组和输入框组中使用时，需要额外的设置</h4>
+          <p>
+            当提示框与
+            <code>.btn-group</code>
+            或
+            <code>.input-group</code>
+            联合使用时，你需要指定
+            <code>container: 'body'</code>
+            选项（见下面的文档）以避免不需要的副作用（例如，当弹出框显示之后，与其合作的页面元素可能变得更宽或是去圆角）。
+          </p>
+        </div>
+        <div class="alert alert-info">
+          <h4>在禁止使用的页面元素上使用弹出框时需要额外增加一个元素将其包裹起来</h4
+          <p>为了给
+            <code>disabled</code>
+            或
+            <code>.disabled</code>
+            元素添加弹出框时，将需要增加弹出框的页面元素包裹在一个
+            <code>&lt;div&gt;</code>
+            中，然后对这个
+            <code>&lt;div&gt;</code>
+            元素应用弹出框。
+          </p>
+        </div>
+        <h3 class="item-header" id="popover-examples">类型</h3>
+        <h4 class="subitem-header" id="popover-examples-static">静态类型</h4>
+        <div class="bs-example bs-example-popover">
+          <div class="popover top">
+            <div class="arrow"></div>
+            <h3 class="popover-title">Popover top</h3>
+            <div class="popover-content">
+              <p>
+                Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+              </p>
+            </div>
+          </div>
+
+          <div class="popover right">
+            <div class="arrow"></div>
+            <h3 class="popover-title">Popover right</h3>
+            <div class="popover-content">
+              <p>
+                Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+              </p>
+            </div>
+          </div>
+
+          <div class="popover bottom">
+            <div class="arrow"></div>
+            <h3 class="popover-title">Popover bottom</h3>
+
+            <div class="popover-content">
+              <p>
+                Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+              </p>
+            </div>
+          </div>
+
+          <div class="popover left">
+            <div class="arrow"></div>
+            <h3 class="popover-title">Popover left</h3>
+            <div class="popover-content">
+              <p>
+                Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+              </p>
+            </div>
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+        <h4 class="subitem-header">不带箭头指示</h4>
+        <div class="bs-example bs-example-popover">
+          <div class="popover">
+            <div class="arrow"></div>
+            <h3 class="popover-title">Popover top</h3>
+            <div class="popover-content">
+              <p>
+                Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+              </p>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <h4 class="subitem-header" id="popover-examples-dynamic">动态演示</h4>
+        <div class="bs-example">
+          <a href="##" class="btn btn-lg btn-danger" data-toggle="popover" title="" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title" rel="popover">打开弹出框</a>
+        </div>
+        <h4 class="subitem-header" id="popover-examples-direction">不同方向</h4>
+        <div class="bs-example">
+          <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="" title="" rel="popover">左侧弹框</button>
+          <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="" title="" rel="popover">上方弹框</button>
+          <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="" title="" rel="popover">下方弹框</button>
+          <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="" title="" rel="popover">右侧弹框</button>
+        </div>
+        <h4 class="subitem-header" id="popover-examples-disable"><a class="anchorjs-link" href="#-8"></a>点击并让弹出框消失</h4>
+        <p>通过使用 <code>focus</code> 触发器可以在用户点击弹出框是让其消失。</p>
+        <div class="bs-callout bs-callout-danger">
+            <h4>实现“点击并让弹出框消失”的效果需要一些额外的代码</h4>
+            <p>为了更好的跨浏览器和跨平台效果，你必须使用 <code>&lt;a&gt;</code> 标签，<i>不能</i>使用 <code>&lt;button&gt;</code> 标签，并且，还必须包含 <code>role="button"</code> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes#tabindex"><code>tabindex</code></a> 属性。</p>
+          </div>
+        <div class="bs-example">
+          <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" rel="popover">可消失的弹出框</a>
         </div>
 
-          <h5 class="text-bold">关闭模态框</h5>
-          <div class="highlight">
-          <pre class='prettyprint'><code>myModalTrigger.close();</code></pre>
-          </div>
+        <h3 class="item-header" id="popovers-usage">用法</h3>
+        <h4 class="subitem-header" id="popovers-usage-rel">通过 <code>rel="tooltip"</code>激活工具提示</h4>
+        <div class="highlight">
+          <pre class="prettyprint">
 
-          <h5 class="text-bold">切换显示和关闭状态</h5>
-          <p>如果模态框没有显示，则立即显示，如果已经显示则关闭。</p>
-          <p>在切换显示和关闭状态时，可以重新传入新的参数，而不影响触发器对象原来的参数。</p>
-                    <div class="highlight">
-          <pre class='prettyprint'><code>myModalTrigger.toggle(options);</code></pre>
-          </div>
+&lt;a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" rel="popover"&gt;可消失的弹出框&lt;/a&gt;
+          </pre>
+        </div>
+        <h4 class="subitem-header" id="tooltips-usage-js">通过JavaScript启用弹出框</h4>
+        <div class="highlight">
+          <p class="prettyprint">
+            <code>$('#example').popover(options)</code>
+          </p>
+        </div>
+        <h4>使用要点</h4>
+        <ul>
+              <li>弹出框依赖 <a href="#javascript/tooltips">工具提示插件</a> ，因此需要先加载工具提示插件。</li>
+              <li>出于性能方面的考虑，工具提示和弹框组件的data属性api是选择性加入的，也就是说 <strong>你必须自己初始化他们</strong>。</li>
+              <li>弹出框在按钮组和输入框组中使用时，需要额外的设置：当提示框与 <code>.btn-group</code> 或 <code>.input-group</code> 联合使用时，你需要指定 <code>container: 'body'</code>选项（见下面的文档）以避免不需要的副作用（例如，当弹出框显示之后，与其合作的页面元素可能变得更宽或是去圆角）。</li>
+              <li>在禁止使用的页面元素上使用弹出框时需要额外增加一个元素将其包裹起来：为了给 <code>disabled</code> 或 <code>.disabled</code> 元素添加弹出框时，将需要增加弹出框的页面元素包裹在一个 <code>&lt;div&gt;</code> 中，然后对这个 <code>&lt;div&gt;</code> 元素应用弹出框。</li>
+            </ul>
 
-          <h4 class="subitem-header">事件</h4>
-          <p>因为模态框的DOM内容是动态生成的，不方便使用jQuery方法来绑定事件，不过可以将监听事件的回调函数传入参数中。</p>
-          <table class="table table-bordered">
+        <h4 class="subitem-header" id="popovers-option">参数</h4>
+        <p>
+          可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
+          <code>data-</code>
+          之后，例如
+          <code>data-animation=""</code>
+          。
+        </p>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>事件</th>
-                <th>jquery事件名称</th>
-                <th>说明</th>
+                <th style="width: 100px;">名称</th>
+                <th style="width: 100px;">类型</th>
+                <th style="width: 50px;">默认值</th>
+                <th>描述</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><code>onShow</code></td>
-                <td><code>show.mower.modal</code></td>
-                <td>当模态框的show方法被调用时立即发生</td>
+                <td>animation</td>
+                <td>boolean</td>
+                <td>true</td>
+                <td>是否应用淡入淡出动画。</td>
               </tr>
               <tr>
-                <td><code>shown</code></td>
-                <td><code>shown.mower.modal</code></td>
-                <td>当模态框完全显示后发生（执行完显示动画之后）</td>
+                <td>html</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>
+                  是否允许内容中包含html。
+                </td>
               </tr>
               <tr>
-                <td><code>onHide</code></td>
-                <td><code>hide.mower.modal</code></td>
-                <td>当模态框hide方法被调用是立即发生</td>
+                <td>placement</td>
+                <td>string | function</td>
+                <td>'right'</td>
+                <td>
+                  top | bottom | left | right | auto.
+                  <br>
+                  显示位置
+                </td>
               </tr>
               <tr>
-                <td><code>hidden</code></td>
-                <td><code>hidden.mower.modal</code></td>
-                <td>当模态框完全隐藏后发生（执行完隐藏动画之后）</td>
+                <td>selector</td>
+                <td>string</td>
+                <td>false</td>
+                <td>
+                  当需要给动态的DOM元素应用工具提示时，需要手动制定选择器。
+                </td>
               </tr>
               <tr>
-                <td><code>loaded</code></td>
-                <td><code>loaded.mower.modal</code></td>
-                <td>当远程内容加载完成后发生</td>
+                <td>trigger</td>
+                <td>string</td>
+                <td>'click'</td>
+                <td>click | hover | focus | manual，决定交互方式。</td>
+              </tr>
+              <tr>
+                <td>title</td>
+                <td>string | function</td>
+                <td>''</td>
+                <td>
+                  标题
+                </td>
+              </tr>
+              <tr>
+                <td>content</td>
+                <td>string | function</td>
+                <td>''</td>
+                <td>
+                  内容
+                </td>
+              </tr>
+              <tr>
+                <td>delay</td>
+                <td>number | object</td>
+                <td>0</td>
+                <td>
+                  <p>
+                    是否延迟展示。
+                  </p>
+                  <p>
+                    <code>delay: { show: 500, hide: 100 }</code>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>container</td>
+                <td>string | false</td>
+                <td>false</td>
+                <td>
+                  <p>
+                    决定相对位置的父级容器。
+                  </p>
+                </td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <!-- /.table-responsive -->
+        <div class="bs-callout bs-callout-info">
+          <h4>为单个弹出框应用data属性</h4>
+          <p>对单个弹出框可以通过data属性单独指定选项，如上所示。</p>
+        </div>
 
-          <pre class='prettyprint'><code>myModalTrigger.show({shown: function()
-    {
-        alert('模态框已显示。');
-    }});</code></pre>
+        <h4 class="subitem-header" id="popover-function">方法</h4>
+        <h4>$().popover(options)</h4>
+        <p>为一组元素初始化弹出框。</p>
 
-          <p>如果模态框的<code>name</code>参数是已知的，则可以获取模态框的jquery对象实例通过jQuery对象的on方法来绑定事件。</p>
-          <pre class='prettyprint'><code>$('#triggerModal').on('shown.mower.modal', function(){...});</code></pre>
+        <h4>.popover('show')</h4>
+        <p>显示弹出框。</p>
+        <div class="bs-example">
+          <p>
+            <code>js$(&#39;#element&#39;).popover(&#39;show&#39;)</code>
+          </p>
+        </div>
 
-          </div>
+        <h4>.popover('hide')</h4>
+        <p>隐藏弹出框。</p>
+        <div class="bs-example">
+          <p>
+            <code>js$(&#39;#element&#39;).popover(&#39;hide&#39;)</code>
+          </p>
+        </div>
+
+        <h4>.popover('toggle')</h4>
+        <p>展示或隐藏弹出框。</p>
+        <div class="bs-example">
+          <p>
+            <code>js$(&#39;#element&#39;).popover(&#39;toggle&#39;)</code>
+          </p>
+        </div>
+
+        <h4>.popover('destroy')</h4>
+        <p>隐藏并销毁弹出框。</p>
+        <div class="bs-example">
+          <p>
+            <code>js$(&#39;#element&#39;).popover(&#39;destroy&#39;)</code>
+          </p>
+        </div>
+
+        <h4 class="subitem-header" id="popover-event">事件</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width: 150px;">事件类型</th>
+                <th>描述</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>show.bs.popover</td>
+                <td>
+                  当
+                  <code>show</code>
+                  方法被调用之后，此事件将被立即触发。
+                </td>
+              </tr>
+              <tr>
+                <td>shown.bs.popover</td>
+                <td>当弹出框展示到用户面前之后（同时CSS过渡效果执行完之后）此事件被触发。</td>
+              </tr>
+              <tr>
+                <td>hide.bs.popover</td>
+                <td>
+                  当
+                  <code>hide</code>
+                  方法被调用之后，此事件被触发。
+                </td>
+              </tr>
+              <tr>
+                <td>hidden.bs.popover</td>
+                <td>当弹出框被隐藏之后（同时CSS过渡效果执行完之后），此事件被触发。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.table-responsive -->
+        <div class="highlight">
+<pre class="prettyprint">
+  $('#myPopover').on('hidden.bs.popover', function () {
+    // do something…
+  })
+</pre>
+        </div>
+      </div>
           <div class="bs-docs-section">
             <h2 class="page-header" id="dropdown">下拉菜单</h2>
 
@@ -885,6 +1623,7 @@ $('#triggerButton').modalTrigger({icon: 'heart'});</code></pre>
 &lt;/div&gt;
               </pre>
             </div>
+            
             <h4 class="subitem-header" id="dropdown-type-navbar">导航条下拉菜单</h4>
             <div class="bs-example">
                 <nav id="navbar-example" class="navbar navbar-default">
@@ -1324,10 +2063,10 @@ $('.dropdown-toggle').dropdown()
                   </div>
           </div>
           <div class="bs-docs-section">
-                 <h2 class="page-header" id="chosen">下拉列表</h2>
+                 <h2 class="page-header" id="chosen">下拉列表Chosen</h2>
                  <p>Mower为了增强单选列表和多选列表，引入第三方插件<a target="_blank" href="https://github.com/harvesthq/chosen" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i> Chosen</a>。</p>
 
-                 <h3 class="item-header">多项选择和单项选择</h3>
+                 <h3 class="item-header" id="chosen-examples">多项选择和单项选择</h3>
 
                  <div class="bs-example">
                    <div class="row">
@@ -1370,11 +2109,6 @@ $('.dropdown-toggle').dropdown()
                               </optgroup>
                             </select>
                       </div>
-                       <div class="col-md-6">
-                         <select rel="remoteChosen" data-server = "true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" tabindex="-1">
-                          <option value=""></option>
-                         </select>
-                       </div>
                    </div>
 
                  </div>
@@ -1398,8 +2132,23 @@ $('.dropdown-toggle').dropdown()
 &lt;/select&gt;
                    </pre>
                  </div>
-                 <h3 class="item-header" id="dropdown-usage">如何使用</h3>
-                 <h4 class="subitem-header">使用rel属性标识初始化插件</h4>
+                 <h3 class="item-header" id="chosen-examples-ajax">Ajax加载下拉菜单数据</h3>
+                 <div class="bs-example">
+                    <select rel="remoteChosen" data-server = "true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" tabindex="-1">
+                     <option value=""></option>
+                    </select>
+
+                  </div>
+                  <div class="highlight">
+                    <pre class="prettyprint">
+&lt;select rel="remoteChosen" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" tabindex="-1"&gt;
+ &lt;option value=""&gt;&lt;/option&gt;
+&lt;/select&gt;
+                    </pre>
+                  </div>
+
+                 <h3 class="item-header" id="chosen-usage">如何使用</h3>
+                 <h4 class="subitem-header" id="chosen-usage-rel">rel属性标识初始化插件</h4>
                  <p>在下拉列表上面增加属性<code>rel="chosen"</code>默认初始化插件</p>
                  <div class="highlight">
                    <pre class="prettyprint">
@@ -1412,7 +2161,7 @@ $('.dropdown-toggle').dropdown()
 &lt;/select&gt;
                    </pre>
                  </div>
-                  <h4 class="subitem-header">使用javascript初始化插件</h4>
+                  <h4 class="subitem-header"  id="chosen-usage-js">javascript初始化插件</h4>
                   <div class="highlight">
                     <pre class="prettyprint">
 $(select).chosen(options);
@@ -1463,16 +2212,44 @@ $(select).chosen(options);
                         </td>
                         <td></td>
                       </tr>
+                      <tr>
+                        <td><code>url</code></td>
+                        <td>Ajax加载数据地址</td>
+                        <td>
+                          <code></code>
+                        </td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td><code>datasource</code></td>
+                        <td>静态数据</td>
+                        <td>
+                        </td>
+                        <td>JS函数或者数组。设置URL选项，datasource选项失效。</td>
+                      </tr>
+                      <tr>
+                        <td><code>nameField</code></td>
+                        <td>显示值</td>
+                        <td>
+                        </td>
+                        <td>url或者datasource选项使用时有效</td>
+                      </tr>
+                      <tr>
+                        <td><code>valueField</code></td>
+                        <td>实际值</td>
+                        <td>
+                        </td>
+                        <td>url或者datasource选项使用时有效</td>
+                      </tr>
                     </tbody>
                   </table>
-                  <h4 class="subitem-header">事件</h4>
           </div>
           <div class="bs-docs-section">
-            <h2 class="page-header">日期选择 </h2>
+            <h2 class="page-header" id="datetimepicker" >日期时间选择 </h2>
             <p>日期选择插件可以帮助用户更方便准确的选择日期和时间。</p>
             <p>在Mower中包含的日期选择控件基于开源项目 <a href="http://eonasdan.github.io/bootstrap-datetimepicker/" target="_blank">Bootstrap 3 Datepicker</a> 定制开发。</p>
             <h3 class="item-header">类型</h3>
-            <h4 class="subitem-header">日期选择</h4>
+            <h4 class="subitem-header" id="datetimepicker-date">日期选择</h4>
             <div class="bs-example">
                 <div class="form-group">
                   <div class='input-group date'  rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
@@ -1496,7 +2273,7 @@ $(select).chosen(options);
 &lt;/div&gt;
               </pre>
             </div>
-            <h4 class="subitem-header">时间选择</h4>
+            <h4 class="subitem-header" id="datetimepicker-time">时间选择</h4>
             <div class="bs-example">
               <div class="form-group">
                   <div class='input-group date'  rel="datetimepicker" data-format="HH:mm:ss">
@@ -1519,7 +2296,7 @@ $(select).chosen(options);
 &lt;/div&gt;
               </pre>
             </div>
-            <h4 class="subitem-header">日期+时间选择</h4>
+            <h4 class="subitem-header" id="datetimepicker-all">日期+时间选择</h4>
             <div class="bs-example">
               <div class="form-group">
                   <div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD HH:mm:ss">
@@ -1544,7 +2321,7 @@ $(select).chosen(options);
             </div>
             <h3 class="item-header">变化</h3>
             <p>日期选择插件中可以设置某些参数达到需要显示效果。下面罗列常用参数,更多选项参数请参考<a href="http://eonasdan.github.io/bootstrap-datetimepicker/Options/#usecurrent" target="_blank">Bootstrap 3 Datepicker Options。</a> </p>
-            <h4 class="subitem-header">不带图标</h4>
+            <h4 class="subitem-header" id="datetimepicker-icon">不带图标</h4>
             <div class="bs-example">
               <div class="row">
                 <div class="col-md-4"><input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  data-format="YYYY-MM-DD"   rel="datetimepicker"></div>
@@ -1557,7 +2334,7 @@ $(select).chosen(options);
   &lt;input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  data-format="YYYY-MM-DD" rel="datetimepicker"&gt;
               </pre>
             </div>
-            <h4 class="subitem-header">清空数值</h4>
+            <h4 class="subitem-header" id="datetimepicker-clear">清空数值</h4>
             <p>日期选择框中增加清空按钮，可以快速删除输入框原有的日期。</p>
             <div class="bs-example">
               <div class="form-group">
@@ -1579,11 +2356,11 @@ $(select).chosen(options);
 &lt;/div&gt;
               </pre>
             </div>
-            <h4 class="subitem-header">显示当前日期值</h4>
+            <h4 class="subitem-header" id="datetimepicker-current">显示当前日期值</h4>
             <p>日期选择框显示时候，自动填充当前日期或者时间值。参数<code>useCurrent</code>默认值为<code>true</code></p>
             <div class="bs-example">
               <div class="form-group">
-                  <div class='input-group date'  rel="datetimepicker" data-use-current="false" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
+                  <div class='input-group date'  rel="datetimepicker" data-use-current="true" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
                       <input type='text' class="form-control" />
                       <span class="input-group-addon">
                           <span class="glyphicon glyphicon-time"></span>
@@ -1593,7 +2370,7 @@ $(select).chosen(options);
             </div>
             <div class="highlight">
               <pre class="prettyprint">
-  &lt;div class='input-group date'  rel="datetimepicker" data-use-current="false" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss"&gt;
+  &lt;div class='input-group date'  rel="datetimepicker" data-use-current="true" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss"&gt;
       &lt;input type='text' class="form-control" /&gt;
       &lt;span class="input-group-addon"&gt;
           &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
@@ -1626,18 +2403,61 @@ $(select).chosen(options);
                         </ul>
                       </li>
                       <li>
-                        <a href="#remote-modals">远程模态框</a>
+                        <a href="#modalbox">ModalBox</a>
                         <ul class="nav">
-                          <li><a href="#remote-modals-examples">实例</a></li>
-                          <li><a href="#remote-modals-type">加载远程内容</a></li>
-                          <li><a href="#remote-modals-custom">加载自定义内容</a></li>
-                          <li><a href="#remote-modals-custom-head">自定义头部</a></li>
-                          <li><a href="#remote-modals-usage">如何使用</a></li>
-                          <li><a href="#remote-modals-usage-data">data属性调用</a></li>
-                          <li><a href="#remote-modals-usage-js">javascript调用</a></li>
-                          <li><a href="#remote-modals-usage-options">参数</a></li>
-                          <li><a href="#remote-modals-usage-method">方法</a></li>
-                          <li><a href="#remote-modals-usage-event">事件</a></li>
+                          <li><a href="#modalbox-examples">实例</a></li>
+                          <li><a href="#modalbox-alert">提示</a></li>
+                          <li><a href="#modalbox-comfirm">确认</a></li>
+                          <li><a href="#modalbox-custom-dialog">自定义模态框</a></li>
+                          <li><a href="#modalbox-custom-html">自定义HTML内容</a></li>
+                          <li><a href="#modalbox-custom-ajax">Ajax加载内容</a></li>
+                          <li><a href="#modalbox-usage">javascript调用</a></li>
+                          <li><a href="#modalbox-usage">如何使用</a></li>
+                          <li><a href="#modalbox-usage-data">使用data属性</a></li>
+                          <li><a href="#modalbox-usage-js">手动调用Javascript</a></li>
+                          <li><a href="#modalbox-usage-options">参数</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#messagebox">消息框</a>
+                        <ul class="nav">
+                          <li><a href="#messagebox-examples">实例</a></li>
+                          <li><a href="#messagebox-warning">警告</a></li>
+                          <li><a href="#messagebox-success">成功</a></li>
+                          <li><a href="#messagebox-error">错误</a></li>
+                          <li><a href="#messagebox-info">提示</a></li>
+                          <li><a href="#messagebox-usage">如何使用</a></li>
+                          <li><a href="#messagebox-usage-js">javascript调用</a></li>
+                          <li><a href="#messagebox-usage-options">参数</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#tooltip">提示消息</a>
+                        <ul class="nav">
+                          <li><a href="#tooltip-examples">实例</a></li>
+                          <li><a href="#tooltip-examples-direction">不同方向的提示</a></li>
+                          <li><a href="#tooltips-usage">用法</a></li>
+                          <li><a href="#tooltips-usage-rel">使用rel属性</a></li>
+                          <li><a href="#tooltips-usage-js">使用javaScript激活</a></li>
+                          <li><a href="#tooltips-option">参数</a></li>
+                          <li><a href="#tooltip-function">方法</a></li>
+                          <li><a href="#tooltip-event">事件</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#popover">弹出框</a>
+                        <ul class="nav">
+                          <li><a href="#popover-examples">实例</a></li>
+                          <li><a href="#popover-examples-static">静态类型</a></li>
+                          <li><a href="#popover-examples-dynamic">动态演示</a></li>
+                          <li><a href="#popover-examples-direction">不同方向</a></li>
+                          <li><a href="#popover-examples-disable">弹出框消失</a></li>
+                          <li><a href="#popovers-usage">用法</a></li>
+                          <li><a href="#popovers-usage-rel">使用rel调用</a></li>
+                          <li><a href="#popovers-usage-js">使用JavaScript调用</a></li>
+                          <li><a href="#popovers-option">参数</a></li>
+                          <li><a href="#popover-function">方法</a></li>
+                          <li><a href="#popover-event">事件</a></li>
                         </ul>
                       </li>
                       <li>
@@ -1658,6 +2478,24 @@ $(select).chosen(options);
                       </li>
                       <li>
                         <a href="#chosen">下拉列表</a>
+                        <ul class="nav">
+                          <li><a href="#chosen-examples">多项选择和单项选择</a></li>
+                          <li><a href="#chosen-examples-ajax">Ajax加载下拉菜单数据</a></li>
+                          <li><a href="#chosen-usage">如何使用</a></li>
+                          <li><a href="#chosen-usage-rel">rel属性标识初始化插件</a></li>
+                          <li><a href="#chosen-usage-js">javascript初始化插件</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#datetimepicker">日期选择</a>
+                        <ul class="nav">
+                          <li><a href="#datetimepicker-date">日期</a></li>
+                          <li><a href="#datetimepicker-date">时间</a></li>
+                          <li><a href="#datetimepicker-all">日期时间</a></li>
+                          <li><a href="#datetimepicker-icon">不带图标</a></li>
+                          <li><a href="#datetimepicker-clear">清空数值</a></li>
+                          <li><a href="#datetimepicker-current">当前时间</a></li>
+                        </ul>
                       </li>
                   </ul>
                   <a class="back-to-top" href="#top">
@@ -1685,6 +2523,103 @@ $(select).chosen(options);
         return "当模态框显示时，时间是：" + (new Date).toString();
       }});
     });
+
+    $(function(){
+      $('#btn-modalbox-tip').click(function(event) {
+        ModalBox.alert("Hello world!", function() {
+        //TODO
+        });
+      });
+      $('#btn-modalbox-comfirm').click(function(event) {
+        ModalBox.confirm("Are you sure?", function(result) {
+         //TODO
+        }); 
+      });
+      $('#btn-modalbox-custom-dialog').click(function(event) {
+        ModalBox.dialog({
+          message: "I am a custom dialog",
+          title: "Custom title",
+          buttons: {
+            success: {
+              label: "Success!",
+              className: "btn-success",
+              callback: function() {
+                Example.show("great success");
+              }
+            },
+            danger: {
+              label: "Danger!",
+              className: "btn-danger",
+              callback: function() {
+                Example.show("uh oh, look out!");
+              }
+            },
+            main: {
+              label: "Click ME!",
+              className: "btn-primary",
+              callback: function() {
+                Example.show("Primary button");
+              }
+            }
+          }
+        });
+      });
+      $('#btn-modalbox-custom-html').click(function(event) {
+        ModalBox.dialog({
+            title: "This is a form in a modal.",
+            message: '<div class="row">  ' +
+                '<div class="col-md-12"> ' +
+                '<form class="form-horizontal"> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-md-4 control-label" for="name">Name</label> ' +
+                '<div class="col-md-4"> ' +
+                '<input id="name" name="name" type="text" placeholder="Your name" class="form-control input-md"> ' +
+                '<span class="help-block">Here goes your name</span> </div> ' +
+                '</div> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-md-4 control-label" for="awesomeness">How awesome is this?</label> ' +
+                '<div class="col-md-4"> <div class="radio"> <label for="awesomeness-0"> ' +
+                '<input type="radio" name="awesomeness" id="awesomeness-0" value="Really awesome" checked="checked"> ' +
+                'Really awesome </label> ' +
+                '</div><div class="radio"> <label for="awesomeness-1"> ' +
+                '<input type="radio" name="awesomeness" id="awesomeness-1" value="Super awesome"> Super awesome </label> ' +
+                '</div> ' +
+                '</div> </div>' +
+                '</form> </div>  </div>',
+            buttons: {
+                success: {
+                    label: "Save",
+                    className: "btn-success",
+                    callback: function () {
+                        var name = $('#name').val();
+                        var answer = $("input[name='awesomeness']:checked").val()
+                        Example.show("Hello " + name + ". You've chosen <b>" + answer + "</b>");
+                    }
+                }
+            }
+                  }
+        );
+      });
+
+      $('#btn-messagebox-warning').click(function(event) {
+        MessageBox.warning("Hello world!");
+      });
+
+      
+      $('#btn-messagebox-success').click(function(event) {
+        MessageBox.success('Have fun storming the castle!', 'title-success'); 
+      });
+
+      $('#btn-messagebox-error').click(function(event) {
+        MessageBox.error('I do not think that word means what you think it means.', 'title-error!'); 
+      });
+
+      $('#btn-messagebox-info').click(function(event) {
+       MessageBox.info('这里是提示信息内容.', '提示'); 
+      });
+
+    });
+
   </script>
 
   </body>

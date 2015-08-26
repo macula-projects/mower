@@ -204,6 +204,7 @@
             }
         },
         renderMenu: function(tree, selectedNode) {
+
             this.$element.empty();
 
             for (var j = 0; j < tree.children.length; j++) { //special tree
@@ -238,7 +239,7 @@
                             "data": data
                         });
                         that.$element.trigger(e);
-                    } else {
+                    } else if (data.length) {
                         that.constructTree(data, rootcode, selectedNode);
 
                         e = $.Event(SidebarMenu.DEFAULTS.events.populateSuccess, {
@@ -259,14 +260,14 @@
             return code && this.nodes[code];
         },
         setMenuActiveLink: function(code) {
-            if(code){
+            if (code) {
                 var $activeMenu = this.$element.find('a[data-toggle="menu"][mcode="' + code + '"]');
 
                 $activeMenu.closest('li').addClass('active');
 
-                var parents = $activeMenu.parentsUntil(this.$element,'li');
+                var parents = $activeMenu.parentsUntil(this.$element, 'li');
 
-                $(parents[parents.length-1]).addClass('open');
+                $(parents[parents.length - 1]).addClass('open');
             }
         },
         _destroy: function() {

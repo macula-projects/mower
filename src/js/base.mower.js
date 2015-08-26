@@ -91,12 +91,32 @@ var Base = (function($, utils, window, document, undefined) {
         document.cookie = "timezoneOffset=" + escape(timeZoneOffset * (-1)) + ";expires=" + expireDate.toGMTString();
     };
 
+    var _enterToTab = function() {
+        $(document).on("keypress", "input", function(e) {
+            /* ENTER PRESSED*/
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                /* FOCUS ELEMENT */
+                var inputs = $(this).parents("form").eq(0).find(':input:visible'),
+                    idx = inputs.index(this);
+
+                if (idx == inputs.length - 1) {
+                    inputs[0].select();
+                } else {
+                    inputs[idx + 1].focus(); //  handles submit buttons
+                    inputs[idx + 1].select();
+                }
+                return false;
+            }
+        });
+    };
+
     // public functions
     base.init = function() {
         _resettimezone();
         _attachDomRemoveEvent();
         _resetIconContent();
-        
+        _enterToTab();
     };
 
     /**
