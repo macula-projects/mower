@@ -697,18 +697,18 @@ ModalBox.ajaxDialog({
                         <p class="bg-info">
                             * 提示 callback事件非必选.
                         </p>
-                        <pre class="prettyprint hljs css"><code><span class="hljs-tag">ModalBox</span><span class="hljs-class">.alert</span>(<span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">message</span>:<span class="hljs-value"> <span class="hljs-string">"I'm an alert!"</span>, callback: <span class="hljs-function">function</span>() {</span></span></span>} })</code></pre>
+                        <pre class="prettyprint"><code><span class="hljs-tag">ModalBox</span><span class="hljs-class">.alert</span>(<span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">message</span>:<span class="hljs-value"> <span class="hljs-string">"I'm an alert!"</span>, callback: <span class="hljs-function">function</span>() {</span></span></span>} })</code></pre>
                         <p>
                             确认和提醒的回调事件必须包含返回值参数，例如确认返回
                              <code>true</code> or <code>false</code> , 而提醒返回用户输入信息值。
                         </p>
-                        <pre class="prettyprint linenums hljs javascript"><code>ModalBox.confirm(<span class="hljs-string">"Are you sure?"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> </span>{
+                        <pre class="prettyprint"><code>ModalBox.confirm(<span class="hljs-string">"Are you sure?"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> </span>{
 <span class="hljs-comment">// result will be true or false</span>
 }); </code></pre>
                         <p>
                             or
                         </p>
-                        <pre class="prettyprint linenums hljs javascript"><code>ModalBox.prompt(<span class="hljs-string">"What is your name?"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> </span>{
+                        <pre class="prettyprint"><code>ModalBox.prompt(<span class="hljs-string">"What is your name?"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result)</span> </span>{
 <span class="hljs-keyword">if</span> (result === <span class="hljs-literal">null</span>) {
 <span class="hljs-comment">// Prompt dismissed</span>
 } <span class="hljs-keyword">else</span> {
@@ -2243,6 +2243,402 @@ $(select).chosen(options);
                       </tr>
                     </tbody>
                   </table>
+          </div>
+          <div class="bs-docs-section">
+            <h2 id="dropdowntable" class="page-header">下拉表格</h2>
+
+            <div class="alert alert-danger">
+              <h4>插件依赖</h4>
+              <p>
+                弹出框依赖
+                <a href="http://datatables.net/" target="_blank">表格插件Datatables</a>
+                。Mower默认打包已经包含，独立使用此插件需要先加载表格插件。
+              </p>
+            </div>
+
+            <h3 class="item-header" id="dropdowntable-examples">实例</h3>
+            <div class="bs-example">
+              <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-label-field="name" data-real-field="extn" data-width="300px" data-height="400px" data-url="../assets/ajax/data/objects.txt" rel="dropdowntable">
+                  <input type="text" class="form-control">
+                  <span class="input-group-addon"><i class="fa fa-table"></i></span>
+              </div>
+            </div>
+            <div class="highlight">
+            <pre class="prettyprint">
+&lt;div class="input-group mu-dropdowntable" 
+data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" 
+data-code-field="extn" 
+data-label-field="name" 
+data-real-field="extn"
+data-width="300px"
+data-height="400px"
+data-url="../assets/ajax/data/objects.txt" 
+rel="dropdowntable"&gt;
+  &lt;input type="text" class="form-control"&gt;
+  &lt;span class="input-group-addon"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/div&gt;
+            </pre>
+            </div>
+     
+
+            <h3 class="item-header" id="dropdowntable-usage">用法</h3>
+            <h4 class="subitem-header" id="dropdowntable-usage-rel">通过 <code>rel="dropdowntable"</code>激活工具提示</h4>
+            <div class="highlight">
+              <pre class="prettyprint">
+&lt;div class="input-group mu-dropdowntable" 
+data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" 
+data-code-field="extn" 
+data-label-field="name" 
+data-real-field="extn" 
+data-url="../assets/ajax/data/objects.txt" 
+rel="dropdowntable"&gt;
+    &lt;input type="text" class="form-control"&gt;
+    &lt;span class="input-group-addon"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/div&gt;
+              </pre>
+            </div>
+            <h4 class="subitem-header" id="tooltips-usage-js">通过JavaScript激活工具提示</h4>
+            <div class="highlight">
+              <pre class="prettyprint">
+  $(<span class="string">'#selector'</span>).dropdowntable(options)
+              </pre>
+            </div>
+            <h4 class="subitem-header" id="#tooltips-option">选项</h4>
+            <p>
+              可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
+              <code>data-</code>
+              之后，例如
+              <code>data-url=""</code>
+              。
+            </p>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th style="width: 100px;">类型</th>
+                    <th style="width: 50px;">默认值</th>
+                    <th>描述</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>url</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>数据Ajax加载地址</td>
+                  </tr>
+                  <tr>
+                    <td>codeField</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>
+                      列值的名称。选中行记录得到相对应的数值，并生成name为<code>realField</code>隐藏域.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>labelField</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>
+                      列值的名称。选中记录得到相对应的数值，并填充到input里面显示.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>realField</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>
+                      表单提交input的名称。未提供此参数默认与<code>codeField</code>相同。
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>multiple</td>
+                    <td>boolean</td>
+                    <td>false</td>
+                    <td>
+                      是否多选
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>separator</td>
+                    <td>string</td>
+                    <td><code>,</code></td>
+                    <td>
+                     配合<code>multiple</code>选项,显示分隔符.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>width</td>
+                    <td>number</td>
+                    <td><code>null</code></td>
+                    <td>
+                      <p>
+                        下拉表格容器宽度,应用于表格容器
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>height</td>
+                    <td>number</td>
+                    <td><code>null</code></td>
+                    <td>
+                      <p>
+                        下拉表格高度，应用于表格
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>columns</td>
+                    <td>string|object</td>
+                    <td>空</td>
+                    <td>
+                      <p>
+                        表格数据列信息.
+                      </p>
+                      <p><code>{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}</code></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>initValue</td>
+                    <td>string|array</td>
+                    <td>空</td>
+                    <td>
+                      <p>
+                        初始化值
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>orientation</td>
+                    <td>string</td>
+                    <td><code>auto</code></td>
+                    <td>
+                      <p>
+                        下拉表格框显示方向
+                      </p>
+                      <p>由<code>left</code> or <code>right</code>, <code>top</code> or <code>bottom</code>, and <code>auto</code> 组成，单个或者空格隔开方向,譬如,<code>top left</code>, <code>bottom</code>, <code>right</code>, <code>auto top</code>等等. </p>
+                    </td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+            <h4 class="subitem-header" id="tooltip-function">方法</h4>
+
+            <h4>$().dropdowntable(options)</h4>
+            <p>为一组元素应用下拉表格。</p>
+
+            <h4>.dropdowntable('getValue')</h4>
+            <p>获取组件值。</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#element').dropdowntable('getValue');
+              </pre>
+            </div>
+            <h4>.dropdowntable('setValue')</h4>
+            <p>设置组件的值。</p>
+           <div class="highlight">
+            <pre class="prettyprint">
+单个数值：$('#element').dropdowntable('setValue'，'002');
+数组：$('#element').dropdowntable('setValue'，['001','007']);
+            </pre>
+           </div>
+
+            <h4>.dropdowntable('clear')</h4>
+            <p>清除组件的值。</p>
+           <div class="highlight">
+            <pre class="prettyprint">
+$('#element').dropdowntable('clear');
+            </pre>
+           </div>
+          </div>
+          <div class="bs-docs-section">
+            <h2 id="dropdowntree" class="page-header">下拉树</h2>
+
+            <div class="alert alert-danger">
+              <h4>插件依赖</h4>
+              <p>
+                下拉树依赖
+                 <a href="http://www.jstree.com/" target="_blank">树插件Jstree</a>
+                。Mower默认打包已经包含，独立使用此插件需要先加载树插件
+              </p>
+            </div>
+
+            <h3 class="item-header" id="dropdowntree-examples">实例</h3>
+            <div class="bs-example">
+              <div class="input-group mu-dropdowntree" data-width="400px" data-height="300px" data-code-field="id" data-label-field="text" data-url="../assets/ajax/data/tree.txt" rel="dropdowntree">
+                  <input type="text" class="form-control">
+                  <span class="input-group-addon"><i class="fa fa-table"></i></span>
+              </div>
+            </div>
+            <div class="highlight">
+            <pre class="prettyprint">
+&lt;div class="input-group mu-dropdowntree" 
+data-width="495" 
+data-code-field="id" 
+data-text-field="name" 
+data-url="../../../assets/ajax/data/tree.txt" 
+rel="dropdowntree"&gt;
+&lt;input type="text" class="form-control"&gt;
+&lt;span class="input-group-addon"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/div&gt;
+            </pre>
+            </div>
+     
+
+            <h3 class="item-header" id="dropdowntree-usage">用法</h3>
+            <h4 class="subitem-header" id="dropdowntree-usage-rel">通过 <code>rel="dropdowntree"</code>激活工具提示</h4>
+            <div class="highlight">
+            <pre class="prettyprint">
+&lt;div class="input-group mu-dropdowntree" 
+data-width="495" 
+data-code-field="extn" 
+data-text-field="name" 
+data-real-field="extn" 
+data-url="../../../assets/ajax/data/tree.txt" 
+rel="dropdowntree"&gt;
+&lt;input type="text" class="form-control"&gt;
+&lt;span class="input-group-addon"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/div&gt;
+            </pre>
+            </div>
+            <h4 class="subitem-header" id="dropdowntree-usage-js">通过JavaScript激活工具提示</h4>
+            <div class="highlight">
+              <pre class="prettyprint">
+  $(<span class="string">'#selector'</span>).dropdowntree(options)
+              </pre>
+            </div>
+            <h4 class="subitem-header" id="#dropdowntree-option">选项</h4>
+            <p>
+              可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
+              <code>data-</code>
+              之后，例如
+              <code>data-url=""</code>
+              。
+            </p>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th style="width: 100px;">类型</th>
+                    <th style="width: 50px;">默认值</th>
+                    <th>描述</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>url</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>数据Ajax加载地址</td>
+                  </tr>
+                  <tr>
+                    <td>codeField</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>
+                      节点值的名称。选中节点得到相对应的数值，并生成name为<code>codeField</code>隐藏域.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>labelField</td>
+                    <td>string</td>
+                    <td>空</td>
+                    <td>
+                      节点显示的名称。选中节点得到相对应的数值，并填充到input里面显示.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>multiple</td>
+                    <td>boolean</td>
+                    <td>false</td>
+                    <td>
+                      是否多选
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>separator</td>
+                    <td>string</td>
+                    <td><code>,</code></td>
+                    <td>
+                     配合<code>multiple</code>选项,显示分隔符.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>width</td>
+                    <td>number</td>
+                    <td><code>null</code></td>
+                    <td>
+                      <p>
+                        下拉树容器宽度,应用于树容器
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>height</td>
+                    <td>number</td>
+                    <td><code>null</code></td>
+                    <td>
+                      <p>
+                        下拉树高度，应用于树
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>initValue</td>
+                    <td>string|array</td>
+                    <td>空</td>
+                    <td>
+                      <p>
+                        初始化值
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>orientation</td>
+                    <td>string</td>
+                    <td><code>auto</code></td>
+                    <td>
+                      <p>
+                        下拉树框显示方向
+                      </p>
+                      <p>由<code>left</code> or <code>right</code>, <code>top</code> or <code>bottom</code>, and <code>auto</code> 组成，单个或者空格隔开方向,譬如,<code>top left</code>, <code>bottom</code>, <code>right</code>, <code>auto top</code>等等. </p>
+                    </td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+            <h4 class="subitem-header" id="tooltip-function">方法</h4>
+
+            <h4>$().dropdowntree(options)</h4>
+            <p>为一组元素应用下拉树。</p>
+
+            <h4>.dropdowntree('getValue')</h4>
+            <p>获取组件值。</p>
+            <div class="highlight">
+              <pre class="prettyprint">
+$('#element').dropdowntree('getValue');
+              </pre>
+            </div>
+            <h4>.dropdowntree('setValue')</h4>
+            <p>设置组件的值。</p>
+           <div class="highlight">
+            <pre class="prettyprint">
+单个数值：$('#element').dropdowntree('setValue'，'002');
+数组：$('#element').dropdowntree('setValue'，['001','007']);
+            </pre>
+           </div>
+
+            <h4>.dropdowntree('clear')</h4>
+            <p>清除组件的值。</p>
+           <div class="highlight">
+            <pre class="prettyprint">
+$('#element').dropdowntree('clear');
+            </pre>
+           </div>
           </div>
           <div class="bs-docs-section">
             <h2 class="page-header" id="datetimepicker" >日期时间选择 </h2>

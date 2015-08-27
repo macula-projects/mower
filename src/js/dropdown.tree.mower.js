@@ -27,13 +27,13 @@
 
     DropDownTree.DEFAULTS = {
         url: '',
-        processData: false,
+        callback: false,
+        labelField: '',
         codeField: '',
-        textField: '',
-        realField: '',
         multiple: false,
         separator: ',',
-        height: 200,
+        width: null,
+        height: null,
         initValue: '',
         orientation: "auto",
         template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
@@ -61,10 +61,15 @@
             this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
-            this.$tree = this.$treeContainer.find('div:first');
+            if (this.options.width && this.options.width !== 'auto') {
+                this.$treeContainer.css('width', this.options.width);
+            }
 
-            this.$tree.css('height', this.options.height + 'px');
-            this.$tree.css('overflow', 'auto');
+            this.$tree = this.$treeContainer.find('div:first');
+            if (this.options.height && this.options.height !== 'auto') {
+                this.$tree.css('height', this.options.height);
+                this.$tree.css('overflow', 'auto');
+            }
 
             this._process_options();
             this._buildEvents();
@@ -286,18 +291,14 @@
 
             return existed;
         },
-        _resize: function() {
-            var width = this.$element.outerWidth(true);
-            this.$treeContainer.css('width', width);
-        },
         construct: function() {
             //wrap table and append to input backend
             if ($.isArray(this.options.initValue)) {
                 for (var i = 0; i < this.options.initValue.length; i++) {
-                    this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + this.options.initValue[i] + '"/>');
+                    this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + this.options.initValue[i] + '"/>');
                 }
             } else if (this.options.initValue) {
-                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + this.options.initValue + '"/>');
+                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + this.options.initValue + '"/>');
             }
         },
         //load data and fill tree
@@ -310,7 +311,7 @@
                 url: options.url,
                 dataType: 'json',
                 success: function(data) {
-                    utils.executeFunction(options.processData, data);
+                    utils.executeFunction(options.callback, data);
                     cb.call(this, data);
                 }
             };
@@ -358,20 +359,20 @@
             if ($.isArray(value)) {
                 for (var i = 0; i < value.length; i++) {
                     if (!this._isExisted(value[i])) {
-                        this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value[i] + '"/>');
+                        this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + value[i] + '"/>');
                         $.jstree.reference(this.$tree).select_node('#' + value[i]);
 
                         var selectNode = $.jstree.reference(this.$tree).get_node('#' + value[i]);
-                        selectNode && text.push(selectNode.text);
+                        selectNode && text.push(selectNode[this.options.labelField]);
                     }
 
                 }
             } else if (value && !this._isExisted(value)) {
-                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
+                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + value + '"/>');
                 $.jstree.reference(this.$tree).select_node('#' + value);
 
                 var selectNode = $.jstree.reference(this.$tree).get_node('#' + value);
-                selectNode && text.push(selectNode.text);
+                selectNode && text.push(selectNode[this.options.labelField]);
             }
 
             this.$input.val(text.join(this.options.separator));
@@ -389,8 +390,8 @@
                 var texts = [];
 
                 for (var i = 0; i < selectNodes.length; i++) {
-                    this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectNodes[i].id + '"/>');
-                    texts.push(selectNodes[i].text);
+                    this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + selectNodes[i][this.options.codeField] + '"/>');
+                    texts.push(selectNodes[i][this.options.labelField]);
                 }
 
                 this.$input.val(texts.join(this.options.separator));
@@ -409,9 +410,6 @@
             this.$input.val('');
         },
         place: function() {
-            //adjustment treeContainer width
-            this._resize();
-
             var treeContainerWidth = this.$treeContainer.outerWidth(),
                 treeContainerHeight = this.$treeContainer.outerHeight(),
                 visualPadding = 10,

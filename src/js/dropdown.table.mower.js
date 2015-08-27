@@ -27,11 +27,12 @@
     DropDownTable.DEFAULTS = {
         url: '',
         codeField: '',
-        textField: '',
+        labelField: '',
         realField: '',
         multiple: false,
         separator: ',',
-        height: 200,
+        width: null,
+        height: null,
         columns: '',
         initValue: '',
         orientation: "auto",
@@ -51,12 +52,22 @@
             var $element = $(element);
             this.options = $.extend({}, DropDownTable.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
+            this.options.realField = this.options.realField || this.options.codeField;
+
             this.$input = this.$element.find('.form-control:first');
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
+
+            if (this.options.width && this.options.width !== 'auto') {
+                this.$tableContainer.css('width', this.options.width);
+            }
+
             this.$table = this.$tableContainer.find('table:first');
 
-            this.$table.attr('data-scrollY', this.options.height + 'px');
+            if (this.options.height && this.options.height !== 'auto') {
+                this.$table.attr('data-scrollX', false);
+                this.$table.attr('data-scrollY', this.options.height);
+            }
 
             this._process_options();
             this._buildEvents();
@@ -80,7 +91,7 @@
                     that._getRealInput().val(that.$input.val());
 
                     that.show();
-                    that.$table.DataTable().searchColumn('[data-name=' + that.options.textField + ']', that.$input.val());
+                    that.$table.DataTable().searchColumn('[data-name=' + that.options.labelField + ']', that.$input.val());
                     that.place();
                 });
             }
@@ -241,34 +252,34 @@
 
             return existed;
         },
-        _resize: function() {
-            var width = this.$element.outerWidth(true);
-            this.$tableContainer.css('width', width);
+        // _resize: function() {
+        //     var width = this.$element.outerWidth(true);
+        //     this.$tableContainer.css('width', this.options.width);
 
-            this.$table.DataTable().adjustColumn();
-
-        },
+        //     this.$table.DataTable().adjustColumn();
+        // },
         construct: function() {
             //make columns
-            if (this.options.columns) {
-                var $thead = $('<thead><tr></tr></thead>');
-                var $tr = $thead.find('tr');
-                $tr.attr('data-id', this.options.codeField);
-
-                var columns = utils.strToJson(this.options.columns);
-
-                if ($.isPlainObject(columns)) {
-                    for (var name in columns) {
-                        var $th = $('<th></th>');
-                        $th.attr("data-name", name);
-                        $th.append(columns[name]);
-
-                        $tr.append($th);
-                    }
-                }
-
-                this.$table.append($thead);
+            var columns = this.options.columns;
+            if (typeof columns === 'string') {
+                columns = utils.strToJson(this.options.columns);
             }
+
+            var $thead = $('<thead><tr></tr></thead>');
+            var $tr = $thead.find('tr');
+            $tr.attr('data-id', this.options.codeField);
+
+            if ($.isPlainObject(columns)) {
+                for (var name in columns) {
+                    var $th = $('<th></th>');
+                    $th.attr("data-name", name);
+                    $th.append(columns[name]);
+
+                    $tr.append($th);
+                }
+            }
+
+            this.$table.append($thead);
 
             //add table ajax data
             this.$table.attr('data-ajax', this.options.url);
@@ -340,10 +351,10 @@
 
             if ($.isArray(data)) {
                 for (var i = 0; i < data.length; i++) {
-                    text.push(data[i][this.options.textField]);
+                    text.push(data[i][this.options.labelField]);
                 }
             } else if (data) {
-                text.push(data[this.options.textField]);
+                text.push(data[this.options.labelField]);
             }
 
             this.$input.val(text.join(this.options.separator));
@@ -357,7 +368,7 @@
 
                 for (var i = 0; i < selectrows.length; i++) {
                     this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectrows[i][this.options.codeField] + '"/>');
-                    texts.push(selectrows[i][this.options.textField]);
+                    texts.push(selectrows[i][this.options.labelField]);
                 }
 
                 this.$input.val(texts.join(this.options.separator));
@@ -377,7 +388,8 @@
         },
         place: function() {
             //change tableContainer width  depend on element width
-            this._resize();
+            //this._resize();
+            this.$table.DataTable().adjustColumn();
 
             var tableContainerWidth = this.$tableContainer.outerWidth(),
                 tableContainerHeight = this.$tableContainer.outerHeight(),

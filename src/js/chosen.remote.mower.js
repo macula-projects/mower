@@ -31,8 +31,8 @@
     url        :'',
     datasource :false,
     callback   :null,
-    nameField  :'text',
-    valueField :'value'
+    nameField  :'label',
+    valueField :'code'
   };
 
   RemoteChosen.prototype = {

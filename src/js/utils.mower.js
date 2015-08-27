@@ -371,16 +371,13 @@ Number.prototype.split = function() {
             }
             return $(this).attr('checked');
         },
-        callEvent: function(func, event, proxy)
-        {
-            if ($.isFunction(func))
-            {
-                if (typeof proxy != 'undefined')
-                {
+        callEvent: function(func, event, proxy) {
+            if ($.isFunction(func)) {
+                if (typeof proxy != 'undefined') {
                     func = $.proxy(func, proxy);
                 }
                 var result = func(event);
-                if(event) event.result = result;
+                if (event) event.result = result;
                 return !(result !== undefined && (!result));
             }
             return 1;
@@ -467,19 +464,19 @@ Number.prototype.split = function() {
             $(document).triggerHandler('update', self);
 
             //update javascript 
-            $html.filter('script').each(function() {
+            $.merge($html.find('script'),$html.filter('script')).each(function() {
                 var $script = $(this);
                 var id = $script.attr('id');
                 if (id) {
                     self.find('#' + id).remove();
                 }
-                if(!$script.attr('data-ref-target')) $script.attr('data-ref-target', ajaxId);
+                if (!$script.attr('data-ref-target')) $script.attr('data-ref-target', ajaxId);
                 self.append($script);
             });
 
             //process call back
             if ($.isFunction(callback)) {
-                callback.apply(self, [true,data]);
+                callback.apply(self, [true, data]);
             }
 
             return self; //keep chain
@@ -487,7 +484,7 @@ Number.prototype.split = function() {
         _privateProcessContents: function(url, ajaxOptions, action, callback, isScrollTop) {
             var self = $(this),
                 s = {},
-                handleError = function(){
+                handleError = function() {
                     if (callback && $.isFunction(callback)) {
                         callback.apply(self, [false]);
                     }
@@ -513,7 +510,7 @@ Number.prototype.split = function() {
                         self.trigger('ajaxError', [xhr, s]);
                         return;
                     }
-                    try{
+                    try {
                         self.css({
                             opacity: '0.0'
                         }).updateHtml(data, action, callback).delay(50).animate({
@@ -521,14 +518,14 @@ Number.prototype.split = function() {
                         }, 300);
 
                         $(window).trigger('resize');
-                    }catch(e){
+                    } catch (e) {
                         handleError();
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     handleError();
                 },
-                complete:function( xhr, status){
+                complete: function(xhr, status) {
                     self.find('h2._loadmask').remove();
                     self.children().removeClass('hidden');
                 }
@@ -730,8 +727,8 @@ var Utils = (function($, window, document, undefined) {
                 if ('()' === functionName.substring(functionName.length - 2)) {
                     functionName = functionName.substring(0, functionName.length - 2);
                 }
-                var ns      = functionName.split('.'),
-                    func    = ns.pop(),
+                var ns = functionName.split('.'),
+                    func = ns.pop(),
                     context = window;
                 for (var i = 0; i < ns.length; i++) {
                     context = context[ns[i]];
@@ -944,4 +941,3 @@ var Utils = (function($, window, document, undefined) {
 $(function() {
     Utils.init();
 });
-
