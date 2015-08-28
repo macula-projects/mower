@@ -2258,7 +2258,7 @@ $(select).chosen(options);
 
             <h3 class="item-header" id="dropdowntable-examples">实例</h3>
             <div class="bs-example">
-              <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-label-field="name" data-real-field="extn" data-width="300px" data-height="400px" data-url="../assets/ajax/data/objects.txt" rel="dropdowntable">
+              <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-label-field="name" data-real-field="extn" data-width="300px" data-height="300px" data-url="../assets/ajax/data/objects.txt" rel="dropdowntable">
                   <input type="text" class="form-control">
                   <span class="input-group-addon"><i class="fa fa-table"></i></span>
               </div>
@@ -2289,11 +2289,13 @@ rel="dropdowntable"&gt;
 data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" 
 data-code-field="extn" 
 data-label-field="name" 
-data-real-field="extn" 
+data-real-field="extn"
+data-width="300px"
+data-height="400px"
 data-url="../assets/ajax/data/objects.txt" 
 rel="dropdowntable"&gt;
-    &lt;input type="text" class="form-control"&gt;
-    &lt;span class="input-group-addon"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/span&gt;
+  &lt;input type="text" class="form-control"&gt;
+  &lt;span class="input-group-addon"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/span&gt;
 &lt;/div&gt;
               </pre>
             </div>
@@ -2475,7 +2477,8 @@ $('#element').dropdowntable('clear');
             <div class="highlight">
             <pre class="prettyprint">
 &lt;div class="input-group mu-dropdowntree" 
-data-width="495" 
+data-width="400px" 
+data-height="300px"
 data-code-field="id" 
 data-text-field="name" 
 data-url="../../../assets/ajax/data/tree.txt" 
@@ -2492,10 +2495,10 @@ rel="dropdowntree"&gt;
             <div class="highlight">
             <pre class="prettyprint">
 &lt;div class="input-group mu-dropdowntree" 
-data-width="495" 
-data-code-field="extn" 
+data-width="400px" 
+data-height="300px"
+data-code-field="id" 
 data-text-field="name" 
-data-real-field="extn" 
 data-url="../../../assets/ajax/data/tree.txt" 
 rel="dropdowntree"&gt;
 &lt;input type="text" class="form-control"&gt;
