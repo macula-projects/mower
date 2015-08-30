@@ -193,9 +193,11 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">联系人</label>
                                             <div class="col-md-9">
-                                                <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-text-field="name" data-real-field="extn" data-url="../../../assets/ajax/data/objects.txt" rel="dropdowntable">
+                                                <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-label-field="name" data-real-field="extn" data-url="../../../assets/ajax/data/objects.txt" data-width="300px" data-height="300px" rel="dropdowntable">
                                                     <input type="text" class="form-control">
-                                                    <span class="input-group-addon"><i class="fa fa-table"></i></span>
+                                                    <span class="input-group-btn">
+                                                      <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -220,9 +222,11 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">地区</label>
                                             <div class="col-md-9">
-                                                <div class="input-group mu-dropdowntree" data-width="495" data-code-field="extn" data-text-field="name" data-real-field="extn" data-url="../../../assets/ajax/data/tree.txt" rel="dropdowntree">
+                                                <div class="input-group mu-dropdowntree" data-width="300px" data-height="300px" data-code-field="id" data-label-field="text" data-real-field="id" data-url="../../../assets/ajax/data/tree.txt" rel="dropdowntree">
                                                     <input type="text" class="form-control">
-                                                    <span class="input-group-addon"><i class="fa fa-table"></i></span>
+                                                    <span class="input-group-btn" >
+                                                      <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -243,10 +247,11 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">街道</label>
                                             <div class="col-md-9">
-                                                <div class="input-group dropdown mu-lookup" data-name="street" data-type="modal-iframe" data-title="TEST" data-width="400px" data-height="200px" data-url="../../../partial/iframe-modal.html" rel="lookup">
+                                                <div class="input-group dropdown mu-lookup" data-name="street" data-type="ajax" data-title="TEST" data-width="400px" data-height="200px" data-url="../../../partial/remote-modal.html" rel="lookup">
                                                     <input id="tagsinput1" type="text" class="form-control">
-                                                    <span class="input-group-addon" data-toggle="popmodal">
-                                                        <i class="fa fa-table"></i></span>
+                                                    <span class="input-group-btn" data-toggle="dropdownlookup">
+                                                      <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

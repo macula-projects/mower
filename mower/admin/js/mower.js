@@ -40950,7 +40950,7 @@ if (typeof jQuery === 'undefined') {
 	return $.fn.jstree;
 }));
 ;/*!
- * mower - v1.1.1 - 2015-08-25
+ * mower - v1.1.1 - 2015-08-30
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -41330,16 +41330,13 @@ Number.prototype.split = function() {
             }
             return $(this).attr('checked');
         },
-        callEvent: function(func, event, proxy)
-        {
-            if ($.isFunction(func))
-            {
-                if (typeof proxy != 'undefined')
-                {
+        callEvent: function(func, event, proxy) {
+            if ($.isFunction(func)) {
+                if (typeof proxy != 'undefined') {
                     func = $.proxy(func, proxy);
                 }
                 var result = func(event);
-                if(event) event.result = result;
+                if (event) event.result = result;
                 return !(result !== undefined && (!result));
             }
             return 1;
@@ -41426,19 +41423,19 @@ Number.prototype.split = function() {
             $(document).triggerHandler('update', self);
 
             //update javascript 
-            $html.filter('script').each(function() {
+            $.merge($html.find('script'),$html.filter('script')).each(function() {
                 var $script = $(this);
                 var id = $script.attr('id');
                 if (id) {
                     self.find('#' + id).remove();
                 }
-                if(!$script.attr('data-ref-target')) $script.attr('data-ref-target', ajaxId);
+                if (!$script.attr('data-ref-target')) $script.attr('data-ref-target', ajaxId);
                 self.append($script);
             });
 
             //process call back
             if ($.isFunction(callback)) {
-                callback.apply(self, [true,data]);
+                callback.apply(self, [true, data]);
             }
 
             return self; //keep chain
@@ -41446,7 +41443,7 @@ Number.prototype.split = function() {
         _privateProcessContents: function(url, ajaxOptions, action, callback, isScrollTop) {
             var self = $(this),
                 s = {},
-                handleError = function(){
+                handleError = function() {
                     if (callback && $.isFunction(callback)) {
                         callback.apply(self, [false]);
                     }
@@ -41472,7 +41469,7 @@ Number.prototype.split = function() {
                         self.trigger('ajaxError', [xhr, s]);
                         return;
                     }
-                    try{
+                    try {
                         self.css({
                             opacity: '0.0'
                         }).updateHtml(data, action, callback).delay(50).animate({
@@ -41480,14 +41477,14 @@ Number.prototype.split = function() {
                         }, 300);
 
                         $(window).trigger('resize');
-                    }catch(e){
+                    } catch (e) {
                         handleError();
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     handleError();
                 },
-                complete:function( xhr, status){
+                complete: function(xhr, status) {
                     self.find('h2._loadmask').remove();
                     self.children().removeClass('hidden');
                 }
@@ -41689,8 +41686,8 @@ var Utils = (function($, window, document, undefined) {
                 if ('()' === functionName.substring(functionName.length - 2)) {
                     functionName = functionName.substring(0, functionName.length - 2);
                 }
-                var ns      = functionName.split('.'),
-                    func    = ns.pop(),
+                var ns = functionName.split('.'),
+                    func = ns.pop(),
                     context = window;
                 for (var i = 0; i < ns.length; i++) {
                     context = context[ns[i]];
@@ -41903,7 +41900,6 @@ var Utils = (function($, window, document, undefined) {
 $(function() {
     Utils.init();
 });
-
 ;/** ========================================================================
  * Mower: utils.mower.js - v1.0.0
  *
@@ -43150,8 +43146,8 @@ $(function() {
     url        :'',
     datasource :false,
     callback   :null,
-    nameField  :'text',
-    valueField :'value'
+    nameField  :'label',
+    valueField :'code'
   };
 
   RemoteChosen.prototype = {
@@ -45207,11 +45203,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     DropDownTable.DEFAULTS = {
         url: '',
         codeField: '',
-        textField: '',
+        labelField: '',
         realField: '',
         multiple: false,
         separator: ',',
-        height: 200,
+        width: null,
+        height: null,
         columns: '',
         initValue: '',
         orientation: "auto",
@@ -45231,12 +45228,22 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             var $element = $(element);
             this.options = $.extend({}, DropDownTable.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
+            this.options.realField = this.options.realField || this.options.codeField;
+
             this.$input = this.$element.find('.form-control:first');
-            this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
+            this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
+
+            if (this.options.width && this.options.width !== 'auto') {
+                this.$tableContainer.css('width', this.options.width);
+            }
+
             this.$table = this.$tableContainer.find('table:first');
 
-            this.$table.attr('data-scrollY', this.options.height + 'px');
+            if (this.options.height && this.options.height !== 'auto') {
+                this.$table.attr('data-scrollX', false);
+                this.$table.attr('data-scrollY', this.options.height);
+            }
 
             this._process_options();
             this._buildEvents();
@@ -45260,7 +45267,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     that._getRealInput().val(that.$input.val());
 
                     that.show();
-                    that.$table.DataTable().searchColumn('[data-name=' + that.options.textField + ']', that.$input.val());
+                    that.$table.DataTable().searchColumn('[data-name=' + that.options.labelField + ']', that.$input.val());
                     that.place();
                 });
             }
@@ -45421,34 +45428,34 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             return existed;
         },
-        _resize: function() {
-            var width = this.$element.outerWidth(true);
-            this.$tableContainer.css('width', width);
+        // _resize: function() {
+        //     var width = this.$element.outerWidth(true);
+        //     this.$tableContainer.css('width', this.options.width);
 
-            this.$table.DataTable().adjustColumn();
-
-        },
+        //     this.$table.DataTable().adjustColumn();
+        // },
         construct: function() {
             //make columns
-            if (this.options.columns) {
-                var $thead = $('<thead><tr></tr></thead>');
-                var $tr = $thead.find('tr');
-                $tr.attr('data-id', this.options.codeField);
-
-                var columns = utils.strToJson(this.options.columns);
-
-                if ($.isPlainObject(columns)) {
-                    for (var name in columns) {
-                        var $th = $('<th></th>');
-                        $th.attr("data-name", name);
-                        $th.append(columns[name]);
-
-                        $tr.append($th);
-                    }
-                }
-
-                this.$table.append($thead);
+            var columns = this.options.columns;
+            if (typeof columns === 'string') {
+                columns = utils.strToJson(this.options.columns);
             }
+
+            var $thead = $('<thead><tr></tr></thead>');
+            var $tr = $thead.find('tr');
+            $tr.attr('data-id', this.options.codeField);
+
+            if ($.isPlainObject(columns)) {
+                for (var name in columns) {
+                    var $th = $('<th></th>');
+                    $th.attr("data-name", name);
+                    $th.append(columns[name]);
+
+                    $tr.append($th);
+                }
+            }
+
+            this.$table.append($thead);
 
             //add table ajax data
             this.$table.attr('data-ajax', this.options.url);
@@ -45520,10 +45527,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             if ($.isArray(data)) {
                 for (var i = 0; i < data.length; i++) {
-                    text.push(data[i][this.options.textField]);
+                    text.push(data[i][this.options.labelField]);
                 }
             } else if (data) {
-                text.push(data[this.options.textField]);
+                text.push(data[this.options.labelField]);
             }
 
             this.$input.val(text.join(this.options.separator));
@@ -45537,7 +45544,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                 for (var i = 0; i < selectrows.length; i++) {
                     this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectrows[i][this.options.codeField] + '"/>');
-                    texts.push(selectrows[i][this.options.textField]);
+                    texts.push(selectrows[i][this.options.labelField]);
                 }
 
                 this.$input.val(texts.join(this.options.separator));
@@ -45557,7 +45564,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         },
         place: function() {
             //change tableContainer width  depend on element width
-            this._resize();
+            //this._resize();
+            this.$table.DataTable().adjustColumn();
 
             var tableContainerWidth = this.$tableContainer.outerWidth(),
                 tableContainerHeight = this.$tableContainer.outerHeight(),
@@ -45741,13 +45749,13 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     DropDownTree.DEFAULTS = {
         url: '',
-        processData: false,
+        callback: false,
+        labelField: '',
         codeField: '',
-        textField: '',
-        realField: '',
         multiple: false,
         separator: ',',
-        height: 200,
+        width: null,
+        height: null,
         initValue: '',
         orientation: "auto",
         template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
@@ -45772,13 +45780,18 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.options = $.extend({}, DropDownTree.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
             this.$input = this.$element.find('.form-control:first');
-            this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
+            this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
-            this.$tree = this.$treeContainer.find('div:first');
+            if (this.options.width && this.options.width !== 'auto') {
+                this.$treeContainer.css('width', this.options.width);
+            }
 
-            this.$tree.css('height', this.options.height + 'px');
-            this.$tree.css('overflow', 'auto');
+            this.$tree = this.$treeContainer.find('div:first');
+            if (this.options.height && this.options.height !== 'auto') {
+                this.$tree.css('height', this.options.height);
+                this.$tree.css('overflow', 'auto');
+            }
 
             this._process_options();
             this._buildEvents();
@@ -46000,18 +46013,14 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             return existed;
         },
-        _resize: function() {
-            var width = this.$element.outerWidth(true);
-            this.$treeContainer.css('width', width);
-        },
         construct: function() {
             //wrap table and append to input backend
             if ($.isArray(this.options.initValue)) {
                 for (var i = 0; i < this.options.initValue.length; i++) {
-                    this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + this.options.initValue[i] + '"/>');
+                    this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + this.options.initValue[i] + '"/>');
                 }
             } else if (this.options.initValue) {
-                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + this.options.initValue + '"/>');
+                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + this.options.initValue + '"/>');
             }
         },
         //load data and fill tree
@@ -46024,7 +46033,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 url: options.url,
                 dataType: 'json',
                 success: function(data) {
-                    utils.executeFunction(options.processData, data);
+                    utils.executeFunction(options.callback, data);
                     cb.call(this, data);
                 }
             };
@@ -46072,20 +46081,20 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             if ($.isArray(value)) {
                 for (var i = 0; i < value.length; i++) {
                     if (!this._isExisted(value[i])) {
-                        this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value[i] + '"/>');
+                        this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + value[i] + '"/>');
                         $.jstree.reference(this.$tree).select_node('#' + value[i]);
 
                         var selectNode = $.jstree.reference(this.$tree).get_node('#' + value[i]);
-                        selectNode && text.push(selectNode.text);
+                        selectNode && text.push(selectNode[this.options.labelField]);
                     }
 
                 }
             } else if (value && !this._isExisted(value)) {
-                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
+                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + value + '"/>');
                 $.jstree.reference(this.$tree).select_node('#' + value);
 
                 var selectNode = $.jstree.reference(this.$tree).get_node('#' + value);
-                selectNode && text.push(selectNode.text);
+                selectNode && text.push(selectNode[this.options.labelField]);
             }
 
             this.$input.val(text.join(this.options.separator));
@@ -46103,8 +46112,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 var texts = [];
 
                 for (var i = 0; i < selectNodes.length; i++) {
-                    this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectNodes[i].id + '"/>');
-                    texts.push(selectNodes[i].text);
+                    this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + selectNodes[i][this.options.codeField] + '"/>');
+                    texts.push(selectNodes[i][this.options.labelField]);
                 }
 
                 this.$input.val(texts.join(this.options.separator));
@@ -46123,9 +46132,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$input.val('');
         },
         place: function() {
-            //adjustment treeContainer width
-            this._resize();
-
             var treeContainerWidth = this.$treeContainer.outerWidth(),
                 treeContainerHeight = this.$treeContainer.outerHeight(),
                 visualPadding = 10,
@@ -46316,6 +46322,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         height: 'auto',
         multiple: false,
         separator: ',',
+        codeField:'code',
+        labelField:'label',
         template: '<div class="dropdown-menu"></div>'
     };
 
@@ -46330,7 +46338,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         this.$lkContainer.append('<div></div');
         this.$lkContent = this.$lkContainer.find('div:first');
 
-        $element.find(toggledropdown).after(this.$lkContainer);
+        $element.prepend(this.$lkContainer);
 
         this._parseOptions();
         this._constructContent();
@@ -46365,6 +46373,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 }
             }
         }
+
+        this.options.name = this.options.name || this.options.codeField;
     };
 
     Lookup.prototype._constructContent = function() {
@@ -46482,7 +46492,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         }
     };
 
-    //value contains item = {label:"xxxx",value:"xxxxx"} or item = {value}
+    //value contains item = {label:"xxxx",code:"xxxxx"} or item = {value}
     Lookup.prototype.setValue = function(value) {
         var labels = [];
 
@@ -46490,11 +46500,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             for (var i = 0; i < value.length; i++) {
                 var item = value[i];
                 if (typeof item === 'object') {
-                    if (item.value && !this._isExisted(item.value)) {
-                        this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item.value + '"/>');
+                    var code = item[this.options.codeField];
+                    if (code  && !this._isExisted(code)) {
+                        this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + code + '"/>');
                     }
 
-                    item.text && labels.push(item.text);
+                    item[this.options.labelField] && labels.push(item[this.options.labelField]);
                 } else {
                     if (!this._isExisted(item)) {
                         this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item + '"/>');
@@ -46509,6 +46520,11 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         }
 
         this.$input.val(labels.join(this.options.separator));
+    };
+
+    Lookup.prototype.clear = function() {
+        this.$element.find('._value').remove();
+        this.$input.val('');
     };
 
     Lookup.prototype.toggleDropdown = function(e) {
@@ -47595,7 +47611,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     //you can put your plugin defaults in here.
     VMMenu.DEFAULTS = {
         url: '', //ajax url
-        isAlwaysShown: 'false',
+        isAlwaysShown: false,
         param: '{}', //data to be sent to the server.
         method: 'GET', // data sending method
         dataType: 'json', // type of data loaded
@@ -47625,7 +47641,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             this.options.param = json.decode(this.options.param || '{}');
 
-            if (this.options.isAlwaysShown === 'true') {
+            if (this.options.isAlwaysShown == true) {
                 this.populate();
                 $element.closest('li.dropdown').addClass('open');
             } else {

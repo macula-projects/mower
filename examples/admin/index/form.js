@@ -120,5 +120,4 @@ var Form = (function($) {
 jQuery(function() {
 
     Form.init();
-
 });

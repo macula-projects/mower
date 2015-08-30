@@ -3570,7 +3570,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-08-25
+ * mower - v1.1.1 - 2015-08-30
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -5371,114 +5371,9 @@ and thus doesn't properly apply the media queries in Bootstrap's CSS. To address
 }
 /* styles for  navbar-default.
  ========================================================================== */
-.navbar-red {
-  background-color: #d9230f;
-  border-color: #a91b0c;
-}
-.navbar-red .navbar-brand {
-  color: #fac0ba;
-}
-.navbar-red .navbar-brand:hover,
-.navbar-red .navbar-brand:focus {
-  color: #fff;
-  background-color: transparent;
-}
-.navbar-red .navbar-text {
-  color: #fac0ba;
-}
-.navbar-red .navbar-nav > li > a {
-  color: #fac0ba;
-}
-.navbar-red .navbar-nav > li > a:hover,
-.navbar-red .navbar-nav > li > a:focus {
-  color: #fff;
-  background-color: transparent;
-}
-.navbar-red .navbar-nav > .active > a,
-.navbar-red .navbar-nav > .active > a:hover,
-.navbar-red .navbar-nav > .active > a:focus {
-  color: #fff;
-  background-color: transparent;
-}
-.navbar-red .navbar-nav > .disabled > a,
-.navbar-red .navbar-nav > .disabled > a:hover,
-.navbar-red .navbar-nav > .disabled > a:focus {
-  color: #ccc;
-  background-color: transparent;
-}
-.navbar-red .navbar-toggle {
-  border-color: #a91b0c;
-}
-.navbar-red .navbar-toggle:hover,
-.navbar-red .navbar-toggle:focus {
-  background-color: #a91b0c;
-}
-.navbar-red .navbar-toggle .icon-bar {
-  background-color: #fff;
-}
-.navbar-red .navbar-collapse,
-.navbar-red .navbar-form {
-  border-color: #b81e0d;
-}
-.navbar-red .navbar-nav > .open > a,
-.navbar-red .navbar-nav > .open > a:hover,
-.navbar-red .navbar-nav > .open > a:focus {
-  color: #fff;
-  background-color: transparent;
-}
-@media (max-width: 767px) {
-  .navbar-red .navbar-nav .open .dropdown-menu > .dropdown-header {
-    border-color: #a91b0c;
-  }
-  .navbar-red .navbar-nav .open .dropdown-menu .divider {
-    background-color: #a91b0c;
-  }
-  .navbar-red .navbar-nav .open .dropdown-menu > li > a {
-    color: #fac0ba;
-  }
-  .navbar-red .navbar-nav .open .dropdown-menu > li > a:hover,
-  .navbar-red .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #fff;
-    background-color: transparent;
-  }
-  .navbar-red .navbar-nav .open .dropdown-menu > .active > a,
-  .navbar-red .navbar-nav .open .dropdown-menu > .active > a:hover,
-  .navbar-red .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #fff;
-    background-color: transparent;
-  }
-  .navbar-red .navbar-nav .open .dropdown-menu > .disabled > a,
-  .navbar-red .navbar-nav .open .dropdown-menu > .disabled > a:hover,
-  .navbar-red .navbar-nav .open .dropdown-menu > .disabled > a:focus {
-    color: #ccc;
-    background-color: transparent;
-  }
-}
-.navbar-red .navbar-link {
-  color: #fac0ba;
-}
-.navbar-red .navbar-link:hover {
-  color: #fff;
-}
-.navbar-red .btn-link {
-  color: #fac0ba;
-}
-.navbar-red .btn-link:hover,
-.navbar-red .btn-link:focus {
-  color: #fff;
-}
-.navbar-red .btn-link[disabled]:hover,
-fieldset[disabled] .navbar-red .btn-link:hover,
-.navbar-red .btn-link[disabled]:focus,
-fieldset[disabled] .navbar-red .btn-link:focus {
-  color: #ccc;
-}
-.navbar-red .badge {
-  color: #d9230f;
-  background-color: #fff;
-}
 .navbar-default-red {
   background-color: #d40b07;
+  border: none;
 }
 .navbar-default-red .navbar-brand {
   color: #fff;
