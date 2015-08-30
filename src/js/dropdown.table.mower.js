@@ -55,7 +55,7 @@
             this.options.realField = this.options.realField || this.options.codeField;
 
             this.$input = this.$element.find('.form-control:first');
-            this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
+            this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
 
             if (this.options.width && this.options.width !== 'auto') {

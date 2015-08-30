@@ -35,6 +35,8 @@
         height: 'auto',
         multiple: false,
         separator: ',',
+        codeField:'code',
+        labelField:'label',
         template: '<div class="dropdown-menu"></div>'
     };
 
@@ -49,7 +51,7 @@
         this.$lkContainer.append('<div></div');
         this.$lkContent = this.$lkContainer.find('div:first');
 
-        $element.find(toggledropdown).after(this.$lkContainer);
+        $element.prepend(this.$lkContainer);
 
         this._parseOptions();
         this._constructContent();
@@ -84,6 +86,8 @@
                 }
             }
         }
+
+        this.options.name = this.options.name || this.options.codeField;
     };
 
     Lookup.prototype._constructContent = function() {
@@ -201,7 +205,7 @@
         }
     };
 
-    //value contains item = {label:"xxxx",value:"xxxxx"} or item = {value}
+    //value contains item = {label:"xxxx",code:"xxxxx"} or item = {value}
     Lookup.prototype.setValue = function(value) {
         var labels = [];
 
@@ -209,11 +213,12 @@
             for (var i = 0; i < value.length; i++) {
                 var item = value[i];
                 if (typeof item === 'object') {
-                    if (item.value && !this._isExisted(item.value)) {
-                        this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item.value + '"/>');
+                    var code = item[this.options.codeField];
+                    if (code  && !this._isExisted(code)) {
+                        this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + code + '"/>');
                     }
 
-                    item.text && labels.push(item.text);
+                    item[this.options.labelField] && labels.push(item[this.options.labelField]);
                 } else {
                     if (!this._isExisted(item)) {
                         this.$input.after('<input class="_value" type="hidden" name="' + this.options.name + '" value="' + item + '"/>');
@@ -228,6 +233,11 @@
         }
 
         this.$input.val(labels.join(this.options.separator));
+    };
+
+    Lookup.prototype.clear = function() {
+        this.$element.find('._value').remove();
+        this.$input.val('');
     };
 
     Lookup.prototype.toggleDropdown = function(e) {

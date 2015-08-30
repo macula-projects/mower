@@ -58,7 +58,7 @@
             this.options = $.extend({}, DropDownTree.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
             this.$input = this.$element.find('.form-control:first');
-            this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
+            this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
             if (this.options.width && this.options.width !== 'auto') {

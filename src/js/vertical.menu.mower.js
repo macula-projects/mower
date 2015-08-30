@@ -27,7 +27,7 @@
     //you can put your plugin defaults in here.
     VMMenu.DEFAULTS = {
         url: '', //ajax url
-        isAlwaysShown: 'false',
+        isAlwaysShown: false,
         param: '{}', //data to be sent to the server.
         method: 'GET', // data sending method
         dataType: 'json', // type of data loaded
@@ -57,7 +57,7 @@
 
             this.options.param = json.decode(this.options.param || '{}');
 
-            if (this.options.isAlwaysShown === 'true') {
+            if (this.options.isAlwaysShown == true) {
                 this.populate();
                 $element.closest('li.dropdown').addClass('open');
             } else {
