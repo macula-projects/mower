@@ -62,11 +62,10 @@
                     <li class="active">
                         <a href="view.html">视图</a>
                     </li>
-
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                   <li><a href="examples/admin/index/">示例</a></li>
-               </ul>
+                    <li><a href="examples/admin/index/">示例</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -377,7 +376,7 @@ $('#example').dataTable( {
 &lt;/table&gt;
                   </pre>
                     </div>
-                    <h3 class="item-header" id="datatables-usage">用法</h3>
+                    <h3 class="item-header" id="datatables-usage">如何使用</h3>
                     <h4 class="subitem-header" id="datatables-usage-rel">通过 <code>rel="datatables"</code>
                   激活数据表格</h4>
                     <div class="alert alert-info">
@@ -410,7 +409,7 @@ $('#example').dataTable( {
 $(<span class="string">'#selector'</span>).datatables(options)
                     </pre>
                     </div>
-                    <h4 class="subitem-header" id="#tooltips-option">参数</h4>
+                    <h4 class="subitem-header" id="#datatables-option">参数</h4>
                     <p>
                         可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
                         <code>data-</code> 之后，例如
@@ -422,14 +421,14 @@ $(<span class="string">'#selector'</span>).datatables(options)
                             Datatables是一个高度灵活的表格工具，可以将任何HTML表格添加高级的交互功能。其中有非常多的参数可以配置。配置参数请参考可以参考<a href="http://dt.thxopen.com/reference/#options" target="_blank">datatables中文网</a>或者<a href="http://datatables.net/reference/option/" target="_blank">datatables英文网</a></p>
                         </p>
                     </div>
-                    <h4 class="subitem-header" id="tooltip-function">方法</h4>
+                    <h4 class="subitem-header" id="datatables-function">方法</h4>
                     <div class="alert alert-info">
                         <h5>API方法</h5>
                         <p>
                             Datatables有一个强大的api，用来处理表格上的数据，你可以添加数据到已经存在的表格，或者对已经存在的数据进行操作。API旨在能够很好地操作表格中的数据。API请参考可以参考<a href="http://dt.thxopen.com/reference/api/" target="_blank">datatables中文网</a>或者<a href="http://datatables.net/reference/api/" target="_blank">datatables英文网</a></p>
                         </p>
                     </div>
-                    <h4 class="subitem-header" id="tooltip-function">事件</h4>
+                    <h4 class="subitem-header" id="datatables-event">事件</h4>
                     <div class="alert alert-info">
                         <h5>API方法</h5>
                         <p>
@@ -533,7 +532,7 @@ $('#myTable').on('draw.dt',
 &lt;!-- END MAIN MENU --&gt;
                    </pre>
                     </div>
-                    <h3 class="item-header" id="vmmenu-usage">用法</h3>
+                    <h3 class="item-header" id="vmmenu-usage">如何使用</h3>
                     <h4 class="subitem-header" id="vmmenu-usage-rel">通过 <code>rel="vmMenu"</code>
                    激活菜单</h4>
                     <div class="highlight">
@@ -568,7 +567,7 @@ $('#myTable').on('draw.dt',
     $(<span class="string">'#selector'</span>).vmMenu(options)
                      </pre>
                     </div>
-                    <h4 class="subitem-header" id="vmmenu-option">参数</h4>
+                    <h4 class="subitem-header" id="vmmenu-options">参数</h4>
                     <p>
                         可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
                         <code>data-</code> 之后，例如
@@ -710,7 +709,7 @@ $('#myMenu').on('complete.mu.vmMenu', function () {
 &lt;/div&gt;
                               </pre>
                     </div>
-                    <h3 class="item-header" id="nbmenu-usage">用法</h3>
+                    <h3 class="item-header" id="nbmenu-usage">如何使用</h3>
                     <h4 class="subitem-header" id="nbmenu-usage-rel">通过 <code>rel="nbMenu"</code>
                               激活菜单</h4>
                     <div class="highlight">
@@ -743,7 +742,7 @@ $('#myMenu').on('complete.mu.vmMenu', function () {
                 $(<span class="string">'#selector'</span>).nbMenu(options)
                                 </pre>
                     </div>
-                    <h4 class="subitem-header" id="nbmenu-option">参数</h4>
+                    <h4 class="subitem-header" id="nbmenu-options">参数</h4>
                     <p>
                         可以将选项通过data属性或JavaScript传递。对于data属性，需要将选项名称放到
                         <code>data-</code> 之后，例如
@@ -767,19 +766,18 @@ $('#myMenu').on('complete.mu.vmMenu', function () {
                                     <td>菜单数据加载地址</td>
                                 </tr>
                                 <tr>
-                                  <td>菜单的子菜单展示方式</td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
+                                    <td>菜单的子菜单展示方式</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                  <td><code>data-level</code></td>
-                                  <td>string</td>
-                                  <td></td>
-                                  <td>
-                                    在菜单项上面添加属性<code>data-level="two"</code>,将会以二级菜单形式展示子菜单列表，若没有设置该属性，
-                                    将以分组形式展示。
-                                  </td>
+                                    <td><code>data-level</code></td>
+                                    <td>string</td>
+                                    <td></td>
+                                    <td>
+                                        在菜单项上面添加属性<code>data-level="two"</code>,将会以二级菜单形式展示子菜单列表，若没有设置该属性， 将以分组形式展示。
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -812,19 +810,68 @@ $('#myMenu').on('complete.mu.vmMenu', function () {
 $('#myMenu').on('complete.mu.nbMenu', function () {
 // do something…
 })
-                                    </pre>
+                        </pre>
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
+                    <ul class="nav bs-docs-sidenav">
+                        <li>
+                            <a href="#datatables">数据表格</a>
+                            <ul class="nav">
+                                <li><a href="#datatables-examples">实例</a></li>
+                                <li><a href="#datatables-examples-html">简单应用</a></li>
+                                <li><a href="#datatables-examples-sort">启用排序功能</a></li>
+                                <li><a href="#datatables-examples-paging">启用分页功能</a></li>
+                                <li><a href="#datatables-examples-selected">高亮选中行</a></li>
+                                <li><a href="#datatables-examples-all">综合示例</a></li>
+                                <li><a href="#datatables-usage">如何使用</a></li>
+                                <li><a href="#datatables-usage-rel">使用rel属性</a></li>
+                                <li><a href="#datatables-usage-js">javascript调用</a></li>
+                                <li><a href="#datatables-options">参数</a></li>
+                                <li><a href="#datatables-function">方法</a></li>
+                                <li><a href="#datatables-event">事件</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#vmmenu">类电商式下拉菜单</a>
+                            <ul class="nav">
+                                <li><a href="#vmmenu-examples">实例</a></li>
+                                <li><a href="#vmmenu-usage">如何使用</a></li>
+                                <li><a href="#vmmenu-usage-rel">使用rel属性</a></li>
+                                <li><a href="#vmmenu-usage-js">javascript调用</a></li>
+                                <li><a href="#vmmenu-options">参数</a></li>
+                                <li><a href="#vmmenu-function">方法</a></li>
+                                <li><a href="#vmmenu-event">事件</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#vmmenu">类电商式下拉菜单</a>
+                            <ul class="nav">
+                                <li><a href="#vmmenu-examples">实例</a></li>
+                                <li><a href="#vmmenu-usage">如何使用</a></li>
+                                <li><a href="#vmmenu-usage-rel">使用rel属性</a></li>
+                                <li><a href="#vmmenu-usage-js">javascript调用</a></li>
+                                <li><a href="#vmmenu-options">参数</a></li>
+                                <li><a href="#vmmenu-event">事件</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#nbmenu">分组式下拉菜单</a>
+                            <ul class="nav">
+                                <li><a href="#nbmenu-examples">实例</a></li>
+                                <li><a href="#nbmenu-usage">如何使用</a></li>
+                                <li><a href="#nbmenu-usage-rel">使用rel属性</a></li>
+                                <li><a href="#nbmenu-usage-js">javascript调用</a></li>
+                                <li><a href="#nbmenu-options">参数</a></li>
+                                <li><a href="#nbmenu-event">事件</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
-            <ul class="nav bs-docs-sidenav">
-            </ul>
-        </div>
-    </div>
-    </div>
     </div>
     <!-- Bootstrap core JavaScript
 ================================================== -->
