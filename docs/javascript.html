@@ -3403,6 +3403,26 @@ $('#element').lookup('clear');
                 MessageBox.info('这里是提示信息内容.', '提示');
             });
 
+            var cities = [{
+                "value": 1,
+                "text": "奥斯丁",
+                "continent": "Europe"
+            }, {
+                "value": 2,
+                "text": "伦敦",
+                "continent": "Europe"
+            }];
+
+            var elt = $('#tags-dropdownquery');
+            elt.tagsselect({
+                itemValue: 'value',
+                itemText: 'text',
+                dropdownquery: {
+                    displayKey: 'text',
+                    source: cities
+                }
+            });
+
         });
         </script>
 </body>
