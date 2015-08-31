@@ -40950,7 +40950,7 @@ if (typeof jQuery === 'undefined') {
 	return $.fn.jstree;
 }));
 ;/*!
- * mower - v1.1.1 - 2015-08-30
+ * mower - v1.1.1 - 2015-08-31
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -44767,6 +44767,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     var backdrop = '.dropdownquery-backdrop';
     var toggle = '[data-toggle="dropdownquery"]';
+    var displayKey = "label";
     var ddqKey = 'dropdownquery';
 
     var specialKeyCodeMap;
@@ -44813,11 +44814,13 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         var $ul = $('<ul class="dropdown-menu" role="menu"></ul>');
         var data = this.options.source;
 
-        if ($.isArray(data) && data.length > 0) {
+        if($.isFunction(data)){
+            data = utils.executeFunction(data);
+        } else if ($.isArray(data) && data.length > 0) {
             for (var i = 0; i < data.length; i++) {
                 var $li;
                 if ($.isPlainObject(data[i])) {
-                    var key = this.options.displayKey;
+                    var key = this.options.displayKey || displayKey;
                     if (key) {
                         $li = $('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + data[i][key] + '</a></li>');
                     }
@@ -44881,7 +44884,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         $.each($items, function(index, val) {
             var newtext;
             if ($.isPlainObject($(this).data(ddqKey))) {
-                var key = that.options.displayKey;
+                var key = that.options.displayKey || displayKey;
                 if (key) {
                     newtext = $(this).data(ddqKey)[key] + " : " + inputValue;
                 }

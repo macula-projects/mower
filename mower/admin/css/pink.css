@@ -1,5 +1,5 @@
 /*!
- * mower - v1.1.1 - 2015-08-30
+ * mower - v1.1.1 - 2015-08-31
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
