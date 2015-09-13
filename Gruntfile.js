@@ -66,7 +66,6 @@ module.exports = function(grunt) {
                         'src/js/chosen.<%= pkg.name %>.js',
                         'src/js/chosen.remote.<%= pkg.name %>.js',
                         'src/js/datetimepicker.<%= pkg.name %>.js',
-                        'src/js/datatables.selectrows.<%= pkg.name %>.js',
                         'src/js/datatables.<%= pkg.name %>.js',
                         'src/js/knockout.<%= pkg.name %>.js',
                         'src/js/dropdown.query.<%= pkg.name %>.js',
