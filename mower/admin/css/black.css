@@ -1,5 +1,5 @@
 /*!
- * mower - v1.1.1 - 2015-08-31
+ * mower - v1.1.1 - 2015-09-13
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -130,7 +130,11 @@
 }
 /*Pagination*/
 .pagination > li.active > a,
-.pagination > li.active > a:hover {
+.pagination > li.active > a:hover,
+.pagination > li.active > a:focus,
+.pagination > li.active > span,
+.pagination > li.active > span:hover,
+.pagination > li.active > span:focus {
   background-color: #474544;
   border-color: #474544;
 }

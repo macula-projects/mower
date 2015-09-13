@@ -3570,7 +3570,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-08-31
+ * mower - v1.1.1 - 2015-09-13
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -5903,7 +5903,11 @@ Input icons
   border-width: 1px;
 }
 .pagination > li.active > a,
-.pagination > li.active > a:hover {
+.pagination > li.active > a:hover,
+.pagination > li.active > a:focus,
+.pagination > li.active > span,
+.pagination > li.active > span:hover,
+.pagination > li.active > span:focus {
   color: #fff;
           text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
   background-color: #d40b07;
@@ -10464,20 +10468,6 @@ div.DTFC_LeftFootWrapper table {
 .dt-row {
   padding: 5px 0;
 }
-/* dataTables selected
- ========================================================================== */
-table.dataTable tbody tr.selected {
-  background-color: #ddd;
-}
-table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > td,
-table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > th {
-  background-color: #bbb;
-}
-table.dataTable.table-hover > tbody > tr:hover.selected > td,
-table.dataTable.table-hover > tbody > tr.odd:hover.selected > td,
-table.dataTable.table-hover > tbody > tr.even:hover.selected > td {
-  background-color: #aaa;
-}
 /* dataTables form-group input
  ========================================================================== */
 table.dataTable thead > tr > th .form-control,
@@ -10917,6 +10907,55 @@ div.DTTT_collection a.DTTT_button {
 .DTTT_print_info p {
   font-size: 14px;
   line-height: 20px;
+}
+/* dataTables selected
+ ========================================================================== */
+table.dataTable tbody tr.selected {
+  color: #000;
+  background-color: #b7c3da;
+}
+table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > td,
+table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > th {
+  color: #000;
+  background-color: #b7c3da;
+}
+table.dataTable td.select-checkbox {
+  position: relative;
+}
+table.dataTable td.select-checkbox:before,
+table.dataTable td.select-checkbox:after {
+  position: absolute;
+  top: 1.2em;
+  left: 50%;
+  display: block;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+}
+table.dataTable td.select-checkbox:before {
+  margin-top: -6px;
+  margin-left: -6px;
+  content: ' ';
+  border: 1px solid black;
+  border-radius: 3px;
+}
+table.dataTable tr.selected td.select-checkbox:after {
+  margin-top: -11px;
+  margin-left: -4px;
+  text-align: center;
+  text-shadow: 1px 1px #b0bed9, -1px -1px #b0bed9, 1px -1px #b0bed9, -1px 1px #b0bed9;
+  content: '\2714';
+}
+div.dataTables_wrapper span.select-info,
+div.dataTables_wrapper span.select-item {
+  margin-left: .5em;
+}
+@media screen and (max-width: 640px) {
+  div.dataTables_wrapper span.select-info,
+  div.dataTables_wrapper span.select-item {
+    display: block;
+    margin-left: 0;
+  }
 }
 /* ========================================================================
    Component: Plugins
