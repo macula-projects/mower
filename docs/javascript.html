@@ -110,7 +110,7 @@
                     </div>
                     <h4 class="subitem-header" id="modals-examples-dynamic">动态实例</h4>
                     <p>点击下面的按钮即可通过 JavaScript 启动一个模态框。此模态框将从上到下、逐渐浮现到页面前。</p>
-                    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+                    <div id="myModal" class="modal fade"  role="dialog" aria-labelledby="myModalLabel" style="display: none;">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -143,7 +143,7 @@
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">大模态框</button>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">小模态框</button>
                     </div>
-                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;">
+                    <div class="modal fade bs-example-modal-lg"  role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -158,7 +158,7 @@
                         </div>
                         <!-- /.modal-dialog -->
                     </div>
-                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                    <div class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -178,7 +178,7 @@
 &lt;!-- Large modal --&gt;
 &lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg"&gt;Large modal&lt;/button&gt;
 
-&lt;div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"&gt;
+&lt;div class="modal fade bs-example-modal-lg"  role="dialog" aria-labelledby="myLargeModalLabel"&gt;
   &lt;div class="modal-dialog modal-lg"&gt;
     &lt;div class="modal-content"&gt;
       ...
@@ -189,7 +189,7 @@
 &lt;!-- Small modal --&gt;
 &lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm"&gt;Small modal&lt;/button&gt;
 
-&lt;div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"&gt;
+&lt;div class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel"&gt;
   &lt;div class="modal-dialog modal-sm"&gt;
     &lt;div class="modal-content"&gt;
       ...
@@ -229,7 +229,7 @@
                     </div>
                     <h4 class="subitem-header" id="modal-responsive">模态框内容嵌套栅格系统</h4>
                     <p>为了模态框更好地利用栅格系统，只需要在<code>.modal-body</code>里面添加<code>.container-fluid</code>,这样就可以在容器里面正常使用栅格系统。</p>
-                    <div id="gridSystemModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" style="display: none;">
+                    <div id="gridSystemModal" class="modal fade"  role="dialog" aria-labelledby="gridModalLabel" style="display: none;">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -1894,7 +1894,7 @@ $('#myTooltip').on('hidden.bs.tooltip', function () {
                                             <a href="#">编辑</a>
                                         </li>
                                         <li class="disabled">
-                                            <a role="menuitem" tabindex="-1" href="#">修改</a>
+                                            <a role="menuitem"  href="#">修改</a>
                                         </li>
                                         <li class="divider"></li>
                                         <li class="dropdown-header">其他操作</li>
@@ -1919,7 +1919,7 @@ $('#myTooltip').on('hidden.bs.tooltip', function () {
         &lt;a href="#"&gt;编辑&lt;/a&gt;
       &lt;/li&gt;
       &lt;li class="disabled"&gt;
-        &lt;a role="menuitem" tabindex="-1" href="#"&gt;修改&lt;/a&gt;
+        &lt;a role="menuitem"  href="#"&gt;修改&lt;/a&gt;
       &lt;/li&gt;
       &lt;li class="divider"&gt;&lt;/li&gt;
       &lt;li class="dropdown-header"&gt;其他操作&lt;/li&gt;
@@ -2013,9 +2013,9 @@ $('.dropdown-toggle').dropdown()
                         <p>Mower为了增强单选列表和多选列表，引入第三方插件<a target="_blank" href="https://github.com/harvesthq/chosen" title="" data-original-title="这是一个第三方组件，点击访问网站"><i class="icon-heart"></i> Chosen</a>。</p>
                         <h3 class="item-header" id="chosen-examples">多项选择和单项选择</h3>
                         <div class="bs-example">
-                            <div class="row">
+                            <div class="row" id="toggleContainer">
                                 <div class="col-md-6">
-                                    <select rel="remoteChosen" data-placeholder="选择一个宠物..." class="chosen-select form-control" tabindex="2">
+                                    <select rel="chosen" data-disable_search_threshold="5" data-width="100%" data-placeholder="选择一个宠物..." class="chosen-select form-control" tabindex="2">
                                         <option value=""></option>
                                         <option value="cat">小猫</option>
                                         <option value="dog">小狗</option>
@@ -2024,7 +2024,7 @@ $('.dropdown-toggle').dropdown()
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <select rel="remoteChosen" data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="2" multiple>
+                                    <select rel="chosen"  data-width="100%" data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="2" multiple>
                                         <option value="strawberries">草莓</option>
                                         <option value="apple">苹果</option>
                                         <option value="orange">橙子</option>
@@ -2077,13 +2077,13 @@ $('.dropdown-toggle').dropdown()
                         </div>
                         <h3 class="item-header" id="chosen-examples-ajax">Ajax加载下拉菜单数据</h3>
                         <div class="bs-example">
-                            <select rel="remoteChosen" data-server="true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" tabindex="-1">
+                            <select rel="remoteChosen" data-server="true" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" >
                                 <option value=""></option>
                             </select>
                         </div>
                         <div class="highlight">
                             <pre class="prettyprint">
-&lt;select rel="remoteChosen" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" tabindex="-1"&gt;
+&lt;select rel="remoteChosen" data-url="assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" &gt;
  &lt;option value=""&gt;&lt;/option&gt;
 &lt;/select&gt;
                     </pre>
@@ -3422,7 +3422,6 @@ $('#element').lookup('clear');
                     source: cities
                 }
             });
-
         });
         </script>
 </body>

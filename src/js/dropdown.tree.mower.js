@@ -16,6 +16,9 @@
     "use strict";
 
     var $window = $(window);
+    var JSTREE_DISPLAYNAME = "text";
+    var JSTREE_ID = "id";
+    var JSTREE_PID = "parent";
 
     var DropDownTree = function(element, options) {
         this.element = element;
@@ -27,9 +30,28 @@
 
     DropDownTree.DEFAULTS = {
         url: '',
-        callback: false,
+        callback: function(instance, data) {
+            var options = instance.options,
+                newData = [],
+                item;
+
+            if (data != null && data.length) {
+                $.each(data, function(index, value) {
+                    if (typeof value[options.codeField] == 'undefined') return true;
+                    item = {};
+                    item[JSTREE_ID] = value[options.codeField];
+                    item[JSTREE_PID] = !value[options.parentCodeField] ? "#" : value[options.parentCodeField];
+                    item[JSTREE_DISPLAYNAME] = value[options.labelField];
+                    newData.push(item);
+                });
+            }
+
+            return newData;
+        },
         labelField: '',
         codeField: '',
+        realField: '',
+        parentCodeField: '',
         multiple: false,
         separator: ',',
         width: null,
@@ -105,6 +127,8 @@
         },
         _process_options: function() {
             var o = this.options;
+
+            o.realField = o.realField || o.codeField;
 
             var jtCoreOpt = $.extend({},
                 DropDownTree.DEFAULTS.JSTREE_CORE, {
@@ -291,14 +315,23 @@
 
             return existed;
         },
+        _newValue: function(value, isNewText) {
+            this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
+            if (isNewText) {
+                $.jstree.reference(this.$tree).select_node('#' + value);
+
+                var selectNode = $.jstree.reference(this.$tree).get_node('#' + value);
+                return selectNode ? selectNode[JSTREE_DISPLAYNAME] : "";
+            }
+        },
         construct: function() {
             //wrap table and append to input backend
             if ($.isArray(this.options.initValue)) {
                 for (var i = 0; i < this.options.initValue.length; i++) {
-                    this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + this.options.initValue[i] + '"/>');
+                    this._newValue(this.options.initValue[i], false);
                 }
             } else if (this.options.initValue) {
-                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + this.options.initValue + '"/>');
+                this._newValue(this.options.initValue, false);
             }
         },
         //load data and fill tree
@@ -311,7 +344,7 @@
                 url: options.url,
                 dataType: 'json',
                 success: function(data) {
-                    utils.executeFunction(options.callback, data);
+                    if (options.callback) data = utils.executeFunction(options.callback, instance, data);
                     cb.call(this, data);
                 }
             };
@@ -325,6 +358,12 @@
 
                 this.$tree.on('ready.jstree', function(e, data) {
                     that.isLoaded = true;
+                    that.clear();
+
+                    that.options = $.extend({}, that.options, {'initValue':that.$element.data('initValue')});
+
+                    that.setValue(that.options.initValue);
+
                     that._show();
                 }).jstree(this.options.jtOpt);
 
@@ -359,23 +398,19 @@
             if ($.isArray(value)) {
                 for (var i = 0; i < value.length; i++) {
                     if (!this._isExisted(value[i])) {
-                        this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + value[i] + '"/>');
-                        $.jstree.reference(this.$tree).select_node('#' + value[i]);
-
-                        var selectNode = $.jstree.reference(this.$tree).get_node('#' + value[i]);
-                        selectNode && text.push(selectNode[this.options.labelField]);
+                        text.push(this._newValue(value[i], true));
                     }
-
                 }
             } else if (value && !this._isExisted(value)) {
-                this.$input.after(' <input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + value + '"/>');
-                $.jstree.reference(this.$tree).select_node('#' + value);
-
-                var selectNode = $.jstree.reference(this.$tree).get_node('#' + value);
-                selectNode && text.push(selectNode[this.options.labelField]);
+                this.$input.val('');
+                text.push(this._newValue(value, true));
             }
 
-            this.$input.val(text.join(this.options.separator));
+            var oldText = $.trim(this.$input.val());
+
+            this.$input.val(oldText ? 
+                (oldText + this.options.separator + text.join(this.options.separator)) 
+                : text.join(this.options.separator));
         },
         click: function(event) {
 
@@ -390,8 +425,8 @@
                 var texts = [];
 
                 for (var i = 0; i < selectNodes.length; i++) {
-                    this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.codeField + '" value="' + selectNodes[i][this.options.codeField] + '"/>');
-                    texts.push(selectNodes[i][this.options.labelField]);
+                    this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectNodes[i][JSTREE_ID] + '"/>');
+                    texts.push(selectNodes[i][JSTREE_DISPLAYNAME]);
                 }
 
                 this.$input.val(texts.join(this.options.separator));

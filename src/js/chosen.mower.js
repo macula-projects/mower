@@ -25,17 +25,7 @@
             var $this = $(this);
 
             if (!$this.data('chosen')) {
-
-                 var options = $.extend({},
-                    base.parseOptions($this, [{
-                            disable_search_threshold: 'number',
-                            no_results_text: 'string',
-                            max_selected_options: 'number',
-                            allow_single_deselect:'boolean'
-                        }])
-                );
-
-                $(this).chosen(options);
+                $(this).chosen($this.data());
             }
         });
     });

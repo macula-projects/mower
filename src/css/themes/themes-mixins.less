@@ -202,7 +202,12 @@
     }
 
     /*Pagination*/
-    .pagination > li.active > a, .pagination > li.active > a:hover {
+    .pagination > li.active > a,
+    .pagination > li.active > a:hover,
+    .pagination > li.active > a:focus,
+    .pagination > li.active > span,
+    .pagination > li.active > span:hover,
+    .pagination > li.active > span:focus {
         background-color: @theme-primary;
         border-color: @theme-primary;
     }

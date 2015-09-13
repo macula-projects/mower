@@ -137,6 +137,8 @@
             return datasource.tree;
         },
         renderMenu: function(tree) {
+            if (typeof tree == 'undefined' || !tree.length) return;
+
             this.$element.empty();
 
             for (var i = 0; i < tree.length; i++) {
@@ -185,11 +187,11 @@
         },
         populate: function() {
             var that = this;
-            var purl = this.options.url ;
+            var purl = this.options.url;
 
             $.ajax({
                 url: purl,
-                cache:true,
+                cache: true,
                 data: this.options.param,
                 dataType: this.options.dataType,
                 type: this.options.method,

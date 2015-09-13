@@ -32,4 +32,4 @@ dist
 *.zip
 /docs/_*
 /docs/mower/*
-projects/
+/docs/projects/

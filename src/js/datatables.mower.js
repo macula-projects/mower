@@ -66,6 +66,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             var obj = $.extend({},
                 base.parseOptions(target, [
                     'id',
+                    'rowId',
+                    'rowParentId',
                     'dom', {
                         autoWidth: 'boolean',
                         deferRender: 'boolean',
@@ -85,7 +87,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         scrollY: 'string'
                     }, {
                         serverSide: 'boolean',
-                        ajax: 'string'
+                        ajax: {
+                            url: 'string',
+                            type: 'string'
+                        }
                     }, {
                         enableSelected: 'boolean',
                         singleSelect: 'boolean',
@@ -93,7 +98,18 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     }, {
                         validated: 'boolean',
                         validateForm: 'string'
+                    }, {
+                        select: 'boolean',
+                        select: {
+                            style: 'string',
+                            info: 'boolean'
+                        }
+                    }, {
+                        xhrComplete: 'function',
+                        createdRow: 'function',
+                        drawCallback: 'function'
                     }
+
                 ])
             );
 
@@ -163,6 +179,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                 if ($.isPlainObject(ajax)) {
                     ajax.url = utils.getAbsoluteUrl(ajax.url, $(dataTable).getContextPath());
+                    ajax.type = ajax.type || 'post';
                 } else if (typeof ajax === 'string') {
                     option.ajax = utils.getAbsoluteUrl(ajax, $(dataTable).getContextPath());
                 }
@@ -177,6 +194,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     }
                 }
             }
+
+            option.rowId = option.rowId || 'id';
+
             // var infoCallback = {
             //     "infoCallback": function(settings, start, end, max, total, pre) {
             //         return _fnUpdateInfo(settings);
@@ -188,13 +208,14 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             if ($.fn.dataTableExt.oApi._fnDataSource(settings) !== 'ssp')
                 return;
 
+            var pageData = {},
+                orderData = {},
+                filterData = settings.oInit.oAjaxParams || {};
             try {
                 //because of macula only support current page,not support current index
                 //so convert it and handle infoCallback in order to make it corret
-                var pageData = {};
-
                 if (settings.oFeatures.bPaginate === true) {
-                    var pageNumber = (data.start === 0 ? 1 : Math.ceil(data.start / data.length));
+                    var pageNumber = ((data.start % data.length) === 0 ? (parseInt(data.start / data.length) + 1) : Math.ceil(data.start / data.length));
                     pageData = {
                         rows: data.length,
                         page: pageNumber
@@ -204,7 +225,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 }
 
                 //process only one column
-                var orderData = {};
                 for (var i = 0; i < data.order.length; i++) {
                     var item = data.order[i];
 
@@ -216,17 +236,19 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     }
                     break;
                 }
-
-                var filterData = settings.oInit.oAjaxParams || {};
-
-                //clear all data
-                for (var name in data)
-                    delete data[name];
-
-                $.extend(data, pageData, orderData, filterData);
             } catch (e) {
                 //NoOPS
+                if (window.console && console.log) {
+                    console.log(e);
+                }
             }
+
+            //no must backend
+            $.each(['columns', 'draw', 'order', 'search', 'length'], function(index, value) {
+                delete data[value];
+            });
+
+            $.extend(data, pageData, orderData, filterData);
         },
         processResData: function(settings, json) {
             if ($.fn.dataTableExt.oApi._fnDataSource(settings) !== 'ssp')
@@ -246,6 +268,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 $.extend(json, dataSource);
             } catch (e) {
                 //NoOPS
+                if (window.console && console.log) {
+                    console.log(e);
+                }
             }
         },
         //parse table options and apply table
@@ -263,17 +288,14 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     option = $.extend({}, this.getTableOption(table));
 
                 //parse row data option
-                $.extend(true, rowOptions, this.getRowOption($table.find(rowDataSelector)));
-                option["row"] = rowOptions;
+                option["row"] = this.getRowOption($table.find(rowDataSelector));
 
                 // Get the column data once for the life time of the plugin
                 $table.find(columnDataSelector).each(function() {
                     var data = that.getColumnsOption(this);
                     columnArray.push(data);
                 });
-                option = $.extend({}, {
-                    "columns": columnArray
-                }, option);
+                option["columns"] = columnArray;
 
                 //predo option
                 this.processOption(this, option);
@@ -289,20 +311,83 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         that.processReqData(settings, data);
                     })
                     .on('xhr.dt', function(e, settings, json) {
+
+                        utils.executeFunction(settings.oInit.xhrComplete, json);
+
                         if (json.success) {
                             that.processResData(settings, json);
                         } else {
                             //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
                         }
                     }).DataTable(option);
+            }
+        },
+        //parse table options and apply table
+        applyTreeDataTable: function(tableSelector, dtOptions) {
+            var table = tableSelector,
+                $table = $(tableSelector),
+                rowDataSelector = '> thead > tr:last-child, > thead > tr:last-child',
+                rowOptions = {},
+                columnDataSelector = '> thead > tr:last-child > th, > thead > tr:last-child > td',
+                columnArray = new Array();
 
-                new $.fn.dataTable.SelectRows(instance, {
-                    "selectedClass": "selected",
-                    "idColumn": option.row.id ? option.row.id : 'id',
-                    "initValue": option.initSelect,
-                    "enableSelected": option.enableSelected === false ? false : true,
-                    "singleSelect": option.singleSelect === false ? false : true
+            if (!$.fn.DataTable.isDataTable(table)) {
+                //parse option
+                var that = this,
+                    option = $.extend({}, this.getTableOption(table));
+
+                //parse row data option
+                option["row"] = this.getRowOption($table.find(rowDataSelector));
+
+                // Get the column data once for the life time of the plugin
+                $table.find(columnDataSelector).each(function() {
+                    var data = that.getColumnsOption(this);
+                    columnArray.push(data);
                 });
+                option["columns"] = columnArray;
+
+                //predo option
+                this.processOption(this, option);
+
+                option = $.extend(true, option, dtOptions || {}, {
+                    "createdRow": function(row, data, index) {
+
+                        var idAttrName = "data-tt-id",
+                            pIdAttrName = "data-tt-parent-id",
+                            rowId = option.rowId || "id",
+                            rowParentId = option.rowParentId || "parentId";
+
+                        var $row = $(row).attr(idAttrName, data[rowId]);
+
+                        if (data[rowParentId]) $row.attr(pIdAttrName, data[rowParentId]);
+
+                    },
+                    "drawCallback": function(settings) {
+                        $(table).treetable({
+                            expandable: true
+                        }, true);
+                    }
+                });
+
+
+                //apply datatables
+                var instance = $table
+                    .on('init.dt', function(e, settings, json) {
+                        //afterdo option
+                    })
+                    .on('preXhr.dt', function(e, settings, data) {
+                        that.processReqData(settings, data);
+                    })
+                    .on('xhr.dt', function(e, settings, json) {
+
+                        utils.executeFunction(settings.oInit.xhrComplete, json);
+
+                        if (json.success) {
+                            that.processResData(settings, json);
+                        } else {
+                            //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
+                        }
+                    }).DataTable(option);
             }
         }
     };
@@ -314,19 +399,67 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     'use strict';
 
     $.fn.dataTable.Api.register('selectedRowIds()', function() {
-        var sr = this.settings()[0]._oSelectRows;
-        return sr.fnSelectedRowIds();
+        var ids = [];
+        this.rows({
+            selected: true
+        }).ids().each(function(value, index) {
+            ids.push(value);
+        });
+        return ids;
     });
 
     $.fn.dataTable.Api.register('selectedRows()', function() {
-        var sr = this.settings()[0]._oSelectRows;
-        return sr.fnSelectedRows();
+        var data = [];
+        this.rows({
+            selected: true
+        }).data().each(function(value, index) {
+            data.push(value);
+        });
+        return data;
     });
 
     $.fn.dataTable.Api.register('selectRowById()', function(id) {
-        var sr = this.settings()[0]._oSelectRows;
-        return sr.fnSelectRowsById(id);
+        var that = this,
+            idName = this.settings()[0].rowId,
+            result;
+
+        if ($.isArray(id)) {
+            result = [];
+            this.rows().indexes().each(function(idx) {
+                var data = that.row(idx).data();
+
+                if (data[idName] && $.inArray(data[idName], id) >= 0) {
+                    that.rows(that.row(idx).node()).select();
+                    result.push(data);
+                }
+            });
+        } else if (id) {
+            this.rows().indexes().each(function(idx) {
+                var data = that.row(idx).data();
+
+                if (data[idName] && data[idName] == id) {
+                    that.rows(that.row(idx).node()).select();
+                    result = data;
+                    return false;
+                }
+            });
+        } else {
+            //this.fnSelectRow();
+        }
+
+        return result;
+
     });
+
+    $.fn.dataTable.Api.register('selectRow()', function(rowSelector) {
+        this.rows(rowSelector).select();
+    });
+
+
+    $.fn.dataTable.Api.register('unSelectRow()', function(rowSelector) {
+        this.rows(rowSelector).deselect();
+    });
+
 
     $.fn.dataTable.Api.register('ajax.setParams()', function(parameters) {
         return this.iterator('table', function(settings) {
@@ -345,16 +478,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         });
     });
 
-    $.fn.dataTable.Api.register('selectRow()', function(rowSelector) {
-        var sr = this.settings()[0]._oSelectRows;
-        return sr.fnSelectRow(rowSelector);
-    });
-
-
-    $.fn.dataTable.Api.register('unSelectRow()', function(rowSelector) {
-        var sr = this.settings()[0]._oSelectRows;
-        return sr.fnUnSelectRow(rowSelector);
-    });
 
     $.fn.dataTable.Api.register('adjustColumn()', function() {
         this.columns.adjust().draw();
@@ -362,8 +485,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     $.fn.dataTable.Api.register('searchColumn()', function(columnSelector, value) {
         this.column(columnSelector)
-        .search(value)
-        .draw();
+            .search(value)
+            .draw();
     });
 
     // Apply datatables to all elements with the rel="datatables" attribute
@@ -374,6 +497,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
         $root.find('[rel="datatables"]').each(function(index, el) {
             adapter.applyDataTable(this);
+        });
+
+        $root.find('[rel="tree-datatables"]').each(function(index, el) {
+            adapter.applyTreeDataTable(this);
         });
     });
 

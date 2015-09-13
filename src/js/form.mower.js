@@ -41,7 +41,9 @@
                 if (data.success) {
                     utils.executeFunction(options.success, data);
                 } else {
-                    if(typeof window.AlertBox != 'undefined' && data.exceptionMessage) AlertBox.error(data.exceptionMessage);
+
+                    if(options.errorContainer && typeof window.AlertBox != 'undefined' && data.exceptionMessage)
+                        AlertBox.error(data.exceptionMessage,{'container':data.errorContainer});
 
                     var $formValidator = $form.data('bootstrapValidator');
                     if ($formValidator.length) {

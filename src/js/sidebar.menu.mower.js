@@ -204,11 +204,14 @@
             }
         },
         renderMenu: function(tree, selectedNode) {
+            if (typeof tree == 'undefined') return;
 
             this.$element.empty();
 
-            for (var j = 0; j < tree.children.length; j++) { //special tree
-                this._renderMenuItem(tree.children[j], this.element);
+            if (tree.children) {
+                for (var j = 0; j < tree.children.length; j++) { //special tree
+                    this._renderMenuItem(tree.children[j], this.element);
+                }
             }
 
             //set icon for first level children of element mandatory 

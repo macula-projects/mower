@@ -381,23 +381,7 @@ div.DTFC_LeftFootWrapper table {
   padding: 5px 0px;
 }
 
-/* dataTables selected
- ========================================================================== */
- table.dataTable tbody tr.selected {
-  background-color: #ddd;
-}
 
-
-table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > td,
-table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > th {
-  background-color: #bbb;
-}
-
-table.dataTable.table-hover > tbody > tr:hover.selected > td,
-table.dataTable.table-hover > tbody > tr.odd:hover.selected >td,
-table.dataTable.table-hover > tbody > tr.even:hover.selected > td {
-  background-color: #aaa;
-}
 
 /* dataTables form-group input
  ========================================================================== */
@@ -881,3 +865,63 @@ div.DTTT_collection a.DTTT_button {
   font-size: 14px;
   line-height: 20px;
 }
+
+/* dataTables selected
+ ========================================================================== */
+ table.dataTable tbody tr.selected {
+  background-color: #b7c3da;
+  color:#000;
+}
+
+
+table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > td,
+table.dataTable.table-striped > tbody > tr:nth-child(odd).selected > th {
+  background-color: #b7c3da;
+  color:#000;
+}
+
+
+table.dataTable td.select-checkbox {
+    position: relative
+}
+
+table.dataTable td.select-checkbox:before,
+table.dataTable td.select-checkbox:after {
+    display: block;
+    position: absolute;
+    top: 1.2em;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    box-sizing: border-box
+}
+
+table.dataTable td.select-checkbox:before {
+    content: ' ';
+    margin-top: -6px;
+    margin-left: -6px;
+    border: 1px solid black;
+    border-radius: 3px
+}
+
+table.dataTable tr.selected td.select-checkbox:after {
+    content: '\2714';
+    margin-top: -11px;
+    margin-left: -4px;
+    text-align: center;
+    text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9
+}
+
+div.dataTables_wrapper span.select-info,
+div.dataTables_wrapper span.select-item {
+    margin-left: 0.5em
+}
+
+@media screen and (max-width: 640px) {
+    div.dataTables_wrapper span.select-info,
+    div.dataTables_wrapper span.select-item {
+        margin-left: 0;
+        display: block
+    }
+}
+

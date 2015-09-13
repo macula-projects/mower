@@ -722,7 +722,12 @@ Input icons
 .pagination > li > a, .pager > li > a, .pagination > li > span, .pager > li > span {
     border-width: 1px;
 }
-.pagination > li.active > a, .pagination > li.active > a:hover {
+.pagination > li.active > a,
+.pagination > li.active > a:hover,
+.pagination > li.active > a:focus,
+.pagination > li.active > span,
+.pagination > li.active > span:hover,
+.pagination > li.active > span:focus, {
     background-color: @theme-primary;
     border-color: @theme-primary;
     color: @white;

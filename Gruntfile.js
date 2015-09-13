@@ -134,8 +134,10 @@ module.exports = function(grunt) {
                         'plugins/toastr/js/toastr.js',
                         'plugins/datatables/js/jquery.dataTables.js',
                         'plugins/datatables/js/dataTables.bootstrap.js',
+                        'plugins/datatables/js/dataTables.select.js',
                         'plugins/jquery-treetable/js/jquery.treetable.js',
                         'plugins/jstree/js/jstree.js',
+                        'plugins/bootpag/js/jquery.bootpag.js',
                         'dist/admin/js/<%= pkg.name %>.js'
                     ],
                     'dist/admin/js/<%= pkg.name %>.min.js': [
@@ -151,8 +153,10 @@ module.exports = function(grunt) {
                         'plugins/toastr/js/toastr.min.js',
                         'plugins/datatables/js/jquery.dataTables.min.js',
                         'plugins/datatables/js/dataTables.bootstrap.min.js',
+                        'plugins/datatables/js/dataTables.select.min.js',
                         'plugins/jquery-treetable/js/jquery.treetable.min.js',
                         'plugins/jstree/js/jstree.min.js',
+                        'plugins/bootpag/js/jquery.bootpag.min.js',
                         'dist/admin/js/<%= pkg.name %>.min.js'
                     ]
                 }

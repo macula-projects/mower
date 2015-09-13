@@ -15,43 +15,6 @@ var Base = (function($, utils, window, document, undefined) {
     var base = {};
 
     // private functions & variables
-    var _parseComposite = function(key, value, t, prefix, parentkey) {
-        var opts = {};
-        var attrName = 'data-' + prefix + (parentkey ? (parentkey.toLowerCase() + '-') : '') + key.toLowerCase();
-
-        if (!t.attr(attrName)) return opts;
-
-        if (value === 'function') {
-            opts[key] = (new Function("return " + t.attr(attrName)))(); //设置页面全局函数
-        } else if (value === 'string') { //字符串直接从宿主对象对应属性中取值
-            opts[key] = t.attr(attrName);
-        } else if (value === 'boolean') { //布尔型从宿主对象对应属性中取值，同时将属性值转为布尔型
-            opts[key] = t.attr(attrName) ? (t.attr(attrName) === 'true') : undefined;
-        } else if (value === 'number') { //数字型也从宿主对象对应属性中取值，同时将属性值转为浮数
-            opts[key] = t.attr(attrName) == '0' ? 0 : parseFloat(t.attr(attrName)) || undefined;
-        } else if (value === 'array') { //数组型也从宿主对象对应属性中取值，同时将属性值转为数组
-            var value = t.attr(attrName);
-            if (value) {
-                //嵌套数组 数值形式:'1,2,3;4,5,6'
-                if (value.indexOf(';') >= 0) {
-                    var nestedArray = new Array();
-                    $.each(value.split(';'), function(index, value) {
-                        if (value !== undefined && value.length > 0) {
-                            nestedArray.push(value.split(','));
-                        }
-                    });
-                    opts[key] = nestedArray;
-                } else {
-                    opts[key] = value.split(',');
-                }
-            } else {
-                opts[key] = undefined;
-            }
-        }
-
-        return opts;
-    };
-
     var _attachDomRemoveEvent = function() {
         var _cleanData = $.cleanData;
         $.cleanData = function(elems) {
@@ -96,19 +59,59 @@ var Base = (function($, utils, window, document, undefined) {
             /* ENTER PRESSED*/
             var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
             if (key == 13) {
-                /* FOCUS ELEMENT */
-                var inputs = $(this).parents("form").eq(0).find(':input:visible'),
-                    idx = inputs.index(this);
-
+                var inputs = $(this).parents("form").eq(0).find(":input:visible:not(disabled):not([readonly])");
+                var idx = inputs.index(this);
                 if (idx == inputs.length - 1) {
-                    inputs[0].select();
+                    idx = -1;
                 } else {
-                    inputs[idx + 1].focus(); //  handles submit buttons
+                    inputs[idx + 1].focus(); // handles submit buttons
+                }
+                try {
                     inputs[idx + 1].select();
+                } catch (err) {
+                    // handle objects not offering select
                 }
                 return false;
             }
         });
+    };
+
+
+    var _parseComposite = function(key, value, t, prefix, parentkey) {
+        var opts = {};
+        var attrName = 'data-' + prefix + (parentkey ? (parentkey.toLowerCase() + '-') : '') + key.toLowerCase();
+
+        if (!t.attr(attrName)) return opts;
+
+        if (value === 'function') {
+            opts[key] = (new Function("return " + t.attr(attrName)))(); //设置页面全局函数
+        } else if (value === 'string') { //字符串直接从宿主对象对应属性中取值
+            opts[key] = t.attr(attrName);
+        } else if (value === 'boolean') { //布尔型从宿主对象对应属性中取值，同时将属性值转为布尔型
+            opts[key] = t.attr(attrName) ? (t.attr(attrName) === 'true') : undefined;
+        } else if (value === 'number') { //数字型也从宿主对象对应属性中取值，同时将属性值转为浮数
+            opts[key] = t.attr(attrName) == '0' ? 0 : parseFloat(t.attr(attrName)) || undefined;
+        } else if (value === 'array') { //数组型也从宿主对象对应属性中取值，同时将属性值转为数组
+            var value = t.attr(attrName);
+            if (value) {
+                //嵌套数组 数值形式:'1,2,3;4,5,6'
+                if (value.indexOf(';') >= 0) {
+                    var nestedArray = new Array();
+                    $.each(value.split(';'), function(index, value) {
+                        if (value !== undefined && value.length > 0) {
+                            nestedArray.push(value.split(','));
+                        }
+                    });
+                    opts[key] = nestedArray;
+                } else {
+                    opts[key] = value.split(',');
+                }
+            } else {
+                opts[key] = undefined;
+            }
+        }
+
+        return opts;
     };
 
     // public functions
@@ -159,14 +162,14 @@ var Base = (function($, utils, window, document, undefined) {
                     } else { //其它情况直接从宿主对象的对应属性中取值
                         opts[pp] = t.attr('data-' + prefix + pp.toLowerCase());
                     }
-                } else { //json对象'{}'
+                } else if($.isPlainObject(pp)) { //json对象'{}'
                     for (var pkey in pp) {
                         var pvalue = pp[pkey];
 
                         if (typeof pvalue === 'string') { //字符串型
                             //解析字符串或布尔型或者数字型或者数组
                             $.extend(opts, _parseComposite(pkey, pvalue, t, prefix));
-                        } else { //对象'{}'
+                        } else if($.isPlainObject(pvalue)){ //对象'{}'
                             var nestedOpts = {};
                             for (var ckey in pvalue) {
                                 var cvalue = pvalue[ckey];

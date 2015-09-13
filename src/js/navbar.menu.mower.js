@@ -100,14 +100,14 @@
 
             this.nodes = datasource.nodes;
 
-            this.renderMenu(datasource.tree);
+            this.renderMenu();
 
             var e = $.Event(NBMenu.DEFAULTS.events.complete);
             this.$element.trigger(e);
 
             return datasource.tree;
         },
-        renderMenu: function(tree) {
+        renderMenu: function() {
 
             var that = this;
             $(menuItemSelector, this.$element).each(function(index, el) {
