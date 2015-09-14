@@ -596,7 +596,7 @@ Number.prototype.split = function() {
                         $(window).trigger('resize');
                     } catch (e) {
                         if ( window.console && console.log ) {
-                                    console.log( msg );
+                            console.log( e );
                          }
                         handleError();
                     }

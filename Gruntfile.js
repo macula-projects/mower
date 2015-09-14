@@ -294,6 +294,19 @@ module.exports = function(grunt) {
                     dest: 'dist/admin/css',
                     ext: '.css'
                 }]
+            },
+            build_macula_admintheme: {
+                options: {
+                    banner: '<%= meta.banner %>',
+                    strictMath: true
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'src/css/themes/',
+                    src: ['*.less', '!themes-mixins.less','!azure.less','!darkblue.less','!deepblue.less','!orange.less','!purple.less','!red.less','!teal.less'],
+                    dest: 'dist/admin/css',
+                    ext: '.css'
+                }]
             }
         },
         cssmin: { //css compress
@@ -499,7 +512,9 @@ module.exports = function(grunt) {
     grunt.registerTask('svrfront', ['connect:all', 'focus:front']);
 
     // grunt admin
-    grunt.registerTask('admin', ['clean:build_admin', 'less:build_admin','less:build_admintheme', 'csscomb:admin', 'concat:buildjs_admin', 'uglify:minify', 'cssmin:minify_admin', 'concat:mergecss_admin', 'concat:mergejs_admin', 'copy:build_admin','copy:build_docs']);
+    grunt.registerTask('admin', ['clean:build_admin', 'less:build_admin','less:build_admintheme', 'csscomb:admin', 'concat:buildjs_admin', 'uglify:minify', 'cssmin:minify_admin', 'concat:mergecss_admin', 'concat:mergejs_admin', 'copy:build_admin','copy:build_docs']);    // grunt admin
+    
+    grunt.registerTask('macula_admin', ['clean:build_admin', 'less:build_admin','less:build_macula_admintheme', 'csscomb:admin', 'concat:buildjs_admin', 'uglify:minify', 'cssmin:minify_admin', 'concat:mergecss_admin', 'concat:mergejs_admin', 'copy:build_admin','copy:build_docs']);
     
     // grunt front
     grunt.registerTask('front', ['clean:build_front', 'less:build_front',  'concat:buildjs_front', 'csscomb:front', 'uglify:minify', 'cssmin:minify_front', 'concat:mergecss_front', 'concat:mergejs_front', 'copy:build_front','copy:build_docs']);

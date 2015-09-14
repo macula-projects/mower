@@ -35,6 +35,7 @@
         method: 'GET', // data sending method
         dataType: 'json', // type of data loaded
         populate: true,
+        selectFirst:true,
         menuItemTemplate: function() {
             if (typeof $.template === "function") {
                 return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
@@ -222,6 +223,9 @@
                 $(this).prepend('<i class="menu-icon ' + SidebarMenu.DEFAULTS.icons[index % SidebarMenu.DEFAULTS.icons.length] + '"></i>');
             });
 
+            if(this.options.selectFirst) 
+                selectedNode = selectedNode || this.$element.find('a[data-toggle="menu"]:first').attr('mcode');
+
             this.setMenuActiveLink(selectedNode);
         },
         populate: function(rootcode, selectedNode) {
@@ -268,9 +272,9 @@
 
                 $activeMenu.closest('li').addClass('active');
 
-                var parents = $activeMenu.parentsUntil(this.$element, 'li');
+                var parents = $activeMenu.parentsUntil(this.$element, 'li:not(.active)');
 
-                $(parents[parents.length - 1]).addClass('open');
+                $(parents).addClass('open');
             }
         },
         _destroy: function() {
