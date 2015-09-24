@@ -1,0 +1,461 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+    <div class="mu-tabbable border-remove">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_5_1" data-toggle="tab">两列</a>
+            </li>
+            <li><a href="#tab_5_2" data-toggle="tab">两列水平</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_5_1">
+                <!-- BEGIN FORM-->
+                <form action="#" id="form_sample_3">
+                    <div class="form-body">
+                        <fieldset>
+                            <legend>商品信息</legend>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">名称</label>
+                                        <input type="text" class="form-control" placeholder="Chee Kin">
+                                        <span class="help-button" title="" data-content="更多详细内容." data-trigger="hover" data-original-title="提示信息" data-toggle="popover" rel="popover"><i class="fa fa-question"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group has-error">
+                                        <label class="control-label">价格</label>
+                                        <input type="text" class="form-control" placeholder="Lim">
+                                        <span class="help-block">输入名字不正确</span>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <!--/row-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">规格</label>
+                                        <select class="form-control">
+                                            <option value="">男</option>
+                                            <option value="">女</option>
+                                        </select>
+                                        <span class="help-block">请选择您的性别</span>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">生产日期</label>
+                                        <input type="text" class="form-control" placeholder="dd/mm/yyyy">
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <!--/row-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">有效期至</label>
+                                        <select class="select2_category form-control" data-placeholder="Choose a Category" tabindex="1">
+                                            <option value="Category 1">初级会员</option>
+                                            <option value="Category 2">中级会员</option>
+                                            <option value="Category 3">高级会员</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">是否过期</label>
+                                        <div class="radio-list">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="optionsRadios2" value="option1" />是
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="optionsRadios2" value="option2" checked />否
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                        </fieldset>
+                    </div>
+                </form>
+                <!-- END FORM-->
+            </div>
+            <div class="tab-pane" id="tab_5_2">
+                <!-- BEGIN FORM-->
+                <form action="#" class="form-horizontal">
+                    <div class="form-body">
+                    <fieldset>
+                        <legend>产家信息</legend>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">生产厂商</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">生产地址</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">服务热线</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">省份</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">邮政编码</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">联系人</label>
+                                    <div class="col-md-9">
+                                        <div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-label-field="name" data-real-field="extn" data-url="/assets/ajax/data/objects.txt" data-width="300px" data-height="300px" rel="dropdowntable">
+                                            <input type="text" class="form-control">
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">国籍</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control">
+                                            <option>中国</option>
+                                            <option>菲律宾</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">地区</label>
+                                    <div class="col-md-9">
+                                        <div class="input-group mu-dropdowntree" data-width="300px" data-height="300px" data-code-field="id" data-label-field="text" data-real-field="id" data-url="/assets/ajax/data/tree.txt" data-callback="false"rel="dropdowntree">
+                                            <input type="text" class="form-control">
+                                            <span class="input-group-btn" >
+                                              <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">城市</label>
+                                    <div class="col-md-9">
+                                        <div class="dropdown mu-dropdownquery">
+                                            <input id="tagsinput" class="form-control" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">街道</label>
+                                    <div class="col-md-9">
+                                        <div class="input-group dropdown mu-lookup" data-name="street" data-type="ajax" data-title="TEST" data-width="400px" data-height="200px" data-url="/partial/remote-modal.html" rel="lookup">
+                                            <input id="tagsinput1" type="text" class="form-control">
+                                            <span class="input-group-btn" data-toggle="dropdownlookup">
+                                              <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    </div>
+                </form>
+                <!-- END FORM-->
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="mu-tabbable border-remove">
+        <ul class="nav nav-tabs ">
+            <li class="active"><a href="#tab_5_3" data-toggle="tab">Javascript</a>
+            </li>
+            <li><a href="#tab_5_4" data-toggle="tab">Html</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_5_2">
+                无
+            </div>
+            <div class="tab-pane" id="tab_5_4">
+            <pre class="prettyprint">
+&lt;div class="mu-tabbable border-remove"&gt;
+    &lt;ul class="nav nav-tabs"&gt;
+        &lt;li class="active"&gt;&lt;a href="#tab_5_1" data-toggle="tab"&gt;两列&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li&gt;&lt;a href="#tab_5_2" data-toggle="tab"&gt;两列水平&lt;/a&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tab-content"&gt;
+        &lt;div class="tab-pane active" id="tab_5_1"&gt;
+            &lt;!-- BEGIN FORM--&gt;
+            &lt;form action="#" id="form_sample_3"&gt;
+                &lt;div class="form-body"&gt;
+                    &lt;fieldset&gt;
+                        &lt;legend&gt;商品信息&lt;/legend&gt;
+                        &lt;div class="row"&gt;
+                            &lt;div class="col-md-6"&gt;
+                                &lt;div class="form-group"&gt;
+                                    &lt;label class="control-label"&gt;名称&lt;/label&gt;
+                                    &lt;input type="text" class="form-control" placeholder="Chee Kin"&gt;
+                                    &lt;span class="help-button" title="" data-content="更多详细内容." data-trigger="hover" data-original-title="提示信息" data-toggle="popover" rel="popover"&gt;&lt;i class="fa fa-question"&gt;&lt;/i&gt;
+                                    &lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!--/span--&gt;
+                            &lt;div class="col-md-6"&gt;
+                                &lt;div class="form-group has-error"&gt;
+                                    &lt;label class="control-label"&gt;价格&lt;/label&gt;
+                                    &lt;input type="text" class="form-control" placeholder="Lim"&gt;
+                                    &lt;span class="help-block"&gt;输入名字不正确&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!--/span--&gt;
+                        &lt;/div&gt;
+                        &lt;!--/row--&gt;
+                        &lt;div class="row"&gt;
+                            &lt;div class="col-md-6"&gt;
+                                &lt;div class="form-group"&gt;
+                                    &lt;label class="control-label"&gt;规格&lt;/label&gt;
+                                    &lt;select class="form-control"&gt;
+                                        &lt;option value=""&gt;男&lt;/option&gt;
+                                        &lt;option value=""&gt;女&lt;/option&gt;
+                                    &lt;/select&gt;
+                                    &lt;span class="help-block"&gt;请选择您的性别&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!--/span--&gt;
+                            &lt;div class="col-md-6"&gt;
+                                &lt;div class="form-group"&gt;
+                                    &lt;label class="control-label"&gt;生产日期&lt;/label&gt;
+                                    &lt;input type="text" class="form-control" placeholder="dd/mm/yyyy"&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!--/span--&gt;
+                        &lt;/div&gt;
+                        &lt;!--/row--&gt;
+                        &lt;div class="row"&gt;
+                            &lt;div class="col-md-6"&gt;
+                                &lt;div class="form-group"&gt;
+                                    &lt;label class="control-label"&gt;有效期至&lt;/label&gt;
+                                    &lt;select class="select2_category form-control" data-placeholder="Choose a Category" tabindex="1"&gt;
+                                        &lt;option value="Category 1"&gt;初级会员&lt;/option&gt;
+                                        &lt;option value="Category 2"&gt;中级会员&lt;/option&gt;
+                                        &lt;option value="Category 3"&gt;高级会员&lt;/option&gt;
+                                    &lt;/select&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!--/span--&gt;
+                            &lt;div class="col-md-6"&gt;
+                                &lt;div class="form-group"&gt;
+                                    &lt;label class="control-label"&gt;是否过期&lt;/label&gt;
+                                    &lt;div class="radio-list"&gt;
+                                        &lt;label class="radio-inline"&gt;
+                                            &lt;input type="radio" name="optionsRadios2" value="option1" /&gt;是
+                                        &lt;/label&gt;
+                                        &lt;label class="radio-inline"&gt;
+                                            &lt;input type="radio" name="optionsRadios2" value="option2" checked /&gt;否
+                                        &lt;/label&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!--/span--&gt;
+                        &lt;/div&gt;
+                    &lt;/fieldset&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+            &lt;!-- END FORM--&gt;
+        &lt;/div&gt;
+        &lt;div class="tab-pane" id="tab_5_2"&gt;
+            &lt;!-- BEGIN FORM--&gt;
+            &lt;form action="#" class="form-horizontal"&gt;
+                &lt;div class="form-body"&gt;
+                &lt;fieldset&gt;
+                    &lt;legend&gt;产家信息&lt;/legend&gt;
+                    &lt;!--/row--&gt;
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;生产厂商&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;input type="text" class="form-control"&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;生产地址&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;input type="text" class="form-control"&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;服务热线&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;input type="text" class="form-control"&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;!--/span--&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;省份&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;input type="text" class="form-control"&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;!--/span--&gt;
+                    &lt;/div&gt;
+                    &lt;!--/row--&gt;
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;邮政编码&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;input type="text" class="form-control"&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;!--/span--&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;联系人&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;div class="input-group mu-dropdowntable" data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" data-code-field="extn" data-label-field="name" data-real-field="extn" data-url="/assets/ajax/data/objects.txt" data-width="300px" data-height="300px" rel="dropdowntable"&gt;
+                                        &lt;input type="text" class="form-control"&gt;
+                                        &lt;span class="input-group-btn"&gt;
+                                          &lt;button class="btn btn-default" type="button"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/span&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;!--/row--&gt;
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;国籍&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;select class="form-control"&gt;
+                                        &lt;option&gt;中国&lt;/option&gt;
+                                        &lt;option&gt;菲律宾&lt;/option&gt;
+                                    &lt;/select&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;!--/span--&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;地区&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;div class="input-group mu-dropdowntree" data-width="300px" data-height="300px" data-code-field="id" data-label-field="text" data-real-field="id" data-url="/assets/ajax/data/tree.txt" data-callback="false"rel="dropdowntree"&gt;
+                                        &lt;input type="text" class="form-control"&gt;
+                                        &lt;span class="input-group-btn" &gt;
+                                          &lt;button class="btn btn-default" type="button"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/span&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;城市&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;div class="dropdown mu-dropdownquery"&gt;
+                                        &lt;input id="tagsinput" class="form-control" type="text" /&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class="col-md-6"&gt;
+                            &lt;div class="form-group"&gt;
+                                &lt;label class="control-label col-md-3"&gt;街道&lt;/label&gt;
+                                &lt;div class="col-md-9"&gt;
+                                    &lt;div class="input-group dropdown mu-lookup" data-name="street" data-type="ajax" data-title="TEST" data-width="400px" data-height="200px" data-url="/partial/remote-modal.html" rel="lookup"&gt;
+                                        &lt;input id="tagsinput1" type="text" class="form-control"&gt;
+                                        &lt;span class="input-group-btn" data-toggle="dropdownlookup"&gt;
+                                          &lt;button class="btn btn-default" type="button"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/span&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+            &lt;!-- END FORM--&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+            </pre>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.prettyPrint();
+</script>

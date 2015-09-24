@@ -1,0 +1,57 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <table id="example" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%"
+            data-paging="true"
+            data-ajax-url="assets/ajax/data/objects.txt"
+            data-ajax-type="get"
+            rel="datatables">
+            <thead>
+                <tr>
+                    <th data-name="name">名称</th>
+                    <th data-name="position">职位</th>
+                    <th data-name="office">办公室</th>
+                    <th data-name="extn">分机.</th>
+                    <th data-name="start_date">入职时间</th>
+                    <th data-name="salary">薪资</th>
+                </tr>
+            </thead>
+        </table>
+        <br/>
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                </li>
+                <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_1">
+                    无
+                </div>
+                <div class="tab-pane" id="tab_5_2">
+                <pre class="prettyprint">
+&lt;table id="example" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%"
+    data-paging="true"
+    data-ajax-url="assets/ajax/data/objects.txt"
+    data-ajax-type="get"
+    rel="datatables"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-name="name"&gt;名称&lt;/th&gt;
+            &lt;th data-name="position"&gt;职位&lt;/th&gt;
+            &lt;th data-name="office"&gt;办公室&lt;/th&gt;
+            &lt;th data-name="extn"&gt;分机.&lt;/th&gt;
+            &lt;th data-name="start_date"&gt;入职时间&lt;/th&gt;
+            &lt;th data-name="salary"&gt;薪资&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.prettyPrint();
+</script>

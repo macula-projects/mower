@@ -223,8 +223,8 @@
                 $(this).prepend('<i class="menu-icon ' + SidebarMenu.DEFAULTS.icons[index % SidebarMenu.DEFAULTS.icons.length] + '"></i>');
             });
 
-            if(this.options.selectFirst) 
-                selectedNode = selectedNode || this.$element.find('a[data-toggle="menu"]:first').attr('mcode');
+
+            selectedNode = selectedNode || (this.options.selectFirst ? this.$element.find('a[data-toggle="menu"]:first').attr('mcode'):'');
 
             this.setMenuActiveLink(selectedNode);
         },

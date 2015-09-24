@@ -1,4 +1,4 @@
-﻿// Name:            Style mower
+// Name:            Style mower
 // Description:     Sets  values for composite HTML elements and customization.
 //
 // ========================================================================
@@ -39,10 +39,10 @@
 @main-menu-subitem-main-font-size:                                       12px;
 
 @wizard-li-height:                                                      30px;
-@wizard-mini-height:                                (@wizard-li-height + 1);
 
 /*whole min height - (1px*2)border*/
 @wizard-li-line-height:                                     @wizard-li-height;
+@wizard-action-line-height:                                (@wizard-li-height - 8);
 @wizard-chevron-border:                               (@wizard-li-height / 2);
 @wizard-chevron-border-left:                    ((@wizard-li-height / 2) - 1);
 
@@ -2594,7 +2594,7 @@ Input icons
   z-index: 1000;
   position: absolute;
   right: 0;
-  line-height: 46px;
+  line-height: @wizard-li-height;
   float: right;
   padding-left: 15px;
   padding-right: 15px;
@@ -2603,9 +2603,11 @@ Input icons
   border-left: 1px solid #d4d4d4;
 }
 .fuelux .wizard .actions a {
-  line-height: 45px;
+  line-height: @wizard-action-line-height;
   font-size: 12px;
   margin-right: 8px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .fuelux .wizard .actions .btn-prev span {
   margin-right: 5px;

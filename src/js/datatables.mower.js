@@ -179,7 +179,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                 if ($.isPlainObject(ajax)) {
                     ajax.url = utils.getAbsoluteUrl(ajax.url, $(dataTable).getContextPath());
-                    ajax.type = ajax.type || 'post';
+                    ajax.type = ajax.type || 'get';
                 } else if (typeof ajax === 'string') {
                     option.ajax = utils.getAbsoluteUrl(ajax, $(dataTable).getContextPath());
                 }
@@ -316,8 +316,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                         if (json.success) {
                             that.processResData(settings, json);
-                        } else {
-                            //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
+                        } else if(!settings.oInit.xhrComplete && json.exceptionMessage) {
+                             ModalBox.alert(json.exceptionMessage);
                         }
                     }).DataTable(option);
             }
@@ -357,9 +357,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                             rowId = option.rowId || "id",
                             rowParentId = option.rowParentId || "parentId";
 
-                        var $row = $(row).attr(idAttrName, data[rowId]);
+                        var $row = $(row).attr(idAttrName, data[rowId] ||data[0]);
 
-                        if (data[rowParentId]) $row.attr(pIdAttrName, data[rowParentId]);
+                        if (data[rowParentId] || data[1]) $row.attr(pIdAttrName, data[rowParentId] || data[1]);
 
                     },
                     "drawCallback": function(settings) {
@@ -379,14 +379,15 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         that.processReqData(settings, data);
                     })
                     .on('xhr.dt', function(e, settings, json) {
-
                         utils.executeFunction(settings.oInit.xhrComplete, json);
-
-                        if (json.success) {
-                            that.processResData(settings, json);
-                        } else {
-                            //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
-                        }
+                        try{
+                           if (json.success) {
+                               that.processResData(settings, json);
+                           } else {
+                               //data.exceptionMessage && MessageBox.error(data.exceptionMessage, true);
+                           } 
+                       }catch(e){}
+                        
                     }).DataTable(option);
             }
         }

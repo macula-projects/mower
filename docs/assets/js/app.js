@@ -55,13 +55,13 @@ var App = (function($, utils, window, document, undefined) {
                 $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
                     var extension = options.url.slice((options.url.lastIndexOf(".") - 1 >>> 0) + 2);
                     if( extension !== 'js')
-                      options.url = "http://macula.top/mower/"  + options.url;
+                      options.url = "http://macula.top/mower"  + options.url;
                 });
             }else{
                 $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
                     var extension = options.url.slice((options.url.lastIndexOf(".") - 1 >>> 0) + 2);
                     if( extension !== 'js')
-                      options.url = "http://localhost:9000/"  + options.url;
+                      options.url = "http://localhost:9000"  + options.url;
                 });
             }
 
