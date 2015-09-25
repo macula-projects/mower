@@ -45,8 +45,6 @@ var App = (function($, utils, window, document, undefined) {
     };
 
 
-
-
     // public functions
     return {
         //main function
@@ -57,13 +55,13 @@ var App = (function($, utils, window, document, undefined) {
                 $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
                     var extension = options.url.slice((options.url.lastIndexOf(".") - 1 >>> 0) + 2);
                     if( extension !== 'js')
-                      options.url = "http://macula.top/mower/"  + options.url;
+                      options.url = "http://macula.top/mower"  + options.url;
                 });
             }else{
                 $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
                     var extension = options.url.slice((options.url.lastIndexOf(".") - 1 >>> 0) + 2);
                     if( extension !== 'js')
-                      options.url = "http://localhost:9000/"  + options.url;
+                      options.url = "http://localhost:9000"  + options.url;
                 });
             }
 
@@ -85,10 +83,13 @@ var App = (function($, utils, window, document, undefined) {
         initBreadCrumb: function() {
             $(".sidebar-menu").on('complete.mu.sidebarMenu', function(event) {
                 /* Act on the event */
+                var defaultVal = QueryString.title ? QueryString.title : $(this).find('a[data-toggle="menu"]').filter(':first').text(),
+                    mcode = QueryString.mcode ? QueryString.mcode:$(this).find('a[data-toggle="menu"]').filter(':first').attr('mcode'),
+                    page = $(this).find('a[data-toggle="menu"][mcode="' + mcode + '"]').attr('data-href');
 
-                var defaultVal = QueryString.title ? QueryString.title : $(this).find('a[data-toggle="menu"]').filter(':first').text();
-
-                $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i><span>' + decodeURIComponent(defaultVal) + '</span>');
+                // $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i><span>' + decodeURIComponent(defaultVal) + '</span>');
+                
+                $(".breadcrumb").breadcrumb("push",  decodeURIComponent(defaultVal) , page);
             });
         },
         initMainMenu: function() {
@@ -216,3 +217,9 @@ var App = (function($, utils, window, document, undefined) {
         }
     };
 }(jQuery, Utils, window, document));
+
+$(document).ready(function() {
+    App.init();
+});
+
+

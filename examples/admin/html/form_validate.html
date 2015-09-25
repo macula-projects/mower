@@ -1,0 +1,291 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-heading bordered-bottom-highlight bordered-themesecondary">
+        <div class="row mu-panel-toolbar">
+            <div class="col-xs-12 col-md-3">
+                <a id="saveForm" class="btn" href="#">
+                    <i class="fa fa-check-circle fa-lg"></i> 提交表单
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <form id="form_sample_1" action="admin/macula-base/application/save" class="form-horizontal" rel="validate-form">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-3">姓名
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="name" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">邮件
+                    </label>
+                    <div class="col-md-4">
+                        <input name="email" type="text" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">个人主页
+                    </label>
+                    <div class="col-md-4">
+                        <input name="url" type="text" class="form-control" data-bv-notempty="true" />
+                        <span class="help-block">e.g: http://www.demo.com or http://demo.com</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">固定电话
+                    </label>
+                    <div class="col-md-4">
+                        <input name="number" type="text" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">移动电话
+                    </label>
+                    <div class="col-md-4">
+                        <input name="digits" type="text" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">信用卡号码
+                    </label>
+                    <div class="col-md-4">
+                        <input name="creditcard" type="text" class="form-control" data-bv-notempty="true" />
+                        <span class="help-block">e.g: 5500 0000 0000 0004</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">职业&nbsp;&nbsp;</label>
+                    <div class="col-md-4">
+                        <input name="occupation" type="text" class="form-control" />
+                        <span class="help-block">可选</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">类别
+                    </label>
+                    <div class="col-md-4">
+                        <select class="form-control" name="category" data-bv-notempty="true">
+                            <option value="">请选择...</option>
+                            <option value="Category 1">类别 1</option>
+                            <option value="Category 2">类别 2</option>
+                            <option value="Category 3">类别 5</option>
+                            <option value="Category 4">类别 4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="mu-tabbable border-remove" style="padding: 10px ">
+    <ul class="nav nav-tabs ">
+        <li class="active"><a href="#tab_5_3" data-toggle="tab">Comments</a>
+        </li>
+        <li><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+        </li>
+        <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_5_3">
+            <p>表单验证基于<a href="http://bv.doc.javake.cn/" target="_blank">bootstrap validator</a>。</p>
+            <p>有两种方式激活应用验证：<code>$('#form').validation()</code>和 在Form dom元素添加属性<code>rel="validate-form"</code>。</p>
+            <p><code>$('#form')</code> 为jQuery选中你需要验证的 dom 元素，最后只需要在html代码中指定相关的属性即可。</p>
+            <pre class="prettyprint">
+&lt;form id="html5Form" method="post" action="admin/application/save" class="form-horizontal"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="col-lg-3 control-label"&gt;Username&lt;/label&gt;
+        &lt;div class="col-lg-5"&gt;
+            &lt;input type="text" class="form-control" name="username"
+                data-bv-message="The username is not valid"
+
+                required
+                data-bv-notempty-message="The username is required and cannot be empty"
+
+                pattern="[a-zA-Z0-9]+"
+                data-bv-regexp-message="The username can only consist of alphabetical, number" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-group"&gt;
+        &lt;label class="col-lg-3 control-label"&gt;Email address&lt;/label&gt;
+        &lt;div class="col-lg-5"&gt;
+            &lt;input class="form-control" name="email"
+                required
+                type="email" data-bv-emailaddress-message="The input is not a valid email address" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-group"&gt;
+        &lt;label class="col-lg-3 control-label"&gt;Website&lt;/label&gt;
+        &lt;div class="col-lg-5"&gt;
+            &lt;input class="form-control" name="website"
+                required
+                type="url" data-bv-uri-message="The input is not a valid website address" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-group"&gt;
+        &lt;label class="col-lg-3 control-label"&gt;Fav color&lt;/label&gt;
+        &lt;div class="col-lg-3"&gt;
+            &lt;input class="form-control" name="color"
+                required
+                type="color" data-bv-hexcolor-message="The input is not a valid color code" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="form-group"&gt;
+        &lt;label class="col-lg-3 control-label"&gt;Age&lt;/label&gt;
+        &lt;div class="col-lg-2"&gt;
+            &lt;input type="text" class="form-control" name="age"
+                required
+                min="10"
+                data-bv-greaterthan-inclusive="false"
+                data-bv-greaterthan-message="The input must be greater than or equal to 10"
+
+                max="100"
+                data-bv-lessthan-inclusive="true"
+                data-bv-lessthan-message="The input must be less than 100" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+            </pre>
+            <p style="margin-bottom: 10px;">其中 
+            <pre class="prettyprint">
+&lt;input data-bv-{验证规则名称} data-bv-{验证规则名称}-{配置项}="..." /&gt;
+            </pre>
+            </p>
+            <p>
+            {验证规则名称} 和 {配置项} 必须小写.
+            </p>
+            <p>
+            通过设置data-bv-{验证规则名称} or data-bv-{验证规则名称}="true"启用验证这条规则，反之弃用验证这条规则。
+            </p>
+            <p>
+            可能某些属性不适用于data-*属性表达，具体参考bootstrap validator官方文档。
+            </p>
+        </div>
+
+        <div class="tab-pane" id="tab_5_1">
+            <p>
+              表单提交时的验证是基于<a href="http://malsup.com/jquery/form/" target="_blank">jquery form plugin</a>和<a href="http://bv.doc.javake.cn/" target="_blank">bootstrap validator</a>来处理。
+            </p>
+            <pre class="prettyprint">
+&lt;script&gt;
+  $(document).ready(function(){
+      $('#saveForm').click(function(){
+         var that = $(this);
+         $form.ajaxValidSubmit({
+          success : function(data) {
+            //TODO
+          },
+          error : function() {
+            //TODO
+          }
+         });
+      });
+  });
+&lt;/script&gt;
+            </pre>
+            <p style="margin-bottom: 10px;">其中<code>ajaxValidSubmit</code>方法中会调用<code>bootstrap validator</code>去验证表单，验证成功后将调用<code>jquery form plugin</code>中ajaxSubmit发起form提交请求。</p>
+        </div>
+        <div class="tab-pane" id="tab_5_2">
+            <pre class="prettyprint">
+&lt;a id="saveForm" class="btn" href="#"&gt;
+    &lt;i class="fa fa-check-circle fa-lg"&gt;&lt;/i&gt; 提交表单
+&lt;/a&gt;
+&lt;form action="" id="form_sample_1" class="form-horizontal" rel="validate-form"&gt;
+          &lt;div class="form-body"&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;姓名
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input type="text" name="name" class="form-control" data-bv-notempty="true" /&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;邮件
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input name="email" type="text" class="form-control" data-bv-notempty="true" /&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;个人主页
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input name="url" type="text" class="form-control" data-bv-notempty="true" /&gt;
+                      &lt;span class="help-block"&gt;e.g: http://www.demo.com or http://demo.com&lt;/span&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;固定电话
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input name="number" type="text" class="form-control" data-bv-notempty="true" /&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;移动电话
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input name="digits" type="text" class="form-control" data-bv-notempty="true" /&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;信用卡号码
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input name="creditcard" type="text" class="form-control" data-bv-notempty="true" /&gt;
+                      &lt;span class="help-block"&gt;e.g: 5500 0000 0000 0004&lt;/span&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;职业&nbsp;&nbsp;&lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;input name="occupation" type="text" class="form-control" /&gt;
+                      &lt;span class="help-block"&gt;可选&lt;/span&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class="form-group"&gt;
+                  &lt;label class="control-label col-md-3"&gt;类别
+                  &lt;/label&gt;
+                  &lt;div class="col-md-4"&gt;
+                      &lt;select class="form-control" name="category" data-bv-notempty="true"&gt;
+                          &lt;option value=""&gt;请选择...&lt;/option&gt;
+                          &lt;option value="Category 1"&gt;类别 1&lt;/option&gt;
+                          &lt;option value="Category 2"&gt;类别 2&lt;/option&gt;
+                          &lt;option value="Category 3"&gt;类别 5&lt;/option&gt;
+                          &lt;option value="Category 4"&gt;类别 4&lt;/option&gt;
+                      &lt;/select&gt;
+                  &lt;/div&gt;
+              &lt;/div&gt;
+          &lt;/div&gt;
+      &lt;/form&gt;
+                            </pre>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+debugger;
+window.prettyPrint();
+$(document).ready(function(){
+    $('#saveForm').click(function(){
+       var that = $(this);
+       $('#form_sample_1').ajaxValidSubmit({
+        success : function(data) {
+          //TODO
+        },
+        error : function() {
+          //TODO
+        }
+       });
+    });
+});
+</script>

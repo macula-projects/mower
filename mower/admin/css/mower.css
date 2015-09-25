@@ -3570,7 +3570,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-09-13
+ * mower - v1.1.1 - 2015-09-24
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -8278,15 +8278,17 @@ Input icons
   float: right;
   padding-right: 15px;
   padding-left: 15px;
-  line-height: 46px;
+  line-height: 30px;
   vertical-align: middle;
   background-color: #e5e5e5;
   border-left: 1px solid #d4d4d4;
 }
 .fuelux .wizard .actions a {
+  padding-top: 0;
+  padding-bottom: 0;
   margin-right: 8px;
   font-size: 12px;
-  line-height: 45px;
+  line-height: 22px;
 }
 .fuelux .wizard .actions .btn-prev span {
   margin-right: 5px;

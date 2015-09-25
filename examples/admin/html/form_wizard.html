@@ -1,0 +1,112 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <div class="fuelux">
+            <div id="MyWizard" class="wizard">
+                <ul class="steps">
+                    <li data-target="#step1">
+                        <span class="badge badge-info">1</span> 提交订单
+                        <span class="chevron"></span>
+                    </li>
+                    <li data-target="#step2">
+                        <span class="badge">2</span> 付款成功
+                        <span class="chevron"></span>
+                    </li>
+                    <li class="active" data-target="#step3">
+                        <span class="badge">3</span> 商品出库
+                        <span class="chevron"></span>
+                    </li>
+                    <li data-target="#step4">
+                        <span class="badge">4</span> 等待收货
+                        <span class="chevron"></span>
+                    </li>
+                    <li data-target="#step5">
+                        <span class="badge">5</span> 完成
+                        <span class="chevron"></span>
+                    </li>
+                </ul>
+                <div class="actions">
+                    <a class="btn btn-default btn-prev" disabled="disabled"><span class="glyphicon glyphicon-arrow-left"></span>Prev</a>
+                    <a class="btn btn-default btn-next" data-last="Complete">Next<span class="glyphicon glyphicon-arrow-right"></span></a>
+                </div>
+                <div class="step-content">
+                    <div class="step-pane sample-pane alert active" data-step="1">
+                        <h4>Setup Campaign</h4>
+                        <p>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic. Beetroot water spinach okra water chestnut ricebean pea catsear courgette.</p>
+                    </div>
+                    <div class="step-pane sample-pane bg-info alert" data-step="2">
+                        <h4>Choose Recipients</h4>
+                        <p>Celery quandong swiss chard chicory earthnut pea potato. Salsify taro catsear garlic gram celery bitterleaf wattle seed collard greens nori. Grape wattle seed kombu beetroot horseradish carrot squash brussels sprout chard. </p>
+                    </div>
+                    <div class="step-pane sample-pane bg-danger alert" data-step="3">
+                        <h4>Design Template</h4>
+                        <p>Nori grape silver beet broccoli kombu beet greens fava bean potato quandong celery. Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut eggplant winter purslane fennel azuki bean earthnut pea sierra leone bologi leek soko chicory celtuce parsley jÃ­cama salsify. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                </li>
+                <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_1">
+                    无
+                </div>
+                <div class="tab-pane" id="tab_5_2">
+                    <pre class="prettyprint">
+&lt;div class="fuelux"&gt;
+    &lt;div id="MyWizard" class="wizard"&gt;
+        &lt;ul class="steps"&gt;
+            &lt;li data-target="#step1"&gt;
+                &lt;span class="badge badge-info"&gt;1&lt;/span&gt; 提交订单
+                &lt;span class="chevron"&gt;&lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li data-target="#step2"&gt;
+                &lt;span class="badge"&gt;2&lt;/span&gt; 付款成功
+                &lt;span class="chevron"&gt;&lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li class="active" data-target="#step3"&gt;
+                &lt;span class="badge"&gt;3&lt;/span&gt; 商品出库
+                &lt;span class="chevron"&gt;&lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li data-target="#step4"&gt;
+                &lt;span class="badge"&gt;4&lt;/span&gt; 等待收货
+                &lt;span class="chevron"&gt;&lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li data-target="#step5"&gt;
+                &lt;span class="badge"&gt;5&lt;/span&gt; 完成
+                &lt;span class="chevron"&gt;&lt;/span&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;div class="actions"&gt;
+            &lt;a class="btn btn-default btn-prev" disabled="disabled"&gt;&lt;span class="glyphicon glyphicon-arrow-left"&gt;&lt;/span&gt;Prev&lt;/a&gt;
+            &lt;a class="btn btn-default btn-next" data-last="Complete"&gt;Next&lt;span class="glyphicon glyphicon-arrow-right"&gt;&lt;/span&gt;&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div class="step-content"&gt;
+            &lt;div class="step-pane sample-pane alert active" data-step="1"&gt;
+                &lt;h4&gt;Setup Campaign&lt;/h4&gt;
+                &lt;p&gt;Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic. Beetroot water spinach okra water chestnut ricebean pea catsear courgette.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="step-pane sample-pane bg-info alert" data-step="2"&gt;
+                &lt;h4&gt;Choose Recipients&lt;/h4&gt;
+                &lt;p&gt;Celery quandong swiss chard chicory earthnut pea potato. Salsify taro catsear garlic gram celery bitterleaf wattle seed collard greens nori. Grape wattle seed kombu beetroot horseradish carrot squash brussels sprout chard. &lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="step-pane sample-pane bg-danger alert" data-step="3"&gt;
+                &lt;h4&gt;Design Template&lt;/h4&gt;
+                &lt;p&gt;Nori grape silver beet broccoli kombu beet greens fava bean potato quandong celery. Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut eggplant winter purslane fennel azuki bean earthnut pea sierra leone bologi leek soko chicory celtuce parsley j?-cama salsify. &lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                        </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        window.prettyPrint();
+    </script>

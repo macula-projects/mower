@@ -14,7 +14,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/index/index.html"
 }, {
     "id": 3,
     "code": "ADMIN-MENU-2",
@@ -256,7 +256,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/form_basic.html"
 },
 {
     "id": 29,
@@ -266,7 +266,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/form_layout.html"
 },
 {
     "id": 30,
@@ -276,7 +276,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/form_wizard.html"
 },
 {
     "id": 31,
@@ -286,7 +286,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/form_validate.html"
 },
 {
     "id": 32,
@@ -315,7 +315,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/datatables_static.html"
 },
 {
     "id": 35,
@@ -325,7 +325,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/datatables_ajax.html"
 },
 {
     "id": 36,
@@ -335,7 +335,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/datatables_tree.html"
 },
 {
     "id": 37,
@@ -345,7 +345,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/datatables_custom.html"
 },
 {
     "id": 38,
@@ -427,7 +427,7 @@
 {
     "id": 46,
     "parentId": 45,
-    "code": "ADMIN-MENU-10",
+    "code": "ADMIN-MENU-9-1",
     "name": "后端模板",
     "attributes": {
         "iconUri": null
@@ -437,7 +437,7 @@
 {
     "id": 47,
     "parentId": 45,
-    "code": "ADMIN-MENU-10",
+    "code": "ADMIN-MENU-9-2",
     "name": "前端模板",
     "attributes": {
         "iconUri": null
@@ -447,7 +447,7 @@
 {
     "id": 48,
     "parentId": 45,
-    "code": "ADMIN-MENU-10",
+    "code": "ADMIN-MENU-9-3",
     "name": "登录页面",
     "attributes": {
         "iconUri": null
