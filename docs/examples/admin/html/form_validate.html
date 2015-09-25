@@ -1,15 +1,15 @@
 <div class="panel panel-default panel-widget">
     <div class="panel-heading bordered-bottom-highlight bordered-themesecondary">
         <div class="row mu-panel-toolbar">
-            <div class="col-xs-12 col-md-3 mu-panel-toolbar-action-cont">
+            <div class="col-xs-12 col-md-3">
                 <a id="saveForm" class="btn" href="#">
-                    <i class="fa fa-check-circle fa-lg"></i> 验证
+                    <i class="fa fa-check-circle fa-lg"></i> 提交表单
                 </a>
             </div>
         </div>
     </div>
     <div class="panel-body" style="background-color: #fff;padding: 10px ">
-        <form action="" id="form_sample_1" class="form-horizontal" rel="validate-form">
+        <form id="form_sample_1" action="admin/macula-base/application/save" class="form-horizontal" rel="validate-form">
             <div class="form-body">
                 <div class="form-group">
                     <label class="control-label col-md-3">姓名
@@ -94,7 +94,7 @@
             <p>有两种方式激活应用验证：<code>$('#form').validation()</code>和 在Form dom元素添加属性<code>rel="validate-form"</code>。</p>
             <p><code>$('#form')</code> 为jQuery选中你需要验证的 dom 元素，最后只需要在html代码中指定相关的属性即可。</p>
             <pre class="prettyprint">
-&lt;form id="html5Form" method="post" class="form-horizontal"
+&lt;form id="html5Form" method="post" action="admin/application/save" class="form-horizontal"
       data-bv-message="This value is not valid"
       data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
       data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -171,11 +171,35 @@
             可能某些属性不适用于data-*属性表达，具体参考bootstrap validator官方文档。
             </p>
         </div>
+
         <div class="tab-pane" id="tab_5_1">
-            无
+            <p>
+              表单提交时的验证是基于<a href="http://malsup.com/jquery/form/" target="_blank">jquery form plugin</a>和<a href="http://bv.doc.javake.cn/" target="_blank">bootstrap validator</a>来处理。
+            </p>
+            <pre class="prettyprint">
+&lt;script&gt;
+  $(document).ready(function(){
+      $('#saveForm').click(function(){
+         var that = $(this);
+         $form.ajaxValidSubmit({
+          success : function(data) {
+            //TODO
+          },
+          error : function() {
+            //TODO
+          }
+         });
+      });
+  });
+&lt;/script&gt;
+            </pre>
+            <p style="margin-bottom: 10px;">其中<code>ajaxValidSubmit</code>方法中会调用<code>bootstrap validator</code>去验证表单，验证成功后将调用<code>jquery form plugin</code>中ajaxSubmit发起form提交请求。</p>
         </div>
         <div class="tab-pane" id="tab_5_2">
             <pre class="prettyprint">
+&lt;a id="saveForm" class="btn" href="#"&gt;
+    &lt;i class="fa fa-check-circle fa-lg"&gt;&lt;/i&gt; 提交表单
+&lt;/a&gt;
 &lt;form action="" id="form_sample_1" class="form-horizontal" rel="validate-form"&gt;
           &lt;div class="form-body"&gt;
               &lt;div class="form-group"&gt;
@@ -249,5 +273,19 @@
     </div>
 </div>
 <script type="text/javascript">
+debugger;
 window.prettyPrint();
+$(document).ready(function(){
+    $('#saveForm').click(function(){
+       var that = $(this);
+       $('#form_sample_1').ajaxValidSubmit({
+        success : function(data) {
+          //TODO
+        },
+        error : function() {
+          //TODO
+        }
+       });
+    });
+});
 </script>
