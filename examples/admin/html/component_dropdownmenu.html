@@ -1,0 +1,292 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <h4 class="header-dividing" id="minimum-setup">基本类型</h4>
+        <div class="row">
+            <div class='col-sm-6'>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation" class="dropdown-header">Dropdown header</li>
+                        <li>
+                            <a href="#">编辑</a>
+                        </li>
+                        <li>
+                            <a href="#">删除</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li role="presentation" class="dropdown-header">Dropdown header</li>
+                        <li>
+                            <a href="#">修改</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <h4 class="header-dividing" id="minimum-setup">导航条下拉菜单</h4>
+        <div class="row">
+            <div class='col-sm-6'>
+                <nav id="navbar-example" class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="collapse navbar-collapse bs-example-js-navbar-collapse">
+                            <ul class="nav navbar-nav">
+                                <li class="active">
+                                    <a href="#">首页</a>
+                                </li>
+                                <li>
+                                    <a href="#">演示</a>
+                                </li>
+                                <li>
+                                    <a href="#">下载</a>
+                                </li>
+                                <li class="">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                        团队
+                                        <span class="caret"></span>
+                                      </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="#">关于我们</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">开发计划</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a href="#">开源代码</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">团队博客</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.nav-collapse -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+        </div>
+        <br/>
+        <h4 class="header-dividing" id="minimum-setup">标签下拉菜单</h4>
+        <div class="row">
+            <div class='col-sm-6'>
+                <div class="dropdown">
+                    <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">操作<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a href="#">编辑</a>
+                        </li>
+                        <li>
+                            <a href="#">删除</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">修改</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <script type="text/javascript">
+            $(function() {
+                $('#datetimepicker3').datetimepicker({
+                    daysOfWeekDisabled: [0, 6]
+                });
+            });
+            </script>
+        </div>
+        <br/>
+        <h4 class="header-dividing" id="minimum-setup">按钮下拉菜单</h4>
+        <div class="row">
+            <div class='col-sm-8'>
+                <div class="btn-group">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a href="#">编辑</a>
+                        </li>
+                        <li>
+                            <a href="#">删除</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">修改</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default">操作</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#">编辑</a>
+                        </li>
+                        <li>
+                            <a href="#">删除</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">增加</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <script type="text/javascript">
+            $(function() {
+                $('#datetimepicker4').datetimepicker({
+                    inline: true,
+                    sideBySide: true
+                });
+            });
+            </script>
+        </div>
+        <br/>
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                </li>
+                <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_1">
+                    无
+                </div>
+                <div class="tab-pane" id="tab_5_2">
+                    <pre class="prettyprint">
+&lt;div class="example"&gt;
+  &lt;div class="dropdown"&gt;
+    &lt;button class="btn dropdown-toggle" type="button" data-toggle="dropdown"&gt;
+      操作
+      &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"&gt;
+      &lt;li role="presentation" class="dropdown-header"&gt;Dropdown header&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;编辑&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;删除&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="divider"&gt;&lt;/li&gt;
+      &lt;li role="presentation" class="dropdown-header"&gt;Dropdown header&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;修改&lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;nav id="navbar-example" class="navbar navbar-default"&gt;
+  &lt;div class="container-fluid"&gt;
+    &lt;div class="collapse navbar-collapse bs-example-js-navbar-collapse"&gt;
+      &lt;ul class="nav navbar-nav"&gt;
+        &lt;li class="active"&gt;
+          &lt;a href="#"&gt;首页&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;a href="#"&gt;演示&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;a href="#"&gt;下载&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class=""&gt;
+          &lt;a class="dropdown-toggle" data-toggle="dropdown" href="#"&gt;
+            团队
+            &lt;span class="caret"&gt;&lt;/span&gt;
+          &lt;/a&gt;
+          &lt;ul class="dropdown-menu"&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;关于我们&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;开发计划&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class="divider"&gt;&lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;开源代码&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href="#"&gt;团队博客&lt;/a&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;&lt;!-- /.nav-collapse --&gt;
+  &lt;/div&gt;&lt;!-- /.container-fluid --&gt;
+&lt;/nav&gt; &lt;!-- /navbar-example --&gt;
+&lt;div style="position:relative;"&gt;
+  &lt;div class="dropdown"&gt;
+    &lt;a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html"&gt;
+      操作
+      &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;编辑&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;删除&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="divider"&gt;&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#"&gt;修改&lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="btn-group"&gt;
+&lt;button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"&gt;
+  操作
+  &lt;span class="caret"&gt;&lt;/span&gt;
+&lt;/button&gt;
+&lt;ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;编辑&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;删除&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="divider"&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;修改&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="btn-group"&gt;
+&lt;button type="button" class="btn btn-default"&gt;操作&lt;/button&gt;
+&lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+  &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;span class="sr-only"&gt;Toggle Dropdown&lt;/span&gt;
+&lt;/button&gt;
+&lt;ul class="dropdown-menu" role="menu"&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;编辑&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;删除&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="divider"&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#"&gt;增加&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+                </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+window.prettyPrint();
+</script>

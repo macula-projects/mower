@@ -1823,8 +1823,13 @@
 }
 
 .bv-form .has-feedback .bv-no-label {
-    top: 4px
+    top: 4px;
 }
+
+.bv-form td.has-feedback .bv-no-label {
+    right: 5px;
+}
+
 
 .bv-form .has-feedback .bv-input-group {
     top: 0;
@@ -1836,11 +1841,8 @@
 	color: #e02222;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 18px;
 	text-decoration: inherit;
 	position: absolute;
-	top: 5px;
-	right: 15px;
 }
 
 
@@ -3570,7 +3572,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-09-24
+ * mower - v1.1.1 - 2015-09-29
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -5478,6 +5480,12 @@ fieldset[disabled] .navbar-default-red .btn-link:focus {
   line-height: 34px;
   text-align: center;
   pointer-events: auto;
+}
+.form-control.input-lg + .form-control-feedback {
+  height: 46px;
+}
+.form-control.input-sm + .form-control-feedback {
+  height: 30px;
 }
 /*
  *Iconic Labels

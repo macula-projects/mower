@@ -157,7 +157,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri":"examples/admin/html/component_datepicker.html" 
 },
 {
     "id": 19,
@@ -177,7 +177,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/component_dropdownmenu.html"
 },
 {
     "id": 21,
@@ -187,7 +187,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/component_dropdownlist.html" 
 },
 {
     "id": 22,
