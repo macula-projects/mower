@@ -62,6 +62,8 @@
 
     function doFormError(e) {}
 
+
+
     // private functions & variables
     var SELECTOR = '[rel="validate-form"]';
 
@@ -87,6 +89,13 @@
                         }
                     });
                 }
+
+                $this.on('updateValidate',function(event){
+                    $this.find('[name], [data-bv-field]')
+                        .each(function() {
+                            $this.bootstrapValidator('addField',$(this));
+                        });
+                });
             });
         });
 

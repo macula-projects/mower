@@ -30,6 +30,7 @@
 
     DropDownTree.DEFAULTS = {
         url: '',
+        datasource:false,
         callback: function(instance, data) {
             var options = instance.options,
                 newData = [],
@@ -340,15 +341,22 @@
             var instance = this.settings.core.instance;
             var options = instance.options;
 
-            var opt = {
-                url: options.url,
-                dataType: 'json',
-                success: function(data) {
-                    if (options.callback) data = utils.executeFunction(options.callback, instance, data);
-                    cb.call(this, data);
-                }
-            };
-            $.ajax(opt);
+            if (options.url) {
+                var opt = {
+                    url: options.url,
+                    dataType: 'json',
+                    success: function(data) {
+                        if (options.callback) data = utils.executeFunction(options.callback, instance, data);
+                        cb.call(this, data);
+                    }
+                };
+                $.ajax(opt);
+            } else {
+                if(typeof options.datasource === 'object') return cb.call(this, options.datasource);
+
+                var data = utils.executeFunction(options.datasource);
+                data ? cb.call(this, data) : cb.call(this, options.datasource);
+            }
         },
         show: function() {
             this.$treeContainer.appendTo('body');

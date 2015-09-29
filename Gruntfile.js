@@ -254,7 +254,8 @@ module.exports = function(grunt) {
                     'plugins/bootbox/js/bootbox.min.js': ['plugins/bootbox/js/bootbox.js'],
                     'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js'],
                     'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js': ['plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'],
-                    'plugins/form/js/form.jquery.min.js': ['plugins/form/js/form.jquery.js']
+                    'plugins/form/js/form.jquery.min.js': ['plugins/form/js/form.jquery.js'],
+                    'plugins/moment/js/moment-with-locales.min.js': ['plugins/moment/js/moment-with-locales.js']
                 }
             },
             minify_doc:{

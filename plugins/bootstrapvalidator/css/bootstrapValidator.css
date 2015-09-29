@@ -21,8 +21,13 @@
 }
 
 .bv-form .has-feedback .bv-no-label {
-    top: 4px
+    top: 4px;
 }
+
+.bv-form td.has-feedback .bv-no-label {
+    right: 5px;
+}
+
 
 .bv-form .has-feedback .bv-input-group {
     top: 0;
@@ -34,11 +39,8 @@
 	color: #e02222;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 18px;
 	text-decoration: inherit;
 	position: absolute;
-	top: 5px;
-	right: 15px;
 }
 
 

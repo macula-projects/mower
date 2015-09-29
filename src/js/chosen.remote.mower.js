@@ -7,7 +7,7 @@
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  * ======================================================================== */
 
- ;(function ( $, window, document, undefined ) {
+ ;(function (  $, utils, window, document, undefined ) {
 
   "use strict";
 
@@ -132,12 +132,11 @@
           
           $.ajax(ajaxOption); 
       } else {
-          var data = this.options.datasource;
-          if ($.isFunction(window[data])){
-               data = data(that);
-           }
-           
-           this._construct(data);
+        var data = this.options.datasource;
+        if(typeof data === 'object') return this._construct(data);
+        
+        var cbData = utils.executeFunction(data,that);
+        return cbData ? this._construct(cbData) : this._construct(data);
       }
     },
     reload: function(options) {
@@ -223,4 +222,4 @@
           }
       });
   });
-})( jQuery, window, document );
+})( jQuery, Utils, window, document );

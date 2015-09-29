@@ -1425,6 +1425,8 @@ if (typeof jQuery === 'undefined') {
                 var opts = this._parseOptions($field);
                 opts = (opts === null) ? options : $.extend(true, options, opts);
 
+                if(!opts) continue;
+
                 this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
                 // Update the cache
