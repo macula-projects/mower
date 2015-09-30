@@ -59,6 +59,7 @@
         height: null,
         initValue: '',
         orientation: "auto",
+        validateForm:'',
         template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
     };
 
@@ -93,6 +94,8 @@
                 this.$tree.css('height', this.options.height);
                 this.$tree.css('overflow', 'auto');
             }
+
+            this.options.validateForm = this.options.validateForm || this.$input.closest('form')[0];
 
             this._process_options();
             this._buildEvents();
@@ -318,6 +321,13 @@
         },
         _newValue: function(value, isNewText) {
             this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
+            
+            //validate
+            // if(this.options.validateForm && typeof $.fn.bootstrapValidator !='undefined'){
+            //     $(this.options.validateForm).bootstrapValidator('addField',this.options.realField);
+            // }
+
+            //display text
             if (isNewText) {
                 $.jstree.reference(this.$tree).select_node('#' + value);
 
@@ -434,6 +444,10 @@
 
                 for (var i = 0; i < selectNodes.length; i++) {
                     this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectNodes[i][JSTREE_ID] + '"/>');
+                    //validate
+                    // if(this.options.validateForm && typeof $.fn.bootstrapValidator !='undefined'){
+                    //     $(this.options.validateForm).bootstrapValidator('addField',this.options.realField);
+                    // }
                     texts.push(selectNodes[i][JSTREE_DISPLAYNAME]);
                 }
 
