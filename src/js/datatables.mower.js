@@ -197,6 +197,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             option.rowId = option.rowId || 'id';
 
+            option.select = option.select || true;
+
             // var infoCallback = {
             //     "infoCallback": function(settings, start, end, max, total, pre) {
             //         return _fnUpdateInfo(settings);
@@ -314,10 +316,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                         utils.executeFunction(settings.oInit.xhrComplete, json);
 
-                        if (json.success) {
-                            that.processResData(settings, json);
-                        } else if(!settings.oInit.xhrComplete && json.exceptionMessage) {
-                             ModalBox.alert(json.exceptionMessage);
+                        if(json != null){
+                            if (json.success) {
+                                that.processResData(settings, json);
+                            } else if(!settings.oInit.xhrComplete && json.exceptionMessage) {
+                                 ModalBox.alert(json.exceptionMessage);
+                            }
                         }
                     }).DataTable(option);
             }

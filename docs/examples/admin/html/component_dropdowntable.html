@@ -3,60 +3,43 @@
         <h4 class="header-dividing" id="minimum-setup">基本类型</h4>
         <div class="row">
             <div class='col-sm-6'>
-                <select  rel="chosen" data-placeholder="选择一个宠物..." class="chosen-select form-control" tabindex="2">
-                  <option value=""></option>
-                  <option value="cat">小猫</option>
-                  <option value="dog">小狗</option>
-                  <option value="fish">金鱼</option>
-                  <option value="dragon">龙</option>
-                </select>
+                <div class="input-group mu-dropdowntable" 
+                data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" 
+                data-code-field="extn" 
+                data-label-field="name" 
+                data-real-field="extn"
+                data-width="558px"
+                data-height="400px"
+                data-url="/assets/ajax/data/objects.txt" 
+                rel="dropdowntable">
+                  <input type="text" class="form-control">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                  </span>
+                </div>
             </div>
         </div>
         <br/>
         <h4 class="header-dividing" id="minimum-setup">多项选择</h4>
         <div class="row">
             <div class='col-sm-6'>
-                <select rel="chosen"  data-width="100%" data-placeholder="选择一些爱吃的水果..." class="chosen-select form-control" tabindex="2" multiple>
-                    <option value="strawberries">草莓</option>
-                    <option value="apple">苹果</option>
-                    <option value="orange">橙子</option>
-                    <option value="cherry">樱桃</option>
-                    <option value="banana">香蕉</option>
-                    <option value="figs">无花果</option>
-                </select>
+                <div class="input-group mu-dropdowntable" 
+                data-columns="{'name':'名称','position':'职位','office':'办公地点','salary':'薪资'}" 
+                data-code-field="extn" 
+                data-label-field="name" 
+                data-real-field="extn"
+                data-width="558px"
+                data-height="400px"
+                data-multiple="true"
+                data-url="/assets/ajax/data/objects.txt" 
+                rel="dropdowntable">
+                  <input type="text" class="form-control">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                  </span>
+                </div>
             </div>
         </div>
-        <br/>
-        <h4 class="header-dividing" id="minimum-setup">分组下拉列表</h4>
-        <div class="row">
-            <div class='col-sm-6'>
-                <select rel="remoteChosen" data-placeholder="选择您喜欢球队..." class="chosen-select form-control" tabindex="5">
-                    <option value=""></option>
-                    <optgroup label="NFC EAST">
-                        <option>Dallas Cowboys</option>
-                        <option>New York Giants</option>
-                        <option>Philadelphia Eagles</option>
-                        <option>Washington Redskins</option>
-                    </optgroup>
-                    <optgroup label="NFC NORTH">
-                        <option>Chicago Bears</option>
-                        <option>Detroit Lions</option>
-                        <option>Green Bay Packers</option>
-                        <option>Minnesota Vikings</option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-        <br/>
-        <h4 class="header-dividing" id="minimum-setup">Ajax远程加载数据</h4>
-        <div class="row">
-            <div class='col-sm-6'>
-            <select rel="remoteChosen" data-server="true" data-url="/assets/ajax/data/chosen.json" data-placeholder="选择喜欢城市..." class="chosen-select form-control" >
-                <option value=""></option>
-            </select>
-            </div>
-        </div>
-
         <br/>
         <div class="mu-tabbable border-remove">
             <ul class="nav nav-tabs ">

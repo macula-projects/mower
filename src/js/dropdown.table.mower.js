@@ -285,8 +285,9 @@
             this.$table.attr('data-ajax', this.options.url);
 
             //add table select attribute
-            this.$table.attr('data-enableSelected', true);
-            this.$table.attr('data-singleSelect', !this.options.multiple);
+            if(this.options.multiple == true){
+                this.$table.attr('data-select-style', 'multi');
+            }
 
             //wrap table and append to input backend
             if ($.isArray(this.options.initValue)) {
