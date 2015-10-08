@@ -37006,7 +37006,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-09-29
+ * mower - v1.1.1 - 2015-10-08
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -39735,6 +39735,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             option.rowId = option.rowId || 'id';
 
+            option.select = option.select || true;
+
             // var infoCallback = {
             //     "infoCallback": function(settings, start, end, max, total, pre) {
             //         return _fnUpdateInfo(settings);
@@ -39852,10 +39854,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                         utils.executeFunction(settings.oInit.xhrComplete, json);
 
-                        if (json.success) {
-                            that.processResData(settings, json);
-                        } else if(!settings.oInit.xhrComplete && json.exceptionMessage) {
-                             ModalBox.alert(json.exceptionMessage);
+                        if(json != null){
+                            if (json.success) {
+                                that.processResData(settings, json);
+                            } else if(!settings.oInit.xhrComplete && json.exceptionMessage) {
+                                 ModalBox.alert(json.exceptionMessage);
+                            }
                         }
                     }).DataTable(option);
             }
@@ -41471,8 +41475,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$table.attr('data-ajax', this.options.url);
 
             //add table select attribute
-            this.$table.attr('data-enableSelected', true);
-            this.$table.attr('data-singleSelect', !this.options.multiple);
+            if(this.options.multiple == true){
+                this.$table.attr('data-select-style', 'multi');
+            }
 
             //wrap table and append to input backend
             if ($.isArray(this.options.initValue)) {
@@ -41791,6 +41796,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         height: null,
         initValue: '',
         orientation: "auto",
+        validateForm:'',
         template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
     };
 
@@ -41825,6 +41831,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 this.$tree.css('height', this.options.height);
                 this.$tree.css('overflow', 'auto');
             }
+
+            this.options.validateForm = this.options.validateForm || this.$input.closest('form')[0];
 
             this._process_options();
             this._buildEvents();
@@ -42050,6 +42058,13 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         },
         _newValue: function(value, isNewText) {
             this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + value + '"/>');
+            
+            //validate
+            // if(this.options.validateForm && typeof $.fn.bootstrapValidator !='undefined'){
+            //     $(this.options.validateForm).bootstrapValidator('addField',this.options.realField);
+            // }
+
+            //display text
             if (isNewText) {
                 $.jstree.reference(this.$tree).select_node('#' + value);
 
@@ -42166,6 +42181,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                 for (var i = 0; i < selectNodes.length; i++) {
                     this.$input.after('<input class="_textbox-value" type="hidden" name="' + this.options.realField + '" value="' + selectNodes[i][JSTREE_ID] + '"/>');
+                    //validate
+                    // if(this.options.validateForm && typeof $.fn.bootstrapValidator !='undefined'){
+                    //     $(this.options.validateForm).bootstrapValidator('addField',this.options.realField);
+                    // }
                     texts.push(selectNodes[i][JSTREE_DISPLAYNAME]);
                 }
 
