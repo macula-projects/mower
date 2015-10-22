@@ -29,6 +29,14 @@
 }
 
 
+.bv-form .has-feedback .input-group + .form-control-feedback {
+    right: 55px;
+}
+
+.bv-form td.has-feedback .input-group.input-group-sm + .form-control-feedback {
+    right: 35px;
+}
+
 .bv-form .has-feedback .bv-input-group {
     top: 0;
     z-index: 100;

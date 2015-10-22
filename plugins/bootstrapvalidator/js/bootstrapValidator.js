@@ -794,7 +794,7 @@ if (typeof jQuery === 'undefined') {
             if (!this._cacheFields[field]) {
                 this._cacheFields[field] = (this.options.fields[field] && this.options.fields[field].selector)
                                          ? $(this.options.fields[field].selector)
-                                         : this.$form.find('[name="' + field + '"]');
+                                         : this.$form.find('[name="' + field + '"],[data-bv-field="'+field + '"]');
             }
 
             return this._cacheFields[field];
@@ -1413,7 +1413,8 @@ if (typeof jQuery === 'undefined') {
                     break;
             }
 
-            fields.attr('data-bv-field', field);
+            // maybe something not need validate
+            //fields.attr('data-bv-field', field);
 
             var type  = fields.attr('type'),
                 total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
@@ -1426,6 +1427,9 @@ if (typeof jQuery === 'undefined') {
                 opts = (opts === null) ? options : $.extend(true, options, opts);
 
                 if(!opts) continue;
+
+                //add tag for field
+                $field.attr('data-bv-field', field);
 
                 this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
@@ -1577,35 +1581,35 @@ if (typeof jQuery === 'undefined') {
             return this;
         },
 
-        // /**
-        //  * Enable/Disable all validators to given field
-        //  *
-        //  * @param {String} field The field name
-        //  * @param {Boolean} enabled Enable/Disable field validators
-        //  * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
-        //  * @returns {BootstrapValidator}
-        //  */
-        // enableFieldValidators: function(field, enabled, validatorName) {
-        //     var validators = this.options.fields[field].validators;
+        /**
+         * Enable/Disable all validators to given field
+         *
+         * @param {String} field The field name
+         * @param {Boolean} enabled Enable/Disable field validators
+         * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
+         * @returns {BootstrapValidator}
+         */
+        enableFieldValidators: function(field, enabled, validatorName) {
+            var validators = this.options.fields[field].validators;
 
-        //     // Enable/disable particular validator
-        //     if (validatorName
-        //         && validators
-        //         && validators[validatorName] && validators[validatorName].enabled !== enabled)
-        //     {
-        //         this.options.fields[field].validators[validatorName].enabled = enabled;
-        //         this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
-        //     }
-        //     // Enable/disable all validators
-        //     else if (!validatorName && this.options.fields[field].enabled !== enabled) {
-        //         this.options.fields[field].enabled = enabled;
-        //         for (var v in validators) {
-        //             this.enableFieldValidators(field, enabled, v);
-        //         }
-        //     }
+            // Enable/disable particular validator
+            if (validatorName
+                && validators
+                && validators[validatorName] && validators[validatorName].enabled !== enabled)
+            {
+                this.options.fields[field].validators[validatorName].enabled = enabled;
+                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
+            }
+            // Enable/disable all validators
+            else if (!validatorName && this.options.fields[field].enabled !== enabled) {
+                this.options.fields[field].enabled = enabled;
+                for (var v in validators) {
+                    this.enableFieldValidators(field, enabled, v);
+                }
+            }
 
-        //     return this;
-        // },
+            return this;
+        },
 
         /**
          * Some validators have option which its value is dynamic.

@@ -93,7 +93,7 @@
                 $this.on('updateValidate',function(event){
                     $this.find('[name], [data-bv-field]')
                         .each(function() {
-                            $this.bootstrapValidator('addField',$(this));
+                            $this.bootstrapValidator('addField',$(this).attr('data-bv-field') || $(this).attr('name'));
                         });
                 });
             });

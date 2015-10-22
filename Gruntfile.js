@@ -83,8 +83,7 @@ module.exports = function(grunt) {
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/form.<%= pkg.name %>.js',
-                        'src/js/messagebox.<%= pkg.name %>.js',
-                        'src/js/form.<%= pkg.name %>.js'
+                        'src/js/messagebox.<%= pkg.name %>.js'
                     ]
                 }
             },

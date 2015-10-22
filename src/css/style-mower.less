@@ -422,6 +422,20 @@ li .icon-large[class*=" icon-"] {
   background-color: #468847;
   color: #ffffff;
 }
+
+
+.has-error .input-group-btn > .btn {
+  color: #fff;
+  border-color: #b94a48;
+  background-color: #f2dede;
+}
+
+.has-success .input-group-btn > .btn {
+  color: #fff;
+  background-color: #468847;
+  border-color: #468847;
+}
+
 .form fieldset .form-group:last-child,
 .form fieldset .form-group:last-child .note,
 .form .form-group:last-child,
@@ -501,6 +515,9 @@ Input icons
   border-radius: 0 !important;
 }
 
+.input-group-btn > .btn.btn-sm {
+  line-height: 18px;
+}
 .input-group-btn.border-less > .btn
 {
   border-left: 0;
@@ -531,6 +548,9 @@ Input icons
   margin-top: 10px;
 }
 
+.input-group + .form-control-feedback{
+  line-height:34px;
+}
 /*
  * Alerts
  */
@@ -2277,6 +2297,85 @@ Input icons
 
 /* mower tabbable. styles for tabbable.
  ========================================================================== */
+ .nav-pills, .nav-tabs {
+     margin-bottom: 10px;
+ }
+
+ .tabs-left.nav-tabs, .tabs-right.nav-tabs {
+  border-bottom: 0
+}
+.tabs-left.nav-tabs>li, .tabs-right.nav-tabs>li {
+  float: none
+}
+.tabs-left.nav-tabs>li>a, .tabs-right.nav-tabs>li>a {
+  margin-right: 0;
+  margin-bottom: 3px
+}
+.tabs-left.nav-tabs {
+  border-right: 1px solid #ddd
+}
+.tabs-left.nav-tabs>li>a {
+  display: block;
+  margin-right: -1px
+}
+.tabs-left.nav-tabs>li.active>a, .tabs-left.nav-tabs>li.active>a:hover>li.active>a:focus {
+  -webkit-border-radius: 4px 0 0 4px;
+  -moz-border-radius: 4px 0 0 4px;
+  -ms-border-radius: 4px 0 0 4px;
+  -o-border-radius: 4px 0 0 4px;
+  border-radius: 4px 0 0 4px;
+  border-color: #ddd transparent #ddd #ddd
+}
+.tabs-right.nav-tabs {
+  border-left: 1px solid #ddd
+}
+.tabs-right.nav-tabs>li>a {
+  display: block;
+  margin-left: -1px
+}
+.tabbable:after, .tabbable:before, .tiles:after, .tiles:before {
+  display: table;
+  content: " "
+}
+.tabs-right.nav-tabs>li.active>a, .tabs-right.nav-tabs>li.active>a:hover>li.active>a:focus {
+  -webkit-border-radius: 0 4px 4px 0;
+  -moz-border-radius: 0 4px 4px 0;
+  -ms-border-radius: 0 4px 4px 0;
+  -o-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+  border-color: #ddd #ddd #ddd transparent
+}
+
+.tabs-below>.nav-pills, .tabs-below>.nav-tabs {
+  border-bottom: 0;
+  margin-bottom: 0;
+  margin-top: 10px
+}
+.tabs-below>.nav-tabs {
+  border-top: 1px solid #ddd;
+  margin-bottom: 0;
+  margin-top: 10px
+}
+.tabs-below>.nav-tabs>li>a {
+  margin-top: -1px;
+  margin-bottom: 0
+}
+.tabs-below>.nav-tabs>li>a .dropdown-menu {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px
+}
+.tabs-below>.nav-tabs .active a, .tabs-below>.nav-tabs .active a:hover .active a:focus {
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  -ms-border-radius: 0 0 4px 4px;
+  -o-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  border-color: transparent #ddd #ddd !important
+}
+
 .mu-tabbable {
   margin-bottom: 15px;
   padding: 0px;

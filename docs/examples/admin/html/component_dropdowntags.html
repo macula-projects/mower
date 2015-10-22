@@ -1,0 +1,83 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <h4 class="header-dividing" id="minimum-setup">基本类型</h4>
+        <div class="row">
+            <div class='col-sm-6'>
+                <div class="dropdown mu-dropdownquery">
+                    <input id="tagsinput" class="form-control" type="text" />
+                </div>
+                <script>
+                $(function(){
+                    var cities = [{
+                        "value": 1,
+                        "text": "奥斯丁",
+                        "continent": "Europe"
+                    }, {
+                        "value": 2,
+                        "text": "伦敦",
+                        "continent": "Europe"
+                    }];
+
+                    var elt = $('#tagsinput');
+                    elt.tagsselect({
+                        itemValue: 'value',
+                        itemText: 'text',
+                        dropdownquery: {
+                            displayKey: 'text',
+                            source: cities
+                        }
+                    });
+                });
+                </script>
+            </div>
+        </div>
+        <br/>
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                </li>
+                <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_1">
+                <pre class="prettyprint">
+&lt;script&gt;
+$(function(){
+    var cities = [{
+        "value": 1,
+        "text": "奥斯丁",
+        "continent": "Europe"
+    }, {
+        "value": 2,
+        "text": "伦敦",
+        "continent": "Europe"
+    }];
+
+    var elt = $('#tagsinput');
+    elt.tagsselect({
+        itemValue: 'value',
+        itemText: 'text',
+        dropdownquery: {
+            displayKey: 'text',
+            source: cities
+        }
+    });
+});
+&lt;/script&gt;
+</pre>
+                </div>
+                <div class="tab-pane" id="tab_5_2">
+                <pre class="prettyprint">
+&lt;div class="dropdown mu-dropdownquery"&gt;
+    &lt;input id="tagsinput" class="form-control" type="text" /&gt;
+&lt;/div&gt;
+                </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+window.prettyPrint();
+</script>

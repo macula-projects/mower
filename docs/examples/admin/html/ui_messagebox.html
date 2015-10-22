@@ -1,0 +1,89 @@
+<div class="col-md-12">
+    <div class="panel panel-widget light bordered">
+        <div class="panel-heading">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>MessageBox
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div>
+                <button id="btn-messagebox-warning" type="button" class="btn btn-warning btn-lg">警告</button>
+                <script>
+                $('#btn-messagebox-warning').click(function(event) {
+                    MessageBox.warning("Hello world!");
+                });
+                </script>
+            </div>
+            <br/>
+            <div>
+                <button id="btn-messagebox-success" type="button" class="btn btn-success btn-lg">成功</button>
+                <script>
+                $('#btn-messagebox-success').click(function(event) {
+                    MessageBox.success('Have fun storming the castle!', 'title-success');
+                });
+                </script>
+            </div>
+            <br/>
+            <div>
+                <button id="btn-messagebox-error" type="button" class="btn btn-danger btn-lg">错误</button>
+                <script>
+                $('#btn-messagebox-error').click(function(event) {
+                    MessageBox.error('I do not think that word means what you think it means.', 'title-error!');
+                });
+                </script>
+            </div>
+            <br/>
+            <div>
+                <button id="btn-messagebox-info" type="button" class="btn btn-primary btn-lg">提示</button>
+                <script>
+                $('#btn-messagebox-info').click(function(event) {
+                    MessageBox.info('这里是提示信息内容.', '提示');
+                });
+                </script>
+            </div>
+            <br/>
+            <div class="mu-tabbable border-remove">
+                <ul class="nav nav-tabs ">
+                    <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                    </li>
+                    <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_5_1">
+                    <pre class="prettyprint">
+&lt;script&gt;
+$('#btn-messagebox-warning').click(function(event) {
+    MessageBox.warning("Hello world!");
+});
+
+$('#btn-messagebox-success').click(function(event) {
+    MessageBox.success('Have fun storming the castle!', 'title-success');
+});
+
+$('#btn-messagebox-error').click(function(event) {
+    MessageBox.error('I do not think that word means what you think it means.', 'title-error!');
+});
+
+$('#btn-messagebox-info').click(function(event) {
+    MessageBox.info('这里是提示信息内容.', '提示');
+});
+&lt;/script&gt;
+                        </pre>
+                    </div>
+                    <div class="tab-pane" id="tab_5_2">
+                        <pre class="prettyprint">
+&lt;button id="btn-messagebox-warning" type="button" class="btn btn-warning btn-lg"&gt;警告&lt;/button&gt;
+&lt;button id="btn-messagebox-success" type="button" class="btn btn-success btn-lg"&gt;成功&lt;/button&gt;
+&lt;button id="btn-messagebox-error" type="button" class="btn btn-danger btn-lg"&gt;错误&lt;/button&gt;
+&lt;button id="btn-messagebox-info" type="button" class="btn btn-primary btn-lg"&gt;提示&lt;/button&gt;
+          </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+window.prettyPrint();
+</script>

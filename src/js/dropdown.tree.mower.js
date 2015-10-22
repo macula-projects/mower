@@ -20,6 +20,8 @@
     var JSTREE_ID = "id";
     var JSTREE_PID = "parent";
 
+    var EVENTS_UPDATE = "updateValue.mu.dropdowntree";
+
     var DropDownTree = function(element, options) {
         this.element = element;
         this.$element = $(element);
@@ -60,7 +62,10 @@
         initValue: '',
         orientation: "auto",
         validateForm:'',
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>',
+        events: {
+            updateValue: EVENTS_UPDATE
+        }
     };
 
     DropDownTree.DEFAULTS.JSTREE_CORE = {
@@ -72,6 +77,12 @@
     // DropDownTree.DEFAULTS.JSTREE_SEARCH = {
     //     show_only_matches: false
     // };
+
+    DropDownTree.DEFAULTS.JSTREE_CHECKBOX = {
+        three_state:false,
+        cascade: '',
+        visible: false
+    };
 
     DropDownTree.prototype = {
 
@@ -146,6 +157,13 @@
                 // 'search': DropDownTree.DEFAULTS.JSTREE_SEARCH,
                 // "plugins": ["wholerow"]
             };
+
+            if(this.options.multiple){
+                $.extend(this.options.jtOpt,{
+                    "checkbox":DropDownTree.DEFAULTS.JSTREE_CHECKBOX,
+                    "plugins": ["checkbox"]
+                })
+            }
 
             var plc = String(o.orientation).toLowerCase().split(/\s+/g),
                 _plc = o.orientation.toLowerCase();
@@ -429,6 +447,8 @@
             this.$input.val(oldText ? 
                 (oldText + this.options.separator + text.join(this.options.separator)) 
                 : text.join(this.options.separator));
+
+            this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
         },
         click: function(event) {
 
@@ -452,6 +472,8 @@
                 }
 
                 this.$input.val(texts.join(this.options.separator));
+
+                this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
             }
 
             if (this.options.multiple === false)
@@ -465,6 +487,8 @@
         clear: function() {
             this.$element.find('._textbox-value').remove();
             this.$input.val('');
+
+            this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
         },
         place: function() {
             var treeContainerWidth = this.$treeContainer.outerWidth(),
@@ -616,6 +640,17 @@
                 return;
             // component click requires us to explicitly show it
             $this.dropdowntree();
+
+            $this.on(EVENTS_UPDATE,function(event){
+                var $form = $(this).attr('validate-form') || $(this).closest('form'),
+                    $field = $(this).find('.form-control:first').attr('data-bv-field') || $(this).find('.form-control:first').attr('name');
+                try{
+                   $form.data('bootstrapValidator')
+                   .updateStatus($field , 'NOT_VALIDATED')
+                   .validateField($field); 
+               }catch(e){};
+
+            });
         });
     });
 

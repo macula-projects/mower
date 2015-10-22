@@ -600,6 +600,7 @@ hr.dotted, .hr-dotted {
 
 .border-circle { border-radius: 50%; }
 .border-rounded { border-radius: @utility-border-rounded; }
+.border-roundless { border-radius: 0 !important; }
 
 /*
  * Remove border
@@ -1673,6 +1674,95 @@ hr.dotted, .hr-dotted {
  
  .badge-danger {
      background-color: @badge-danger;
+ }
+
+
+
+ /* componet
+ ========================================================================== */
+   .component-btn {
+    display: inline-block;
+   }
+
+  .component-btn, .ie8 .component-btn:hover {
+  filter: none
+ }
+
+ .component-btn, .component-btn:hover {
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease
+ }
+
+ .component-btn {
+  height: 60px;
+  min-width: 80px;
+  margin: 5px 5px 0 0;
+  border: 1px solid #ddd;
+  padding: 12px 0 0;
+  background-color: #fafafa;
+  background-image: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  color: #646464;
+  text-shadow: none;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all .3s ease
+ }
+
+ .component-btn:hover, .component-btn:hover>.badge {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none
+ }
+
+ .component-btn:hover {
+  text-decoration: none;
+  border-color: #999;
+  color: #444;
+  text-shadow: 0 1px 0 #fff;
+  transition: all .3s ease;
+  box-shadow: none
+ }
+ .component-btn:hover>.badge {
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+  box-shadow: none
+ }
+ .component-btn > div {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  color: #000;
+  font-size: 12px;
+  font-weight: 300
+ }
+ .component-btn>.badge {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 300;
+  top: -5px;
+  right: -5px;
+  padding: 3px 6px;
+  color: #fff;
+  text-shadow: none;
+  border-width: 0;
+  border-style: solid;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none
+ }
+
+ .component-btn>i {
+  font-size: 18px
  }
 
 /* Hack
