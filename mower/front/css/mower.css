@@ -1823,7 +1823,20 @@
 }
 
 .bv-form .has-feedback .bv-no-label {
-    top: 4px
+    top: 4px;
+}
+
+.bv-form td.has-feedback .bv-no-label {
+    right: 5px;
+}
+
+
+.bv-form .has-feedback .input-group + .form-control-feedback {
+    right: 55px;
+}
+
+.bv-form td.has-feedback .input-group.input-group-sm + .form-control-feedback {
+    right: 35px;
 }
 
 .bv-form .has-feedback .bv-input-group {
@@ -1836,11 +1849,8 @@
 	color: #e02222;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 18px;
 	text-decoration: inherit;
 	position: absolute;
-	top: 5px;
-	right: 15px;
 }
 
 
@@ -1850,7 +1860,7 @@
 
 
 /*!
- * mower - v1.1.1 - 2015-09-13
+ * mower - v1.1.1 - 2015-10-22
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -2364,6 +2374,9 @@ hr.dotted,
 }
 .border-rounded {
   border-radius: 5px;
+}
+.border-roundless {
+  border-radius: 0 !important;
 }
 /*
  * Remove border
@@ -3484,6 +3497,90 @@ fieldset[disabled] .btn-maroon.active {
 .badge-danger {
   background-color: #d9534f;
 }
+/* componet
+ ========================================================================== */
+.component-btn {
+  display: inline-block;
+}
+.component-btn,
+.ie8 .component-btn:hover {
+  filter: none;
+}
+.component-btn,
+.component-btn:hover {
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+}
+.component-btn {
+  position: relative;
+  min-width: 80px;
+  height: 60px;
+  padding: 12px 0 0;
+  margin: 5px 5px 0 0;
+  color: #646464;
+  text-align: center;
+  text-shadow: none;
+  cursor: pointer;
+  background-color: #fafafa;
+  background-image: none;
+  border: 1px solid #ddd;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+  transition: all .3s ease;
+}
+.component-btn:hover,
+.component-btn:hover > .badge {
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+}
+.component-btn:hover {
+  color: #444;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fff;
+  border-color: #999;
+  box-shadow: none;
+  transition: all .3s ease;
+}
+.component-btn:hover > .badge {
+  box-shadow: none;
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+          transition: all .3s ease;
+}
+.component-btn > div {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  font-weight: 300;
+  color: #000;
+}
+.component-btn > .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: none;
+  border-style: solid;
+  border-width: 0;
+          border-radius: 12px;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+
+  -webkit-border-radius: 12px;
+     -moz-border-radius: 12px;
+}
+.component-btn > i {
+  font-size: 18px;
+}
 /* Hack
  ========================================================================== */
 /*
@@ -3759,6 +3856,12 @@ fieldset[disabled] .navbar-default-red .btn-link:focus {
   text-align: center;
   pointer-events: auto;
 }
+.form-control.input-lg + .form-control-feedback {
+  height: 46px;
+}
+.form-control.input-sm + .form-control-feedback {
+  height: 30px;
+}
 /*
  *Iconic Labels
  */
@@ -3882,6 +3985,16 @@ li .icon-large[class*=" icon-"] {
   background-color: #468847;
   border-color: #468847;
 }
+.has-error .input-group-btn > .btn {
+  color: #fff;
+  background-color: #f2dede;
+  border-color: #b94a48;
+}
+.has-success .input-group-btn > .btn {
+  color: #fff;
+  background-color: #468847;
+  border-color: #468847;
+}
 .form fieldset .form-group:last-child,
 .form fieldset .form-group:last-child .note,
 .form .form-group:last-child,
@@ -3960,6 +4073,9 @@ Input icons
   line-height: 20px;
   border-radius: 0 !important;
 }
+.input-group-btn > .btn.btn-sm {
+  line-height: 18px;
+}
 .input-group-btn.border-less > .btn {
   border-right: 0;
   border-left: 0;
@@ -3986,6 +4102,9 @@ Input icons
 .input-group > .btn.btn-sm > .caret,
 .input-group > .btn-group > .btn.btn-sm > .caret {
   margin-top: 10px;
+}
+.input-group + .form-control-feedback {
+  line-height: 34px;
 }
 /*
  * Alerts
@@ -6256,6 +6375,97 @@ Input icons
 }
 /* mower tabbable. styles for tabbable.
  ========================================================================== */
+.nav-pills,
+.nav-tabs {
+  margin-bottom: 10px;
+}
+.tabs-left.nav-tabs,
+.tabs-right.nav-tabs {
+  border-bottom: 0;
+}
+.tabs-left.nav-tabs > li,
+.tabs-right.nav-tabs > li {
+  float: none;
+}
+.tabs-left.nav-tabs > li > a,
+.tabs-right.nav-tabs > li > a {
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+.tabs-left.nav-tabs {
+  border-right: 1px solid #ddd;
+}
+.tabs-left.nav-tabs > li > a {
+  display: block;
+  margin-right: -1px;
+}
+.tabs-left.nav-tabs > li.active > a,
+.tabs-left.nav-tabs > li.active > a:hover > li.active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+          border-radius: 4px 0 0 4px;
+
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+      -ms-border-radius: 4px 0 0 4px;
+       -o-border-radius: 4px 0 0 4px;
+}
+.tabs-right.nav-tabs {
+  border-left: 1px solid #ddd;
+}
+.tabs-right.nav-tabs > li > a {
+  display: block;
+  margin-left: -1px;
+}
+.tabbable:after,
+.tabbable:before,
+.tiles:after,
+.tiles:before {
+  display: table;
+  content: " ";
+}
+.tabs-right.nav-tabs > li.active > a,
+.tabs-right.nav-tabs > li.active > a:hover > li.active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+          border-radius: 0 4px 4px 0;
+
+  -webkit-border-radius: 0 4px 4px 0;
+     -moz-border-radius: 0 4px 4px 0;
+      -ms-border-radius: 0 4px 4px 0;
+       -o-border-radius: 0 4px 4px 0;
+}
+.tabs-below > .nav-pills,
+.tabs-below > .nav-tabs {
+  margin-top: 10px;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+.tabs-below > .nav-tabs {
+  margin-top: 10px;
+  margin-bottom: 0;
+  border-top: 1px solid #ddd;
+}
+.tabs-below > .nav-tabs > li > a {
+  margin-top: -1px;
+  margin-bottom: 0;
+}
+.tabs-below > .nav-tabs > li > a .dropdown-menu {
+          border-radius: 4px;
+
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+      -ms-border-radius: 4px;
+       -o-border-radius: 4px;
+}
+.tabs-below > .nav-tabs .active a,
+.tabs-below > .nav-tabs .active a:hover .active a:focus {
+  border-color: transparent #ddd #ddd !important;
+          border-radius: 0 0 4px 4px;
+
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+      -ms-border-radius: 0 0 4px 4px;
+       -o-border-radius: 0 0 4px 4px;
+}
 .mu-tabbable {
   padding: 0;
   margin-bottom: 15px;
@@ -6558,15 +6768,17 @@ Input icons
   float: right;
   padding-right: 15px;
   padding-left: 15px;
-  line-height: 46px;
+  line-height: 30px;
   vertical-align: middle;
   background-color: #e5e5e5;
   border-left: 1px solid #d4d4d4;
 }
 .fuelux .wizard .actions a {
+  padding-top: 0;
+  padding-bottom: 0;
   margin-right: 8px;
   font-size: 12px;
-  line-height: 45px;
+  line-height: 22px;
 }
 .fuelux .wizard .actions .btn-prev span {
   margin-right: 5px;

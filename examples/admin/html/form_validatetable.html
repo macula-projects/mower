@@ -1,0 +1,304 @@
+<div class="panel panel-default panel-widget">
+    <div class="panel-heading bordered-bottom-highlight bordered-themesecondary">
+        <div class="row mu-panel-toolbar">
+            <div class="col-xs-12 col-md-3">
+                <a id="saveForm" class="btn" href="#">
+                    <i class="fa fa-check-circle fa-lg"></i> 提交表单
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" style="background-color: #fff;padding: 10px ">
+        <form id="form_sample_1" action="admin/macula-base/application/save" class="form-horizontal" rel="validate-form" data-bv-container="tooltip">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-3">姓名
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="name" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">邮件
+                    </label>
+                    <div class="col-md-4">
+                        <input name="email" type="text" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">个人主页
+                    </label>
+                    <div class="col-md-4">
+                        <input name="url" type="text" class="form-control" data-bv-notempty="true" />
+                        <span class="help-block">e.g: http://www.demo.com or http://demo.com</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">固定电话
+                    </label>
+                    <div class="col-md-4">
+                        <input name="number" type="text" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">移动电话
+                    </label>
+                    <div class="col-md-4">
+                        <input name="digits" type="text" class="form-control" data-bv-notempty="true" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">信用卡号码
+                    </label>
+                    <div class="col-md-4">
+                        <input name="creditcard" type="text" class="form-control" data-bv-notempty="true" />
+                        <span class="help-block">e.g: 5500 0000 0000 0004</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">职业&nbsp;&nbsp;</label>
+                    <div class="col-md-4">
+                        <input name="occupation" type="text" class="form-control" />
+                        <span class="help-block">可选</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">类别
+                    </label>
+                    <div class="col-md-4">
+                        <select class="form-control" name="category" data-bv-notempty="true">
+                            <option value="">请选择...</option>
+                            <option value="Category 1">类别 1</option>
+                            <option value="Category 2">类别 2</option>
+                            <option value="Category 3">类别 5</option>
+                            <option value="Category 4">类别 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">家庭住址
+                    </label>
+                    <div class="col-md-4">
+                        <div class="input-group mu-dropdowntree" 
+                        data-width="400px" 
+                        data-height="300px"
+                        data-code-field="id" 
+                        data-label-field="text"
+                        data-url="/assets/ajax/data/tree.txt" 
+                        data-callback="false" 
+                        rel="dropdowntree">
+                        <input type="text" class="form-control" required data-bv-field="address">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="form-section">订单明细列表 </h3>
+                <table id="dataArgs" class="table table-bordered table-striped table-responsive table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="width:20%">订单名称</th>
+                        <th style="width:20%">产品名称</th>
+                        <th style="width:25%">产品数量</th>
+                        <th style="width:25%">订单收货地址</th>
+                        <th style="width:10%">操作</th>
+                      </tr>
+                     </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input type="text" name="ordername" required data-bv-group="td" class="form-control input-sm" style="width:100%"/>
+                        </td>
+                        <td>
+                          <input type="text"  name="productname" required data-bv-group="td" class="form-control input-sm" style="width:100%"/>
+                        </td>
+                        <td>
+                          <input type="text"  name="productcount" required data-bv-numeric="true" data-bv-group="td" class="form-control input-sm" style="width:100%"/>
+                        </td>
+                        <td>
+                           <div class="input-group input-group-sm mu-dropdowntree" 
+                             data-width="400px" 
+                             data-height="300px"
+                             data-code-field="id" 
+                             data-label-field="text"
+                             data-url="/assets/ajax/data/tree.txt" 
+                             data-callback="false" 
+                             rel="dropdowntree">
+                             <input type="text" class="form-control input-sm"  data-bv-group="td" required data-bv-field="orderaddress">
+                             <span class="input-group-btn">
+                               <button class="btn btn-default" type="button"><i class="fa fa-table"></i></button>
+                             </span>
+                           </div>
+                        </td>        
+                        <td><button  class="btn btn-danger" style="padding: 2px 10px;" data-bind="click: $parent.onDeleteDataArgs, clickBubble: false"><i class="fa fa-trash-o"></i> 删除</button></td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="8">
+                          <button class="btn btn-primary" style="padding: 2px 10px;" data-bind="click: onAddDataArgs"><i class="fa fa-plus-circle"></i> 添加参数</button>
+                        </td>
+                      </tr>
+                    </tfoot>
+          </table>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="mu-tabbable border-remove" style="padding: 10px ">
+    <ul class="nav nav-tabs ">
+        <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+        </li>
+        <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane" id="tab_5_1">
+无
+        </div>
+        <div class="tab-pane" id="tab_5_2">
+<pre class="prettyprint">
+&lt;form id="form_sample_1" action="admin/macula-base/application/save" class="form-horizontal" rel="validate-form" data-bv-container="tooltip"&gt;
+&lt;div class="form-body"&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;姓名
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input type="text" name="name" class="form-control" data-bv-notempty="true" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;邮件
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input name="email" type="text" class="form-control" data-bv-notempty="true" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;个人主页
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input name="url" type="text" class="form-control" data-bv-notempty="true" /&gt;
+            &lt;span class="help-block"&gt;e.g: http://www.demo.com or http://demo.com&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;固定电话
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input name="number" type="text" class="form-control" data-bv-notempty="true" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;移动电话
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input name="digits" type="text" class="form-control" data-bv-notempty="true" /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;信用卡号码
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input name="creditcard" type="text" class="form-control" data-bv-notempty="true" /&gt;
+            &lt;span class="help-block"&gt;e.g: 5500 0000 0000 0004&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;职业&nbsp;&nbsp;&lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;input name="occupation" type="text" class="form-control" /&gt;
+            &lt;span class="help-block"&gt;可选&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;类别
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;select class="form-control" name="category" data-bv-notempty="true"&gt;
+                &lt;option value=""&gt;请选择...&lt;/option&gt;
+                &lt;option value="Category 1"&gt;类别 1&lt;/option&gt;
+                &lt;option value="Category 2"&gt;类别 2&lt;/option&gt;
+                &lt;option value="Category 3"&gt;类别 5&lt;/option&gt;
+                &lt;option value="Category 4"&gt;类别 4&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+        &lt;label class="control-label col-md-3"&gt;家庭住址
+        &lt;/label&gt;
+        &lt;div class="col-md-4"&gt;
+            &lt;div class="input-group mu-dropdowntree" 
+            data-width="400px" 
+            data-height="300px"
+            data-code-field="id" 
+            data-label-field="text"
+            data-url="/assets/ajax/data/tree.txt" 
+            data-callback="false" 
+            rel="dropdowntree"&gt;
+            &lt;input type="text" class="form-control" required data-bv-field="address"&gt;
+            &lt;span class="input-group-btn"&gt;
+              &lt;button class="btn btn-default" type="button"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/button&gt;
+            &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;h3 class="form-section"&gt;订单明细列表 &lt;/h3&gt;
+    &lt;table id="dataArgs" class="table table-bordered table-striped table-responsive table-condensed"&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th style="width:20%"&gt;订单名称&lt;/th&gt;
+            &lt;th style="width:20%"&gt;产品名称&lt;/th&gt;
+            &lt;th style="width:25%"&gt;产品数量&lt;/th&gt;
+            &lt;th style="width:25%"&gt;订单收货地址&lt;/th&gt;
+            &lt;th style="width:10%"&gt;操作&lt;/th&gt;
+          &lt;/tr&gt;
+         &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;
+            &lt;td&gt;
+              &lt;input type="text" name="ordername" required data-bv-group="td" class="form-control input-sm" style="width:100%"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+              &lt;input type="text"  name="productname" required data-bv-group="td" class="form-control input-sm" style="width:100%"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+              &lt;input type="text"  name="productcount" required data-bv-numeric="true" data-bv-group="td" class="form-control input-sm" style="width:100%"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+               &lt;div class="input-group input-group-sm mu-dropdowntree" 
+                 data-width="400px" 
+                 data-height="300px"
+                 data-code-field="id" 
+                 data-label-field="text"
+                 data-url="/assets/ajax/data/tree.txt" 
+                 data-callback="false" 
+                 rel="dropdowntree"&gt;
+                 &lt;input type="text" class="form-control input-sm"  data-bv-group="td" required data-bv-field="orderaddress"&gt;
+                 &lt;span class="input-group-btn"&gt;
+                   &lt;button class="btn btn-default" type="button"&gt;&lt;i class="fa fa-table"&gt;&lt;/i&gt;&lt;/button&gt;
+                 &lt;/span&gt;
+               &lt;/div&gt;
+            &lt;/td&gt;        
+            &lt;td&gt;&lt;button  class="btn btn-danger" style="padding: 2px 10px;" data-bind="click: $parent.onDeleteDataArgs, clickBubble: false"&gt;&lt;i class="fa fa-trash-o"&gt;&lt;/i&gt; 删除&lt;/button&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+        &lt;tfoot&gt;
+          &lt;tr&gt;
+            &lt;td colspan="8"&gt;
+              &lt;button class="btn btn-primary" style="padding: 2px 10px;" data-bind="click: onAddDataArgs"&gt;&lt;i class="fa fa-plus-circle"&gt;&lt;/i&gt; 添加参数&lt;/button&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tfoot&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/form&gt;
+</pre>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+debugger;
+window.prettyPrint();
+</script>

@@ -66,7 +66,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_general.html"
 }, {
     "id": 9,
     "parentId": 7,
@@ -75,16 +75,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
-}, {
-    "id": 10,
-    "parentId": 7,
-    "code": "ADMIN-MENU-3-3",
-    "name": "图标",
-    "attributes": {
-        "iconUri": null
-    },
-    "uri": null
+    "uri": "examples/admin/html/ui_buttons.html"
 }, {
     "id": 11,
     "parentId": 7,
@@ -93,7 +84,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_tabs.html"
 }, {
     "id": 12,
     "parentId": 7,
@@ -102,7 +93,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_progressbar.html"
 }, {
     "id": 13,
     "parentId": 7,
@@ -111,7 +102,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_pager.html"
 }, {
     "id": 14,
     "parentId": 7,
@@ -120,7 +111,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_alerts.html"
 }, {
     "id": 15,
     "parentId": 7,
@@ -129,7 +120,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_messagebox.html"
 }, {
     "id": 16,
     "parentId": 7,
@@ -138,7 +129,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/ui_modals.html"
 },
 {
     "id": 17,
@@ -207,27 +198,17 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/component_dropdowntree.html"
 },
 {
     "id": 24,
     "parentId": 19,
     "code": "ADMIN-MENU-4-2-5",
-    "name": "下拉树",
-    "attributes": {
-        "iconUri": null
-    },
-    "uri": null
-},
-{
-    "id": 25,
-    "parentId": 19,
-    "code": "ADMIN-MENU-4-2-6",
     "name": "下拉标签式查询",
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/component_dropdowntags.html"
 },
 {
     "id": 26,
@@ -237,7 +218,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/component_lookup.html"
 },
 {
     "id": 27,
@@ -286,7 +267,27 @@
     "attributes": {
         "iconUri": null
     },
+    "uri": ""
+},
+{
+    "id": 49,
+    "parentId": 31,
+    "code": "ADMIN-MENU-5-4",
+    "name": "简单类型",
+    "attributes": {
+        "iconUri": null
+    },
     "uri": "examples/admin/html/form_validate.html"
+},
+{
+    "id": 50,
+    "parentId": 31,
+    "code": "ADMIN-MENU-5-5",
+    "name": "明细表格",
+    "attributes": {
+        "iconUri": null
+    },
+    "uri": "examples/admin/html/form_validatetable.html"
 },
 {
     "id": 32,
@@ -364,7 +365,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/panels_basic.html"
 },
 {
     "id": 40,
@@ -374,7 +375,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/panels_theme.html"
 },
 {
     "id": 41,

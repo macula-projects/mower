@@ -2523,7 +2523,7 @@ if (typeof jQuery === 'undefined') {
             if (!this._cacheFields[field]) {
                 this._cacheFields[field] = (this.options.fields[field] && this.options.fields[field].selector)
                                          ? $(this.options.fields[field].selector)
-                                         : this.$form.find('[name="' + field + '"]');
+                                         : this.$form.find('[name="' + field + '"],[data-bv-field="'+field + '"]');
             }
 
             return this._cacheFields[field];
@@ -3142,7 +3142,8 @@ if (typeof jQuery === 'undefined') {
                     break;
             }
 
-            fields.attr('data-bv-field', field);
+            // maybe something not need validate
+            //fields.attr('data-bv-field', field);
 
             var type  = fields.attr('type'),
                 total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
@@ -3153,6 +3154,11 @@ if (typeof jQuery === 'undefined') {
                 // Try to parse the options from HTML attributes
                 var opts = this._parseOptions($field);
                 opts = (opts === null) ? options : $.extend(true, options, opts);
+
+                if(!opts) continue;
+
+                //add tag for field
+                $field.attr('data-bv-field', field);
 
                 this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
@@ -3304,35 +3310,35 @@ if (typeof jQuery === 'undefined') {
             return this;
         },
 
-        // /**
-        //  * Enable/Disable all validators to given field
-        //  *
-        //  * @param {String} field The field name
-        //  * @param {Boolean} enabled Enable/Disable field validators
-        //  * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
-        //  * @returns {BootstrapValidator}
-        //  */
-        // enableFieldValidators: function(field, enabled, validatorName) {
-        //     var validators = this.options.fields[field].validators;
+        /**
+         * Enable/Disable all validators to given field
+         *
+         * @param {String} field The field name
+         * @param {Boolean} enabled Enable/Disable field validators
+         * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
+         * @returns {BootstrapValidator}
+         */
+        enableFieldValidators: function(field, enabled, validatorName) {
+            var validators = this.options.fields[field].validators;
 
-        //     // Enable/disable particular validator
-        //     if (validatorName
-        //         && validators
-        //         && validators[validatorName] && validators[validatorName].enabled !== enabled)
-        //     {
-        //         this.options.fields[field].validators[validatorName].enabled = enabled;
-        //         this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
-        //     }
-        //     // Enable/disable all validators
-        //     else if (!validatorName && this.options.fields[field].enabled !== enabled) {
-        //         this.options.fields[field].enabled = enabled;
-        //         for (var v in validators) {
-        //             this.enableFieldValidators(field, enabled, v);
-        //         }
-        //     }
+            // Enable/disable particular validator
+            if (validatorName
+                && validators
+                && validators[validatorName] && validators[validatorName].enabled !== enabled)
+            {
+                this.options.fields[field].validators[validatorName].enabled = enabled;
+                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
+            }
+            // Enable/disable all validators
+            else if (!validatorName && this.options.fields[field].enabled !== enabled) {
+                this.options.fields[field].enabled = enabled;
+                for (var v in validators) {
+                    this.enableFieldValidators(field, enabled, v);
+                }
+            }
 
-        //     return this;
-        // },
+            return this;
+        },
 
         /**
          * Some validators have option which its value is dynamic.
@@ -8106,7 +8112,7 @@ function log() {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-09-13
+ * mower - v1.1.1 - 2015-10-22
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -8134,7 +8140,10 @@ var UniqueId = (function() {
  * 线形树，不修改原始数据，只是原始数据的重新排序.
  */
 Array.prototype.makeLineTree = function(option) {
-    var o = option || {}, id = o.id || 'id', pid = o.pid || 'pid', order = o.order || 'ordered';
+    var o = option || {},
+        id = o.id || 'id',
+        pid = o.pid || 'pid',
+        order = o.order || 'ordered';
 
     function node(origin) {
         var self = this;
@@ -8155,9 +8164,11 @@ Array.prototype.makeLineTree = function(option) {
             return self.key;
         };
         self.compare2 = function(other) {
-            var lk = self.getKey(), rk = other.getKey(), loop = Math.min(lk.length, rk.length);
+            var lk = self.getKey(),
+                rk = other.getKey(),
+                loop = Math.min(lk.length, rk.length);
             for (var i = 0; i < loop; i++) {
-                if (typeof (lk[i]) == 'undefined' || typeof (rk[i]) == 'undefined') {
+                if (typeof(lk[i]) == 'undefined' || typeof(rk[i]) == 'undefined') {
                     break;
                 }
                 if (lk[i] != rk[i]) {
@@ -8168,20 +8179,23 @@ Array.prototype.makeLineTree = function(option) {
             return lk.length > rk.length ? 1 : -1;
         };
     }
+
     function getId(m) {
-        if (typeof (id) == 'function') {
+        if (typeof(id) == 'function') {
             return id(m) || 0;
         }
         return m[id] || 0;
     }
+
     function getPid(m) {
-        if (typeof (pid) == 'function') {
+        if (typeof(pid) == 'function') {
             return pid(m) || 0;
         }
         return m[pid] || 0;
     }
+
     function getOrder(m) {
-        if (typeof (order) == 'function') {
+        if (typeof(order) == 'function') {
             return order(m) || 0;
         }
         return m[order] || 0;
@@ -8655,7 +8669,7 @@ Number.prototype.split = function() {
             $(document).triggerHandler('update', self);
 
             //update javascript 
-            $.merge($html.find('script'),$html.filter('script')).each(function() {
+            $.merge($html.find('script'), $html.filter('script')).each(function() {
                 var $script = $(this);
                 var id = $script.attr('id');
                 if (id) {
@@ -8710,9 +8724,9 @@ Number.prototype.split = function() {
 
                         $(window).trigger('resize');
                     } catch (e) {
-                        if ( window.console && console.log ) {
-                                    console.log( msg );
-                         }
+                        if (window.console && console.log) {
+                            console.log(e);
+                        }
                         handleError();
                     }
                 },
@@ -9127,6 +9141,39 @@ var Utils = (function($, window, document, undefined) {
             $('html,body').animate({
                 scrollTop: pos
             }, 'slow');
+        },
+        mdifference: function(postIds, existedIds, details, idAttr, nameAttr) {
+            if (!idAttr) {
+                idAttr = 'id';
+            }
+            if (!nameAttr) {
+                nameAttr = 'name';
+            }
+            var removed = [],
+                added = [];
+
+            function getName(el) {
+                for (var i = 0; i < details.length; i++) {
+                    if (details[i][idAttr] == el) {
+                        return details[i][nameAttr];
+                    }
+                }
+                return '未知';
+            }
+            jQuery.grep(postIds, function(el) {
+                if (el != '' && jQuery.inArray(el, existedIds) == -1) {
+                    added.push(getName(el));
+                }
+            });
+            jQuery.grep(existedIds, function(el) {
+                if (el != '' && jQuery.inArray(el, postIds) == -1) {
+                    removed.push(getName(el));
+                }
+            });
+            return {
+                'removed': removed,
+                'added': added
+            };
         }
     };
 
@@ -9805,7 +9852,7 @@ $(function() {
  * Licensed under Apache Licence 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  * ======================================================================== */
 
- ;(function ( $, window, document, undefined ) {
+ ;(function (  $, utils, window, document, undefined ) {
 
   "use strict";
 
@@ -9930,12 +9977,11 @@ $(function() {
           
           $.ajax(ajaxOption); 
       } else {
-          var data = this.options.datasource;
-          if ($.isFunction(window[data])){
-               data = data(that);
-           }
-           
-           this._construct(data);
+        var data = this.options.datasource;
+        if(typeof data === 'object') return this._construct(data);
+        
+        var cbData = utils.executeFunction(data,that);
+        return cbData ? this._construct(cbData) : this._construct(data);
       }
     },
     reload: function(options) {
@@ -10021,7 +10067,7 @@ $(function() {
           }
       });
   });
-})( jQuery, window, document );;/**
+})( jQuery, Utils, window, document );;/**
  * Project: Bootstrap Hover Dropdown
  * Author: Cameron Spear
  * Contributors: Mattia Larentis
@@ -10864,6 +10910,8 @@ $(function() {
 
     function doFormError(e) {}
 
+
+
     // private functions & variables
     var SELECTOR = '[rel="validate-form"]';
 
@@ -10889,6 +10937,13 @@ $(function() {
                         }
                     });
                 }
+
+                $this.on('updateValidate',function(event){
+                    $this.find('[name], [data-bv-field]')
+                        .each(function() {
+                            $this.bootstrapValidator('addField',$(this).attr('data-bv-field') || $(this).attr('name'));
+                        });
+                });
             });
         });
 

@@ -9480,7 +9480,7 @@ if (typeof jQuery === 'undefined') {
             if (!this._cacheFields[field]) {
                 this._cacheFields[field] = (this.options.fields[field] && this.options.fields[field].selector)
                                          ? $(this.options.fields[field].selector)
-                                         : this.$form.find('[name="' + field + '"]');
+                                         : this.$form.find('[name="' + field + '"],[data-bv-field="'+field + '"]');
             }
 
             return this._cacheFields[field];
@@ -10099,7 +10099,8 @@ if (typeof jQuery === 'undefined') {
                     break;
             }
 
-            fields.attr('data-bv-field', field);
+            // maybe something not need validate
+            //fields.attr('data-bv-field', field);
 
             var type  = fields.attr('type'),
                 total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
@@ -10112,6 +10113,9 @@ if (typeof jQuery === 'undefined') {
                 opts = (opts === null) ? options : $.extend(true, options, opts);
 
                 if(!opts) continue;
+
+                //add tag for field
+                $field.attr('data-bv-field', field);
 
                 this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
 
@@ -37006,7 +37010,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-10-08
+ * mower - v1.1.1 - 2015-10-21
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -41757,6 +41761,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     var JSTREE_ID = "id";
     var JSTREE_PID = "parent";
 
+    var EVENTS_UPDATE = "updateValue.mu.dropdowntree";
+
     var DropDownTree = function(element, options) {
         this.element = element;
         this.$element = $(element);
@@ -41797,7 +41803,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         initValue: '',
         orientation: "auto",
         validateForm:'',
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>'
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>',
+        events: {
+            updateValue: EVENTS_UPDATE
+        }
     };
 
     DropDownTree.DEFAULTS.JSTREE_CORE = {
@@ -41809,6 +41818,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     // DropDownTree.DEFAULTS.JSTREE_SEARCH = {
     //     show_only_matches: false
     // };
+
+    DropDownTree.DEFAULTS.JSTREE_CHECKBOX = {
+        three_state:false,
+        cascade: '',
+        visible: false
+    };
 
     DropDownTree.prototype = {
 
@@ -41883,6 +41898,13 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 // 'search': DropDownTree.DEFAULTS.JSTREE_SEARCH,
                 // "plugins": ["wholerow"]
             };
+
+            if(this.options.multiple){
+                $.extend(this.options.jtOpt,{
+                    "checkbox":DropDownTree.DEFAULTS.JSTREE_CHECKBOX,
+                    "plugins": ["checkbox"]
+                })
+            }
 
             var plc = String(o.orientation).toLowerCase().split(/\s+/g),
                 _plc = o.orientation.toLowerCase();
@@ -42166,6 +42188,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$input.val(oldText ? 
                 (oldText + this.options.separator + text.join(this.options.separator)) 
                 : text.join(this.options.separator));
+
+            this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
         },
         click: function(event) {
 
@@ -42189,6 +42213,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 }
 
                 this.$input.val(texts.join(this.options.separator));
+
+                this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
             }
 
             if (this.options.multiple === false)
@@ -42202,6 +42228,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         clear: function() {
             this.$element.find('._textbox-value').remove();
             this.$input.val('');
+
+            this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
         },
         place: function() {
             var treeContainerWidth = this.$treeContainer.outerWidth(),
@@ -42353,6 +42381,17 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 return;
             // component click requires us to explicitly show it
             $this.dropdowntree();
+
+            $this.on(EVENTS_UPDATE,function(event){
+                var $form = $(this).attr('validate-form') || $(this).closest('form'),
+                    $field = $(this).find('.form-control:first').attr('data-bv-field') || $(this).find('.form-control:first').attr('name');
+                try{
+                   $form.data('bootstrapValidator')
+                   .updateStatus($field , 'NOT_VALIDATED')
+                   .validateField($field); 
+               }catch(e){};
+
+            });
         });
     });
 
@@ -44977,7 +45016,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 $this.on('updateValidate',function(event){
                     $this.find('[name], [data-bv-field]')
                         .each(function() {
-                            $this.bootstrapValidator('addField',$(this));
+                            $this.bootstrapValidator('addField',$(this).attr('data-bv-field') || $(this).attr('name'));
                         });
                 });
             });

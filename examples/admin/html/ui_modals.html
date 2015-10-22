@@ -1,0 +1,427 @@
+<style>
+.example .modal {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    z-index: 1;
+    display: block;
+}
+</style>
+<div class="row">
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="panel panel-widget light bordered">
+            <div class="panel-heading">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>静态固定显示
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="example">
+                    <div class="modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                                    <h4 class="modal-title">标题</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>主题内容...</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="button" class="btn btn-primary">保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-widget light bordered">
+            <div class="panel-heading">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>按钮动态触发显示
+                </div>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                        启动模态框
+                    </button>
+                </div>
+                <br/>
+                <div>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".bs-example-modal-lg">大模态框</button>
+                </div>
+                <br/>
+                <div>
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".bs-example-modal-sm">小模态框</button>
+                </div>
+                <br/>
+                <div>
+                    <button id="btn-modalbox-ajax-html" type="button" data-url="/partial/remote-modal.html" data-title="ajax" data-toggle="modalbox" class="btn btn-primary btn-lg">Ajax加载内容</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-widget light bordered">
+            <div class="panel-heading">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>代码触发显示
+                </div>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <button id="btn-modalbox-tip" type="button" class="btn btn-primary btn-lg">提示框</button>
+                    <script>
+                    $('#btn-modalbox-tip').click(function(event) {
+                        ModalBox.alert("Hello world!", function() {
+                            //TODO
+                        });
+                    });
+                    </script>
+                </div>
+                <br/>
+                <div>
+                    <button id="btn-modalbox-comfirm" type="button" class="btn btn-primary btn-lg">确认框</button>
+                    <script>
+                    $('#btn-modalbox-comfirm').click(function(event) {
+                        ModalBox.confirm("Are you sure?", function(result) {
+                            //TODO
+                        });
+                    });
+                    </script>
+                </div>
+                <br/>
+                <div>
+                    <button id="btn-modalbox-custom-dialog" type="button" class="btn btn-primary btn-lg">自定义框</button>
+                    <script>
+                    $('#btn-modalbox-custom-dialog').click(function(event) {
+                        ModalBox.dialog({
+                            message: "I am a custom dialog",
+                            title: "Custom title",
+                            buttons: {
+                                success: {
+                                    label: "Success!",
+                                    className: "btn-success",
+                                    callback: function() {
+                                        Example.show("great success");
+                                    }
+                                },
+                                danger: {
+                                    label: "Danger!",
+                                    className: "btn-danger",
+                                    callback: function() {
+                                        Example.show("uh oh, look out!");
+                                    }
+                                },
+                                main: {
+                                    label: "Click ME!",
+                                    className: "btn-primary",
+                                    callback: function() {
+                                        Example.show("Primary button");
+                                    }
+                                }
+                            }
+                        });
+                    });
+                    </script>
+                </div>
+                <br/>
+                <div>
+                    <button id="btn-modalbox-custom-html" type="button" class="btn btn-primary btn-lg">自定义HTML内容</button>
+                    <script>
+                    $('#btn-modalbox-custom-html').click(function(event) {
+                        ModalBox.dialog({
+                            title: "This is a form in a modal.",
+                            message: '<div class="row">  ' +
+                                '<div class="col-md-12"> ' +
+                                '<form class="form-horizontal"> ' +
+                                '<div class="form-group"> ' +
+                                '<label class="col-md-4 control-label" for="name">Name</label> ' +
+                                '<div class="col-md-4"> ' +
+                                '<input id="name" name="name" type="text" placeholder="Your name" class="form-control input-md"> ' +
+                                '<span class="help-block">Here goes your name</span> </div> ' +
+                                '</div> ' +
+                                '<div class="form-group"> ' +
+                                '<label class="col-md-4 control-label" for="awesomeness">How awesome is this?</label> ' +
+                                '<div class="col-md-4"> <div class="radio"> <label for="awesomeness-0"> ' +
+                                '<input type="radio" name="awesomeness" id="awesomeness-0" value="Really awesome" checked="checked"> ' +
+                                'Really awesome </label> ' +
+                                '</div><div class="radio"> <label for="awesomeness-1"> ' +
+                                '<input type="radio" name="awesomeness" id="awesomeness-1" value="Super awesome"> Super awesome </label> ' +
+                                '</div> ' +
+                                '</div> </div>' +
+                                '</form> </div>  </div>',
+                            buttons: {
+                                success: {
+                                    label: "Save",
+                                    className: "btn-success",
+                                    callback: function() {
+                                        var name = $('#name').val();
+                                        var answer = $("input[name='awesomeness']:checked").val()
+                                        Example.show("Hello " + name + ". You've chosen <b>" + answer + "</b>");
+                                    }
+                                }
+                            }
+                        });
+                    });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">对话框标题</h4>
+            </div>
+            <div class="modal-body">
+                <h4>春晓 <small>唐代·孟浩然</small></h4>
+                <p>春眠不觉晓⑴，处处闻啼鸟⑵。
+                    <br> 夜来风雨声⑶，花落知多少⑷。
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myLargeModalLabel">大模态框</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade bs-example-modal-sm" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">小模态框</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default panel-widget">
+            <div class="panel-body" style="background-color: #fff;padding: 10px ">
+                <div class="mu-tabbable border-remove">
+                    <ul class="nav nav-tabs ">
+                        <li class="active"><a href="#tab_5_1" data-toggle="tab">静态固定</a>
+                        </li>
+                        <li><a href="#tab_5_2" data-toggle="tab">按钮动态触发</a>
+                        </li>
+                        <li><a href="#tab_5_3" data-toggle="tab">代码触发</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_5_1">
+                        <pre class="prettyprint">
+&lt;style&gt;
+.example .modal {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    z-index: 1;
+    display: block;
+}
+&lt;/style&gt;
+&lt;div class="example"&gt;
+    &lt;div class="modal"&gt;
+        &lt;div class="modal-dialog"&gt;
+            &lt;div class="modal-content"&gt;
+                &lt;div class="modal-header"&gt;
+                    &lt;button type="button" class="close" data-dismiss="modal"&gt;&lt;span aria-hidden="true"&gt;×&lt;/span&gt;&lt;span class="sr-only"&gt;关闭&lt;/span&gt;&lt;/button&gt;
+                    &lt;h4 class="modal-title"&gt;标题&lt;/h4&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-body"&gt;
+                    &lt;p&gt;主题内容...&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-footer"&gt;
+                    &lt;button type="button" class="btn btn-default" data-dismiss="modal"&gt;关闭&lt;/button&gt;
+                    &lt;button type="button" class="btn btn-primary"&gt;保存&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                        </pre>
+                        </div>
+                        <div class="tab-pane" id="tab_5_2">
+                            <pre class="prettyprint">
+&lt;!-- Default modal --&gt;
+&lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal"&gt;Default modal&lt;/button&gt;
+
+&lt;div class="modal fade bs-example-modal"  role="dialog" aria-labelledby="myLargeModalLabel"&gt;
+  &lt;div class="modal-dialog modal-lg"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Large modal --&gt;
+&lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg"&gt;Large modal&lt;/button&gt;
+
+&lt;div class="modal fade bs-example-modal-lg"  role="dialog" aria-labelledby="myLargeModalLabel"&gt;
+  &lt;div class="modal-dialog modal-lg"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Small modal --&gt;
+&lt;button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm"&gt;Small modal&lt;/button&gt;
+
+&lt;div class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel"&gt;
+  &lt;div class="modal-dialog modal-sm"&gt;
+    &lt;div class="modal-content"&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Ajax modal --&gt;
+&lt;button id="btn-modalbox-custom-html" type="button" data-url="partial/remote-modal.html" data-title="ajax" data-toggle="modalbox" class="btn btn-primary btn-lg"&gt;Ajax加载内容&lt;/button&gt;
+              </pre>
+                        </div>
+                        <div class="tab-pane" id="tab_5_3">
+                            <pre class="prettyprint">
+&lt;button id="btn-modalbox-tip" type="button" class="btn btn-primary btn-lg"&gt;提示框&lt;/button&gt;
+&lt;script&gt;
+$('#btn-modalbox-tip').click(function(event) {
+  ModalBox.alert("Hello world!", function() {
+   //TODO
+ });
+});
+&lt;/script&gt;
+
+&lt;button id="btn-modalbox-comfirm" type="button" class="btn btn-primary btn-lg"&gt;确认框&lt;/button&gt;
+&lt;script&gt;
+$('#btn-modalbox-comfirm').click(function(event) {
+  MessageBox.confirm("Are you sure?", function(result) {
+    //TODO
+  }); 
+});
+&lt;/script&gt;
+
+
+&lt;button id="btn-modalbox-custom-dialog" type="button" class="btn btn-primary btn-lg"&gt;自定义框&lt;/button&gt;
+&lt;script&gt;
+&lt;script&gt;
+$('#btn-modalbox-custom-dialog').click(function(event) {
+ModalBox.dialog({
+  message: "I am a custom dialog",
+  title: "Custom title",
+  buttons: {
+    success: {
+      label: "Success!",
+      className: "btn-success",
+      callback: function() {
+        Example.show("great success");
+      }
+    },
+    danger: {
+      label: "Danger!",
+      className: "btn-danger",
+      callback: function() {
+        Example.show("uh oh, look out!");
+      }
+    },
+    main: {
+      label: "Click ME!",
+      className: "btn-primary",
+      callback: function() {
+        Example.show("Primary button");
+      }
+    }
+  }
+})
+});
+&lt;/script&gt;
+        
+&lt;button id="btn-modalbox-custom-html" type="button" class="btn btn-primary btn-lg"&gt;自定义HTML内容&lt;/button&gt;
+&lt;script&gt;
+$('#btn-modalbox-custom-html').click(function(event) {
+ModalBox.dialog({
+  title: "This is a form in a modal.",
+  message: '&lt;div class="row"&gt;  ' +
+      '&lt;div class="col-md-12"&gt; ' +
+      '&lt;form class="form-horizontal"&gt; ' +
+      '&lt;div class="form-group"&gt; ' +
+      '&lt;label class="col-md-4 control-label" for="name"&gt;Name&lt;/label&gt; ' +
+      '&lt;div class="col-md-4"&gt; ' +
+      '&lt;input id="name" name="name" type="text" placeholder="Your name" class="form-control input-md"&gt; ' +
+      '&lt;span class="help-block"&gt;Here goes your name&lt;/span&gt; &lt;/div&gt; ' +
+      '&lt;/div&gt; ' +
+      '&lt;div class="form-group"&gt; ' +
+      '&lt;label class="col-md-4 control-label" for="awesomeness"&gt;How awesome is this?&lt;/label&gt; ' +
+      '&lt;div class="col-md-4"&gt; &lt;div class="radio"&gt; &lt;label for="awesomeness-0"&gt; ' +
+      '&lt;input type="radio" name="awesomeness" id="awesomeness-0" value="Really awesome" checked="checked"&gt; ' +
+      'Really awesome &lt;/label&gt; ' +
+      '&lt;/div&gt;&lt;div class="radio"&gt; &lt;label for="awesomeness-1"&gt; ' +
+      '&lt;input type="radio" name="awesomeness" id="awesomeness-1" value="Super awesome"&gt; Super awesome &lt;/label&gt; ' +
+      '&lt;/div&gt; ' +
+      '&lt;/div&gt; &lt;/div&gt;' +
+      '&lt;/form&gt; &lt;/div&gt;  &lt;/div&gt;',
+  buttons: {
+      success: {
+          label: "Save",
+          className: "btn-success",
+          callback: function () {
+              var name = $('#name').val();
+              var answer = $("input[name='awesomeness']:checked").val()
+              Example.show("Hello " + name + ". You've chosen &lt;b&gt;" + answer + "&lt;/b&gt;");
+          }
+      }
+  }
+})
+});  
+&lt;/script&gt;
+            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+window.prettyPrint();
+</script>
