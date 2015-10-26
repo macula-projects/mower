@@ -375,7 +375,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": "examples/admin/html/panels_theme.html"
+    "uri": ""
 },
 {
     "id": 41,
@@ -451,8 +451,9 @@
     "code": "ADMIN-MENU-9-3",
     "name": "登录页面",
     "attributes": {
-        "iconUri": null
+        "iconUri": null,
+        "openMode":"blank"
     },
-    "uri": null
+    "uri": "examples/admin/html/page_login.html"
 }
 ]

@@ -191,28 +191,43 @@ var App = (function($, utils, window, document, undefined) {
             });
             //End Sidebar Collapse
 
+            var that = this;
             $(".sidebar-menu").on("clickMenu.mu.sidebarMenu", function(event) {
                 event.preventDefault();
 
                 //scripts as below traffic default implement in sidebarMenu plugin
                 var title = event.instance.name,
+                    openMode = event.instance.attributes.openMode||'normal',
                     rcode = event.rcode,
-                    mcode = event.mcode;
+                    mcode = event.mcode,
+                    href = event.href;
 
-                var purl = window.location.href;
-                var i = purl.indexOf("?");
-                purl = purl.substring(0, i);
 
-                var purl = purl + '?title=' + title + '&_=' + (new Date()).valueOf();
+                switch(openMode){
+                    case '_blank':
+                    case 'blank':
+                        var host = window.location.host;
+                            host = ( 'http://'+ host + '/' + href);
+                        window.location.href = host;
+                    break;
+                    default:
+                    {
+                        var purl = window.location.href,
+                            i = purl.indexOf("?"),
+                            purl = purl.substring(0, i),
+                            purl = purl + '?title=' + title + '&_=' + (new Date()).valueOf();
 
-                if ($.cookie) {
-                    $.cookie('rcode', rcode);
-                    $.cookie('mcode', mcode);
-                } else {
-                    purl = purl + (purl.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + rcode + '&mcode=' + mcode;
+                        if ($.cookie) {
+                            $.cookie('rcode', rcode);
+                            $.cookie('mcode', mcode);
+                        } else {
+                            purl = purl + (purl.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + rcode + '&mcode=' + mcode;
+                        }
+                        window.location.href = purl;
+
+                        break;
+                    }
                 }
-
-                window.location = purl;
             });
         }
     };

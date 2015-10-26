@@ -10267,35 +10267,35 @@ if (typeof jQuery === 'undefined') {
             return this;
         },
 
-        // /**
-        //  * Enable/Disable all validators to given field
-        //  *
-        //  * @param {String} field The field name
-        //  * @param {Boolean} enabled Enable/Disable field validators
-        //  * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
-        //  * @returns {BootstrapValidator}
-        //  */
-        // enableFieldValidators: function(field, enabled, validatorName) {
-        //     var validators = this.options.fields[field].validators;
+        /**
+         * Enable/Disable all validators to given field
+         *
+         * @param {String} field The field name
+         * @param {Boolean} enabled Enable/Disable field validators
+         * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
+         * @returns {BootstrapValidator}
+         */
+        enableFieldValidators: function(field, enabled, validatorName) {
+            var validators = this.options.fields[field].validators;
 
-        //     // Enable/disable particular validator
-        //     if (validatorName
-        //         && validators
-        //         && validators[validatorName] && validators[validatorName].enabled !== enabled)
-        //     {
-        //         this.options.fields[field].validators[validatorName].enabled = enabled;
-        //         this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
-        //     }
-        //     // Enable/disable all validators
-        //     else if (!validatorName && this.options.fields[field].enabled !== enabled) {
-        //         this.options.fields[field].enabled = enabled;
-        //         for (var v in validators) {
-        //             this.enableFieldValidators(field, enabled, v);
-        //         }
-        //     }
+            // Enable/disable particular validator
+            if (validatorName
+                && validators
+                && validators[validatorName] && validators[validatorName].enabled !== enabled)
+            {
+                this.options.fields[field].validators[validatorName].enabled = enabled;
+                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
+            }
+            // Enable/disable all validators
+            else if (!validatorName && this.options.fields[field].enabled !== enabled) {
+                this.options.fields[field].enabled = enabled;
+                for (var v in validators) {
+                    this.enableFieldValidators(field, enabled, v);
+                }
+            }
 
-        //     return this;
-        // },
+            return this;
+        },
 
         /**
          * Some validators have option which its value is dynamic.
@@ -37010,7 +37010,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-10-21
+ * mower - v1.1.1 - 2015-10-26
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -37842,6 +37842,8 @@ var Utils = (function($, window, document, undefined) {
 
                 return (typeof context[func] === 'undefined') ? null : context[func].apply(this, args);
             }
+
+            return null;
         },
         getAbsoluteUrl: function(url, contextPath) {
             if (url.indexOf('://') >= 0) {
@@ -44013,8 +44015,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     /* MAINMENU CLASS DEFINITION
      * ====================== */
 
-    var menuItemSelector = '[data-toggle=menu]';
-
     var SidebarMenu = function(element, options) {
         this.element = element;
         this.$element = $(element);
@@ -44034,14 +44034,14 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         selectFirst:true,
         menuItemTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
+                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}"  data-mode="${attributes.openMode}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
             } else {
                 return "";
             }
         },
         subMenuItemTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" class="menu-dropdown" >{{if attributes.iconUri}}<i class="${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span><i class="menu-expand"></i></a><ul class="submenu"></ul></li>');
+                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-mode="${attributes.openMode}" class="menu-dropdown" >{{if attributes.iconUri}}<i class="${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span><i class="menu-expand"></i></a><ul class="submenu"></ul></li>');
             } else {
                 return "";
             }
@@ -44129,6 +44129,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
                 var mcode = $this.attr('_mcode') || $this.attr('mcode');
                 var href = $this.attr('data-href');
+                var openMode = $this.attr('data-mode') || 'normal';
                 var instance = that.findMenuByCode(mcode); //origin
 
                 var module = this;
@@ -44159,7 +44160,15 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 }
 
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
-                window.location.href = url;
+
+                switch(openMode){
+                    case '_blank':
+                    case 'blank':
+                        window.open(url,instance.name || '');
+                    break;
+                    default:
+                    window.location.href = url;
+                }
             });
 
             if (this.options.populate === true) this.populate();
