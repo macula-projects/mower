@@ -16,41 +16,6 @@
     },
     "uri": "examples/admin/index/index.html"
 }, {
-    "id": 3,
-    "code": "ADMIN-MENU-2",
-    "name": "页面布局",
-    "attributes": {
-        "iconUri": null
-    },
-    "uri": null
-}, {
-    "id": 4,
-    "parentId": 3,
-    "code": "ADMIN-MENU-2-1",
-    "name": "类电商式",
-    "attributes": {
-        "iconUri": null
-    },
-    "uri": null
-}, {
-    "id": 5,
-    "parentId": 3,
-    "code": "ADMIN-MENU-2-2",
-    "name": "垂直菜单",
-    "attributes": {
-        "iconUri": null
-    },
-    "uri": null
-}, {
-    "id": 6,
-    "parentId": 3,
-    "code": "ADMIN-MENU-2-3",
-    "name": "垂直&侧边菜单",
-    "attributes": {
-        "iconUri": null
-    },
-    "uri": null
-}, {
     "id": 7,
     "code": "ADMIN-MENU-3",
     "name": "UI元素",
@@ -375,7 +340,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": ""
+    "uri": "examples/admin/html/panels_theme.html"
 },
 {
     "id": 41,
@@ -431,9 +396,10 @@
     "code": "ADMIN-MENU-9-1",
     "name": "后端模板",
     "attributes": {
-        "iconUri": null
+        "iconUri": null,
+        "openMode":"blank"
     },
-    "uri": null
+    "uri": "examples/admin/html/page_admin.html"
 },
 {
     "id": 47,
@@ -443,8 +409,42 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri":null
 },
+{
+    "id": 51,
+    "parentId": 47,
+    "code": "ADMIN-MENU-9-2-1",
+    "name": "模板一",
+    "attributes": {
+        "iconUri": null,
+        "openMode":"blank"
+    },
+    "uri": "examples/admin/html/page_front_shopping.html"
+},
+{
+    "id": 52,
+    "parentId": 47,
+    "code": "ADMIN-MENU-9-2-2",
+    "name": "模板二",
+    "attributes": {
+        "iconUri": null,
+        "openMode":"blank"
+    },
+    "uri": "examples/admin/html/page_front_shopping_search.html"
+},
+{
+    "id": 53,
+    "parentId": 47,
+    "code": "ADMIN-MENU-9-2-3",
+    "name": "模板三",
+    "attributes": {
+        "iconUri": null,
+        "openMode":"blank"
+    },
+    "uri": "examples/admin/html/page_front_shopping_lovejd.html"
+},
+
 {
     "id": 48,
     "parentId": 45,

@@ -84,11 +84,12 @@ var App = (function($, utils, window, document, undefined) {
             $(".sidebar-menu").on('complete.mu.sidebarMenu', function(event) {
                 /* Act on the event */
                 var defaultVal = QueryString.title ? QueryString.title : $(this).find('a[data-toggle="menu"]').filter(':first').text(),
-                    mcode = QueryString.mcode ? QueryString.mcode : $(this).find('a[data-toggle="menu"][data-mode="normal"]').filter(':first').attr('mcode'),
+                    mcode = QueryString.mcode ? QueryString.mcode : $(this).find('a[data-toggle="menu"]').filter(':first').attr('mcode'),
                     page = $(this).find('a[data-toggle="menu"][mcode="' + mcode + '"]').attr('data-href');
 
                 // $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i><span>' + decodeURIComponent(defaultVal) + '</span>');
-                if(page) $(".breadcrumb").breadcrumb("push", decodeURIComponent(defaultVal), page);
+
+                $(".breadcrumb").breadcrumb("push", decodeURIComponent(defaultVal), page);
             });
         },
         initMainMenu: function() {
@@ -102,7 +103,7 @@ var App = (function($, utils, window, document, undefined) {
             }
 
             $(".sidebar-menu").sidebarMenu({
-                'url': "assets/ajax/data/menu.json",
+                'url': "assets/ajax/data/admin_menu.txt",
                 "populate": false
             }).sidebarMenu('populate', rcode, mcode);
 
@@ -205,16 +206,18 @@ var App = (function($, utils, window, document, undefined) {
                 switch (openMode) {
                     case '_blank':
                     case 'blank':
-                        var host = window.location.host,
-                            isRemote = host.indexOf('macula.top');
+                    {
+                       var host = window.location.host,
+                           isRemote = host.indexOf('macula.top');
 
-                        if (isRemote >= 0) {
-                            host = host + '/mower';
-                        }
+                       if (isRemote >= 0) {
+                           host = host + '/mower';
+                       }
 
-                        host = ('http://' + host + '/' + href);
-                        window.location.href = host;
-                        break;
+                       host = ('http://' + host + '/' + href);
+                       window.location.href = host;
+                       break; 
+                   }
                     default:
                         {
                             var purl = window.location.href,
@@ -229,7 +232,6 @@ var App = (function($, utils, window, document, undefined) {
                                 purl = purl + (purl.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + rcode + '&mcode=' + mcode;
                             }
                             window.location.href = purl;
-
                             break;
                         }
                 }

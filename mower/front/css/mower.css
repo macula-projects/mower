@@ -1860,7 +1860,7 @@
 
 
 /*!
- * mower - v1.1.1 - 2015-10-22
+ * mower - v1.1.1 - 2015-10-27
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -7234,6 +7234,9 @@ Input icons
 }
 .mu-header-inner .search-content .nav > li > a {
   padding: 3px 10px;
+}
+.mu-header-inner .search-content .nav-pills {
+  margin-bottom: 0;
 }
 .mu-header-inner .search-content .search-form .form-control {
   border: 2px solid #ccc;

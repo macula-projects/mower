@@ -37010,7 +37010,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-10-26
+ * mower - v1.1.1 - 2015-10-27
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -44034,14 +44034,14 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         selectFirst:true,
         menuItemTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}"  data-mode="${attributes.openMode}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
+                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}"  data-mode="{{if attributes.openMode}}${attributes.openMode}{{else}}normal{{/if}}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
             } else {
                 return "";
             }
         },
         subMenuItemTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-mode="${attributes.openMode}" class="menu-dropdown" >{{if attributes.iconUri}}<i class="${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span><i class="menu-expand"></i></a><ul class="submenu"></ul></li>');
+                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-mode="{{if attributes.openMode}}${attributes.openMode}{{else}}normal{{/if}}" class="menu-dropdown" >{{if attributes.iconUri}}<i class="${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span><i class="menu-expand"></i></a><ul class="submenu"></ul></li>');
             } else {
                 return "";
             }
@@ -44166,6 +44166,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     case 'blank':
                         window.open(url,instance.name || '');
                     break;
+                    case 'normal':
                     default:
                     window.location.href = url;
                 }
@@ -44229,7 +44230,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             });
 
 
-            selectedNode = selectedNode || (this.options.selectFirst ? this.$element.find('a[data-toggle="menu"]:first').attr('mcode'):'');
+            selectedNode = selectedNode || (this.options.selectFirst ? this.$element.find('a[data-toggle="menu"][data-mode="normal"]:first').attr('mcode'):'');
 
             this.setMenuActiveLink(selectedNode);
         },

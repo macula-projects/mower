@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <title>Shopping</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../mower/front/css/mower.css">
+
+</head>
+
+<body>
+    <!-- BEGIN HEADER -->
+    <div id="header">
+        <div class="navbar navbar-default mu-navbar-sm" role="navigation">
+            <!-- BEGIN HEADER LOGIN CONTAINER -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <ul class="nav navbar-nav mu-navbar-nav-sm">
+                            <li><a target="_blank" href="http://www.jd.com"><i class="fa fa-truck fa-flip-horizontal"></i>广州服务中心</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clo-xs-12 col-md-6">
+                        <ul class="nav navbar-nav mu-navbar-nav-sm navbar-right">
+                            <li>您好,*春,欢迎进入败家子乐购网!
+                                <span><a href="javascript:login();">[<i class="fa fa-sign-out"></i>退出登陆]</a>
+                                </span>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                    <i class="fa fa-envelope"></i>
+                                    <span class="badge">9</span>
+                                    消息<i class="fa fa-angle-down fa-sm"></i>
+                                </a>
+                                <ul class="dropdown-menu mu-header-dropdown-list mu-header-dropdown-list-default" role="dropdown-menu">
+                                    <li class="mu-header-dropdown-list-header">
+                                        <i class="fa fa-envelope-o"></i>
+                                        9条未读消息
+                                    </li>
+                                    <li class="mu-header-dropdown-list-content">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">1</span>
+                                                    测试数据1
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">2</span>
+                                                    测试数据2
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">3</span>
+                                                    测试数据3
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">4</span>
+                                                    测试数据4
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">5</span>
+                                                    测试数据5
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">6</span>
+                                                    测试数据1
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">7</span>
+                                                    测试数据5
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="label label-icon mu-bg-blue2">8</span>
+                                                    测试数据1
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="mu-header-dropdown-list-footer">
+                                        <a href="#">查看所有消息 <i class="fa fa-arrow-circle-o-right pull-right"></i></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a target="_blank" href="http://www.jd.com"><i class="fa fa-map-marker"></i>活动专区</a>
+                            </li>
+                            <li class="divider-vertical"></li>
+                            <li>
+                                <a target="_blank" href="http://www.jd.com"><i class="fa fa-sitemap"></i>网站导航</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END HEADER LOGIN CONTAINER -->
+        </div>
+        <!-- BEGIN HEADER MAIN CONTAINER -->
+        <div class="mu-header">
+            <div class="container mu-header-banner">
+            </div>
+            <div class="container mu-header-inner visible-md-block visible-lg-block" style="height:83px">
+                <div class="row">
+                    <div class="col-xs-6 col-md-3 hidden-xs">
+                        <img src="../../../assets/img/9_logo.png" width="293" height="83" alt="">
+                    </div>
+                    <div class="col-xs-6 col-md-2 hidden-xs step-tooltip">
+                        <div class="step-tooltip-content">
+                            <span>店铺版</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- BEGIN MAIN MENU -->
+            <div class="mu-header-navbar">
+                <div class="container">
+                    <div class="navbar navbar-default-red yamm" role="navigation">
+                        <div class="navbar-header">
+                            <!--<a href="#" class="navbar-brand">Search</a>-->
+                            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="navbar-collapse collapse" id="navbar-main">
+                            <ul class="nav navbar-nav">
+                                <li class="active">
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="#">购货</a>
+                                </li>
+                                <li>
+                                    <a href="http://www.jd.com/" target="_blank">推荐</a>
+                                </li>
+                                <li>
+                                    <a href="http://iu.jd.com/index.html" target="_blank">促销活动</a>
+                                </li>
+                                <li>
+                                    <a href="http://www.jd.com/" target="_blank">我的交易</a>
+                                </li>
+                                <li>
+                                    <a href="http://iu.jd.com/index.html" target="_blank">业务活动</a>
+                                </li>
+                                <li>
+                                    <a href="http://iu.jd.com/index.html" target="_blank">我的报表</a>
+                                </li>
+                                <li>
+                                    <a href="http://iu.jd.com/index.html" target="_blank">我的财务</a>
+                                </li>
+                                <li>
+                                    <a href="http://iu.jd.com/index.html" target="_blank">我的设置</a>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>
+                                    <a href="http://iu.jd.com/index.html" target="_blank"><i class="fa fa-hand-o-right"></i>店铺管理</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END MAIN MENU -->
+        </div>
+        <!-- END HEADER MAIN CONTAINER -->
+    </div>
+    <!-- END HEADER -->
+
+    <!-- BEGIN MAIN -->
+    <div class="container">
+        <!-- BEGIN BREADCRUMB -->
+        <div class="mu-breadcrumb-wrapper">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home  fa-2x"></i><a href="#">店铺管理</a>
+                </li>
+                <li ><a href="#">店铺销售</a></li>
+                <li ><a href="#">办理</a></li>
+                <li class="active">销售报单</li>
+            </ol>
+        </div>
+        <!-- END BREADCRUMB-->
+        <div class="mu-content-wrapper">
+            <div class="mu-sidebar">
+                <div style="width:240px;padding:10px;">
+                    <ul class="nav nav-stacked nav-pills">
+                        <li><a href="###"><i class="fa fa-home"></i> 首页 <i class="fa fa-heart pull-right"></i></a></li>
+                        <li><a href="###"><i class="fa fa-user"></i> 个人资料 <span class="badge badge-success pull-right">4</span></a></li>
+                        <li><a href="###"><i class="fa fa-comment"></i> 消息 </a></li>
+                        <li>
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="###">
+                            更多 <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a href="">Lorem ipsum.</a></li>
+                            <li><a href="">Optio, fuga.</a></li>
+                            <li><a href="">Dicta, vero.</a></li>
+                            <li><a href="">Doloribus, obcaecati.</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                </div>
+            </div>
+            <div class="mu-content">
+                <div class="mu-content-inner" style="width:800px;">
+                    <div class="row ">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="panel panel-widget light">
+                                <div class="panel-heading">
+                                    <div class="caption">
+                                        <i class="fa fa-gift"></i>订单数据
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                <table id="dt_basic" class="table table-striped table-bordered table-hover" rel="datatables">
+                                    <thead>
+                                        <tr>
+                                            <th>商品编码</th>
+                                            <th>商品名称</th>
+                                            <th>规格</th>
+                                            <th>单价</th>
+                                            <th>库存</th>
+                                            <th>已订购</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody done8="1" done9="7">
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                1
+                                            </td>
+                                            <td align="left">
+                                                苹果汁
+                                            </td>
+                                            <td align="left">
+                                                每箱24瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥18.00
+                                            </td>
+                                            <td align="left">
+                                                39
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                2
+                                            </td>
+                                            <td align="left">
+                                                牛奶
+                                            </td>
+                                            <td align="left">
+                                                每箱24瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥19.00
+                                            </td>
+                                            <td align="left">
+                                                17
+                                            </td>
+                                            <td align="left">
+                                                40
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                3
+                                            </td>
+                                            <td align="left">
+                                                蕃茄酱
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥10.00
+                                            </td>
+                                            <td align="left">
+                                                13
+                                            </td>
+                                            <td align="left">
+                                                70
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                4
+                                            </td>
+                                            <td align="left">
+                                                盐
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥22.00
+                                            </td>
+                                            <td align="left">
+                                                53
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                5
+                                            </td>
+                                            <td align="left">
+                                                麻油
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥21.35
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                6
+                                            </td>
+                                            <td align="left">
+                                                酱油
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥25.00
+                                            </td>
+                                            <td align="left">
+                                                120
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                7
+                                            </td>
+                                            <td align="left">
+                                                海鲜粉
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥30.00
+                                            </td>
+                                            <td align="left">
+                                                15
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                8
+                                            </td>
+                                            <td align="left">
+                                                胡椒粉
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥40.00
+                                            </td>
+                                            <td align="left">
+                                                6
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                9
+                                            </td>
+                                            <td align="left">
+                                                鸡
+                                            </td>
+                                            <td align="left">
+                                                每袋500克
+                                            </td>
+                                            <td align="right">
+                                                ￥97.00
+                                            </td>
+                                            <td align="left">
+                                                29
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                10
+                                            </td>
+                                            <td align="left">
+                                                蟹
+                                            </td>
+                                            <td align="left">
+                                                每袋500克
+                                            </td>
+                                            <td align="right">
+                                                ￥31.00
+                                            </td>
+                                            <td align="left">
+                                                31
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                11
+                                            </td>
+                                            <td align="left">
+                                                大众奶酪
+                                            </td>
+                                            <td align="left">
+                                                每袋6包
+                                            </td>
+                                            <td align="right">
+                                                ￥21.00
+                                            </td>
+                                            <td align="left">
+                                                22
+                                            </td>
+                                            <td align="left">
+                                                30
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                12
+                                            </td>
+                                            <td align="left">
+                                                德国奶酪
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥38.00
+                                            </td>
+                                            <td align="left">
+                                                86
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                13
+                                            </td>
+                                            <td align="left">
+                                                龙虾
+                                            </td>
+                                            <td align="left">
+                                                每袋500克
+                                            </td>
+                                            <td align="right">
+                                                ￥6.00
+                                            </td>
+                                            <td align="left">
+                                                24
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                14
+                                            </td>
+                                            <td align="left">
+                                                沙茶
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥23.25
+                                            </td>
+                                            <td align="left">
+                                                35
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                15
+                                            </td>
+                                            <td align="left">
+                                                味精
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥15.50
+                                            </td>
+                                            <td align="left">
+                                                39
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                16
+                                            </td>
+                                            <td align="left">
+                                                饼干
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥17.45
+                                            </td>
+                                            <td align="left">
+                                                29
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                17
+                                            </td>
+                                            <td align="left">
+                                                猪肉
+                                            </td>
+                                            <td align="left">
+                                                每袋500克
+                                            </td>
+                                            <td align="right">
+                                                ￥39.00
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                18
+                                            </td>
+                                            <td align="left">
+                                                墨鱼
+                                            </td>
+                                            <td align="left">
+                                                每袋500克
+                                            </td>
+                                            <td align="right">
+                                                ￥62.50
+                                            </td>
+                                            <td align="left">
+                                                42
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                19
+                                            </td>
+                                            <td align="left">
+                                                糖果
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥9.20
+                                            </td>
+                                            <td align="left">
+                                                25
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                20
+                                            </td>
+                                            <td align="left">
+                                                桂花糕
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥81.00
+                                            </td>
+                                            <td align="left">
+                                                40
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                21
+                                            </td>
+                                            <td align="left">
+                                                花生
+                                            </td>
+                                            <td align="left">
+                                                每箱30包
+                                            </td>
+                                            <td align="right">
+                                                ￥10.00
+                                            </td>
+                                            <td align="left">
+                                                3
+                                            </td>
+                                            <td align="left">
+                                                40
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                22
+                                            </td>
+                                            <td align="left">
+                                                糯米
+                                            </td>
+                                            <td align="left">
+                                                每袋3公斤
+                                            </td>
+                                            <td align="right">
+                                                ￥21.00
+                                            </td>
+                                            <td align="left">
+                                                104
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                23
+                                            </td>
+                                            <td align="left">
+                                                燕麦
+                                            </td>
+                                            <td align="left">
+                                                每袋3公斤
+                                            </td>
+                                            <td align="right">
+                                                ￥9.00
+                                            </td>
+                                            <td align="left">
+                                                61
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                24
+                                            </td>
+                                            <td align="left">
+                                                汽水
+                                            </td>
+                                            <td align="left">
+                                                每箱12瓶
+                                            </td>
+                                            <td align="right">
+                                                ￥4.50
+                                            </td>
+                                            <td align="left">
+                                                20
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left" class="sorted">
+                                                25
+                                            </td>
+                                            <td align="left">
+                                                巧克力
+                                            </td>
+                                            <td align="left">
+                                                每箱30盒
+                                            </td>
+                                            <td align="right">
+                                                ￥14.00
+                                            </td>
+                                            <td align="left">
+                                                76
+                                            </td>
+                                            <td align="left">
+                                                0
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- END MAIN -->
+
+    <!-- BEGIN FOOTER -->
+    <div id="footer" class="mu-footer-container">
+        <div class="container">
+            <footer role="contentinfo">
+                <ul class="list-inline text-center">
+                    <li><a href="http://www.jd.com/" target="_blank">败家子官网</a>
+                    </li>
+                    <li>|</li>
+                    <li><a href="http://www.jd.com/" target="_blank">败家子3D体验馆</a>
+                    </li>
+                    <li>|</li>
+                    <li><a href="http://www.jd.com/" target="_blank">败家子(中国)教育网</a>
+                    </li>
+                    <li>|</li>
+                    <li><a href="http://www.jd.com/" target="_blank">中华养生馆</a>
+                    </li>
+                    <li>|</li>
+                    <li><a href="http://www.jd.com/" target="_blank">导航地图</a>
+                    </li>
+                </ul>
+                <p>
+                    版权为败家子(中国)有限公司,未经许可,不得转载和链接 粤ICP备05041458
+                </p>
+                <p>服务热线: 400-800-1188</p>
+            </footer>
+        </div>
+    </div>
+    <!-- END FOOTER -->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="../../../libs/respond/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- BEGIN CORE PLUGINS -->
+    <script src="../../../libs/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="../../../libs/jquery/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="../../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../../libs/knockout/knockout-3.1.0-min.js" type="text/javascript"></script>
+    <script src="../../../libs/jquery-tmpl/jquery.tmpl.min.js" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="../../../mower/front/js/mower.js" type="text/javascript"></script> 
+    <script src="../../../assets/js/query.js" type="text/javascript"></script>
+    <script src="../../../assets/js/pshopping.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+</body>
+
+</html>
