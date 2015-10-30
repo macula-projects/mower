@@ -359,7 +359,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/chart_echart.html"
 },
 {
     "id": 43,
@@ -369,7 +369,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/chart_flot.html"
 },
 {
     "id": 44,
@@ -379,7 +379,7 @@
     "attributes": {
         "iconUri": null
     },
-    "uri": null
+    "uri": "examples/admin/html/chart_easypie.html"
 },
 {
     "id": 45,
