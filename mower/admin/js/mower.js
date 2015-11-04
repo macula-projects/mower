@@ -37010,7 +37010,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-10-30
+ * mower - v1.1.1 - 2015-11-04
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -38572,7 +38572,31 @@ var Base = (function($, utils, window, document, undefined) {
             /* ENTER PRESSED*/
             var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
             if (key == 13) {
-                var inputs = $(this).parents("form").eq(0).find(":input:visible:not(disabled):not([readonly])");
+
+                var $form = $(this).closest("form"),
+                    inputs = $form.find(":input:visible:not(disabled):not([readonly])"),
+                    isValid = true;
+
+                //validate = true, route next
+                if ($form.data('bootstrapValidator')) {
+                    var $formValidator = $form.data('bootstrapValidator'),
+                        name = $(this).attr('data-bv-field') || $(this).attr('name') ;
+
+                        isValid = $formValidator.isValidField(name);
+
+                        if(!isValid){
+                            try{
+                                $(this)[0].focus();
+                                $(this)[0].select();
+
+                                 $formValidator.validateField(name);
+                            }catch(err){
+
+                            }
+                            return false;
+                        }
+                }
+
                 var idx = inputs.index(this);
                 if (idx == inputs.length - 1) {
                     idx = -1;
@@ -38581,6 +38605,7 @@ var Base = (function($, utils, window, document, undefined) {
                 }
                 try {
                     inputs[idx + 1].select();
+
                 } catch (err) {
                     // handle objects not offering select
                 }
@@ -38675,14 +38700,14 @@ var Base = (function($, utils, window, document, undefined) {
                     } else { //其它情况直接从宿主对象的对应属性中取值
                         opts[pp] = t.attr('data-' + prefix + pp.toLowerCase());
                     }
-                } else if($.isPlainObject(pp)) { //json对象'{}'
+                } else if ($.isPlainObject(pp)) { //json对象'{}'
                     for (var pkey in pp) {
                         var pvalue = pp[pkey];
 
                         if (typeof pvalue === 'string') { //字符串型
                             //解析字符串或布尔型或者数字型或者数组
                             $.extend(opts, _parseComposite(pkey, pvalue, t, prefix));
-                        } else if($.isPlainObject(pvalue)){ //对象'{}'
+                        } else if ($.isPlainObject(pvalue)) { //对象'{}'
                             var nestedOpts = {};
                             for (var ckey in pvalue) {
                                 var cvalue = pvalue[ckey];
@@ -45007,12 +45032,11 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             /* Act on the event */
             var $root = $(updatedFragment || 'html');
 
-            $root.find(SELECTOR).each(function(index, el) {
+            $root.find(SELECTOR).addBack(SELECTOR).each(function(index, el) {
                 var $this = $(this);
-
                 if (!$this.data('bootstrapValidator')) {
                     $this.bootstrapValidator({
-                        excluded: [':disabled'],
+                        excluded: [':disabled',':hidden', ':not(:visible)'],
                         message: '请输入合法的数值',
                         feedbackIcons: {
                             valid: 'fa fa-check',
@@ -45020,7 +45044,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                             validating: 'fa fa-refresh',
                             required: 'required'
                         }
-                    });
+                    }); 
                 }
 
                 $this.on('updateValidate',function(event){

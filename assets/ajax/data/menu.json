@@ -176,6 +176,16 @@
     "uri": "examples/admin/html/component_dropdowntags.html"
 },
 {
+    "id": 25,
+    "parentId": 19,
+    "code": "ADMIN-MENU-4-2-6",
+    "name": "下拉地址",
+    "attributes": {
+        "iconUri": null
+    },
+    "uri": "examples/admin/html/component_dropdownaddress.html"
+},
+{
     "id": 26,
     "parentId": 17,
     "code": "ADMIN-MENU-4-3",
