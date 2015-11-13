@@ -29,12 +29,13 @@
     //you can put your plugin defaults in here.
     AreaPicker.DEFAULTS = {
         name: '',
+        width:'400px',
         url: false,
         street: false,
         dataType: 'json',
         method: 'GET',
         defaultarea: '<div class="dropdown-menu" rel="dropdown-menu" data-options="closeOnBodyClick:false">' +
-            '<div class="tabbable-line" style="width:400px;">' +
+            '<div class="tabbable-line">' +
             '<ul class="nav nav-tabs nav-justified">' +
             '<li class="active" ><a href="#tab_province"  data-toggle="tab">省</a>' +
             '</li>' +
@@ -97,6 +98,8 @@
             }
 
             this.$areacontainer = this.options.street ? $(this.options.areawithstreet) : $(this.options.defaultarea);
+            this.$areacontainer.css('width',this.options.width);
+
             this.$areaheader = this.$areacontainer.find('.nav-tabs');
             this.$areacontent = this.$areacontainer.find('.tab-content');
 
