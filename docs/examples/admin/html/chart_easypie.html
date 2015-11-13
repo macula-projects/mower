@@ -1,0 +1,179 @@
+<style>
+.easy-pie-chart .number {
+    font-weight: 300;
+    width: 85px;
+    margin: 0 auto;
+}
+
+.easy-pie-chart .number {
+    font-size: 14px!important;
+    position: relative;
+    text-align: center;
+    height: 75px;
+    line-height: 75px;
+}
+
+.easy-pie-chart .number canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.easy-pie-chart .title {
+    display: block;
+    text-align: center;
+    color: #333;
+    font-weight: 300;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+</style>
+<div class="alert alert-warning">
+    <h4 class="block">引入easypiechart</h4>
+    <p> easypiechart是轻量级的饼图插件，更多参考官方
+        <a href="https://github.com/rendro/easy-pie-chart" target="_blank">easypiechart文档</a>。
+    </p>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-widget light bordered">
+            <div class="panel-heading">
+                <div class="caption">
+                    <i class="fa fa-pie-chart"></i>饼状图1
+                </div>
+            </div>
+            <div class="panel-body" style="height:200px;">
+                <div class="easy-pie-chart">
+                    <div class="number" id="transactions" data-percent="73" data-scale-color="#ffb400"><span>73%</span></div>
+                    <a class="title" href="javascript:;"> Transactions <i class="fa fa-arrow-circle-o-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-widget light bordered">
+            <div class="panel-heading">
+                <div class="caption">
+                    <i class="fa fa-pie-chart"></i>饼状图1
+                </div>
+            </div>
+            <div class="panel-body" style="height:200px;">
+                <div class="easy-pie-chart">
+                    <div id="visits" class="number" data-percent="43" data-scale-color="#ffb400">43%</div>
+                    <a class="title" href="javascript:;"> Boundce <i class="fa fa-arrow-circle-o-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mu-tabbable border-remove">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#tab_5_3" data-toggle="tab">CSS</a>
+                </li>
+                <li ><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                </li>
+                <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_5_3">
+                    <pre class="prettyprint">
+&lt;style&gt;
+.easy-pie-chart .number {
+    font-weight: 300;
+    width: 85px;
+    margin: 0 auto;
+}
+
+.easy-pie-chart .number {
+    font-size: 14px!important;
+    position: relative;
+    text-align: center;
+    height: 75px;
+    line-height: 75px;
+}
+
+.easy-pie-chart .number canvas {
+     position: absolute; 
+     top: 0; 
+    left: 0; 
+}
+
+.easy-pie-chart .title{
+    display: block;
+    text-align: center;
+    color: #333;
+    font-weight: 300;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+&lt;/style&gt;
+                </pre>
+                </div>
+                <div class="tab-pane" id="tab_5_1">
+                    <pre class="prettyprint">
+&lt;script src="../../../assets/plugins/easypiechart/jquery.easypiechart.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+$(function() {
+    $("#transactions").easyPieChart({
+        animate: {
+            duration: 1000,
+            enabled: true
+        },
+        size: 75,
+        lineWidth: 3,
+        barColor: '#d40b07'
+    });
+    $("#visits").easyPieChart({
+        animate: {
+            duration: 1000,
+            enabled: true
+        },
+        size: 75,
+        lineWidth: 3,
+        barColor: '#ffce55'
+    });
+});
+window.prettyPrint();
+&lt;/script&gt;
+                    </pre>
+                </div>
+                <div class="tab-pane" id="tab_5_2">
+                    <pre class="prettyprint">
+&lt;div class="easy-pie-chart"&gt;
+    &lt;div class="number" id="transactions" data-percent="73" data-scale-color="#ffb400"&gt;&lt;span&gt;73%&lt;/span&gt;&lt;/div&gt;
+    &lt;a class="title" href="javascript:;"&gt; Transactions &lt;i class="fa fa-arrow-circle-o-right"&gt;&lt;/i&gt;&lt;/a&gt;
+&lt;/div&gt;
+                            </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../assets/plugins/easypiechart/jquery.easypiechart.js"></script>
+<script>
+$(function() {
+    $("#transactions").easyPieChart({
+        animate: {
+            duration: 1000,
+            enabled: true
+        },
+        size: 75,
+        lineWidth: 3,
+        barColor: '#d40b07'
+    });
+    $("#visits").easyPieChart({
+        animate: {
+            duration: 1000,
+            enabled: true
+        },
+        size: 75,
+        lineWidth: 3,
+        barColor: '#ffce55'
+    });
+});
+window.prettyPrint();
+</script>

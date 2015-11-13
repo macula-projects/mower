@@ -17,8 +17,6 @@
     /* MAINMENU CLASS DEFINITION
      * ====================== */
 
-    var menuItemSelector = '[data-toggle=menu]';
-
     var SidebarMenu = function(element, options) {
         this.element = element;
         this.$element = $(element);
@@ -38,14 +36,14 @@
         selectFirst:true,
         menuItemTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
+                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}"  data-mode="{{if attributes.openMode}}${attributes.openMode}{{else}}normal{{/if}}" data-href="${uri}" data-toggle="menu" >{{if attributes.iconUri}}<i class="menu-icon ${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span></a></li>');
             } else {
                 return "";
             }
         },
         subMenuItemTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" class="menu-dropdown" >{{if attributes.iconUri}}<i class="${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span><i class="menu-expand"></i></a><ul class="submenu"></ul></li>');
+                return $.template(null, '<li><a href="javascript:void(0);" mcode="${code}" data-href="${uri}" data-mode="{{if attributes.openMode}}${attributes.openMode}{{else}}normal{{/if}}" class="menu-dropdown" >{{if attributes.iconUri}}<i class="${attributes.iconUri}"></i>{{/if}}<span class="menu-text">${name}</span><i class="menu-expand"></i></a><ul class="submenu"></ul></li>');
             } else {
                 return "";
             }
@@ -133,6 +131,7 @@
 
                 var mcode = $this.attr('_mcode') || $this.attr('mcode');
                 var href = $this.attr('data-href');
+                var openMode = $this.attr('data-mode') || 'normal';
                 var instance = that.findMenuByCode(mcode); //origin
 
                 var module = this;
@@ -163,7 +162,16 @@
                 }
 
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
-                window.location.href = url;
+
+                switch(openMode){
+                    case '_blank':
+                    case 'blank':
+                        window.open(url,instance.name || '');
+                    break;
+                    case 'normal':
+                    default:
+                    window.location.href = url;
+                }
             });
 
             if (this.options.populate === true) this.populate();
@@ -224,7 +232,7 @@
             });
 
 
-            selectedNode = selectedNode || (this.options.selectFirst ? this.$element.find('a[data-toggle="menu"]:first').attr('mcode'):'');
+            selectedNode = selectedNode || (this.options.selectFirst ? this.$element.find('a[data-toggle="menu"][data-mode="normal"]:first').attr('mcode'):'');
 
             this.setMenuActiveLink(selectedNode);
         },

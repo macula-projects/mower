@@ -59,7 +59,35 @@ var Base = (function($, utils, window, document, undefined) {
             /* ENTER PRESSED*/
             var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
             if (key == 13) {
-                var inputs = $(this).parents("form").eq(0).find(":input:visible:not(disabled):not([readonly])");
+
+                var $form = $(this).closest("form"),
+                    inputs = $form.find(":input:visible:not(disabled):not([readonly])").filter(function(){
+                        return $(this).parent().css("display") != "none";
+                    }),
+                    isValid = true;
+
+                //validate = true, route next
+                if ($form.length && $form.data('bootstrapValidator')) {
+                    var $formValidator = $form.data('bootstrapValidator'),
+                        name = $(this).attr('data-bv-field') || $(this).attr('name') ;
+
+                        isValid = $formValidator.isValidField(name);
+
+                        if(!isValid){
+                            try{
+                                $(this)[0].focus();
+                                $(this)[0].select();
+
+                                 $formValidator.validateField(name);
+                            }catch(err){
+
+                            }
+                            return false;
+                        }
+                }
+
+                if($(this).data('entertab') === false) return false;
+
                 var idx = inputs.index(this);
                 if (idx == inputs.length - 1) {
                     idx = -1;
@@ -68,6 +96,7 @@ var Base = (function($, utils, window, document, undefined) {
                 }
                 try {
                     inputs[idx + 1].select();
+
                 } catch (err) {
                     // handle objects not offering select
                 }
@@ -114,12 +143,23 @@ var Base = (function($, utils, window, document, undefined) {
         return opts;
     };
 
+    var  _ajustModalPosition = function(position)
+    {
+        $(document).on('show.bs.modal','.modal', function() {
+            var $dialog = $(this).find('.modal-dialog');
+            var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+            var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
+            $dialog.css('margin-top', pos);
+        });
+    }
+
     // public functions
     base.init = function() {
         _resettimezone();
         _attachDomRemoveEvent();
         _resetIconContent();
         _enterToTab();
+        _ajustModalPosition('fit');
     };
 
     /**
@@ -162,14 +202,14 @@ var Base = (function($, utils, window, document, undefined) {
                     } else { //其它情况直接从宿主对象的对应属性中取值
                         opts[pp] = t.attr('data-' + prefix + pp.toLowerCase());
                     }
-                } else if($.isPlainObject(pp)) { //json对象'{}'
+                } else if ($.isPlainObject(pp)) { //json对象'{}'
                     for (var pkey in pp) {
                         var pvalue = pp[pkey];
 
                         if (typeof pvalue === 'string') { //字符串型
                             //解析字符串或布尔型或者数字型或者数组
                             $.extend(opts, _parseComposite(pkey, pvalue, t, prefix));
-                        } else if($.isPlainObject(pvalue)){ //对象'{}'
+                        } else if ($.isPlainObject(pvalue)) { //对象'{}'
                             var nestedOpts = {};
                             for (var ckey in pvalue) {
                                 var cvalue = pvalue[ckey];

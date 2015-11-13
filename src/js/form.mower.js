@@ -74,12 +74,11 @@
             /* Act on the event */
             var $root = $(updatedFragment || 'html');
 
-            $root.find(SELECTOR).each(function(index, el) {
+            $root.find(SELECTOR).addBack(SELECTOR).each(function(index, el) {
                 var $this = $(this);
-
                 if (!$this.data('bootstrapValidator')) {
                     $this.bootstrapValidator({
-                        excluded: [':disabled'],
+                        excluded: [':disabled',':hidden', ':not(:visible)'],
                         message: '请输入合法的数值',
                         feedbackIcons: {
                             valid: 'fa fa-check',
@@ -87,7 +86,7 @@
                             validating: 'fa fa-refresh',
                             required: 'required'
                         }
-                    });
+                    }); 
                 }
 
                 $this.on('updateValidate',function(event){

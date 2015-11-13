@@ -51,22 +51,22 @@ var App = (function($, utils, window, document, undefined) {
         init: function() {
 
             var isLocal = window.location.href.indexOf('macula.top');
-            if(isLocal != -1){
-                $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+            if (isLocal != -1) {
+                $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
                     var extension = options.url.slice((options.url.lastIndexOf(".") - 1 >>> 0) + 2);
-                    if( extension !== 'js')
-                      options.url = "http://macula.top/mower"  + options.url;
+                    if (extension !== 'js')
+                        options.url = "http://macula.top/mower" + options.url;
                 });
-            }else{
-                $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+            } else {
+                $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
                     var extension = options.url.slice((options.url.lastIndexOf(".") - 1 >>> 0) + 2);
-                    if( extension !== 'js')
-                      options.url = "http://localhost:9000"  + options.url;
+                    if (extension !== 'js')
+                        options.url = "http://localhost:9000" + options.url;
                 });
             }
 
             loading();
-            
+
             this.initMainMenu();
             this.initBreadCrumb();
             this.initSidebarMenu();
@@ -84,12 +84,11 @@ var App = (function($, utils, window, document, undefined) {
             $(".sidebar-menu").on('complete.mu.sidebarMenu', function(event) {
                 /* Act on the event */
                 var defaultVal = QueryString.title ? QueryString.title : $(this).find('a[data-toggle="menu"]').filter(':first').text(),
-                    mcode = QueryString.mcode ? QueryString.mcode:$(this).find('a[data-toggle="menu"]').filter(':first').attr('mcode'),
+                    mcode = QueryString.mcode ? QueryString.mcode : $(this).find('a[data-toggle="menu"][data-mode="normal"]').filter(':first').attr('mcode'),
                     page = $(this).find('a[data-toggle="menu"][mcode="' + mcode + '"]').attr('data-href');
 
                 // $(".breadcrumb").find('li.active').empty().append('<i class="fa fa-home home"></i><span>' + decodeURIComponent(defaultVal) + '</span>');
-                
-                $(".breadcrumb").breadcrumb("push",  decodeURIComponent(defaultVal) , page);
+                if(page) $(".breadcrumb").breadcrumb("push", decodeURIComponent(defaultVal), page);
             });
         },
         initMainMenu: function() {
@@ -106,7 +105,7 @@ var App = (function($, utils, window, document, undefined) {
                 'url': "assets/ajax/data/menu.json",
                 "populate": false
             }).sidebarMenu('populate', rcode, mcode);
-            
+
 
             selectedMenu.closest('li').addClass('active').siblings().removeClass('active');
 
@@ -191,28 +190,49 @@ var App = (function($, utils, window, document, undefined) {
             });
             //End Sidebar Collapse
 
+            var that = this;
             $(".sidebar-menu").on("clickMenu.mu.sidebarMenu", function(event) {
                 event.preventDefault();
 
                 //scripts as below traffic default implement in sidebarMenu plugin
                 var title = event.instance.name,
+                    openMode = event.instance.attributes.openMode || 'normal',
                     rcode = event.rcode,
-                    mcode = event.mcode;
+                    mcode = event.mcode,
+                    href = event.href;
 
-                var purl = window.location.href;
-                var i = purl.indexOf("?");
-                purl = purl.substring(0, i);
 
-                var purl = purl + '?title=' + title + '&_=' + (new Date()).valueOf();
+                switch (openMode) {
+                    case '_blank':
+                    case 'blank':
+                        var host = window.location.host,
+                            isRemote = host.indexOf('macula.top');
 
-                if ($.cookie) {
-                    $.cookie('rcode', rcode);
-                    $.cookie('mcode', mcode);
-                } else {
-                    purl = purl + (purl.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + rcode + '&mcode=' + mcode;
+                        if (isRemote >= 0) {
+                            host = host + '/mower';
+                        }
+
+                        host = ('http://' + host + '/' + href);
+                        window.location.href = host;
+                        break;
+                    default:
+                        {
+                            var purl = window.location.href,
+                                i = purl.indexOf("?"),
+                                purl = purl.substring(0, i),
+                                purl = purl + '?title=' + title + '&_=' + (new Date()).valueOf();
+
+                            if ($.cookie) {
+                                $.cookie('rcode', rcode);
+                                $.cookie('mcode', mcode);
+                            } else {
+                                purl = purl + (purl.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + rcode + '&mcode=' + mcode;
+                            }
+                            window.location.href = purl;
+
+                            break;
+                        }
                 }
-
-                window.location = purl;
             });
         }
     };
@@ -221,5 +241,3 @@ var App = (function($, utils, window, document, undefined) {
 $(document).ready(function() {
     App.init();
 });
-
-

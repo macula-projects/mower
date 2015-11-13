@@ -823,6 +823,8 @@ var Utils = (function($, window, document, undefined) {
 
                 return (typeof context[func] === 'undefined') ? null : context[func].apply(this, args);
             }
+
+            return null;
         },
         getAbsoluteUrl: function(url, contextPath) {
             if (url.indexOf('://') >= 0) {

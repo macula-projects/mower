@@ -83,7 +83,8 @@ module.exports = function(grunt) {
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/form.<%= pkg.name %>.js',
-                        'src/js/messagebox.<%= pkg.name %>.js'
+                        'src/js/messagebox.<%= pkg.name %>.js',
+                        'src/js/areapicker.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -174,7 +175,7 @@ module.exports = function(grunt) {
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
-                        'src/js/vertival.menu.<%= pkg.name %>.js',
+                        'src/js/vertical.menu.<%= pkg.name %>.js',
                         'src/js/popover.<%= pkg.name %>.js',
                         'src/js/tab.<%= pkg.name %>.js',
                         'src/js/tooltip.<%= pkg.name %>.js',
