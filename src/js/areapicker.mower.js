@@ -28,8 +28,8 @@
 
     //you can put your plugin defaults in here.
     AreaPicker.DEFAULTS = {
-        name: '',
-        width:'400px',
+        name: 'areapicker',
+        width: '400px',
         url: false,
         street: false,
         dataType: 'json',
@@ -78,8 +78,8 @@
             '</div>' +
             '</div>' +
             '</div>',
-        event: {
-
+        events: {
+            clicked: 'click.mu.areapicker'
         }
     };
 
@@ -92,13 +92,13 @@
             this.options = $.extend({}, AreaPicker.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
             this.component = $element.is('.area') ? $element.find(TOGGLE) : false;
-            this.hasInput = this.component && this.element.find('input').length;
+            this.hasInput = this.component && $element.find('input').length;
             if (this.component && this.component.length === 0) {
                 this.component = false;
             }
 
             this.$areacontainer = this.options.street ? $(this.options.areawithstreet) : $(this.options.defaultarea);
-            this.$areacontainer.css('width',this.options.width);
+            this.$areacontainer.css('width', this.options.width);
 
             this.$areaheader = this.$areacontainer.find('.nav-tabs');
             this.$areacontent = this.$areacontainer.find('.tab-content');
@@ -106,46 +106,59 @@
             $element.find(TOGGLE).after(this.$areacontainer);
 
             var that = this;
-            this.$areacontainer.on(DROPDOWNMENU_SHOW_EVENT, function(e) {
+            this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$areacontainer, function(e) {
                 that.loadAndConstruct(that.options.url, that.$areacontent.find('.tab-pane:first'));
             });
 
             this.$areacontent.on('click', 'a', function(e) {
                 e.preventDefault();
-
-                var tabContent = $(this).closest('.tab-pane'),
-                    areaCode = $(this).attr('areaCode'),
-                    areaName = $(this).text();
-
                 $(this).parent().addClass('active').siblings().removeClass("active");
 
-                var selectedDesc = [],
-                    selectedCode, selected = this.$areacontent.find('li.active');
-                selected.each(function() {
-                    selectedDesc.push($(this).children('a').text());
-                    if (index === selected.length - 1) {
-                        selectedCode = $(this).children('a').attr('data-areaCode');
-                    }
-                });
-                if (this.hasInput) { // single input
-                    this.element.find('input').val(selectedDesc.join(' /'));
-                } else if (this.component) { // component button
-                    if (typeof this.component[0] !== "undefined") {
-                        this.component[0].textContent = selectedDesc.join(' /');
-                    } else {
-                        this.component[0].innerText = selectedDesc.join(' /');
-                    }
-                }
-                $element.prepend('<input type="hidden" name="' + this.options.name + '" value="' + selectedCode + '"/>');
+                var allTabContent = that.$areacontainer.find('.tab-pane'),
+                    tabContent = $(this).closest('.tab-pane'),
+                    index = allTabContent.index(tabContent),
+                    areaCode = $(this).attr('data-areaCode'),
+                    zipCode = $(this).attr('data-zipCode'),
+                    areaName = $(this).text();
 
-                if (tabContent.is(":last-child")) {
-                    that.$areacontainer.dropdown('toggle');
+                var hiddenInput = $element.find('[name="' + that.options.name + '"]');
+                if (hiddenInput.length) {
+                    hiddenInput.val(areaCode);
+                } else {
+                    $element.prepend('<input type="hidden" name="' + that.options.name + '" value="' + areaCode + '"/>');
+                }
+
+                var selectedDesc = [],
+                    selected = that.$areacontent.find('li.active');
+                selected.each(function(i) {
+                    if (i > index) return false;
+
+                    selectedDesc.push($(this).children('a').text());
+                });
+
+                if (that.hasInput) { // single input
+                    that.$element.find('input').val(selectedDesc.join(' /'));
+                } else if (that.component) { // component button
+                    $(that.component).find('.text').html(selectedDesc.join(' /'));
+                }
+
+                if ((allTabContent.length - 1) == index) {
+                    $element.find(TOGGLE).dropdown('toggle');
                 } else {
                     if (areaCode) {
                         var url = that.options.url + '?parentAreaCode=' + areaCode;
                         that.loadAndConstruct(url, tabContent.next());
                     }
                 }
+
+                //trigger populdate success event 
+                var e = $.Event(AreaPicker.DEFAULTS.events.clicked, {
+                    "areaCode": areaCode,
+                    "zipCode": zipCode,
+                    "areaName": areaName
+                });
+
+                that.$element.trigger(e);
             });
         },
         loadAndConstruct: function(url, tabContent) {
@@ -155,15 +168,15 @@
                     url: url,
                     dataType: this.options.dataType,
                     type: this.options.method,
-                    success: function(data) {
+                    success: function(datas) {
                         if (datas.success) {
                             var areaInfo = datas.returnObject,
                                 html = [];
 
                             html.push('<ul class="area-list list-inline">');
                             for (var i = 0, n = areaInfo.length; i < n; i++) {
-                                
-                                if(!areaInfo[i]) continue;
+
+                                if (!areaInfo[i]) continue;
 
                                 if (typeof areaInfo[i].zipCode != 'undefined') {
                                     html.push("<li><a data-zipCode='" + areaInfo[i].zipCode + "' data-areaCode='" + areaInfo[i].areaCode + "' href='javascript:void(0);'>" + areaInfo[i].areaDesc + "</a></li>");

@@ -98,14 +98,17 @@
     <div class="col-md-12">
         <div class="mu-tabbable border-remove">
             <ul class="nav nav-tabs ">
-                <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                <li class="active"><a href="#tab_5_1" data-toggle="tab">交互图</a>
                 </li>
-                <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                <li><a href="#tab_5_2" data-toggle="tab">柱状图</a>
                 </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_5_1">
                     <pre class="prettyprint">
+&lt;div id="interactiveChart" style="height:400px;"&gt;&lt;/div&gt;
+&lt;script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.js"&gt;&lt;/script&gt;
+&lt;script&gt;
 $(function() {
 
     function data() {
@@ -257,11 +260,66 @@ $(function() {
         })
     }
 });
+&lt;/script&gt;
+
                     </pre>
                 </div>
                 <div class="tab-pane" id="tab_5_2">
                     <pre class="prettyprint">
-&lt;div id="interactiveChart" style="height:400px;"&gt;&lt;/div&gt;
+&lt;div id="barChart" style="height:400px;"&gt;&lt;/div&gt;
+&lt;script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.js"&gt;&lt;/script&gt;
+&lt;script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.categories.js"&gt;&lt;/script&gt;
+&lt;script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.orderBars.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+$(function () {
+    function getData() {
+        var data = [];
+
+        data.push({
+            data: [[0.5, 1], [1, 4], [2, 2]],
+            color: "#d40b07"
+        });
+
+        data.push({
+            data: [[0.5, 5], [1, 3], [2, 1]],
+            color: "##529500"
+        });
+
+        return data;
+    }
+    // ORDERED CHART
+    var d = getData();
+    for(var i = 0; i&lt;d.length; i++) {
+        d[i].bars = {
+            order: i
+        }
+    }
+
+    $.plot($('#barChart'), d, {
+        series: {
+            bars: {
+                show: !0 
+            }
+        },
+        bars: {
+            barWidth: 0.05,
+            lineWidth: 0,
+            fill: true
+
+        },
+        grid: {
+            tickColor: "#eee",
+            borderColor: "#eee",
+            borderWidth: 1
+        },
+        xaxis:{
+        min: 0,
+        max: 3
+        }
+    });
+});
+&lt;/script&gt;
+
                     </pre>
                 </div>
             </div>
@@ -270,6 +328,8 @@ $(function() {
 </div>
 <script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.crosshair.js"></script>
+<script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.categories.js"></script>
+<script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.orderBars.js"></script>
 <script language="javascript" type="text/javascript" src="../../assets/plugins/flot/jquery.flot.pie.js"></script>
 <script>
 $(function() {
@@ -692,43 +752,55 @@ $(function() {
     }
 });
 
-$(function() {
-    function e(e) {
-        var t = [],
-            r = 100 + e,
-            o = 200 + e;
-        for (i = 1; i <= 20; i++) {
-            var a = Math.floor(Math.random() * (o - r + 1) + r);
-            t.push([i, a]), r++, o++
-        }
-        return t
+$(function () {
+    function getData() {
+        var data = [];
+
+        data.push({
+            data: [[0.5, 1], [1, 4], [2, 2]],
+            color: "#d40b07"
+        });
+
+        data.push({
+            data: [[0.5, 5], [1, 3], [2, 1]],
+            color: "##529500"
+        });
+
+        return data;
     }
-    var t = e(0),
-        r = {
-            series: {
-                bars: {
-                    show: !0
-                }
-            },
+    // ORDERED CHART
+    var d = getData();
+    for(var i = 0; i<d.length; i++) {
+        d[i].bars = {
+            order: i
+        }
+    }
+
+    $.plot($('#barChart'), d, {
+        series: {
             bars: {
-                barWidth: .8,
-                lineWidth: 0,
-                shadowSize: 0,
-                align: "left"
-            },
-            grid: {
-                tickColor: "#eee",
-                borderColor: "#eee",
-                borderWidth: 1
+                show: !0 
             }
-        };
-    0 !== $("#barChart").size() && $.plot($("#barChart"), [{
-        data: t,
-        lines: {
-            lineWidth: 1
         },
-        shadowSize: 0
-    }], r);
+        bars: {
+            barWidth: 0.05,
+            lineWidth: 0,
+            fill: true
+
+        },
+        grid: {
+            tickColor: "#eee",
+            borderColor: "#eee",
+            borderWidth: 1
+        },
+        xaxis:{
+        min: 0,
+        max: 3
+        }
+    });
+});
+
+$(function() {
     var o = [
             [10, 10],
             [20, 20],
