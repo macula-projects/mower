@@ -3580,7 +3580,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-11-04
+ * mower - v1.1.1 - 2015-11-16
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -8346,6 +8346,11 @@ Input icons
   background-color: #fff;
   border: 0;
   border-top: 1px solid #eee;
+}
+.tabbable-line > .nav-tabs.nav-justified > .active > a,
+.tabbable-line > .nav-tabs.nav-justified > .active > a:hover,
+.tabbable-line > .nav-tabs.nav-justified > .active > a:focus {
+  border: 0;
 }
 .portlet .tabbable-line > .tab-content {
   padding-bottom: 0;

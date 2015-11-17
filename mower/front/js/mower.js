@@ -8112,7 +8112,7 @@ function log() {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-11-03
+ * mower - v1.1.1 - 2015-11-13
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -9676,11 +9676,13 @@ var Base = (function($, utils, window, document, undefined) {
             if (key == 13) {
 
                 var $form = $(this).closest("form"),
-                    inputs = $form.find(":input:visible:not(disabled):not([readonly])"),
+                    inputs = $form.find(":input:visible:not(disabled):not([readonly])").filter(function(){
+                        return $(this).parent().css("display") != "none";
+                    }),
                     isValid = true;
 
                 //validate = true, route next
-                if ($form.data('bootstrapValidator')) {
+                if ($form.length && $form.data('bootstrapValidator')) {
                     var $formValidator = $form.data('bootstrapValidator'),
                         name = $(this).attr('data-bv-field') || $(this).attr('name') ;
 
@@ -9698,6 +9700,8 @@ var Base = (function($, utils, window, document, undefined) {
                             return false;
                         }
                 }
+
+                if($(this).data('entertab') === false) return false;
 
                 var idx = inputs.index(this);
                 if (idx == inputs.length - 1) {
@@ -9754,12 +9758,23 @@ var Base = (function($, utils, window, document, undefined) {
         return opts;
     };
 
+    var  _ajustModalPosition = function(position)
+    {
+        $(document).on('show.bs.modal','.modal', function() {
+            var $dialog = $(this).find('.modal-dialog');
+            var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+            var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
+            $dialog.css('margin-top', pos);
+        });
+    }
+
     // public functions
     base.init = function() {
         _resettimezone();
         _attachDomRemoveEvent();
         _resetIconContent();
         _enterToTab();
+        _ajustModalPosition('fit');
     };
 
     /**
@@ -11250,12 +11265,11 @@ $(function() {
             /* Act on the event */
             var $root = $(updatedFragment || 'html');
 
-            $root.find(SELECTOR).each(function(index, el) {
+            $root.find(SELECTOR).addBack(SELECTOR).each(function(index, el) {
                 var $this = $(this);
-
                 if (!$this.data('bootstrapValidator')) {
                     $this.bootstrapValidator({
-                        excluded: [':disabled'],
+                        excluded: [':disabled',':hidden', ':not(:visible)'],
                         message: '请输入合法的数值',
                         feedbackIcons: {
                             valid: 'fa fa-check',
@@ -11263,7 +11277,7 @@ $(function() {
                             validating: 'fa fa-refresh',
                             required: 'required'
                         }
-                    });
+                    }); 
                 }
 
                 $this.on('updateValidate',function(event){
