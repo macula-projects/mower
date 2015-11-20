@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="panel-body" style="background-color: #fff;padding: 10px ">
-        <table id="example" class="table table-striped table-bordered table-hover" id="parenttable" data-select="true" rel="datatables">
+        <table id="example" class="table table-striped table-bordered table-hover" id="parenttable"  rel="datatables">
             <thead>
                 <tr>
                     <th>商品编码</th>
@@ -49,7 +49,7 @@
                     <th>规格</th>
                     <th>单价</th>
                     <th>库存</th>
-                    <th>已订购</th>
+                    <th>已订购12</th>
                 </tr>
             </thead>
             <tbody done8="1" done9="7">
@@ -557,3 +557,10 @@
         </table>
     </div>
 </div>
+
+<script>
+    $(function(){
+        $('#example').DataTable();
+    });
+
+</script>

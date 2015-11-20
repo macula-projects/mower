@@ -58,9 +58,7 @@
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
 
-            if (this.options.width && this.options.width !== 'auto') {
-                this.$tableContainer.css('width', this.options.width);
-            }
+            //this._resize();//resize width
 
             this.$table = this.$tableContainer.find('table:first');
 
@@ -252,12 +250,17 @@
 
             return existed;
         },
-        // _resize: function() {
-        //     var width = this.$element.outerWidth(true);
-        //     this.$tableContainer.css('width', this.options.width);
+        _resize: function() {
+            var width;
+            if (!this.options.width) 
+                width = this.$element.outerWidth(true);
+            else
+                width = this.options.width;
 
-        //     this.$table.DataTable().adjustColumn();
-        // },
+            alert(width);
+
+            this.$tableContainer.css('width', width);
+        },
         construct: function() {
             //make columns
             var columns = this.options.columns;
@@ -285,7 +288,7 @@
             this.$table.attr('data-ajax', this.options.url);
 
             //add table select attribute
-            if(this.options.multiple == true){
+            if (this.options.multiple == true) {
                 this.$table.attr('data-select-style', 'multi');
             }
 
@@ -389,7 +392,8 @@
         },
         place: function() {
             //change tableContainer width  depend on element width
-            //this._resize();
+            this._resize();
+
             this.$table.DataTable().adjustColumn();
 
             var tableContainerWidth = this.$tableContainer.outerWidth(),

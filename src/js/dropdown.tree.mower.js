@@ -96,9 +96,9 @@
             this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
-            if (this.options.width && this.options.width !== 'auto') {
-                this.$treeContainer.css('width', this.options.width);
-            }
+
+            if(!this.options.width) this.options.width = this.$element.outerWidth(true);
+             this.$treeContainer.css('width', this.options.width);
 
             this.$tree = this.$treeContainer.find('div:first');
             if (this.options.height && this.options.height !== 'auto') {

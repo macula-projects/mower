@@ -99,7 +99,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         validated: 'boolean',
                         validateForm: 'string'
                     }, {
-                        select: 'boolean',
                         select: {
                             style: 'string',
                             info: 'boolean'
@@ -197,7 +196,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             option.rowId = option.rowId || 'id';
 
-            option.select = option.select || true;
+            if(typeof option.select == 'undefined') {
+                $.extend(option,{select:{
+                    'style':'single',
+                    'info':false
+                }});
+            }
 
             // var infoCallback = {
             //     "infoCallback": function(settings, start, end, max, total, pre) {
