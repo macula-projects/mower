@@ -82,7 +82,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         lengthChange: 'boolean'
                     }, {
                         processing: 'boolean',
-                        scrollX: 'string',
+                        scrollX: 'boolean',
                         scrollCollapse: 'boolean',
                         scrollY: 'string'
                     }, {

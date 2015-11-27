@@ -1,3 +1,5 @@
+
+/// <reference path="../../typings/jquery/jquery.d.ts"/>
 /** ========================================================================
  * Mower: areapicker.mower.js - v1.0.0
  *
@@ -82,7 +84,7 @@
             clicked: 'click.mu.areapicker'
         }
     };
-
+    
     AreaPicker.prototype = {
 
         constructor: AreaPicker,
@@ -96,7 +98,8 @@
             if (this.component && this.component.length === 0) {
                 this.component = false;
             }
-
+            
+            
             this.$areacontainer = this.options.street ? $(this.options.areawithstreet) : $(this.options.defaultarea);
             this.$areacontainer.css('width', this.options.width);
 

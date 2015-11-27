@@ -36,9 +36,9 @@
         columns: '',
         initValue: '',
         orientation: "auto",
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu">' +
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu" style="left:-9999px;">' +
             '<table class="table table-striped table-bordered table-condensed"' +
-            'data-paging="false" data-info="false"  data-scrollCollapse="true"' +
+            'data-paging="false" data-scrollX="false" data-info="false"  data-scrollCollapse="true"' +
             'data-ordering="false" data-dom="r<\'dt-wrapper table-responsive\'t>">' +
             '</table>' +
             '</div>'
@@ -58,12 +58,9 @@
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
 
-            //this._resize();//resize width
-
             this.$table = this.$tableContainer.find('table:first');
 
             if (this.options.height && this.options.height !== 'auto') {
-                this.$table.attr('data-scrollX', false);
                 this.$table.attr('data-scrollY', this.options.height);
             }
 
@@ -256,8 +253,6 @@
                 width = this.$element.outerWidth(true);
             else
                 width = this.options.width;
-
-            alert(width);
 
             this.$tableContainer.css('width', width);
         },

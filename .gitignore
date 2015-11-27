@@ -33,3 +33,4 @@ dist
 /docs/_*
 /docs/mower/*
 /docs/projects/
+typings

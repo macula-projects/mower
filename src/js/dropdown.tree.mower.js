@@ -62,7 +62,7 @@
         initValue: '',
         orientation: "auto",
         validateForm:'',
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>',
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu" style="left:-9999px;"></div>',
         events: {
             updateValue: EVENTS_UPDATE
         }
@@ -96,9 +96,6 @@
             this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
-
-            if(!this.options.width) this.options.width = this.$element.outerWidth(true);
-             this.$treeContainer.css('width', this.options.width);
 
             this.$tree = this.$treeContainer.find('div:first');
             if (this.options.height && this.options.height !== 'auto') {
@@ -453,6 +450,7 @@
         click: function(event) {
 
             event.preventDefault();
+            event.stopPropagation();
 
             if ($(event.target).hasClass('jstree-ocl')) return;
 
@@ -491,6 +489,13 @@
             this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
         },
         place: function() {
+            var width;
+            if (!this.options.width) 
+                width = this.$element.outerWidth(true);
+            else
+                width = this.options.width;
+            this.$treeContainer.css('width', width);
+
             var treeContainerWidth = this.$treeContainer.outerWidth(),
                 treeContainerHeight = this.$treeContainer.outerHeight(),
                 visualPadding = 10,
