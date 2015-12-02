@@ -37010,7 +37010,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-11-16
+ * mower - v1.1.1 - 2015-12-02
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -39666,7 +39666,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         lengthChange: 'boolean'
                     }, {
                         processing: 'boolean',
-                        scrollX: 'string',
+                        scrollX: 'boolean',
                         scrollCollapse: 'boolean',
                         scrollY: 'string'
                     }, {
@@ -39683,7 +39683,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         validated: 'boolean',
                         validateForm: 'string'
                     }, {
-                        select: 'boolean',
                         select: {
                             style: 'string',
                             info: 'boolean'
@@ -39781,7 +39780,12 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             option.rowId = option.rowId || 'id';
 
-            option.select = option.select || true;
+            if(typeof option.select == 'undefined') {
+                $.extend(option,{select:{
+                    'style':'single',
+                    'info':false
+                }});
+            }
 
             // var infoCallback = {
             //     "infoCallback": function(settings, start, end, max, total, pre) {
@@ -41272,9 +41276,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         columns: '',
         initValue: '',
         orientation: "auto",
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu">' +
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu" style="left:-9999px;">' +
             '<table class="table table-striped table-bordered table-condensed"' +
-            'data-paging="false" data-info="false"  data-scrollCollapse="true"' +
+            'data-paging="false" data-scrollX="false" data-info="false"  data-scrollCollapse="true"' +
             'data-ordering="false" data-dom="r<\'dt-wrapper table-responsive\'t>">' +
             '</table>' +
             '</div>'
@@ -41294,14 +41298,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
             this.$tableContainer = $(DropDownTable.DEFAULTS.template);
 
-            if (this.options.width && this.options.width !== 'auto') {
-                this.$tableContainer.css('width', this.options.width);
-            }
-
             this.$table = this.$tableContainer.find('table:first');
 
             if (this.options.height && this.options.height !== 'auto') {
-                this.$table.attr('data-scrollX', false);
                 this.$table.attr('data-scrollY', this.options.height);
             }
 
@@ -41488,12 +41487,15 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             return existed;
         },
-        // _resize: function() {
-        //     var width = this.$element.outerWidth(true);
-        //     this.$tableContainer.css('width', this.options.width);
+        _resize: function() {
+            var width;
+            if (!this.options.width) 
+                width = this.$element.outerWidth(true);
+            else
+                width = this.options.width;
 
-        //     this.$table.DataTable().adjustColumn();
-        // },
+            this.$tableContainer.css('width', width);
+        },
         construct: function() {
             //make columns
             var columns = this.options.columns;
@@ -41521,7 +41523,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$table.attr('data-ajax', this.options.url);
 
             //add table select attribute
-            if(this.options.multiple == true){
+            if (this.options.multiple == true) {
                 this.$table.attr('data-select-style', 'multi');
             }
 
@@ -41625,7 +41627,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         },
         place: function() {
             //change tableContainer width  depend on element width
-            //this._resize();
+            this._resize();
+
             this.$table.DataTable().adjustColumn();
 
             var tableContainerWidth = this.$tableContainer.outerWidth(),
@@ -41845,7 +41848,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         initValue: '',
         orientation: "auto",
         validateForm:'',
-        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu"></div>',
+        template: '<div class="mu-picker mu-picker-dropdown dropdown-menu" style="left:-9999px;"></div>',
         events: {
             updateValue: EVENTS_UPDATE
         }
@@ -41879,9 +41882,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
-            if (this.options.width && this.options.width !== 'auto') {
-                this.$treeContainer.css('width', this.options.width);
-            }
 
             this.$tree = this.$treeContainer.find('div:first');
             if (this.options.height && this.options.height !== 'auto') {
@@ -42236,6 +42236,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         click: function(event) {
 
             event.preventDefault();
+            event.stopPropagation();
 
             if ($(event.target).hasClass('jstree-ocl')) return;
 
@@ -42274,6 +42275,13 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this.$element.trigger(DropDownTree.DEFAULTS.events.updateValue);
         },
         place: function() {
+            var width;
+            if (!this.options.width) 
+                width = this.$element.outerWidth(true);
+            else
+                width = this.options.width;
+            this.$treeContainer.css('width', width);
+
             var treeContainerWidth = this.$treeContainer.outerWidth(),
                 treeContainerHeight = this.$treeContainer.outerHeight(),
                 visualPadding = 10,
@@ -45123,7 +45131,9 @@ var MessageBox = (function($, toastr) {
 jQuery(function() {
     MessageBox.init();
 });
-;/** ========================================================================
+;
+/// <reference path="../../typings/jquery/jquery.d.ts"/>
+/** ========================================================================
  * Mower: areapicker.mower.js - v1.0.0
  *
  * used for choosing area.
@@ -45207,7 +45217,7 @@ jQuery(function() {
             clicked: 'click.mu.areapicker'
         }
     };
-
+    
     AreaPicker.prototype = {
 
         constructor: AreaPicker,
@@ -45221,7 +45231,8 @@ jQuery(function() {
             if (this.component && this.component.length === 0) {
                 this.component = false;
             }
-
+            
+            
             this.$areacontainer = this.options.street ? $(this.options.areawithstreet) : $(this.options.defaultarea);
             this.$areacontainer.css('width', this.options.width);
 

@@ -1,27 +1,160 @@
+<style type="text/css">
+.input-group .form-inline .form-control {
+    float: none;
+    width: auto;
+}
+.content {
+  padding: 5px;
+  margin-bottom: 3px;
+}
+.content:hover {
+  border: 1px dotted #bbb;
+}
+
+</style>
 <div class="panel panel-default panel-widget">
     <div class="panel-body" style="background-color: #fff;padding: 10px ">
-        <h4 class="header-dividing" id="minimum-setup">基本静态类型</h4>
+        <h4 class="header-dividing" id="minimum-setup">高级查询</h4>
         <div class="row">
-        <div class='col-sm-6'>
-            <div class="input-group dropdown mu-lookup" data-name="street"
-             rel="lookup">
-                <div class="dropdown-menu" style="width:400px;height:300px;text-align:center;">
-                  <p>静态内容</p>
+            <div class='col-sm-6'>
+                <div class="input-group dropdown mu-lookup" data-name="street" rel="lookup">
+                    <div class="dropdown-menu" style="width:620px;height:300px;padding:5px;">
+                        <div>
+                            <form class="form-inline">
+                                <div class="content"  >
+                                <div class="row">
+
+                                      <div class="col-sm-5 padding-right-less">
+                                          <div class="form-group">
+                                              <select class="form-control" id="parameter_1" name="parameter_1">
+                                                  <option value="anywhere">Keyword Anywhere</option>
+                                                  <option value="contributor">Author or Contributor</option>
+                                                  <option value="title">Title</option>
+                                                  <option value="subject">Subject</option>
+                                                  <option value="series">Series</option>
+                                                  <option value="award">Award</option>
+                                                  <option value="identifier">Identifier (eg. ISBN/UPC)</option>
+                                                  <option value="region">Geographic Region</option>
+                                                  <option value="genre">Genre</option>
+                                                  <option value="publisher">Publisher</option>
+                                                  <option value="callnumber">Call Number</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="col-sm-6 padding-right-less padding-left-less text-right">
+                                          <div class="form-group">
+                                              <div class="margin-bottom">
+                                                  <select class="form-control" id="parameter_1" name="parameter_1">
+                                                      <option value="anywhere">Keyword Anywhere</option>
+                                                      <option value="contributor">Author or Contributor</option>
+                                                      <option value="title">Title</option>
+                                                      <option value="subject">Subject</option>
+                                                      <option value="series">Series</option>
+                                                      <option value="award">Award</option>
+                                                      <option value="identifier">Identifier (eg. ISBN/UPC)</option>
+                                                      <option value="region">Geographic Region</option>
+                                                      <option value="genre">Genre</option>
+                                                      <option value="publisher">Publisher</option>
+                                                      <option value="callnumber">Call Number</option>
+                                                  </select>
+                                              </div>
+                                              <div class="margin-bottom">
+                                                  <label class="control-label">大于等于：</label>
+                                                  <div class='input-group date' id='datetimepicker2'>
+                                                      <input type='text' class="form-control" />
+                                                      <span class="input-group-addon">
+                                                      <span class="glyphicon glyphicon-time"></span>
+                                                      </span>
+                                                  </div>
+                                              </div>
+                                              <div class="margin-bottom">
+                                                  <label class="control-label">小于：</label>
+                                                  <div class='input-group date' id='datetimepicker2'>
+                                                      <input type='text' class="form-control" />
+                                                      <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                                      </span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="col-sm-1">
+                                          <a href="#" class="text-red" role="button" style="font-size:18px;margin:0 5px;"><i class="fa fa-times-circle"></i></a>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                  
+                                
+                                <div class="row">
+                                    <div class="col-sm-5 padding-right-less">
+                                        <div class="form-group">
+                                            <select class="form-control" id="parameter_1" name="parameter_1">
+                                                <option value="anywhere">Keyword Anywhere</option>
+                                                <option value="contributor">Author or Contributor</option>
+                                                <option value="title">Title</option>
+                                                <option value="subject">Subject</option>
+                                                <option value="series">Series</option>
+                                                <option value="award">Award</option>
+                                                <option value="identifier">Identifier (eg. ISBN/UPC)</option>
+                                                <option value="region">Geographic Region</option>
+                                                <option value="genre">Genre</option>
+                                                <option value="publisher">Publisher</option>
+                                                <option value="callnumber">Call Number</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 padding-right-less padding-left-less text-right">
+                                    <div class="input-group mu-dropdowntree" data-height="300px" data-code-field="id" data-label-field="text" data-url="/assets/ajax/data/tree.txt" data-callback="false" rel="dropdowntree">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-btn">
+                                                      <button class="btn btn-default" type="button"><i class="fa fa-chevron-down"></i></button>
+                                                    </span>
+                                                    </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <a href="#" class="text-red" role="button" style="font-size:18px;margin:0 5px;"><i class="fa fa-times-circle"></i></a>
+                                    </div>
+                                </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="form-actions" style="margin-top:40px;border-top:1px solid #eee;padding-top:10px;">
+                            
+                            <button type="button" class="btn btn-danger">重置条件</button>
+                            <button type="button" class="btn btn-primary">添加条件</button>
+                            <button type="submit" class="btn btn-primary pull-right">立即筛选</button>
+                        </div>
+                    </div>
+                    <input id="tagsinput1" type="text" class="form-control">
+                    <span class="input-group-btn" data-toggle="dropdownlookup">
+                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                  </span>
                 </div>
-                <input id="tagsinput1" type="text" class="form-control" >
-                <span class="input-group-btn" data-toggle="dropdownlookup">
-                  <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-                </span>
             </div>
         </div>
+        <br/>
+        <h4 class="header-dividing" id="minimum-setup">基本静态类型</h4>
+        <div class="row">
+            <div class='col-sm-6'>
+                <div class="input-group dropdown mu-lookup" data-name="street" rel="lookup">
+                    <div class="dropdown-menu" style="width:400px;height:300px;text-align:center;">
+                        <p>静态内容</p>
+                    </div>
+                    <input id="tagsinput1" type="text" class="form-control">
+                    <span class="input-group-btn" data-toggle="dropdownlookup">
+                  <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                </span>
+                </div>
+            </div>
         </div>
         <br/>
         <h4 class="header-dividing" id="minimum-setup">Ajax加载内容</h4>
         <div class="row">
             <div class='col-sm-6'>
                 <div class="input-group dropdown mu-lookup" data-name="street" data-type="ajax" data-title="TEST" data-width="400px" data-height="200px" data-url="/partial/remote-modal.html" rel="lookup">
-                   <input id="tagsinput1" type="text" class="form-control">
-                   <span class="input-group-btn" data-toggle="dropdownlookup">
+                    <input id="tagsinput1" type="text" class="form-control">
+                    <span class="input-group-btn" data-toggle="dropdownlookup">
                      <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
                    </span>
                 </div>
@@ -32,8 +165,8 @@
         <div class="row">
             <div class='col-sm-6'>
                 <div class="input-group dropdown mu-lookup" data-name="street" data-type="iframe" data-title="TEST" data-width="400px" data-height="200px" data-url="/partial/iframe-modal.html" rel="lookup">
-                   <input id="tagsinput1" type="text" class="form-control">
-                   <span class="input-group-btn" data-toggle="dropdownlookup">
+                    <input id="tagsinput1" type="text" class="form-control">
+                    <span class="input-group-btn" data-toggle="dropdownlookup">
                      <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
                    </span>
                 </div>
@@ -43,15 +176,14 @@
         <h4 class="header-dividing" id="minimum-setup">Modal加载内容</h4>
         <div class="row">
             <div class='col-sm-6'>
-            <div class="input-group dropdown mu-lookup" data-name="street" data-type="modal-ajax" data-title="TEST" data-width="400px" data-height="200px" data-url="/partial/remote-modal.html" rel="lookup">
-               <input id="tagsinput1" type="text" class="form-control">
-               <span class="input-group-btn" data-toggle="popmodal">
+                <div class="input-group dropdown mu-lookup" data-name="street" data-type="modal-ajax" data-title="TEST" data-width="400px" data-height="200px" data-url="/partial/remote-modal.html" rel="lookup">
+                    <input id="tagsinput1" type="text" class="form-control">
+                    <span class="input-group-btn" data-toggle="popmodal">
                  <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
                </span>
-            </div>
+                </div>
             </div>
         </div>
-
         <br/>
         <div class="mu-tabbable border-remove">
             <ul class="nav nav-tabs ">
@@ -62,10 +194,10 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_5_1">
-                无
+                    无
                 </div>
                 <div class="tab-pane" id="tab_5_2">
-                <pre class="prettyprint">
+                    <pre class="prettyprint">
 &lt;h4 class="header-dividing" id="minimum-setup"&gt;基本静态类型&lt;/h4&gt;
 &lt;div class="row"&gt;
 &lt;div class='col-sm-6'&gt;
@@ -124,5 +256,8 @@
     </div>
 </div>
 <script type="text/javascript">
+$(function() {
+    $('#datetimepicker2').datetimepicker();
+});
 window.prettyPrint();
 </script>

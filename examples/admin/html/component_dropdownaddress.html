@@ -1,27 +1,3 @@
-<style type="text/css">
-    .area-list li {
-        float: left;
-        width: 90px;
-        padding: 2px 0 2px 15px;
-        clear: none;
-    }
-
-     .area-list li.active > a {
-        background-color: #f3565d;
-        color: #fff;
-    }
-    .area-list li a {
-        font-size: 13px;
-        float: left;
-        padding: 2px 4px;
-        color: #23527c;
-    }
-
-    .area-list li a:hover {
-        background-color: #23527c;
-        color: #fff;
-    }
-</style>
 <div class="panel panel-default panel-widget">
     <div class="panel-body" style="background-color: #fff;padding: 10px ">
         <h4 class="header-dividing" id="minimum-setup">基本类型</h4>
@@ -35,6 +11,32 @@
                 </div>
             </div>
         </div>
+
+                <br/>
+                <div class="mu-tabbable border-remove">
+                    <ul class="nav nav-tabs ">
+                        <li class="active"><a href="#tab_5_1" data-toggle="tab">Javascript</a>
+                        </li>
+                        <li><a href="#tab_5_2" data-toggle="tab">Html</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_5_1">
+                        无
+                        </div>
+                        <div class="tab-pane" id="tab_5_2">
+                        <pre class="prettyprint">
+&lt;div class="btn-group area" rel="areapicker" data-url="/assets/ajax/data/address.txt"&gt;
+    &lt;button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"&gt;
+        &lt;span class="text"&gt;收货地址&lt;/span&gt;
+        &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+&lt;/div&gt;
+                        </pre>
+                        </div>
+                    </div>
+                </div>
+
     </div>
 </div>
 <script type="text/javascript">

@@ -3580,7 +3580,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-11-16
+ * mower - v1.1.1 - 2015-12-02
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -8704,6 +8704,28 @@ Input icons
   color: #fff;
   text-align: center;
 }
+/* areapicker
+ ========================================================================== */
+.area-list li {
+  float: left;
+  width: 90px;
+  padding: 2px 0 2px 15px;
+  clear: none;
+}
+.area-list li.active > a {
+  color: #fff;
+  background-color: #f3565d;
+}
+.area-list li a {
+  float: left;
+  padding: 2px 4px;
+  font-size: 13px;
+  color: #23527c;
+}
+.area-list li a:hover {
+  color: #fff;
+  background-color: #23527c;
+}
 /* dropdown content in mower header */
 .mu-header-dropdown-list {
   width: 250px !important;
@@ -11233,6 +11255,9 @@ div.dataTables_wrapper span.select-item {
 }
 /* jstree styles. 
  ========================================================================== */
+.jstree-default .jstree-anchor {
+  font-size: 12px;
+}
 .jstree-default .jstree-clicked {
   background-color: #e1e1e1;
   border: 0;
