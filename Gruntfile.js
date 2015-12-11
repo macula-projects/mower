@@ -84,7 +84,7 @@ module.exports = function(grunt) {
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/form.<%= pkg.name %>.js',
                         'src/js/messagebox.<%= pkg.name %>.js',
-                        'src/js/areapicker.<%= pkg.name %>.js'
+                        'src/js/cascadepicker.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -181,7 +181,8 @@ module.exports = function(grunt) {
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/form.<%= pkg.name %>.js',
                         'src/js/modalbox.<%= pkg.name %>.js',
-                        'src/js/messagebox.<%= pkg.name %>.js'
+                        'src/js/messagebox.<%= pkg.name %>.js',
+                        'src/js/cascadepicker.<%= pkg.name %>.js'
                     ]
                 }
             },

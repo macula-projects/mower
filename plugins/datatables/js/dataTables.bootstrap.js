@@ -54,6 +54,11 @@ DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, bu
 		var i, ien, node, button;
 		var clickHandler = function ( e ) {
 			e.preventDefault();
+			
+			//hide tooltip before redraw
+			var $target = $(e.currentTarget);
+			$target.find('a').tooltip('hide');
+
 			if ( !$(e.currentTarget).hasClass('disabled') ) {
 				api.page( e.data.action ).draw( 'page' );
 			}

@@ -72,7 +72,7 @@ var Base = (function($, utils, window, document, undefined) {
                         name = $(this).attr('data-bv-field') || $(this).attr('name') ;
 
                         isValid = $formValidator.isValidField(name);
-
+ 
                         if(!isValid){
                             try{
                                 $(this)[0].focus();
