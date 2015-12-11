@@ -1860,7 +1860,7 @@
 
 
 /*!
- * mower - v1.1.1 - 2015-11-13
+ * mower - v1.1.1 - 2015-12-10
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -6627,6 +6627,11 @@ Input icons
   border: 0;
   border-top: 1px solid #eee;
 }
+.tabbable-line > .nav-tabs.nav-justified > .active > a,
+.tabbable-line > .nav-tabs.nav-justified > .active > a:hover,
+.tabbable-line > .nav-tabs.nav-justified > .active > a:focus {
+  border: 0;
+}
 .portlet .tabbable-line > .tab-content {
   padding-bottom: 0;
 }
@@ -6978,6 +6983,28 @@ Input icons
   font-size: 42px;
   color: #fff;
   text-align: center;
+}
+/* cascadepicker
+ ========================================================================== */
+.cascade-list li {
+  float: left;
+  width: 90px;
+  padding: 2px 0 2px 15px;
+  clear: none;
+}
+.cascade-list li.active > a {
+  color: #fff;
+  background-color: #f3565d;
+}
+.cascade-list li a {
+  float: left;
+  padding: 2px 4px;
+  font-size: 13px;
+  color: #23527c;
+}
+.cascade-list li a:hover {
+  color: #fff;
+  background-color: #23527c;
 }
 /* dropdown content in mower header */
 .mu-header-dropdown-list {
