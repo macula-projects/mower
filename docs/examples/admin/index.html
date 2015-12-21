@@ -4,10 +4,17 @@
 <head>
     <title>Mower Index</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../mower/admin/css/mower.css">
     <link rel="stylesheet" href="../../assets/css/app.css">
     <script src="../../assets/js/themes.js" type="text/javascript"></script>
+    <!-- [if lt IE 9] >
+        <script src="../../libs/html5shiv/html5shiv.min.js"></script>
+        <script src="../../libs/respond/respond.min.js"></script>
+    <![endif]-- >
 </head>
 
 <body>
@@ -65,9 +72,9 @@
                             <ul class="account-area">
                                 <li>
                                     <a class="login-area dropdown-toggle" data-toggle="dropdown">
-                                        <section>
-                                            <h2><span class="profile">测试用户</span></h2>
-                                        </section>
+                                        <div class="profile">
+                                            <h2><span>测试用户</span></h2>
+                                        </div>
                                         <div class="avatar" title="View your public profile">
                                             <img src="../../assets/img/bing.png">
                                         </div>
@@ -225,7 +232,7 @@
     <!-- BEGIN CORE PLUGINS -->
     <script src="../../libs/jquery/jquery-1.11.1.js" type="text/javascript"></script>
     <script src="../../libs/json/json2.js" type="text/javascript"></script>
-    <script src="../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../bootstrap/js/bootstrap.js" type="text/javascript"></script>
     <script src="../../libs/knockout/knockout-3.1.0-min.js" type="text/javascript"></script>
     <script src="../../libs/jquery-tmpl/jquery.tmpl.min.js" type="text/javascript"></script>
     <!-- END CORE PLUGINS -->
@@ -236,6 +243,10 @@
     <!-- END PAGE LEVEL SCRIPTS -->
 
     <script src="../../assets/plugins/google-code-prettify/prettify.js"></script>
+
+    <!-- [if lt IE 9] >
+        <script src="../../libs/respond/respond.min.js"></script>
+    <![endif]-- >
 </body>
 
 </html>

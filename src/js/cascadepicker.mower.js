@@ -76,8 +76,8 @@
             var that = this;
             //add cascade items
             $.each(this.options.cascadeItems,function(index,value){
-                that.$cascadeheader.append('<li><a href="#cascade_'+ index + '"  data-toggle="tab">'+ value +'</a></li>');
-                that.$cascadecontent.append('<div class="tab-pane" id="cascade_'+ index +'"></div>');
+                that.$cascadeheader.append('<li><a href="#cascade_'+ index +'_' + that.options.name + '"  data-toggle="tab">'+ value +'</a></li>');
+                that.$cascadecontent.append('<div class="tab-pane" id="cascade_'+ index +'_' + that.options.name +'"></div>');
             });
 
             this.$cascadeheader.find('li:first').addClass('active');

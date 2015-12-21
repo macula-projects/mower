@@ -105,7 +105,6 @@ var Base = (function($, utils, window, document, undefined) {
         });
     };
 
-
     var _parseComposite = function(key, value, t, prefix, parentkey) {
         var opts = {};
         var attrName = 'data-' + prefix + (parentkey ? (parentkey.toLowerCase() + '-') : '') + key.toLowerCase();
@@ -151,7 +150,7 @@ var Base = (function($, utils, window, document, undefined) {
             var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
             $dialog.css('margin-top', pos);
         });
-    }
+    };
 
     // public functions
     base.init = function() {
@@ -160,6 +159,7 @@ var Base = (function($, utils, window, document, undefined) {
         _resetIconContent();
         _enterToTab();
         _ajustModalPosition('fit');
+
     };
 
     /**
