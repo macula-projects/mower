@@ -3,7 +3,15 @@
         <h4 class="header-dividing" id="minimum-setup">基本类型</h4>
         <div class="row">
             <div class='col-sm-6'>
-                <div class="btn-group cascade" rel="cascadepicker" data-url="/assets/ajax/data/address.txt">
+                <div id="cascadepicker" data-name="caspicker2" class="btn-group cascade" >
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        <span class="text">收货地址</span>
+                        <span class="caret"></span>
+                    </button>
+                </div>
+            </div>
+             <div class='col-sm-6'>
+                <div class="btn-group cascade" rel="cascadepicker" data-name="caspicker1" data-url="/assets/ajax/data/address.txt">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                         <span class="text">收货地址</span>
                         <span class="caret"></span>
@@ -41,4 +49,10 @@
 </div>
 <script type="text/javascript">
 window.prettyPrint();
+$(function(){
+    $("#cascadepicker").cascadepicker({
+        'url':"/assets/ajax/data/address.txt",
+        'cascadeItems':['省','市','区/县']
+    });
+});
 </script>

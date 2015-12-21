@@ -3580,7 +3580,7 @@ table.treetable tbody tr.selected {
 }
 
 /*!
- * mower - v1.1.1 - 2015-12-11
+ * mower - v1.1.1 - 2015-12-17
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -5373,8 +5373,8 @@ and thus doesn't properly apply the media queries in Bootstrap's CSS. To address
   padding: 10px 10px;
 }
 .navbar-nav > li > a {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
   font-size: 15px;
   line-height: 25px;
 }
@@ -9458,20 +9458,23 @@ body:before {
   width: 29px;
   height: 29px;
 }
-.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section {
+.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section,
+.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area .profile {
   display: block;
   float: left;
   width: auto;
   overflow: hidden;
   line-height: 25px;
 }
-.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section h2 {
+.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section h2,
+.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area .profile h2 {
   margin: 0;
-  font-size: 14px;
+  font-size: 14px !important;
   font-weight: 400;
   white-space: nowrap;
 }
-.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section h2 span {
+.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section h2 span,
+.mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area .profile h2 span {
   display: block;
   min-width: 100px;
   margin-right: 5px;
