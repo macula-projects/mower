@@ -10,14 +10,13 @@
                     </button>
                 </div>
             </div>
-             <div class='col-sm-6'>
-                <div class="btn-group cascade" rel="cascadepicker" data-name="caspicker1" data-url="/assets/ajax/data/address.txt">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                        <span class="text">收货地址</span>
-                        <span class="caret"></span>
+<!--             <div class='col-sm-6'>
+                <div data-name="caspicker2" class="btn-group cascade" >
+                    <button class="btn btn-default" type="button" id="dropdownMenu2">
+                        <span class="text">获取选择值</span>
                     </button>
                 </div>
-            </div>
+            </div> -->
         </div>
 
                 <br/>
@@ -54,5 +53,12 @@ $(function(){
         'url':"/assets/ajax/data/address.txt",
         'cascadeItems':['省','市','区/县']
     });
+
+    // $("#dropdownMenu2").click(function(){
+    //     var selected = $("#cascadepicker").cascadepicker('getAllSelectedOption');
+    //      alert(selected[0]);
+    //      alert(selected[1]);
+    //      alert(selected[2]);
+    // });
 });
 </script>

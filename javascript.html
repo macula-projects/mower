@@ -2986,7 +2986,7 @@ $('#element').lookup('clear');
                             <h4 class="subitem-header" id="datetimepicker-date">日期选择</h4>
                             <div class="bs-example">
                                 <div class="form-group">
-                                    <div class='input-group date' rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
+                                    <div class='input-group date datetimepicker-date'>
                                         <input type='text' class="form-control" />
                                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-time"></span>
@@ -2997,7 +2997,7 @@ $('#element').lookup('clear');
                             <div class="highlight">
                                 <pre class="prettyprint">
 &lt;div class="form-group"&gt;
-    &lt;div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD"&gt;
+    &lt;div class='input-group date datetimepicker-date'  &gt;
       &lt;input type='text' class="form-control" /&gt;
       &lt;span class="input-group-addon"&gt;
           &lt;span class="fa fa-calendar"&gt;
@@ -3005,12 +3005,27 @@ $('#element').lookup('clear');
       &lt;/span&gt;
     &lt;/div&gt;
 &lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+// 仅选择日期
+$(".datetimepicker-date").datetimepicker(
+{
+    language:  "zh-CN",
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    minView: 2,
+    forceParse: 0,
+    format: "yyyy-mm-dd"
+});
+&lt;/script&gt;
               </pre>
                             </div>
                             <h4 class="subitem-header" id="datetimepicker-time">时间选择</h4>
                             <div class="bs-example">
                                 <div class="form-group">
-                                    <div class='input-group date' rel="datetimepicker" data-format="HH:mm:ss">
+                                    <div class='input-group date datetimepicker-time'>
                                         <input type='text' class="form-control" />
                                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-time"></span>
@@ -3021,19 +3036,33 @@ $('#element').lookup('clear');
                             <div class="highlight">
                                 <pre class="prettyprint">
 &lt;div class="form-group"&gt;
-  &lt;div class='input-group date'  rel="datetimepicker" data-format="HH:mm:ss"&gt;
+  &lt;div class='input-group date datetimepicker-time' &gt;
       &lt;input type='text' class="form-control" /&gt;
       &lt;span class="input-group-addon"&gt;
           &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
       &lt;/span&gt;
   &lt;/div&gt;
 &lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+// 选择时间
+$(".datetimepicker-time").datetimepicker({
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 1,
+    minView: 0,
+    maxView: 1,
+    forceParse: 0,
+    format: 'hh:ii:ss'
+});
+&lt;/script&gt;
               </pre>
                             </div>
                             <h4 class="subitem-header" id="datetimepicker-all">日期+时间选择</h4>
                             <div class="bs-example">
                                 <div class="form-group">
-                                    <div class='input-group date' rel="datetimepicker" data-format="YYYY-MM-DD HH:mm:ss">
+                                    <div class='input-group date datetimepicker-all'>
                                         <input type='text' class="form-control" />
                                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-time"></span>
@@ -3044,14 +3073,29 @@ $('#element').lookup('clear');
                             <div class="highlight">
                                 <pre class="prettyprint">
 &lt;div class="form-group"&gt;
-    &lt;div class='input-group date'  rel="datetimepicker" data-format="YYYY-MM-DD HH:mm:ss"&gt;
+    &lt;div class='input-group date datetimepicker-all'&gt;
         &lt;input type='text' class="form-control" /&gt;
         &lt;span class="input-group-addon"&gt;
             &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
         &lt;/span&gt;
     &lt;/div&gt;
 &lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+// 选择时间和日期
+$(".datetimepicker-all").datetimepicker(
+{
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    forceParse: 0,
+    showMeridian: 1,
+    format: "yyyy-mm-dd hh:ii"
+});
+&lt;/script&gt;
               </pre>
+
                             </div>
                             <h3 class="item-header">变化</h3>
                             <p>日期选择插件中可以设置某些参数达到需要显示效果。下面罗列常用参数,更多选项参数请参考<a href="http://eonasdan.github.io/bootstrap-datetimepicker/Options/#usecurrent" target="_blank">Bootstrap 3 Datepicker Options。</a> </p>
@@ -3059,19 +3103,33 @@ $('#element').lookup('clear');
                             <div class="bs-example">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD" data-format="YYYY-MM-DD" rel="datetimepicker">
+                                        <input type="text" class="form-control datetimepicker-date" placeholder="选择或者输入一个日期：yyyy-mm-dd" >
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" placeholder="选择或者输入一个时间：HH:mm:ss" data-format="HH:mm:ss" rel="datetimepicker">
+                                        <input type="text" class="form-control datetimepicker-time" placeholder="选择或者输入一个时间：hh:ii:ss" >
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" placeholder="选择或者输入一个日期+时间：YYYY-MM-DD HH:mm:ss" data-format="YYYY-MM-DD HH:mm:ss" rel="datetimepicker">
+                                        <input type="text" class="form-control datetimepicker-all" placeholder="选择或者输入一个日期+时间：yyyy-mm-dd hh:ii:ss">
                                     </div>
                                 </div>
                             </div>
                             <div class="highlight">
                                 <pre class="prettyprint">
-  &lt;input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  data-format="YYYY-MM-DD" rel="datetimepicker"&gt;
+  &lt;input type="text" class="form-control" placeholder="选择或者输入一个日期：YYYY-MM-DD"  &gt;
+  &lt;script type="text/javascript"&gt;
+// 选择时间和日期
+$(".datetimepicker-all").datetimepicker(
+{
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    forceParse: 0,
+    showMeridian: 1,
+    format: "yyyy-mm-dd hh:ii"
+});
+&lt;/script&gt;
               </pre>
                             </div>
                             <h4 class="subitem-header" id="datetimepicker-clear">清空数值</h4>
@@ -3080,6 +3138,9 @@ $('#element').lookup('clear');
                                 <div class="form-group">
                                     <div class='input-group date' rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
                                         <input type='text' class="form-control" />
+                                        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-remove"></span>
+                                        </span>
                                         <span class="input-group-addon">
             <span class="glyphicon glyphicon-time"></span>
                                         </span>
@@ -3091,31 +3152,12 @@ $('#element').lookup('clear');
 &lt;div class='input-group date'  rel="datetimepicker" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss"&gt;
     &lt;input type='text' class="form-control" /&gt;
     &lt;span class="input-group-addon"&gt;
+        &lt;span class="glyphicon glyphicon-remove"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;span class="input-group-addon"&gt;
         &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
     &lt;/span&gt;
 &lt;/div&gt;
-              </pre>
-                            </div>
-                            <h4 class="subitem-header" id="datetimepicker-current">显示当前日期值</h4>
-                            <p>日期选择框显示时候，自动填充当前日期或者时间值。参数<code>useCurrent</code>默认值为<code>true</code></p>
-                            <div class="bs-example">
-                                <div class="form-group">
-                                    <div class='input-group date' rel="datetimepicker" data-use-current="true" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss">
-                                        <input type='text' class="form-control" />
-                                        <span class="input-group-addon">
-            <span class="glyphicon glyphicon-time"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="highlight">
-                                <pre class="prettyprint">
-  &lt;div class='input-group date'  rel="datetimepicker" data-use-current="true" data-show-clear="true" data-format="YYYY-MM-DD HH:mm:ss"&gt;
-      &lt;input type='text' class="form-control" /&gt;
-      &lt;span class="input-group-addon"&gt;
-          &lt;span class="glyphicon glyphicon-time"&gt;&lt;/span&gt;
-      &lt;/span&gt;
-  &lt;/div&gt;
               </pre>
                             </div>
                         </div>
@@ -3281,7 +3323,6 @@ $('#element').lookup('clear');
                                     <li><a href="#datetimepicker-all">日期时间</a></li>
                                     <li><a href="#datetimepicker-icon">不带图标</a></li>
                                     <li><a href="#datetimepicker-clear">清空数值</a></li>
-                                    <li><a href="#datetimepicker-current">当前时间</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -3421,6 +3462,43 @@ $('#element').lookup('clear');
                     displayKey: 'text',
                     source: cities
                 }
+            });
+
+            $(".datetimepicker-date").datetimepicker(
+            {
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0,
+                format: "yyyy-mm-dd",
+                pickerPosition: "bottom-left"
+            });
+            // 选择时间
+            $(".datetimepicker-time").datetimepicker({
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 1,
+                minView: 0,
+                maxView: 1,
+                forceParse: 0,
+                format: 'hh:ii:ss'
+            });
+            // 选择时间和日期
+            $(".datetimepicker-all").datetimepicker(
+            {
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                format: "yyyy-mm-dd hh:ii"
             });
         });
         </script>

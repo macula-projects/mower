@@ -1860,7 +1860,7 @@
 
 
 /*!
- * mower - v1.1.1 - 2015-12-10
+ * mower - v1.1.1 - 2015-12-22
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -3653,8 +3653,8 @@ and thus doesn't properly apply the media queries in Bootstrap's CSS. To address
   padding: 10px 10px;
 }
 .navbar-nav > li > a {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
   font-size: 15px;
   line-height: 25px;
 }
