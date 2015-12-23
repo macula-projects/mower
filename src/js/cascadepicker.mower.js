@@ -29,6 +29,7 @@
     //you can put your plugin defaults in here.
     CascadePicker.DEFAULTS = {
         name: 'cascadepicker',
+        initValue:false,
         width: '400px',
         url: false,
         street: false,
@@ -47,7 +48,8 @@
             '</div>' +
             '</div>',
         events: {
-            clicked: 'click.mu.cascadepicker'
+            clicked: 'click.mu.cascadepicker',
+            loaded: 'loaded.mu.cascadepicker'
         }
     };
     
@@ -83,10 +85,26 @@
             this.$cascadeheader.find('li:first').addClass('active');
             this.$cascadecontent.find('div.tab-pane:first').addClass('active');
 
-            
-            this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$cascadecontainer, function(e) {
-                that.loadAndConstruct(that.options.url, that.$cascadecontent.find('.tab-pane:first'));
-            });
+            //init values
+            var initValue = this.options.initValue;
+            if ($.isArray(initValue)) {
+                  $(initValue).each(function(index,value){
+                    var url = that.options.url;
+                    if(index) {
+                        url += '?' +that.options.postName +'=' + value;
+                    }
+                     that.loadAndConstruct(url, that.$cascadecontent.find('.tab-pane').eq(index),value);
+                  });
+            } else if(initValue){
+                this.loadAndConstruct(this.options.url, this.$cascadecontent.find('.tab-pane:first'),initValue);
+            }
+
+            //previous inited
+            if(!initValue){
+                this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$cascadecontainer, function(e) {
+                    that.loadAndConstruct(that.options.url, that.$cascadecontent.find('.tab-pane:first'));
+                });
+            }
 
             this.$cascadecontent.on('click', 'a', function(e) {
                 e.preventDefault();
@@ -133,7 +151,7 @@
                 that.$element.trigger(e);
             });
         },
-        loadAndConstruct: function(url, tabContent) {
+        loadAndConstruct: function(url, tabContent,option) {
             var that = this;
             if (url) {
                 $.ajax({
@@ -163,13 +181,65 @@
                                         $li.find('a').attr('data-'+ k,v);
                                     });
                             });
-
                             that.$cascadeheader.find('a[href="#' + $(tabContent).attr('id') + '"]').tab('show');
+
+
+                            that.selectOption(option);
                         } else {
                             ModalBox.alert(datas.exceptionMessage);
                         }
+
+                        //trigger loaded success event 
+                        var e = $.Event(CascadePicker.DEFAULTS.events.loaded);
+                        that.$element.trigger(e);
                     }
                 });
+            }
+        },
+        getAllSelectedOption:function () {
+            var selectedCode = [],
+                selected = this.$cascadecontent.find('li.active'),
+                that = this;
+
+            selected.each(function(i) {
+                selectedCode.push($(this).children('a').attr('data-'+ that.options.codeName));
+            });
+
+            return selectedCode;
+        },
+        selectOption:function  (option) {
+            var that = this,
+                code;
+            if ($.isArray(option)) {
+                  var length = option.length;
+                  $(option).each(function(index,value){
+                    if(index == length -1) code = value; 
+                    that.$cascadecontent.find('li>a[data-'+ that.options.codeName +'=' + value +']').parent().addClass('active');
+                  });
+            } else if (option) {
+                code = option; 
+                this.$cascadecontent.find('li>a[data-'+ this.options.codeName +'=' + option +']').parent().addClass('active');
+            }
+
+            //set code 
+            var hiddenInput = this.$element.find('[name="' + this.options.name + '"]');
+            if (hiddenInput.length) {
+                hiddenInput.val(code);
+            } else {
+                this.$element.prepend('<input type="hidden" name="' + this.options.name + '" value="' + code + '"/>');
+            }
+
+            //set text
+            var selectedDesc = [],
+                selected = this.$cascadecontent.find('li.active');
+            selected.each(function() {
+                selectedDesc.push($(this).children('a').text());
+            });
+
+            if (this.hasInput) { // single input
+                this.$element.find('input').val(selectedDesc.join(' /'));
+            } else if (that.component) { // component button
+                $(this.component).find('.text').html(selectedDesc.join(' /'));
             }
         },
         _destroy: function() {

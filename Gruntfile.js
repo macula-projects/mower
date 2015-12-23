@@ -121,7 +121,6 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/admin/js/<%= pkg.name %>.js': [
-                        'plugins/moment/js/moment-with-locales.js',
                         'plugins/slimScroll/js/slimscroll.js',
                         'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
                         'plugins/chosen/js/chosen.jquery.js',
@@ -140,7 +139,6 @@ module.exports = function(grunt) {
                         'dist/admin/js/<%= pkg.name %>.js'
                     ],
                     'dist/admin/js/<%= pkg.name %>.min.js': [
-                        'plugins/moment/js/moment-with-locales.min.js',
                         'plugins/slimScroll/js/slimscroll.min.js',
                         'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js',
                         'plugins/chosen/js/chosen.jquery.min.js',
@@ -255,8 +253,7 @@ module.exports = function(grunt) {
                     'plugins/bootbox/js/bootbox.min.js': ['plugins/bootbox/js/bootbox.js'],
                     'plugins/jstree/js/jstree.min.js': ['plugins/jstree/js/jstree.js'],
                     'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js': ['plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'],
-                    'plugins/form/js/form.jquery.min.js': ['plugins/form/js/form.jquery.js'],
-                    'plugins/moment/js/moment-with-locales.min.js': ['plugins/moment/js/moment-with-locales.js']
+                    'plugins/form/js/form.jquery.min.js': ['plugins/form/js/form.jquery.js']
                 }
             },
             minify_doc:{
@@ -332,7 +329,8 @@ module.exports = function(grunt) {
                     'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css'],
                     'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css': ['plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css'],
                     'plugins/toastr/css/toastr.min.css': ['plugins/toastr/css/toastr.css'],
-                    'plugins/jstree/css/style.min.css': ['plugins/jstree/css/style.css']
+                    'plugins/jstree/css/style.min.css': ['plugins/jstree/css/style.css'],
+                    'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css': ['plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css']
                 }
             }
         },

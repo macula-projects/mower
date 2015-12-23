@@ -15,7 +15,11 @@
             <script type="text/javascript">
             $(function() {
                 $('#datetimepicker1').datetimepicker({
-                    debug: true
+                    fontAwesome:true,
+                    format:'yyyy-mm-dd hh:ii:ss',
+                     autoclose: true,
+                    todayBtn: true,
+                    pickerPosition: "bottom-left"
                 });
             });
             </script>
@@ -36,7 +40,16 @@
             <script type="text/javascript">
             $(function() {
                 $('#datetimepicker2').datetimepicker({
-                    format: 'LT'
+                        language:  "zh-CN",
+                        weekStart: 1,
+                        todayBtn:  1,
+                        autoclose: 1,
+                        todayHighlight: 1,
+                        startView: 1,
+                        minView: 0,
+                        maxView: 1,
+                        forceParse: 0,
+                        format: 'hh:ii'
                 });
             });
             </script>
@@ -77,10 +90,7 @@
             </div>
             <script type="text/javascript">
             $(function() {
-                $('#datetimepicker4').datetimepicker({
-                    inline: true,
-                    sideBySide: true
-                });
+                $('#datetimepicker4').datetimepicker();
             });
             </script>
         </div>
@@ -97,20 +107,32 @@
                 <div class="tab-pane active" id="tab_5_1">
                 <pre class="prettyprint">
 $(function() {
-    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker1').datetimepicker({
+        fontAwesome:true,
+        format:'yyyy-mm-dd hh:ii:ss',
+         autoclose: true,
+        todayBtn: true,
+        pickerPosition: "bottom-left"
+    });
 
     $('#datetimepicker2').datetimepicker({
-        format: 'LT'
+            language:  "zh-CN",
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 1,
+            minView: 0,
+            maxView: 1,
+            forceParse: 0,
+            format: 'hh:ii'
     });
 
     $('#datetimepicker3').datetimepicker({
         daysOfWeekDisabled: [0, 6]
     });
 
-    $('#datetimepicker4').datetimepicker({
-        inline: true,
-        sideBySide: true
-    });
+    $('#datetimepicker4').datetimepicker();
 });
                 </pre>
                 </div>
