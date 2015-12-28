@@ -33174,7 +33174,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2015-12-23
+ * mower - v1.1.1 - 2015-12-28
  * Copyright (c) 2015 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -35953,6 +35953,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         xhrComplete: 'function',
                         createdRow: 'function',
                         drawCallback: 'function'
+                    },
+                    {
+                        data:'array'
                     }
 
                 ])
@@ -37528,6 +37531,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     };
     DropDownTable.DEFAULTS = {
         url: '',
+        name:'',
+        datasource:false,
         codeField: '',
         labelField: '',
         realField: '',
@@ -37554,7 +37559,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             var $element = $(element);
             this.options = $.extend({}, DropDownTable.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
-            this.options.realField = this.options.realField || this.options.codeField;
+            this.options.realField = this.options.realField || thie.options.name || this.options.codeField;
 
             this.$input = this.$element.find('.form-control:first');
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
@@ -37781,9 +37786,6 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             this.$table.append($thead);
 
-            //add table ajax data
-            this.$table.attr('data-ajax', this.options.url);
-
             //add table select attribute
             if (this.options.multiple == true) {
                 this.$table.attr('data-select-style', 'multi');
@@ -37800,7 +37802,18 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         },
         //load data and fill table
         populate: function() {
-            adapter.applyDataTable(this.$table);
+            var options = {};
+
+            if (this.options.url) {
+                options["ajax"] = this.options.url;
+            } else {
+                if(typeof this.options.datasource === 'object'){
+                    options['data'] = this.options.datasource;
+                } else if(utils.isFunction(this.options.datasource)){
+                    options['data'] = utils.executeFunction(this.options.datasource);
+                }
+            }
+            adapter.applyDataTable(this.$table,options);
 
             var that = this;
             this.$table.on('init.dt', function() {
@@ -38080,6 +38093,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
     DropDownTree.DEFAULTS = {
         url: '',
+        name:'',
         datasource:false,
         callback: function(instance, data) {
             var options = instance.options,
@@ -38129,7 +38143,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     DropDownTree.DEFAULTS.JSTREE_CHECKBOX = {
         three_state:false,
         cascade: '',
-        visible: false
+        visible: true
     };
 
     DropDownTree.prototype = {
@@ -38188,7 +38202,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         _process_options: function() {
             var o = this.options;
 
-            o.realField = o.realField || o.codeField;
+            o.realField = o.realField || o.name || o.codeField;
 
             var jtCoreOpt = $.extend({},
                 DropDownTree.DEFAULTS.JSTREE_CORE, {
@@ -41486,17 +41500,14 @@ jQuery(function() {
                   $(initValue).each(function(index,value){
                     var url = that.options.url;
                     if(index) {
-                        url += '?' +that.options.postName +'=' + value;
+                        url += '?' +that.options.postName +'=' + initValue[index -1];
                     }
                      that.loadAndConstruct(url, that.$cascadecontent.find('.tab-pane').eq(index),value);
                   });
             } else if(initValue){
                 this.loadAndConstruct(this.options.url, this.$cascadecontent.find('.tab-pane:first'),initValue);
-            }
-
-            //previous inited
-            if(!initValue){
-                this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$cascadecontainer, function(e) {
+            } else {
+                 this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$cascadecontainer, function(e) {
                     that.loadAndConstruct(that.options.url, that.$cascadecontent.find('.tab-pane:first'));
                 });
             }
@@ -41552,6 +41563,7 @@ jQuery(function() {
                 $.ajax({
                     url: url,
                     dataType: this.options.dataType,
+                    async:false,
                     type: this.options.method,
                     success: function(datas) {
                         if (datas.success) {
@@ -41603,6 +41615,8 @@ jQuery(function() {
             return selectedCode;
         },
         selectOption:function  (option) {
+            if(!option) return;
+            
             var that = this,
                 code;
             if ($.isArray(option)) {
