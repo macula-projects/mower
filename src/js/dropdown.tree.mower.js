@@ -32,6 +32,7 @@
 
     DropDownTree.DEFAULTS = {
         url: '',
+        name:'',
         datasource:false,
         callback: function(instance, data) {
             var options = instance.options,
@@ -81,7 +82,7 @@
     DropDownTree.DEFAULTS.JSTREE_CHECKBOX = {
         three_state:false,
         cascade: '',
-        visible: false
+        visible: true
     };
 
     DropDownTree.prototype = {
@@ -140,7 +141,7 @@
         _process_options: function() {
             var o = this.options;
 
-            o.realField = o.realField || o.codeField;
+            o.realField = o.realField || o.name || o.codeField;
 
             var jtCoreOpt = $.extend({},
                 DropDownTree.DEFAULTS.JSTREE_CORE, {

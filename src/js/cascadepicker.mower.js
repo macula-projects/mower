@@ -91,17 +91,14 @@
                   $(initValue).each(function(index,value){
                     var url = that.options.url;
                     if(index) {
-                        url += '?' +that.options.postName +'=' + value;
+                        url += '?' +that.options.postName +'=' + initValue[index -1];
                     }
                      that.loadAndConstruct(url, that.$cascadecontent.find('.tab-pane').eq(index),value);
                   });
             } else if(initValue){
                 this.loadAndConstruct(this.options.url, this.$cascadecontent.find('.tab-pane:first'),initValue);
-            }
-
-            //previous inited
-            if(!initValue){
-                this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$cascadecontainer, function(e) {
+            } else {
+                 this.$element.one(DROPDOWNMENU_SHOW_EVENT, this.$cascadecontainer, function(e) {
                     that.loadAndConstruct(that.options.url, that.$cascadecontent.find('.tab-pane:first'));
                 });
             }
@@ -157,6 +154,7 @@
                 $.ajax({
                     url: url,
                     dataType: this.options.dataType,
+                    async:false,
                     type: this.options.method,
                     success: function(datas) {
                         if (datas.success) {
@@ -208,6 +206,8 @@
             return selectedCode;
         },
         selectOption:function  (option) {
+            if(!option) return;
+            
             var that = this,
                 code;
             if ($.isArray(option)) {

@@ -107,6 +107,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         xhrComplete: 'function',
                         createdRow: 'function',
                         drawCallback: 'function'
+                    },
+                    {
+                        data:'array'
                     }
 
                 ])

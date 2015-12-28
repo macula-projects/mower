@@ -26,6 +26,8 @@
     };
     DropDownTable.DEFAULTS = {
         url: '',
+        name:'',
+        datasource:false,
         codeField: '',
         labelField: '',
         realField: '',
@@ -52,7 +54,7 @@
             var $element = $(element);
             this.options = $.extend({}, DropDownTable.DEFAULTS, $element.data(), typeof options === 'object' && options);
 
-            this.options.realField = this.options.realField || this.options.codeField;
+            this.options.realField = this.options.realField || thie.options.name || this.options.codeField;
 
             this.$input = this.$element.find('.form-control:first');
             this.$component = this.$element.is('.mu-dropdowntable') ? this.$element.find('.input-group-btn') : false;
@@ -279,9 +281,6 @@
 
             this.$table.append($thead);
 
-            //add table ajax data
-            this.$table.attr('data-ajax', this.options.url);
-
             //add table select attribute
             if (this.options.multiple == true) {
                 this.$table.attr('data-select-style', 'multi');
@@ -298,7 +297,18 @@
         },
         //load data and fill table
         populate: function() {
-            adapter.applyDataTable(this.$table);
+            var options = {};
+
+            if (this.options.url) {
+                options["ajax"] = this.options.url;
+            } else {
+                if(typeof this.options.datasource === 'object'){
+                    options['data'] = this.options.datasource;
+                } else if(utils.isFunction(this.options.datasource)){
+                    options['data'] = utils.executeFunction(this.options.datasource);
+                }
+            }
+            adapter.applyDataTable(this.$table,options);
 
             var that = this;
             this.$table.on('init.dt', function() {
