@@ -7,6 +7,7 @@
  */
 (function() {
   var $, Node, Tree, methods;
+  var persistStore; //Arron
 
   $ = jQuery;
 
@@ -437,10 +438,19 @@
         onInitialized: null,
         onNodeCollapse: null,
         onNodeExpand: null,
-        onNodeInitialized: null
+        onNodeInitialized: null,
+        persist:true,
+        persistStoreName:'treetable_store'
       }, options);
 
+      //Arron
+      if(options.persist) {
+        persistStore = new Persist.Store(options.persistStoreName);
+      }
+
       return this.each(function() {
+
+
         var el = $(this), tree;
 
         if (force || el.data("treetable") === undefined) {
@@ -604,7 +614,32 @@
     unloadBranch: function(node) {
       this.data("treetable").unloadBranch(node);
       return this;
-    }
+    },
+    //Arron start
+    persistTreeState: function() {
+      $.each(this.data("treetable").tree, function(idx, node) {
+        var $row = $(node.row);
+        if($row.hasClass('expanded')) {
+          persistStore.set(node.id, '1');
+        } else {
+          persistStore.remove(node.id);
+        }
+      });
+    },
+
+    getPersistedTreeState: function() {
+      $.each(this.data("treetable").tree, function(idx, node) {
+        if(persistStore.get(node.id) == '1'){
+          if (node) {
+            if (!node.initialized) {
+              node._initialize();
+            }
+            node.expand();
+          }
+        }
+      });
+    }  
+    //Arron end 
   };
 
   $.fn.treetable = function(method) {

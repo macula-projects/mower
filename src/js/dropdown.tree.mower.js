@@ -63,6 +63,7 @@
         initValue: '',
         orientation: "auto",
         validateForm:'',
+        wholeRow:false,
         template: '<div class="mu-picker mu-picker-dropdown dropdown-menu" style="left:-9999px;"></div>',
         events: {
             updateValue: EVENTS_UPDATE
@@ -156,12 +157,19 @@
                 // "plugins": ["wholerow"]
             };
 
+            var plugins=[];
             if(this.options.multiple){
+                plugins.push('checkbox');
                 $.extend(this.options.jtOpt,{
-                    "checkbox":DropDownTree.DEFAULTS.JSTREE_CHECKBOX,
-                    "plugins": ["checkbox"]
+                    "checkbox":DropDownTree.DEFAULTS.JSTREE_CHECKBOX
                 })
             }
+            if(this.options.wholeRow){
+                plugins.push('wholerow');
+            }
+            $.extend(this.options.jtOpt,{
+                "plugins": plugins
+            });
 
             var plc = String(o.orientation).toLowerCase().split(/\s+/g),
                 _plc = o.orientation.toLowerCase();

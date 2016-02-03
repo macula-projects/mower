@@ -89,7 +89,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                         serverSide: 'boolean',
                         ajax: {
                             url: 'string',
-                            type: 'string'
+                            type: 'string',
+                            data:'function'
                         }
                     }, {
                         enableSelected: 'boolean',
@@ -252,7 +253,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 }
             }
 
-            //no must backend
+            //no must backend and must not be dulplicate 
             $.each(['columns', 'draw', 'order', 'search', 'length'], function(index, value) {
                 delete data[value];
             });

@@ -121,6 +121,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/admin/js/<%= pkg.name %>.js': [
+                        'plugins/persist/js/persist.js',
                         'plugins/slimScroll/js/slimscroll.js',
                         'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
                         'plugins/chosen/js/chosen.jquery.js',
@@ -139,6 +140,7 @@ module.exports = function(grunt) {
                         'dist/admin/js/<%= pkg.name %>.js'
                     ],
                     'dist/admin/js/<%= pkg.name %>.min.js': [
+                        'plugins/persist/js/persist.min.js',
                         'plugins/slimScroll/js/slimscroll.min.js',
                         'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js',
                         'plugins/chosen/js/chosen.jquery.min.js',

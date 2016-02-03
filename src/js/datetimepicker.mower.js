@@ -22,10 +22,29 @@
         var $root = $(updatedFragment || 'html');
 
         $root.find('[rel="datetimepicker"]').each(function(index, el) {
-                var $this = $(this),
-                    options = $this.data();
-                
-                $this.datetimepicker(options);
+            var $this = $(this),
+                options = $this.data();
+
+            $this.datetimepicker(options)
+                .on('changeDate', function(event) {
+                    var $form = $(this).closest('form');
+                    if ($form.length) {
+                        var validator = $form.data('bootstrapValidator'),
+                            field;
+
+                        if ($(event.currentTarget).is('div')) {
+                            field = $(event.currentTarget).find('input[name],input[data-bv-field]');
+                        } else if ($(event.currentTarget).is('input')) {
+                            field = $(event.currentTarget);
+                        }
+
+                        if (validator && field.length) {
+                            var fieldName = field.attr('data-bv-field') || field.attr('name');
+                            validator.updateStatus(fieldName, 'NOT_VALIDATED')
+                                .validateField(fieldName);
+                        }
+                    }
+                });
         });
     });
 }(jQuery, window, document));

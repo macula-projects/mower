@@ -29,7 +29,8 @@
 
     BreadCrumb.DEFAULTS = {
         prefix: "breadcrumb",
-        param: '{}',
+        type:'GET',
+        param: false,
         home: '<i class="fa fa-home home"></i>',
         divider: '',
         keyboard: false,
@@ -53,7 +54,7 @@
         _init: function(element, options) {
             var $element = $(element);
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
-            this.options.param = json.decode(this.options.param || '{}');
+            this.options.param = this.options.param || {};
         },
         _getXPath: function(elements) {
             var path = new Array();
@@ -131,7 +132,8 @@
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
 
                 var ajaxOpt = {
-                    data: this.options.param
+                    data: this.options.param,
+                    type: this.options.type
                 };
 
                 var target = this.$element.data('target');
