@@ -409,7 +409,29 @@
         "iconUri": null,
         "openMode":"blank"
     },
+    "uri": null
+},
+{
+    "id": 54,
+    "parentId": 46,
+    "code": "ADMIN-MENU-9-1-1",
+    "name": "模板1",
+    "attributes": {
+        "iconUri": null,
+        "openMode":"blank"
+    },
     "uri": "examples/admin/html/page_admin.html"
+},
+{
+    "id": 55,
+    "parentId": 46,
+    "code": "ADMIN-MENU-9-1-2",
+    "name": "模板2",
+    "attributes": {
+        "iconUri": null,
+        "openMode":"blank"
+    },
+    "uri": "examples/admin/html/page_admin_light.html"
 },
 {
     "id": 47,

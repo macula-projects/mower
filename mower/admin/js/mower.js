@@ -28398,8 +28398,8 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
       }, options);
 
       //Arron
-      if(options.persist) {
-        persistStore = new Persist.Store(options.persistStoreName);
+      if(settings.persist) {
+        persistStore = new Persist.Store(settings.persistStoreName);
       }
 
       return this.each(function() {
@@ -34346,7 +34346,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2016-02-03
+ * mower - v1.1.1 - 2016-10-27
  * Copyright (c) 2016 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -36107,12 +36107,12 @@ var Base = (function($, utils, window, document, undefined) {
 
     var  _ajustModalPosition = function(position)
     {
-        $(document).on('show.bs.modal','.modal', function() {
-            var $dialog = $(this).find('.modal-dialog');
-            var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
-            var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
-            $dialog.css('margin-top', pos);
-        });
+        // $(document).on('shown.bs.modal','.modal', function() {
+        //     var $dialog = $(this).find('.modal-dialog');
+        //     var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+        //     var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
+        //     $dialog.css('margin-top', pos);
+        // });
     };
 
     // public functions
@@ -36201,6 +36201,563 @@ var Base = (function($, utils, window, document, undefined) {
 $(function() {
     Base.init();
 });
+;/* ========================================================================
+ * ZUI: draggable.js
+ * http://zui.sexy
+ * ========================================================================
+ * Copyright (c) 2014 cnezsoft.com; Licensed MIT
+ * ======================================================================== 
+ * Updates in Mower：
+ * 1. changed event namespace to *.mower.draggable
+ * ======================================================================== */
+
+
+(function($) {
+    'use strict';
+
+    var Draggable = function(element, options) {
+        this.$ = $(element);
+        this.options = this.getOptions(options);
+
+        this.init();
+    };
+
+    Draggable.DEFAULTS = {
+        container: 'body',
+        move: true
+    };
+
+    Draggable.prototype.getOptions = function(options) {
+        options = $.extend({}, Draggable.DEFAULTS, this.$.data(), options);
+        return options;
+    };
+
+    Draggable.prototype.init = function() {
+        this.handleMouseEvents();
+    };
+
+    Draggable.prototype.handleMouseEvents = function() {
+        var $e = this.$,
+            BEFORE = 'before',
+            DRAG = 'drag',
+            FINISH = 'finish',
+            setting = this.options,
+            startPos, cPos, startOffset, mousePos, moved;
+
+        var mouseDown = function(event) {
+            if(setting.hasOwnProperty(BEFORE) && $.isFunction(setting[BEFORE])) {
+                var isSure = setting[BEFORE]({
+                    event: event,
+                    element: $e
+                });
+                if(isSure !== undefined && (!isSure)) return;
+            }
+
+            var $container = $(setting.container),
+                pos = $e.offset();
+            cPos = $container.offset();
+            startPos = {
+                x: event.pageX,
+                y: event.pageY
+            };
+            startOffset = {
+                x: event.pageX - pos.left + cPos.left,
+                y: event.pageY - pos.top + cPos.top
+            };
+            mousePos = $.extend({}, startPos);
+            moved = false;
+
+            $e.addClass('drag-ready');
+            $(document).bind('mousemove', mouseMove).bind('mouseup', mouseUp);
+            event.preventDefault();
+            if(setting.stopPropagation) {
+                event.stopPropagation();
+            }
+        };
+
+        var mouseMove = function(event) {
+            moved = true;
+            var mX = event.pageX,
+                mY = event.pageY;
+            var dragPos = {
+                left: mX - startOffset.x,
+                top: mY - startOffset.y
+            };
+
+            $e.removeClass('drag-ready').addClass('dragging');
+            if(setting.move) {
+                $e.css(dragPos);
+            }
+
+            if(setting.hasOwnProperty(DRAG) && $.isFunction(setting[DRAG])) {
+                setting[DRAG]({
+                    event: event,
+                    element: $e,
+                    startOffset: startOffset,
+                    pos: dragPos,
+                    offset: {
+                        x: mX - startPos.x,
+                        y: mY - startPos.y
+                    },
+                    smallOffset: {
+                        x: mX - mousePos.x,
+                        y: mY - mousePos.y
+                    }
+                });
+            }
+            mousePos.x = mX;
+            mousePos.y = mY;
+
+            if(setting.stopPropagation) {
+                event.stopPropagation();
+            }
+        };
+
+        var mouseUp = function(event) {
+            $(document).unbind('mousemove', mouseMove).unbind('mouseup', mouseUp);
+            if(!moved) {
+                $e.removeClass('drag-ready');
+                return;
+            }
+            var endPos = {
+                left: event.pageX - startOffset.x,
+                top: event.pageY - startOffset.y
+            };
+            $e.removeClass('drag-ready').removeClass('dragging');
+            if(setting.move) {
+                $e.css(endPos);
+            }
+
+            if(setting.hasOwnProperty(FINISH) && $.isFunction(setting[FINISH])) {
+                setting[FINISH]({
+                    event: event,
+                    element: $e,
+                    pos: endPos,
+                    offset: {
+                        x: event.pageX - startPos.x,
+                        y: event.pageY - startPos.y
+                    },
+                    smallOffset: {
+                        x: event.pageX - mousePos.x,
+                        y: event.pageY - mousePos.y
+                    }
+                });
+            }
+            event.preventDefault();
+            if(setting.stopPropagation) {
+                event.stopPropagation();
+            }
+        };
+
+        if(setting.handle) {
+            $e.on('mousedown', setting.handle, mouseDown);
+        } else {
+            $e.on('mousedown', mouseDown);
+        }
+    };
+
+    $.fn.draggable = function(option) {
+        return this.each(function() {
+            var $this = $(this);
+            var data = $this.data('mower.draggable');
+            var options = typeof option == 'object' && option;
+
+            if(!data) $this.data('mower.draggable', (data = new Draggable(this, options)));
+
+            if(typeof option == 'string') data[option]();
+        });
+    };
+
+    $.fn.draggable.Constructor = Draggable;
+}(jQuery));
+
+;/* ========================================================================
+ * Bootstrap: modal.js v3.3.6
+ * http://getbootstrap.com/javascript/#modals
+ * ========================================================================
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // MODAL CLASS DEFINITION
+  // ======================
+
+  var Modal = function (element, options) {
+    this.options             = options
+    this.$body               = $(document.body)
+    this.$element            = $(element)
+    this.$dialog             = this.$element.find('.modal-dialog')
+    this.$backdrop           = null
+    this.isShown             = null
+    this.originalBodyPad     = null
+    this.scrollbarWidth      = 0
+    this.ignoreBackdropClick = false
+
+    if (this.options.remote) {
+      this.$element
+        .find('.modal-content')
+        .load(this.options.remote, $.proxy(function () {
+          this.$element.trigger('loaded.bs.modal')
+        }, this))
+    }
+  }
+
+  Modal.VERSION  = '3.3.6'
+
+  Modal.TRANSITION_DURATION = 300
+  Modal.BACKDROP_TRANSITION_DURATION = 150
+
+  Modal.DEFAULTS = {
+    backdrop: true,
+    keyboard: true,
+    show: true,
+    position: 'fit' // 'center' or '40px' or '10%'
+  }
+
+  Modal.prototype.toggle = function (_relatedTarget) {
+    return this.isShown ? this.hide() : this.show(_relatedTarget)
+  }
+
+  Modal.prototype.show = function (_relatedTarget) {
+    var that = this
+    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
+
+    this.$element.trigger(e)
+
+    if (this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = true
+
+   if(that.options.moveable) that.setMoveale()
+
+    this.checkScrollbar()
+    this.setScrollbar()
+    this.$body.addClass('modal-open')
+
+    this.escape()
+    this.resize()
+
+    this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
+
+    this.$dialog.on('mousedown.dismiss.bs.modal', function () {
+      that.$element.one('mouseup.dismiss.bs.modal', function (e) {
+        if ($(e.target).is(that.$element)) that.ignoreBackdropClick = true
+      })
+    })
+
+    this.backdrop(function () {
+      var transition = $.support.transition && that.$element.hasClass('fade')
+
+      if (!that.$element.parent().length) {
+        that.$element.appendTo(that.$body) // don't move modals dom position
+      }
+
+      that.$element
+        .show()
+        .scrollTop(0)
+
+      that.adjustDialog();
+
+      if (transition) {
+        that.$element[0].offsetWidth // force reflow
+      }
+
+      that.$element.addClass('in')
+
+      that.enforceFocus()
+
+      var e = $.Event('shown.bs.modal', { relatedTarget: _relatedTarget })
+
+      transition ?
+        that.$dialog // wait for modal to slide in
+          .one('bsTransitionEnd', function () {
+            that.$element.trigger('focus').trigger(e)
+          })
+          .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+        that.$element.trigger('focus').trigger(e)
+    })
+  }
+
+  Modal.prototype.hide = function (e) {
+    if (e) e.preventDefault()
+
+    e = $.Event('hide.bs.modal')
+
+    this.$element.trigger(e)
+
+    if (!this.isShown || e.isDefaultPrevented()) return
+
+    this.isShown = false
+
+    this.escape()
+    this.resize()
+
+    $(document).off('focusin.bs.modal')
+
+    this.$element
+      .removeClass('in')
+      .off('click.dismiss.bs.modal')
+      .off('mouseup.dismiss.bs.modal')
+
+    this.$dialog.off('mousedown.dismiss.bs.modal')
+
+    $.support.transition && this.$element.hasClass('fade') ?
+      this.$element
+        .one('bsTransitionEnd', $.proxy(this.hideModal, this))
+        .emulateTransitionEnd(Modal.TRANSITION_DURATION) :
+      this.hideModal()
+  }
+
+  Modal.prototype.enforceFocus = function () {
+    $(document)
+      .off('focusin.bs.modal') // guard against infinite focus loop
+      .on('focusin.bs.modal', $.proxy(function (e) {
+        if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
+          this.$element.trigger('focus')
+        }
+      }, this))
+  }
+
+  Modal.prototype.escape = function () {
+    if (this.isShown && this.options.keyboard) {
+      this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+        e.which == 27 && this.hide()
+      }, this))
+    } else if (!this.isShown) {
+      this.$element.off('keydown.dismiss.bs.modal')
+    }
+  }
+
+  Modal.prototype.resize = function () {
+    if (this.isShown) {
+      $(window).on('resize.bs.modal', $.proxy(this.handleUpdate, this))
+    } else {
+      $(window).off('resize.bs.modal')
+    }
+  }
+
+  Modal.prototype.hideModal = function () {
+    var that = this
+    this.$element.hide()
+    this.backdrop(function () {
+      that.$body.removeClass('modal-open')
+      that.resetAdjustments()
+      that.resetScrollbar()
+      that.$element.trigger('hidden.bs.modal')
+    })
+  }
+
+  Modal.prototype.removeBackdrop = function () {
+    this.$backdrop && this.$backdrop.remove()
+    this.$backdrop = null
+  }
+
+  Modal.prototype.backdrop = function (callback) {
+    var that = this
+    var animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+    if (this.isShown && this.options.backdrop) {
+      var doAnimate = $.support.transition && animate
+
+      this.$backdrop = $(document.createElement('div'))
+        .addClass('modal-backdrop ' + animate)
+        .appendTo(this.$body)
+
+      this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
+        if (this.ignoreBackdropClick) {
+          this.ignoreBackdropClick = false
+          return
+        }
+        if (e.target !== e.currentTarget) return
+        this.options.backdrop == 'static'
+          ? this.$element[0].focus()
+          : this.hide()
+      }, this))
+
+      if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+      this.$backdrop.addClass('in')
+
+      if (!callback) return
+
+      doAnimate ?
+        this.$backdrop
+          .one('bsTransitionEnd', callback)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callback()
+
+    } else if (!this.isShown && this.$backdrop) {
+      this.$backdrop.removeClass('in')
+
+      var callbackRemove = function () {
+        that.removeBackdrop()
+        callback && callback()
+      }
+      $.support.transition && this.$element.hasClass('fade') ?
+        this.$backdrop
+          .one('bsTransitionEnd', callbackRemove)
+          .emulateTransitionEnd(Modal.BACKDROP_TRANSITION_DURATION) :
+        callbackRemove()
+
+    } else if (callback) {
+      callback()
+    }
+  }
+
+  // these following methods are used to handle overflowing modals
+
+  Modal.prototype.handleUpdate = function () {
+    this.adjustDialog()
+  }
+
+  Modal.prototype.adjustDialog = function () {
+    var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
+
+    this.$element.css({
+      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+      paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
+    })
+
+    var $dialog = this.$element.find('.modal-dialog'), 
+        position = this.options.position;
+
+    var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+    var topPos = position == 'fit' ? (half * 2 / 3) : (position == 'center' ? half : position);
+    if($dialog.hasClass('modal-moveable')) {
+        var pos = null;
+        if(this.options.rememberPos) {
+            if(this.options.rememberPos === true) {
+                pos = this.$element.data('modal-pos');
+            }
+        }
+        if(!pos) {
+            pos = {
+                left: Math.max(0, ($(window).width() - $dialog.outerWidth()) / 2),
+                top: topPos
+            };
+        }
+        $dialog.css(pos);
+    } else {
+        $dialog.css('margin-top', topPos);
+    }
+  }
+
+  Modal.prototype.setMoveale = function() {
+        var that = this;
+        var options = that.options;
+        var $dialog = that.$element.find('.modal-dialog').removeClass('modal-dragged');
+        $dialog.toggleClass('modal-moveable', options.moveable);
+
+        if(!that.$element.data('modal-moveable-setup')) {
+            $dialog.draggable({
+                container: that.$element,
+                handle: '.modal-header',
+                before: function() {
+                    $dialog.css('margin-top', '').addClass('modal-dragged');
+                },
+                finish: function(e) {
+                    if(options.rememberPos) {
+                        that.$element.data('modal-pos', e.pos);
+                    }
+                }
+            });
+        }
+    }
+
+  Modal.prototype.resetAdjustments = function () {
+    this.$element.css({
+      paddingLeft: '',
+      paddingRight: ''
+    })
+  }
+
+  Modal.prototype.checkScrollbar = function () {
+    var fullWindowWidth = window.innerWidth
+    if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
+      var documentElementRect = document.documentElement.getBoundingClientRect()
+      fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left)
+    }
+    this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth
+    this.scrollbarWidth = this.measureScrollbar()
+  }
+
+  Modal.prototype.setScrollbar = function () {
+    var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
+    this.originalBodyPad = document.body.style.paddingRight || ''
+    if (this.bodyIsOverflowing) this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
+  }
+
+  Modal.prototype.resetScrollbar = function () {
+    this.$body.css('padding-right', this.originalBodyPad)
+  }
+
+  Modal.prototype.measureScrollbar = function () { // thx walsh
+    var scrollDiv = document.createElement('div')
+    scrollDiv.className = 'modal-scrollbar-measure'
+    this.$body.append(scrollDiv)
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    this.$body[0].removeChild(scrollDiv)
+    return scrollbarWidth
+  }
+
+
+
+
+  // MODAL PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option, _relatedTarget) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.modal')
+      var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data) $this.data('bs.modal', (data = new Modal(this, options)))
+      if (typeof option == 'string') data[option](_relatedTarget)
+      else if (options.show) data.show(_relatedTarget)
+    })
+  }
+
+  var old = $.fn.modal
+
+  $.fn.modal             = Plugin
+  $.fn.modal.Constructor = Modal
+
+
+  // MODAL NO CONFLICT
+  // =================
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+  // MODAL DATA-API
+  // ==============
+
+  $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
+    var $this   = $(this)
+    var href    = $this.attr('href')
+    var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
+    var option  = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
+
+    if ($this.is('a')) e.preventDefault()
+
+    $target.one('show.bs.modal', function (showEvent) {
+      if (showEvent.isDefaultPrevented()) return // only register focus restorer if modal will actually get shown
+      $target.one('hidden.bs.modal', function () {
+        $this.is(':visible') && $this.trigger('focus')
+      })
+    })
+    Plugin.call($target, option, this)
+  })
+
+}(jQuery);
 ;/** ========================================================================
  * Mower: alert.mower.js - v1.0.0
  *
@@ -36388,7 +36945,7 @@ $(function() {
         prefix: "breadcrumb",
         type:'GET',
         param: false,
-        home: '<i class="fa fa-home home"></i>',
+        home: '',
         divider: '',
         keyboard: false,
         events: {
@@ -37167,6 +37724,11 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     },
                     {
                         data:'array'
+                    },
+                    {
+                        language: {
+                           emptyTable: "string"
+                        }
                     }
 
                 ])
@@ -42045,14 +42607,14 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     ready: readyToShow
                 });
                 if (typeof customContent === 'string') {
-                    $body.html(customContent);
+                    $body.find(".bootbox-body").html(customContent);
                     readyToShow();
                 }
             } else if (custom instanceof $) {
-                $body.html($('<div>').append(custom.clone()).html());
+                $body.find(".bootbox-body").html($('<div>').append(custom.clone()).html());
                 readyToShow();
             } else {
-                $body.html(custom);
+                $body.find(".bootbox-body").html(custom);
                 readyToShow();
             }
         } else if (options.url) {
@@ -42064,7 +42626,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 $header.detach();
                 $body.detach();
                 $content.empty().append($header).append($body);
-                $body.css('padding', 0)
+                $body.find(".bootbox-body").css('padding', 0)
                     .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
 
                 if (options.waittime > 0) {
@@ -42141,7 +42703,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                             } else if ($data.hasClass('modal-body')) {
                                 $dialog.find('.modal-body').replaceWith($data);
                             } else {
-                                $body.wrapInner($data);
+                                $body.find(".bootbox-body").wrapInner($data);
                             }
                         });
 
@@ -42154,7 +42716,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                             $modal.append($script);
                         });
                     } catch (e) {
-                        $body.wrapInner(data);
+                        $body.find(".bootbox-body").wrapInner(data);
                     }
 
                     $modal.callEvent('loaded.mower.modal', {
@@ -42546,7 +43108,29 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         });
     }
 
-    function doFormError(e) {}
+    function doFormError(data) {
+       if(!data) return;
+        
+        if(!data.success){
+            var table = $('<table class="table table-bordered table-striped"><thead><tr><th>名称</th><th>错误信息</th></tr></thead></table>'),
+                tbody = $('<tbody></tbody>').appendTo(table);
+            $.each(data.validateErrors, function(idx,value)
+            {
+                var tr = $('<tr/>');
+                var element = $('<td/>').text(value.element)
+                    .appendTo(tr),
+                    message = $('<td/>').text(value.message)
+                    .appendTo(tr);
+                
+                tr.appendTo(tbody);
+            });
+            
+            ModalBox.dialog({
+                    title: data.errorMessage,
+                    message: table
+                });
+        }
+    }
 
 
 
