@@ -11704,6 +11704,8 @@ div.dataTables_wrapper span.select-item {
 }
 .panel-widget.unboxed > .panel-heading > .mu-panel-toolbar {
   padding-top: 0;
+  padding-right: 1px;
+  padding-left: 1px;
 }
 .panel-widget.unboxed > .panel-body {
   padding: 0;
@@ -11713,9 +11715,8 @@ div.dataTables_wrapper span.select-item {
   padding: 0;
   background-color: #fff;
 }
-.panel-widget.unboxed > .panel-body.form {
-  padding: 10px;
-  border: 1px solid #d3d3d3;
+.panel-widget.unboxed > .panel-body form .form-body {
+  margin: 10px 15px;
 }
 .panel-widget.unboxed > .panel-body > .dataTables_wrapper > .dt-row {
   padding: 10px;
