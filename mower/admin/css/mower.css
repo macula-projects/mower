@@ -3959,7 +3959,7 @@ table.treetable tbody tr.selected {
 	}
 }
 /*!
- * mower - v1.1.1 - 2016-10-27
+ * mower - v1.1.1 - 2016-10-28
  * Copyright (c) 2016 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -9249,7 +9249,7 @@ Input icons
 /* styles for panel .
  ========================================================================== */
 .mu-panel-toolbar {
-  padding: 8px 10px;
+  padding: 8px 0;
 }
 /*
  * advanced query in toolbar.
@@ -11691,25 +11691,32 @@ div.dataTables_wrapper span.select-item {
   border: 1px solid #e5e5e5 !important;
   outline: none !important;
 }
-body.gbss:before {
-  background-color: #fff;
+.mu-content-body {
+  padding-top: 10px;
 }
-body.gbss .mu-content .mu-content-header {
-  height: auto;
-  min-height: auto;
-  padding: 0 15px;
-  line-height: 39px;
-  background-image: none;
+.panel-widget.unboxed {
+  background-color: transparent;
+  box-shadow: none;
 }
-body.gbss .mu-content .mu-content-body {
+.panel-widget.unboxed > .panel-heading {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.panel-widget.unboxed > .panel-heading > .mu-panel-toolbar {
+  padding-top: 0;
+}
+.panel-widget.unboxed > .panel-body {
   padding: 0;
   background-color: #fff;
 }
-body.gbss .mu-content .mu-content-body > .row {
-  margin-right: 0;
-  margin-left: 0;
+.panel-widget.unboxed > .panel-body {
+  padding: 0;
+  background-color: #fff;
 }
-body.gbss .mu-content .mu-content-body > .row > div[class^="col"] {
-  padding-right: 0;
-  padding-left: 0;
+.panel-widget.unboxed > .panel-body.form {
+  padding: 10px;
+  border: 1px solid #d3d3d3;
+}
+.panel-widget.unboxed > .panel-body > .dataTables_wrapper > .dt-row {
+  padding: 10px;
 }
