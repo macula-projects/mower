@@ -5,7 +5,7 @@
  */
 /*Border Colors*/
 .bordered-themeprimary {
-  border-color: #474544 !important;
+  border-color: #001940 !important;
 }
 .bordered-themesecondary {
   border-color: #d73d32 !important;
@@ -29,55 +29,55 @@
 .mu-header-container .header-menu .navbar-nav > li.open > a,
 .mu-header-container .header-menu .navbar-nav > li.open > a:focus,
 .mu-header-container .header-menu .navbar-nav > li.open > a:hover {
-  background-color: #6a6765;
+  background-color: #003a95;
 }
 .mu-header-container .header-menu .navbar-nav > li.active > a,
 .mu-header-container .header-menu .navbar-nav > li.active > a:focus,
 .mu-header-container .header-menu .navbar-nav > li.active > a:hover {
-  background-color: #6a6765;
+  background-color: #003a95;
 }
 .mu-header-container .header-menu .navbar-nav > li > a:focus,
 .mu-header-container .header-menu .navbar-nav > li > a:hover,
 .mu-header-container .header-menu .navbar-nav > li > a:active {
   color: #fff;
-  background-color: #6a6765;
+  background-color: #003a95;
 }
 .mu-header-container .header-menu .navbar-nav .dropdown-menu > .active > a,
 .mu-header-container .header-menu .navbar-nav .dropdown-menu > .active > a:hover,
 .mu-header-container .header-menu .navbar-nav .dropdown-menu > .active > a:focus {
-  background-color: #6a6765;
+  background-color: #003a95;
 }
 .mu-header-container .navbar .navbar-inner {
-  background: #474544;
+  background: #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area > li > a .badge {
-  box-shadow: 1px 1px 0 #474544;
+  box-shadow: 1px 1px 0 #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area > li .dropdown-menu.dropdown-messages li .message-time {
-  color: #474544;
+  color: #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area > li .dropdown-menu.dropdown-login-area > li .avatar-area .caption {
-  background-color: #474544;
+  background-color: #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area > li .dropdown-menu.dropdown-login-area > li.dropdown-footer {
-  border-top: 3px solid #474544;
+  border-top: 3px solid #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .account-area > li.open > a {
-  background-color: #474544;
+  background-color: #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .setting-container input[type=checkbox] + .text:before {
-  border-color: #474544;
+  border-color: #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account .setting-container input[type=checkbox]:checked + .text:before {
   color: #d73d32;
-  border-color: #474544;
+  border-color: #001940;
 }
 .mu-header-container .navbar .navbar-inner .navbar-header .navbar-account.setting-open .setting {
-  background-color: #474544;
+  background-color: #001940;
 }
 /*Sidebar*/
 .mu-sidebar:hover .sidebar-collapse .collapse-icon {
-  color: #474544;
+  color: #001940;
 }
 .mu-sidebar .sidebar-header-wrapper {
   position: relative;
@@ -86,30 +86,30 @@
   margin-left: 5px;
 }
 .mu-sidebar .sidebar-header-wrapper .searchicon {
-  color: #474544;
+  color: #001940;
 }
 .mu-sidebar .sidebar-menu li:before {
-  background-color: #474544;
+  background-color: #001940;
 }
 .mu-sidebar .sidebar-menu li:not(.open):hover:before {
   background-color: #d73d32;
 }
 .mu-sidebar .sidebar-collapse:before {
-  background-color: #474544;
+  background-color: #001940;
 }
 .mu-sidebar .sidebar-collapse .collapse-icon:hover {
   color: #fff;
-  background-color: #474544;
+  background-color: #001940;
 }
 /*content Header*/
 .mu-content-header .header-buttons a:before {
-  background-color: #474544;
+  background-color: #001940;
 }
 .mu-content-header .header-buttons a:hover {
-  color: #474544;
+  color: #001940;
 }
 .mu-content-header .header-buttons a.active {
-  color: #474544;
+  color: #001940;
 }
 .mu-content-header .header-buttons a.favorite:before {
   background-color: #d73d32;
@@ -119,14 +119,14 @@
   color: #d73d32;
 }
 .mu-content-header .header-buttons a.sidebar-toggler:before {
-  background-color: #474544;
+  background-color: #001940;
 }
 .mu-content-header .header-buttons a.sidebar-toggler:hover,
 .mu-content-header .header-buttons a.sidebar-toggler.active {
-  color: #474544;
+  color: #001940;
 }
 .breadcrumb > li > a {
-  color: #474544;
+  color: #001940;
 }
 /*Pagination*/
 .pagination > li.active > a,
@@ -135,6 +135,6 @@
 .pagination > li.active > span,
 .pagination > li.active > span:hover,
 .pagination > li.active > span:focus {
-  background-color: #474544;
-  border-color: #474544;
+  background-color: #001940;
+  border-color: #001940;
 }

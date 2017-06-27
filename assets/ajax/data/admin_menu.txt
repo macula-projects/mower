@@ -2975,7 +2975,7 @@
     "attributes": {
         "iconUri": null,
         "helpUri": null,
-        "openMode": "normal",
+        "openMode": "open",
         "ordered": 3420,
         "toolbarItem": false
     },

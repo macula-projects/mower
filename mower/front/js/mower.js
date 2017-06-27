@@ -9950,7 +9950,7 @@ function log() {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2016-05-31
+ * mower - v1.1.1 - 2016-11-29
  * Copyright (c) 2016 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -12858,7 +12858,7 @@ $(function() {
     // Apply to  all elements with the rel="dropdown-menu" attribute
     // ===================================
     $(document)
-        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu]', isClosedOnDMBodyClick);
+        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu],.query-container form', isClosedOnDMBodyClick);
 
 }(jQuery, Base || {}, window, document));
 
@@ -12917,7 +12917,7 @@ $(function() {
         dataType: 'json', // type of data loaded
         groupTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
+                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-mode="{{if menu3.attributes.openMode}}${menu3.attributes.openMode}{{else}}normal{{/if}}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
             } else {
                 return "";
             }
@@ -13008,8 +13008,10 @@ $(function() {
 
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
                 var $this = $(this);
+                var rcode = $this.attr('_rcode') || $this.attr('rcode');
                 var mcode = $this.attr('_mcode') || $this.attr('mcode');
                 var href = $this.attr('data-href');
+                var openMode = $this.attr('data-mode') || 'normal';
                 var instance = that.findMenuByCode(mcode); //origin
 
                 if ($this.is('a')) e.preventDefault();
@@ -13032,8 +13034,26 @@ $(function() {
                 }
 
                 var url = utils.getAbsoluteUrl(href, that.$element.getContextPath());
+
+                if ($.cookie) {
+                    $.cookie('rcode', rcode);
+                    $.cookie('mcode', mcode);
+                } else {
+                    url = url + (url.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + this.rootcode + '&mcode=' + mcode;
+                }
+
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
-                window.location.href = url;
+
+                switch(openMode){
+                    case '_blank':
+                    case 'blank':
+                    case 'open':
+                        window.open(url, "_blank");
+                    break;
+                    case 'normal':
+                    default:
+                    window.location.href = url;
+                }
             });
         },
         populate: function() {
@@ -13810,7 +13830,29 @@ $(function() {
         });
     }
 
-    function doFormError(e) {}
+    function doFormError(data) {
+       if(!data) return;
+        
+        if(!data.success){
+            var table = $('<table class="table table-bordered table-striped"><thead><tr><th>名称</th><th>错误信息</th></tr></thead></table>'),
+                tbody = $('<tbody></tbody>').appendTo(table);
+            $.each(data.validateErrors, function(idx,value)
+            {
+                var tr = $('<tr/>');
+                var element = $('<td/>').text(value.element)
+                    .appendTo(tr),
+                    message = $('<td/>').text(value.message)
+                    .appendTo(tr);
+                
+                tr.appendTo(tbody);
+            });
+            
+            ModalBox.dialog({
+                    title: data.errorMessage,
+                    message: table
+                });
+        }
+    }
 
 
 

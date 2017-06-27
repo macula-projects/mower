@@ -2652,7 +2652,7 @@
 
 
 /*!
- * mower - v1.1.1 - 2016-05-31
+ * mower - v1.1.1 - 2016-11-29
  * Copyright (c) 2016 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
@@ -5244,8 +5244,7 @@ Input icons
   clear: both;
   font-weight: normal;
   color: #444;
-
-  white-spaice: nowrap;
+  white-space: nowrap;
 }
 .mu-menu-item > h3 i {
   padding-right: 15px;
@@ -7943,53 +7942,40 @@ Input icons
 /* styles for panel .
  ========================================================================== */
 .mu-panel-toolbar {
-  padding: 8px 10px;
+  padding: 8px 0;
+}
+.query-container {
+  background-color: #fff;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+          box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+.query-container form {
+  padding: 2px;
+  border-top: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
 }
 /*
  * advanced query in toolbar.
  */
 .advanced-query-container {
   position: absolute;
-  top: 40px;
   right: 0;
   left: auto;
   z-index: 1010;
   display: none;
-  text-align: left;
+  width: 100%;
+  padding: 2px;
+  margin-top: 0;
   white-space: normal;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, .2);
-  border-radius: 6px;
+  border-top: none;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
           box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-}
-.advanced-query-container:before {
-  position: absolute;
-  top: -7px;
-  right: 9px;
-  display: inline-block !important;
-  content: '';
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #ccc;
-  border-bottom-color: rgba(0, 0, 0, .2);
-  border-left: 7px solid transparent;
-}
-.advanced-query-container:after {
-  position: absolute;
-  top: -6px;
-  right: 10px;
-  display: inline-block !important;
-  content: '';
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #fff;
-  border-left: 6px solid transparent;
-}
-.advanced-query-content {
-  width: 600px;
-  height: 400px;
-  padding: 5px;
 }
 /* styles for mower content body.
  ========================================================================== */

@@ -34346,8 +34346,8 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2016-10-28
- * Copyright (c) 2016 Infinitus, Inc.
+ * mower - v1.1.1 - 2017-06-27
+ * Copyright (c) 2017 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
 
@@ -36970,6 +36970,9 @@ $(function() {
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
             this.options.param = this.options.param || {};
         },
+        _updateOption:function(options) {
+            this.options = $.extend({}, this.options, $(this.element).data(), typeof options === 'object' && options);
+        },
         _getXPath: function(elements) {
             var path = new Array();
 
@@ -37217,6 +37220,9 @@ $(function() {
                 instance = $.data(element, pluginKey, new BreadCrumb(element, options));
                 if (instance && typeof BreadCrumb.prototype['_init'] === 'function')
                     BreadCrumb.prototype['_init'].apply(instance, [element, options]);
+
+            } else if (typeof BreadCrumb.prototype['_updateOption'] === 'function' && typeof options === 'object'){ // update option
+                BreadCrumb.prototype['_updateOption'].apply(instance, [options]);
             }
 
             // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
@@ -37231,6 +37237,7 @@ $(function() {
                     $.data(element, pluginKey, null);
                 }
             }
+
         });
 
         // If the earlier cached method gives a value back, return the resulting value, otherwise return this to preserve chainability.
@@ -37979,26 +37986,47 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 //predo option
                 this.processOption(this, option);
 
-                option = $.extend(true, option, dtOptions || {}, {
-                    "createdRow": function(row, data, index) {
+                option = $.extend(true, option, dtOptions || {});
 
-                        var idAttrName = "data-tt-id",
-                            pIdAttrName = "data-tt-parent-id",
-                            rowId = option.rowId || "id",
-                            rowParentId = option.rowParentId || "parentId";
+                var  customCreatedRow ;
 
-                        var $row = $(row).attr(idAttrName, data[rowId] ||data[0]);
+                if (option && option.hasOwnProperty('createdRow')) {
+                    customCreatedRow = option.createdRow;
+                }
 
-                        if (data[rowParentId] || data[1]) $row.attr(pIdAttrName, data[rowParentId] || data[1]);
+                option = $.extend(true, option,
+                    {
+                        "createdRow" : function(row, data, index) {
+                            var idAttrName = "data-tt-id",
+                                pIdAttrName = "data-tt-parent-id",
+                                rowId = option.rowId || "id",
+                                rowParentId = option.rowParentId || "parentId";
 
-                    },
-                    "drawCallback": function(settings) {
-                        $(table).treetable({
-                            expandable: true
-                        }, true);
+                            var $row = $(row).attr(idAttrName, data[rowId] ||data[0]);
+
+                            if (data[rowParentId] || data[1]) $row.attr(pIdAttrName, data[rowParentId] || data[1]);
+
+                            customCreatedRow &&  utils.executeFunction(customCreatedRow, row, data, index);
+                        }
                     }
-                });
+                );
 
+                var  customDrawCallback;
+
+                if (option && option.hasOwnProperty('drawCallback')) {
+                    customDrawCallback = option.drawCallback;
+                }
+
+                option = $.extend(true, option,
+                    {
+                        "drawCallback" : function(settings) {
+                            $(table).treetable({
+                                expandable: true
+                            }, true);
+
+                            customDrawCallback &&  utils.executeFunction(customDrawCallback,settings);
+                        }
+                    });
 
                 //apply datatables
                 var instance = $table
@@ -39930,6 +39958,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             this.$input = this.$element.find('.form-control:first');
             this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
+            this.$componentClear = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn > .clear') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
 
@@ -40075,6 +40104,9 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 // }],
                 [this.$component, {
                     click: $.proxy(this.show, this)
+                }],
+                [this.$componentClear, {
+                    click: $.proxy(this._clear, this)
                 }]
             ];
 
@@ -40166,6 +40198,16 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             this._attachSecondaryEvents();
             this._trigger('shown.mu.dropdowntree');
         },
+        _clear:function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.clear();
+            this.hide();
+
+            this._newValue("",false);
+        },
         _isExisted: function(val) {
             var existed = false;
             $.each(this._getRealInput(), function() {
@@ -40226,7 +40268,11 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 data ? cb.call(this, data) : cb.call(this, options.datasource);
             }
         },
-        show: function() {
+        show: function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
             this.$treeContainer.appendTo('body');
 
             if (!this.isLoaded) {
@@ -40247,6 +40293,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
             }
 
             this._show();
+        },
+        refresh: function(options) {
+            this.options = $.extend({},  this.options, typeof options === 'object' && options);
+            $.jstree.reference(this.$tree)  && $.jstree.reference(this.$tree).refresh();
         },
         hide: function() {
             if (!this.$treeContainer.is(':visible'))
@@ -40942,7 +40992,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
     // Apply to  all elements with the rel="dropdown-menu" attribute
     // ===================================
     $(document)
-        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu]', isClosedOnDMBodyClick);
+        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu],.query-container form', isClosedOnDMBodyClick);
 
 }(jQuery, Base || {}, window, document));
 
@@ -41567,7 +41617,7 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
         dataType: 'json', // type of data loaded
         groupTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
+                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-mode="{{if menu3.attributes.openMode}}${menu3.attributes.openMode}{{else}}normal{{/if}}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
             } else {
                 return "";
             }
@@ -41658,8 +41708,10 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
 
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
                 var $this = $(this);
+                var rcode = $this.attr('_rcode') || $this.attr('rcode');
                 var mcode = $this.attr('_mcode') || $this.attr('mcode');
                 var href = $this.attr('data-href');
+                var openMode = $this.attr('data-mode') || 'normal';
                 var instance = that.findMenuByCode(mcode); //origin
 
                 if ($this.is('a')) e.preventDefault();
@@ -41682,8 +41734,26 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 }
 
                 var url = utils.getAbsoluteUrl(href, that.$element.getContextPath());
+
+                if ($.cookie) {
+                    $.cookie('rcode', rcode);
+                    $.cookie('mcode', mcode);
+                } else {
+                    url = url + (url.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + this.rootcode + '&mcode=' + mcode;
+                }
+
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
-                window.location.href = url;
+
+                switch(openMode){
+                    case '_blank':
+                    case 'blank':
+                    case 'open':
+                        window.open(url, "_blank");
+                    break;
+                    case 'normal':
+                    default:
+                    window.location.href = url;
+                }
             });
         },
         populate: function() {
@@ -42269,7 +42339,8 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 switch(openMode){
                     case '_blank':
                     case 'blank':
-                        window.open(url,instance.name || '');
+                    case 'open':
+                        window.open(url, "_blank");
                     break;
                     case 'normal':
                     default:
