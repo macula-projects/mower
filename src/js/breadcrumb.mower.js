@@ -31,7 +31,7 @@
         prefix: "breadcrumb",
         type:'GET',
         param: false,
-        home: '',
+        home: '<i class="fa fa-home home"></i>',
         divider: '',
         keyboard: false,
         events: {
