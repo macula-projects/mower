@@ -74,8 +74,7 @@
     "code": "ADMIN-MENU-3-7",
     "name": "警告框",
     "attributes": {
-        "iconUri": null,
-        "openMode":"blank"
+        "iconUri": null
     },
     "uri": "examples/admin/html/ui_alerts.html"
 }, {

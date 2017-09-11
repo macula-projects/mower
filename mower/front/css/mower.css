@@ -2652,8 +2652,8 @@
 
 
 /*!
- * mower - v1.1.1 - 2016-11-29
- * Copyright (c) 2016 Infinitus, Inc.
+ * mower - v1.1.1 - 2017-09-11
+ * Copyright (c) 2017 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
 /* ========================================================================
@@ -5409,10 +5409,15 @@ Input icons
   min-height: 41px;
   padding: 0;
   margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
 }
 .panel-widget > .panel-heading.bordered-bottom-highlight {
-  border-bottom: 3px solid #eee;
+  border-bottom: 3px solid #b5b5b5;
+}
+.panel-widget > .panel-heading.bordered-bottom-shadow {
+  -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+     -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+          box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
 }
 .panel-widget > .panel-heading:before,
 .panel-widget > .panel-heading:after {
@@ -5617,12 +5622,12 @@ Input icons
 /* Box panel-widget */
 .panel-widget.box {
   padding: 0 !important;
+  border-color: #ddd;
 }
 .panel-widget.box > .panel-heading {
   padding: 0 10px;
   margin-bottom: 0;
-  color: #fff;
-  border-bottom: 0;
+  background: #f5f5f5;
 }
 .panel-widget.box > .panel-heading > .caption {
   padding: 11px 0 9px 0;

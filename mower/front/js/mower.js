@@ -9950,8 +9950,8 @@ function log() {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2016-11-29
- * Copyright (c) 2016 Infinitus, Inc.
+ * mower - v1.1.1 - 2017-09-11
+ * Copyright (c) 2017 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
 

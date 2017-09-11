@@ -34346,7 +34346,7 @@ else if ( jQuery && !jQuery.fn.dataTable.select ) {
 })(jQuery, window);
 
 ;/*!
- * mower - v1.1.1 - 2017-06-27
+ * mower - v1.1.1 - 2017-09-11
  * Copyright (c) 2017 Infinitus, Inc.
  * Licensed under Apache License 2.0 (https://github.com/macula-projects/mower/blob/master/LICENSE)
  */
