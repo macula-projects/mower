@@ -1122,13 +1122,19 @@ Input icons
   padding: 0px;
 }
 .panel-widget > .panel-heading {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
   padding: 0;
   margin-bottom: 10px;
   min-height: 41px;
 
   &.bordered-bottom-highlight {
-    border-bottom: 3px solid #eee;
+    border-bottom: 3px solid #b5b5b5;
+  }
+
+  &.bordered-bottom-shadow {
+    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+   -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
   }
 }
 
@@ -1339,12 +1345,12 @@ Input icons
 /* Box panel-widget */
 .panel-widget.box {
   padding: 0px !important;
+  border-color: #ddd;
 }
 .panel-widget.box > .panel-heading {
-  border-bottom: 0;
   padding: 0 10px;
   margin-bottom: 0;
-  color: #fff;
+  background: #f5f5f5;
 }
 .panel-widget.box > .panel-heading > .caption {
   padding: 11px 0 9px 0;
