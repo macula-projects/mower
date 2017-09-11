@@ -96,6 +96,7 @@
 
             this.$input = this.$element.find('.form-control:first');
             this.$component = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn') : false;
+            this.$componentClear = this.$element.is('.mu-dropdowntree') ? this.$element.find('.input-group-btn > .clear') : false;
             this.$treeContainer = $(DropDownTree.DEFAULTS.template);
             this.$treeContainer.append('<div></div');
 
@@ -241,6 +242,9 @@
                 // }],
                 [this.$component, {
                     click: $.proxy(this.show, this)
+                }],
+                [this.$componentClear, {
+                    click: $.proxy(this._clear, this)
                 }]
             ];
 
@@ -332,6 +336,16 @@
             this._attachSecondaryEvents();
             this._trigger('shown.mu.dropdowntree');
         },
+        _clear:function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.clear();
+            this.hide();
+
+            this._newValue("",false);
+        },
         _isExisted: function(val) {
             var existed = false;
             $.each(this._getRealInput(), function() {
@@ -392,7 +406,11 @@
                 data ? cb.call(this, data) : cb.call(this, options.datasource);
             }
         },
-        show: function() {
+        show: function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
             this.$treeContainer.appendTo('body');
 
             if (!this.isLoaded) {
@@ -413,6 +431,10 @@
             }
 
             this._show();
+        },
+        refresh: function(options) {
+            this.options = $.extend({},  this.options, typeof options === 'object' && options);
+            $.jstree.reference(this.$tree)  && $.jstree.reference(this.$tree).refresh();
         },
         hide: function() {
             if (!this.$treeContainer.is(':visible'))

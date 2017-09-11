@@ -53,21 +53,21 @@
             </div>
             <div class="panel-body">
                 <div>
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                    <button type="button" class="btn btn-primary btn-lg" data-moveable="true" data-toggle="modal" data-target="#myModal">
                         启动模态框
                     </button>
                 </div>
                 <br/>
                 <div>
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".bs-example-modal-lg">大模态框</button>
+                    <button type="button" class="btn btn-primary btn-lg" data-moveable="true" data-toggle="modal" data-target=".bs-example-modal-lg">大模态框</button>
                 </div>
                 <br/>
                 <div>
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".bs-example-modal-sm">小模态框</button>
+                    <button type="button" class="btn btn-primary btn-lg" data-moveable="true" data-toggle="modal" data-target=".bs-example-modal-sm">小模态框</button>
                 </div>
                 <br/>
                 <div>
-                    <button id="btn-modalbox-ajax-html" type="button" data-url="/partial/remote-modal.html" data-title="ajax" data-toggle="modalbox" class="btn btn-primary btn-lg">Ajax加载内容</button>
+                    <button id="btn-modalbox-ajax-html" type="button" data-url="/partial/remote-modal.html" data-toggle="modalbox" class="btn btn-primary btn-lg">Ajax加载内容</button>
                 </div>
             </div>
         </div>
@@ -226,7 +226,23 @@
                 <h4 class="modal-title" id="mySmallModalLabel">小模态框</h4>
             </div>
             <div class="modal-body">
-                ...
+                <div class="input-group date" id="datetimepicker1">
+                        <input type="text" class="form-control">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#datetimepicker1').datetimepicker({
+                            fontAwesome:true,
+                            format:'yyyy-mm-dd hh:ii:ss',
+                             autoclose: true,
+                            todayBtn: true,
+                            pickerPosition: "bottom-left"
+                        });
+                    });
+                </script>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -335,7 +351,7 @@ $('#btn-modalbox-tip').click(function(event) {
 &lt;button id="btn-modalbox-comfirm" type="button" class="btn btn-primary btn-lg"&gt;确认框&lt;/button&gt;
 &lt;script&gt;
 $('#btn-modalbox-comfirm').click(function(event) {
-  MessageBox.confirm("Are you sure?", function(result) {
+  ModalBox.confirm("Are you sure?", function(result) {
     //TODO
   }); 
 });

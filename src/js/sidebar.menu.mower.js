@@ -166,7 +166,8 @@
                 switch(openMode){
                     case '_blank':
                     case 'blank':
-                        window.open(url,instance.name || '');
+                    case 'open':
+                        window.open(url, "_blank");
                     break;
                     case 'normal':
                     default:

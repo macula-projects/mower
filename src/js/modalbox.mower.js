@@ -141,14 +141,14 @@
                     ready: readyToShow
                 });
                 if (typeof customContent === 'string') {
-                    $body.html(customContent);
+                    $body.find(".bootbox-body").html(customContent);
                     readyToShow();
                 }
             } else if (custom instanceof $) {
-                $body.html($('<div>').append(custom.clone()).html());
+                $body.find(".bootbox-body").html($('<div>').append(custom.clone()).html());
                 readyToShow();
             } else {
-                $body.html(custom);
+                $body.find(".bootbox-body").html(custom);
                 readyToShow();
             }
         } else if (options.url) {
@@ -160,7 +160,7 @@
                 $header.detach();
                 $body.detach();
                 $content.empty().append($header).append($body);
-                $body.css('padding', 0)
+                $body.find(".bootbox-body").css('padding', 0)
                     .html('<iframe id="' + iframeName + '" name="' + iframeName + '" src="' + options.url + '" frameborder="no" allowtransparency="true" scrolling="auto" style="width: 100%; height: 100%; left: 0px;"></iframe>');
 
                 if (options.waittime > 0) {
@@ -237,7 +237,7 @@
                             } else if ($data.hasClass('modal-body')) {
                                 $dialog.find('.modal-body').replaceWith($data);
                             } else {
-                                $body.wrapInner($data);
+                                $body.find(".bootbox-body").wrapInner($data);
                             }
                         });
 
@@ -250,7 +250,7 @@
                             $modal.append($script);
                         });
                     } catch (e) {
-                        $body.wrapInner(data);
+                        $body.find(".bootbox-body").wrapInner(data);
                     }
 
                     $modal.callEvent('loaded.mower.modal', {

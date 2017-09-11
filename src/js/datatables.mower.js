@@ -111,6 +111,11 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                     },
                     {
                         data:'array'
+                    },
+                    {
+                        language: {
+                           emptyTable: "string"
+                        }
                     }
 
                 ])
@@ -361,26 +366,47 @@ var DTAdapter = (function(base, utils, $, window, document, undefined) {
                 //predo option
                 this.processOption(this, option);
 
-                option = $.extend(true, option, dtOptions || {}, {
-                    "createdRow": function(row, data, index) {
+                option = $.extend(true, option, dtOptions || {});
 
-                        var idAttrName = "data-tt-id",
-                            pIdAttrName = "data-tt-parent-id",
-                            rowId = option.rowId || "id",
-                            rowParentId = option.rowParentId || "parentId";
+                var  customCreatedRow ;
 
-                        var $row = $(row).attr(idAttrName, data[rowId] ||data[0]);
+                if (option && option.hasOwnProperty('createdRow')) {
+                    customCreatedRow = option.createdRow;
+                }
 
-                        if (data[rowParentId] || data[1]) $row.attr(pIdAttrName, data[rowParentId] || data[1]);
+                option = $.extend(true, option,
+                    {
+                        "createdRow" : function(row, data, index) {
+                            var idAttrName = "data-tt-id",
+                                pIdAttrName = "data-tt-parent-id",
+                                rowId = option.rowId || "id",
+                                rowParentId = option.rowParentId || "parentId";
 
-                    },
-                    "drawCallback": function(settings) {
-                        $(table).treetable({
-                            expandable: true
-                        }, true);
+                            var $row = $(row).attr(idAttrName, data[rowId] ||data[0]);
+
+                            if (data[rowParentId] || data[1]) $row.attr(pIdAttrName, data[rowParentId] || data[1]);
+
+                            customCreatedRow &&  utils.executeFunction(customCreatedRow, row, data, index);
+                        }
                     }
-                });
+                );
 
+                var  customDrawCallback;
+
+                if (option && option.hasOwnProperty('drawCallback')) {
+                    customDrawCallback = option.drawCallback;
+                }
+
+                option = $.extend(true, option,
+                    {
+                        "drawCallback" : function(settings) {
+                            $(table).treetable({
+                                expandable: true
+                            }, true);
+
+                            customDrawCallback &&  utils.executeFunction(customDrawCallback,settings);
+                        }
+                    });
 
                 //apply datatables
                 var instance = $table

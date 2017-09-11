@@ -31,7 +31,7 @@
         prefix: "breadcrumb",
         type:'GET',
         param: false,
-        home: '<i class="fa fa-home home"></i>',
+        home: '',
         divider: '',
         keyboard: false,
         events: {
@@ -55,6 +55,9 @@
             var $element = $(element);
             this.options = $.extend({}, BreadCrumb.DEFAULTS, $element.data(), typeof options === 'object' && options);
             this.options.param = this.options.param || {};
+        },
+        _updateOption:function(options) {
+            this.options = $.extend({}, this.options, $(this.element).data(), typeof options === 'object' && options);
         },
         _getXPath: function(elements) {
             var path = new Array();
@@ -303,6 +306,9 @@
                 instance = $.data(element, pluginKey, new BreadCrumb(element, options));
                 if (instance && typeof BreadCrumb.prototype['_init'] === 'function')
                     BreadCrumb.prototype['_init'].apply(instance, [element, options]);
+
+            } else if (typeof BreadCrumb.prototype['_updateOption'] === 'function' && typeof options === 'object'){ // update option
+                BreadCrumb.prototype['_updateOption'].apply(instance, [options]);
             }
 
             // if we have an instance, and as long as the first argument (options) is a valid string value, tries to call a method from this instance.
@@ -317,6 +323,7 @@
                     $.data(element, pluginKey, null);
                 }
             }
+
         });
 
         // If the earlier cached method gives a value back, return the resulting value, otherwise return this to preserve chainability.

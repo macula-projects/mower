@@ -60,7 +60,29 @@
         });
     }
 
-    function doFormError(e) {}
+    function doFormError(data) {
+       if(!data) return;
+        
+        if(!data.success){
+            var table = $('<table class="table table-bordered table-striped"><thead><tr><th>名称</th><th>错误信息</th></tr></thead></table>'),
+                tbody = $('<tbody></tbody>').appendTo(table);
+            $.each(data.validateErrors, function(idx,value)
+            {
+                var tr = $('<tr/>');
+                var element = $('<td/>').text(value.element)
+                    .appendTo(tr),
+                    message = $('<td/>').text(value.message)
+                    .appendTo(tr);
+                
+                tr.appendTo(tbody);
+            });
+            
+            ModalBox.dialog({
+                    title: data.errorMessage,
+                    message: table
+                });
+        }
+    }
 
 
 

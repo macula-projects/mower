@@ -144,12 +144,12 @@ var Base = (function($, utils, window, document, undefined) {
 
     var  _ajustModalPosition = function(position)
     {
-        $(document).on('show.bs.modal','.modal', function() {
-            var $dialog = $(this).find('.modal-dialog');
-            var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
-            var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
-            $dialog.css('margin-top', pos);
-        });
+        // $(document).on('shown.bs.modal','.modal', function() {
+        //     var $dialog = $(this).find('.modal-dialog');
+        //     var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+        //     var pos = position == 'fit' ? (half * 2 / 4) : (position == 'center' ? half : position);
+        //     $dialog.css('margin-top', pos);
+        // });
     };
 
     // public functions

@@ -444,8 +444,8 @@
       }, options);
 
       //Arron
-      if(options.persist) {
-        persistStore = new Persist.Store(options.persistStoreName);
+      if(settings.persist) {
+        persistStore = new Persist.Store(settings.persistStoreName);
       }
 
       return this.each(function() {

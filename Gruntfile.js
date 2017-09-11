@@ -61,6 +61,8 @@ module.exports = function(grunt) {
                         'src/js/string.<%= pkg.name %>.js',
                         'src/js/date.<%= pkg.name %>.js',
                         'src/js/base.<%= pkg.name %>.js',
+                        'src/js/draggable.<%= pkg.name %>.js',
+                        'src/js/modal.<%= pkg.name %>.js',
                         'src/js/alert.<%= pkg.name %>.js',
                         'src/js/breadcrumb.<%= pkg.name %>.js',
                         'src/js/chosen.<%= pkg.name %>.js',
@@ -97,6 +99,7 @@ module.exports = function(grunt) {
                         'plugins/font-awesome/css/font-awesome.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'plugins/toastr/css/toastr.css',
+                        'plugins/chosen/css/bootstrap-chosen.css',
                         'plugins/jquery-treetable/css/jquery.treetable.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css',
                         'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
@@ -107,6 +110,7 @@ module.exports = function(grunt) {
                         'plugins/font-awesome/css/font-awesome.min.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'plugins/toastr/css/toastr.min.css',
+                        'plugins/chosen/css/bootstrap-chosen.min.css',
                         'plugins/jquery-treetable/css/jquery.treetable.min.css',
                         'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css',
                         'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css',
@@ -170,8 +174,11 @@ module.exports = function(grunt) {
                         'src/js/string.<%= pkg.name %>.js',
                         'src/js/date.<%= pkg.name %>.js',
                         'src/js/base.<%= pkg.name %>.js',
+                        'src/js/draggable.<%= pkg.name %>.js',
+                        'src/js/modal.<%= pkg.name %>.js',
                         'src/js/chosen.<%= pkg.name %>.js',
                         'src/js/chosen.remote.<%= pkg.name %>.js',
+                        'src/js/datetimepicker.<%= pkg.name %>.js',
                         'src/js/dropdown.hover.<%= pkg.name %>.js',
                         'src/js/dropdown.<%= pkg.name %>.js',
                         'src/js/navbar.menu.<%= pkg.name %>.js',
@@ -181,8 +188,7 @@ module.exports = function(grunt) {
                         'src/js/tooltip.<%= pkg.name %>.js',
                         'src/js/form.<%= pkg.name %>.js',
                         'src/js/modalbox.<%= pkg.name %>.js',
-                        'src/js/messagebox.<%= pkg.name %>.js',
-                        'src/js/cascadepicker.<%= pkg.name %>.js'
+                        'src/js/messagebox.<%= pkg.name %>.js'
                     ]
                 }
             },
@@ -193,11 +199,15 @@ module.exports = function(grunt) {
                 files: {
                     'dist/front/css/<%= pkg.name %>.css': [
                         'plugins/font-awesome/css/font-awesome.css',
+                        'plugins/chosen/css/bootstrap-chosen.css',
+                        'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.css',
                         'dist/front/css/<%= pkg.name %>.css'
                     ],
                     'dist/front/css/<%= pkg.name %>.min.css': [
                         'plugins/font-awesome/css/font-awesome.min.css',
+                        'plugins/chosen/css/bootstrap-chosen.min.css',
+                        'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css',
                         'plugins/bootstrapValidator/css/bootstrapValidator.min.css',
                         'dist/front/css/<%= pkg.name %>.min.css'
                     ]
@@ -211,6 +221,7 @@ module.exports = function(grunt) {
                     'dist/front/js/<%= pkg.name %>.js': [
                         'plugins/slimScroll/js/slimscroll.js',
                         'plugins/chosen/js/chosen.jquery.js',
+                        'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.js',
                         'plugins/form/js/form.jquery.js',
@@ -222,6 +233,7 @@ module.exports = function(grunt) {
                     'dist/front/js/<%= pkg.name %>.min.js': [
                         'plugins/slimScroll/js/slimscroll.min.js',
                         'plugins/chosen/js/chosen.jquery.min.js',
+                        'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.min.js',
                         'plugins/bootstrapValidator/js/bootstrapValidator.zh_cn.min.js',
                         'plugins/form/js/form.jquery.min.js',
@@ -327,6 +339,7 @@ module.exports = function(grunt) {
             },
             minify_plugins: {
                 files: {
+                    'plugins/chosen/css/bootstrap-chosen.min.css': ['plugins/chosen/css/bootstrap-chosen.css'],
                     'plugins/jquery-treetable/css/jquery.treetable.min.css': ['plugins/jquery-treetable/css/jquery.treetable.css'],
                     'plugins/bootstrapvalidator/css/bootstrapValidator.min.css': ['plugins/bootstrapvalidator/css/bootstrapValidator.css'],
                     'plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.min.css': ['plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css'],
@@ -380,6 +393,11 @@ module.exports = function(grunt) {
                     cwd: 'plugins/jstree/',
                     src: ['img/*'],
                     dest: 'dist/admin/'
+                },{
+                    expand: true,
+                    cwd: 'plugins/chosen/',
+                    src: ['img/*'],
+                    dest: 'dist/admin/'
                 }]
             },
             build_front:{
@@ -391,6 +409,11 @@ module.exports = function(grunt) {
                 },{
                     expand: true,
                     cwd: 'plugins/jstree/',
+                    src: ['img/*'],
+                    dest: 'dist/front/'
+                },{
+                    expand: true,
+                    cwd: 'plugins/chosen/',
                     src: ['img/*'],
                     dest: 'dist/front/'
                 }]

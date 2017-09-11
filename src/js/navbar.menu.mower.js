@@ -53,7 +53,7 @@
         dataType: 'json', // type of data loaded
         groupTemplate: function() {
             if (typeof $.template === "function") {
-                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
+                return $.template(null, '{{each(index2, menu2) children}} <li> {{if menu2.children.length}} <h3 class="title">${menu2.name}</h3> <ul class="list-unstyled list-inline"> {{each(index3, menu3) menu2.children}} <li> <a mcode="${menu3.code}" href="javascript:void(0);" data-href="${menu3.uri}" data-mode="{{if menu3.attributes.openMode}}${menu3.attributes.openMode}{{else}}normal{{/if}}" data-toggle="menu">${menu3.name}</a> </li>{{/each}} </ul> {{else}} <a mcode="${menu2.code}" href="javascript:void(0);" data-href="${menu2.uri}" data-toggle="menu">${menu2.name}</a> {{/if}} </li> <li class="divider"> </li> {{/each}}');
             } else {
                 return "";
             }
@@ -144,8 +144,10 @@
 
             this.$element.on('click.module.mu.menu', '[data-toggle="menu"]', function(e) {
                 var $this = $(this);
+                var rcode = $this.attr('_rcode') || $this.attr('rcode');
                 var mcode = $this.attr('_mcode') || $this.attr('mcode');
                 var href = $this.attr('data-href');
+                var openMode = $this.attr('data-mode') || 'normal';
                 var instance = that.findMenuByCode(mcode); //origin
 
                 if ($this.is('a')) e.preventDefault();
@@ -168,8 +170,26 @@
                 }
 
                 var url = utils.getAbsoluteUrl(href, that.$element.getContextPath());
+
+                if ($.cookie) {
+                    $.cookie('rcode', rcode);
+                    $.cookie('mcode', mcode);
+                } else {
+                    url = url + (url.indexOf('?') > -1 ? '&' : '?') + 'rcode=' + this.rootcode + '&mcode=' + mcode;
+                }
+
                 url = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + (new Date()).valueOf();
-                window.location.href = url;
+
+                switch(openMode){
+                    case '_blank':
+                    case 'blank':
+                    case 'open':
+                        window.open(url, "_blank");
+                    break;
+                    case 'normal':
+                    default:
+                    window.location.href = url;
+                }
             });
         },
         populate: function() {

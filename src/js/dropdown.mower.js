@@ -27,7 +27,7 @@
     // Apply to  all elements with the rel="dropdown-menu" attribute
     // ===================================
     $(document)
-        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu]', isClosedOnDMBodyClick);
+        .on('click.bs.dropdown.data-api', '[rel=dropdown-menu],.query-container form', isClosedOnDMBodyClick);
 
 }(jQuery, Base || {}, window, document));
 
