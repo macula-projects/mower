@@ -18,7 +18,7 @@ module.exports = function(grunt) {
                 ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
                 '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
                 ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-                ' * Licensed under <%= _.pluck(pkg.licenses, "type").join(", ") %> (<%= _.pluck(pkg.licenses, "url").join(", ") %>)\n' +
+                ' * Licensed under <%= _.map(pkg.licenses, "type").join(", ") %> (<%= _.map(pkg.licenses, "url").join(", ") %>)\n' +
                 ' */\n',
             jqueryCheck: 'if (typeof jQuery === \'undefined\') { throw new Error(\'<%= pkg.name %>\\\'s JavaScript requires jQuery\') }\n\n',
             build_date: '<%= grunt.template.today("yyyymmddHHMMss") %>',
