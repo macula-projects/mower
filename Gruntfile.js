@@ -257,7 +257,8 @@ module.exports = function(grunt) {
             },
             minify_plugins: {
                 options: {
-                    preserveComments: 'some'
+                    preserveComments: 'some',
+                    ie8: true
                 },
                 files: {
                     'plugins/jquery-treetable/js/jquery.treetable.min.js': ['plugins/jquery-treetable/js/jquery.treetable.js'],
