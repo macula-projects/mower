@@ -252,7 +252,8 @@
     var $dialog = this.$element.find('.modal-dialog'), 
         position = this.options.position;
 
-    var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+    //var half = Math.max(0, ($(window).height() - $dialog.outerHeight()) / 2);
+    var half = Math.max(0, (("innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight) - $dialog.outerHeight()) / 2); //use window.innerHeight instead
     var topPos = position == 'fit' ? (half * 2 / 3) : (position == 'center' ? half : position);
     if($dialog.hasClass('modal-moveable')) {
         var pos = null;

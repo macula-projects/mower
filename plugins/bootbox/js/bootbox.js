@@ -737,7 +737,8 @@
     dialog.modal({
       backdrop: options.backdrop ? "static": false,
       keyboard: false,
-      show: false
+      show: false,
+      position: options.position
     });
 
     if (options.show) {
