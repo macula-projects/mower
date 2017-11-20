@@ -638,8 +638,55 @@
           }
         }
       });
-    }  
+    },  
     //Arron end 
+
+  expandLevel: function(level){
+      var self = this;
+      var rootNode;
+      $.each(self.data("treetable").tree, function(idx, node) {
+        if(node){
+          rootNode = node;
+          return false;
+        }
+      });
+      if(rootNode){
+          var ids = new Array();
+          ids.push(rootNode.id);
+          
+            expandChildren = function(arrayIds) {
+              var childrenIds = new Array();
+              $.each(arrayIds, function(idx, id){
+                    var node = self.data("treetable").tree[id];
+                    if (node) {
+                        if (!node.initialized) {
+                            node._initialize();
+                         }
+                        node.expand();
+                    }
+                    if (node) {
+                      var children = node.children;
+                      $.each(children, function(idx, node){
+                            if (node) {
+                                if (!node.initialized) {
+                                  node._initialize();
+                                }
+                                childrenIds.push(node.id);
+                            }
+                      });
+                      
+                    }
+              });
+                return childrenIds;
+             }
+          
+          for(i = 0; i < level; i++){
+            ids = expandChildren(ids);
+          }
+      }
+
+    },
+    
   };
 
   $.fn.treetable = function(method) {

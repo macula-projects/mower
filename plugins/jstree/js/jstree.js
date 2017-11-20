@@ -3557,55 +3557,55 @@
 		 * @return {Object}
 		 */
 		// get_json : function (obj, options, flat) {
-		// 	obj = this.get_node(obj || $.jstree.root);
-		// 	if(!obj) { return false; }
-		// 	if(options && options.flat && !flat) { flat = []; }
-		// 	var tmp = {
-		// 		'id' : obj.id,
-		// 		'text' : obj.text,
-		// 		'icon' : this.get_icon(obj),
-		// 		'li_attr' : $.extend(true, {}, obj.li_attr),
-		// 		'a_attr' : $.extend(true, {}, obj.a_attr),
-		// 		'state' : {},
-		// 		'data' : options && options.no_data ? false : $.extend(true, {}, obj.data)
-		// 		//( this.get_node(obj, true).length ? this.get_node(obj, true).data() : obj.data ),
-		// 	}, i, j;
-		// 	if(options && options.flat) {
-		// 		tmp.parent = obj.parent;
-		// 	}
-		// 	else {
-		// 		tmp.children = [];
-		// 	}
-		// 	if(!options || !options.no_state) {
-		// 		for(i in obj.state) {
-		// 			if(obj.state.hasOwnProperty(i)) {
-		// 				tmp.state[i] = obj.state[i];
-		// 			}
-		// 		}
-		// 	}
-		// 	if(options && options.no_id) {
-		// 		delete tmp.id;
-		// 		if(tmp.li_attr && tmp.li_attr.id) {
-		// 			delete tmp.li_attr.id;
-		// 		}
-		// 		if(tmp.a_attr && tmp.a_attr.id) {
-		// 			delete tmp.a_attr.id;
-		// 		}
-		// 	}
-		// 	if(options && options.flat && obj.id !== $.jstree.root) {
-		// 		flat.push(tmp);
-		// 	}
-		// 	if(!options || !options.no_children) {
-		// 		for(i = 0, j = obj.children.length; i < j; i++) {
-		// 			if(options && options.flat) {
-		// 				this.get_json(obj.children[i], options, flat);
-		// 			}
-		// 			else {
-		// 				tmp.children.push(this.get_json(obj.children[i], options));
-		// 			}
-		// 		}
-		// 	}
-		// 	return options && options.flat ? flat : (obj.id === $.jstree.root ? tmp.children : tmp);
+		//  	obj = this.get_node(obj || $.jstree.root);
+		//  	// if(!obj) { return false; }
+		//  	if(options && options.flat && !flat) { flat = []; }
+		//  	var tmp = {
+		//  		'id' : obj.id,
+		//  		'text' : obj.text,
+		//  		'icon' : this.get_icon(obj),
+		//  		'li_attr' : $.extend(true, {}, obj.li_attr),
+		//  		'a_attr' : $.extend(true, {}, obj.a_attr),
+		//  		'state' : {},
+		//  		'data' : options && options.no_data ? false : $.extend(true, {}, obj.data)
+		//  		//( this.get_node(obj, true).length ? this.get_node(obj, true).data() : obj.data ),
+		//  	}, i, j;
+		//  	if(options && options.flat) {
+		//  		tmp.parent = obj.parent;
+		//  	}
+		//  	else {
+		//  		tmp.children = [];
+		//  	}
+		//  	if(!options || !options.no_state) {
+		//  		for(i in obj.state) {
+		//  			if(obj.state.hasOwnProperty(i)) {
+		//  				tmp.state[i] = obj.state[i];
+		//  			}
+		//  		}
+		//  	}
+		//  	if(options && options.no_id) {
+		//  		delete tmp.id;
+		//  		if(tmp.li_attr && tmp.li_attr.id) {
+		//  			delete tmp.li_attr.id;
+		//  		}
+		//  		if(tmp.a_attr && tmp.a_attr.id) {
+		//  			delete tmp.a_attr.id;
+		//  		}
+		//  	}
+		//  	if(options && options.flat && obj.id !== $.jstree.root) {
+		//  		flat.push(tmp);
+		//  	}
+		//  	if(!options || !options.no_children) {
+		//  		for(i = 0, j = obj.children.length; i < j; i++) {
+		//  			if(options && options.flat) {
+		//  				this.get_json(obj.children[i], options, flat);
+		//  			}
+		//  			else {
+		//  				tmp.children.push(this.get_json(obj.children[i], options));
+		//  			}
+		//  		}
+		//  	}
+		//  	return options && options.flat ? flat : (obj.id === $.jstree.root ? tmp.children : tmp);
 		// },
 		/**
 		 * create a new node (do not confuse with load_node)
@@ -4506,8 +4506,8 @@
 		//  * @return {String}
 		//  */
 		// get_icon : function (obj) {
-		// 	obj = this.get_node(obj);
-		// 	return (!obj || obj.id === $.jstree.root) ? false : obj.icon;
+		//  	obj = this.get_node(obj);
+		//  	return (!obj || obj.id === $.jstree.root) ? false : obj.icon;
 		// },
 		// /**
 		//  * hide the icon on an individual node
