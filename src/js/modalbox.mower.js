@@ -111,8 +111,9 @@
         }
 
         var readyToShow = function(delay) {
-            if (typeof delay === 'undefined') delay = 300;
-            setTimeout(function() {
+            // 异步设置宽高，容易导致尺寸变化出现动画，位置计算不准
+            //if (typeof delay === 'undefined') delay = 300;
+            //setTimeout(function() {
                 $dialog = $modal.find('.modal-dialog');
                 if (options.width && options.width != 'auto') {
                     $dialog.css('width', options.width);
@@ -130,7 +131,7 @@
                     }
                 }
                 $modal.removeClass('modal-loading');
-            }, delay);
+            //}, delay);
         };
 
         if (options.type === 'custom' && custom) {
